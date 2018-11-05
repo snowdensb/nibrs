@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("nibrs.fbi.services")
 public class AppProperties {
 
-    private String nibrsNiemDocumentRequestFolder = "/tmp/nibrs/niemDocument/request";
+    private String nibrsNiemDocumentFolder = "/tmp/nibrs/niemSubmission";
 	private String stagingDataRestServiceBaseUrl = "http://localhost:8080/";
 	private String nibrsNiemServiceEndpointUrl = "https4://localhost:443/UCR/NOE/NIBRSServices";
 	private String truststoreLocation = "";
@@ -46,12 +46,12 @@ public class AppProperties {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
-	public String getNibrsNiemDocumentRequestFolder() {
-		return nibrsNiemDocumentRequestFolder;
+	public String getNibrsNiemDocumentFolder() {
+		return nibrsNiemDocumentFolder;
 	}
 
-	public void setNibrsNiemDocumentRequestFolder(String nibrsNiemDocumentRequestFolder) {
-		this.nibrsNiemDocumentRequestFolder = nibrsNiemDocumentRequestFolder;
+	public void setNibrsNiemDocumentFolder(String nibrsNiemDocumentFolder) {
+		this.nibrsNiemDocumentFolder = nibrsNiemDocumentFolder;
 	}
 
 	public String getNibrsNiemServiceEndpointUrl() {

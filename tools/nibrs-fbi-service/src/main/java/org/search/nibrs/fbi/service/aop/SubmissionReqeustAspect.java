@@ -15,25 +15,52 @@
  */
 package org.search.nibrs.fbi.service.aop;
 
+import java.io.File;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.camel.Exchange;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.search.nibrs.fbi.service.AppProperties;
+import org.search.nibrs.fbi.service.service.StagingDataRestClient;
+import org.search.nibrs.stagingdata.model.Submission;
+import org.search.nibrs.stagingdata.model.Violation;
 import org.search.nibrs.xml.XmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 @Aspect
 @Component
 public class SubmissionReqeustAspect {
 	private final Log log = LogFactory.getLog(this.getClass());
 	
-	@Autowired
 	private AppProperties appProperties;
+	
+	@Autowired
+	private StagingDataRestClient stagingDataRestClient;
+	
+	private String responseFilePath;
+	
+	@Autowired
+	public SubmissionReqeustAspect(AppProperties appProperties) {
+		this.appProperties = appProperties; 
+		responseFilePath = appProperties.getNibrsNiemDocumentFolder() + "/response/";
+		
+	    File directorty = new File(responseFilePath); 
+	    if (!directorty.exists()){
+	    	directorty.mkdirs(); 
+	    }
+
+	}
 
 	@Around("execution(* org.search.nibrs.fbi.service.service.SubmissionRequestProcessor.*(..))")
     public void processSubmissionRequest(ProceedingJoinPoint joinPoint) throws Exception {
@@ -46,19 +73,58 @@ public class SubmissionReqeustAspect {
     	String incidentIdentifier = XmlUtils.xPathStringSearch(requestDocument, "(nibrs:Submission/nibrs:Report/nc:Incident/nc:ActivityIdentification/nc:IdentificationID)"
     			+ "|(nibrs:Submission/nibrs:Report[not(nc:Incident)]/j:Arrest/nc:ActivityIdentification/nc:IdentificationID)");
     	log.info("Incident Identifier: " + incidentIdentifier);
-
+    	
+    	Submission submission = new Submission();
+    	submission.setIncidentIdentifier(incidentIdentifier);
     	
     	Exchange exchange = (Exchange)joinPoint.getArgs()[1];
-    	log.info("Aspect exchange messageID: " + exchange.getIn().getMessageId()); 
-    	log.info("Aspect exchange Camel File Name: " + exchange.getIn().getHeader("CamelFileName")); 
+    	log.info("Aspect exchange messageID: " + exchange.getIn().getMessageId());
     	
+    	String fileName = (String) exchange.getIn().getHeader("CamelFileName"); 
+    	log.info("Aspect exchange Camel File Name: " + fileName); 
+    	submission.setRequestFilePath(appProperties.getNibrsNiemDocumentFolder() + "/request/" + fileName);
+    	submission.setSubmissionTimestamp(LocalDateTime.now());
     	try {
     		log.info(" Allowed execution for " + joinPoint);
 			Document returnedDocument = (Document) joinPoint.proceed();
-			log.info("Aspect result: " + XmlUtils.nodeToString(returnedDocument)); 
+			log.info("Aspect result: " + XmlUtils.nodeToString(returnedDocument));
+			
+			submission.setResponseTimestamp(LocalDateTime.now());
+			
+			String responseFileName = responseFilePath + fileName;
+			submission.setResponseFilePath(responseFileName);
+			FileUtils.writeStringToFile(new File(responseFileName), XmlUtils.nodeToString(returnedDocument), "UTF-8");
+			
+			
+			String status = XmlUtils.xPathStringSearch(returnedDocument, "//return/ingestResponse/status");
+			switch (status) {
+			case "ACCEPTED":
+				submission.setAcceptedIndicator(true);
+				break; 
+			case "ERRORS":
+				submission.setAcceptedIndicator(false);
+				
+				Set<Violation> violationSet = new HashSet<>();
+				NodeList violationsNodes = (NodeList) XmlUtils.xPathNodeListSearch(returnedDocument, "//return/ingestResponse/violations");
+				
+				for (int i=0; i<violationsNodes.getLength(); i++) {
+					Node violations = (Node)violationsNodes.item(i);
+					Violation violation = new Violation(); 
+					violation.setViolationCode(XmlUtils.xPathStringSearch(violations, "violationCode"));
+					violation.setViolationLevel(XmlUtils.xPathStringSearch(violations, "violationLevel"));
+					violation.setViolationTimestamp(submission.getResponseTimestamp());
+					violationSet.add(violation);
+				}
+				
+				submission.setViolations(violationSet);
+				break;
+			}
+			
+
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
+    	
+		stagingDataRestClient.persistSubmission(submission);
     }
 }

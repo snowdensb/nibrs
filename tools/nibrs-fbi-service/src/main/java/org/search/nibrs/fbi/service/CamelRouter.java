@@ -16,7 +16,6 @@
 package org.search.nibrs.fbi.service;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.xml.Namespaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,17 +33,16 @@ public class CamelRouter extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         fromF("file:%s/input?idempotent=true&moveFailed=%s/error&move=processed/", 
-        		appProperties.getNibrsNiemDocumentRequestFolder(), appProperties.getNibrsNiemDocumentRequestFolder()).routeId("niemDocumentFileInput")
-	        	.log(LoggingLevel.INFO, "MessageID before calling is ${id}.")
+        		appProperties.getNibrsNiemDocumentFolder(), appProperties.getNibrsNiemDocumentFolder()).routeId("niemDocumentFileInput")
 	        	.log(LoggingLevel.INFO, "File Name before calling is ${in.header.CamelFileName}")
         		.transform().method("submissionRequestProcessor", "processSubmissionRequest")
                 .end();
         
         from("direct:submitNiemDocument").routeId("callFBINibrsNiemService")
-        	.removeHeaders("*")
         	.to("xslt:xsl/SOAPWrapper.xsl")
-        	.log(LoggingLevel.INFO, "Before calling the FBI service")
+        	.wireTap("file:"+ appProperties.getNibrsNiemDocumentFolder() + "/request")
         	.log(LoggingLevel.INFO, "About to send to FBI ${body}")
+        	.removeHeaders("*")
         	.to(appProperties.getNibrsNiemServiceEndpointUrl())
         	.log(LoggingLevel.INFO, "After calling the FBI service")
         	.log(LoggingLevel.INFO, "MessageID after calling is ${id}.")

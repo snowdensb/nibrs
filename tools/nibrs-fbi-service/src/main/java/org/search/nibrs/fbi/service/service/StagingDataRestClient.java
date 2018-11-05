@@ -20,9 +20,10 @@ package org.search.nibrs.fbi.service.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.fbi.service.AppProperties;
+import org.search.nibrs.stagingdata.model.Submission;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -32,7 +33,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class StagingDataRestClient {
 
-	private final Log log = LogFactory.getLog(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private RestTemplate restTemplate;
 	@Autowired
@@ -43,7 +44,13 @@ public class StagingDataRestClient {
 		restTemplate = new RestTemplate(); 
 		restTemplate.setMessageConverters(getMessageConverters());
 	}
-	
+
+	public void persistSubmission(Submission submission) {
+		restTemplate.postForLocation(appProperties.getStagingDataRestServiceBaseUrl() + "submissions", submission);
+		logger.info("Called the %s%s to persist the  ", appProperties.getStagingDataRestServiceBaseUrl(),  "submissions"); 
+	}
+
+
 	
 	private List<HttpMessageConverter<?>> getMessageConverters() {
 	    List<HttpMessageConverter<?>> converters = 
