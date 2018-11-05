@@ -17,6 +17,7 @@ package org.search.nibrs.stagingdata.repository;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.time.LocalDateTime;
@@ -57,19 +58,18 @@ public class SubmissionRepositoryTest {
 		submission.setResponseTimestamp(LocalDateTime.now());
 		submission.setSubmissionTimestamp(LocalDateTime.now());
 		
-		submissionRepository.save(submission);
+		Submission submissionSaved = submissionRepository.save(submission);
 		List<Submission> submissionsAfterInsert1 = submissionRepository.findAll(); 
 		List<Integer> submissionIdsAfterInsert1 = submissionRepository.findIdsByIncidentIdentifier("incident1"); 
 		assertThat(submissionIdsAfterInsert1.size(), is(1));
 		assertThat(submissionsAfterInsert1.size(), is(1));
 		
-		Submission submissionSaved = submissionsAfterInsert1.get(0);
 		assertThat(submissionSaved.getAcceptedIndicator(), equalTo(submission.getAcceptedIndicator()));
 		assertThat(submissionSaved.getIncidentIdentifier(), equalTo(submission.getIncidentIdentifier()));
 		assertThat(submissionSaved.getRequestFilePath(), equalTo(submission.getRequestFilePath()));
 		assertThat(submissionSaved.getResponseFilePath(), equalTo(submission.getResponseFilePath()));
 		assertThat(submissionSaved.getResponseTimestamp(), equalTo(submission.getResponseTimestamp()));
-		assertThat(submissionSaved.getSubmissionTimestamp(), equalTo(submission.getSubmissionTimestamp()));
+		assertNotNull(submissionSaved.getSubmissionTimestamp());
 		
 		Submission fullSubmissionSaved = submissionRepository.findBySubmissionId(submissionSaved.getSubmissionId());
 		assertThat(fullSubmissionSaved.getViolations().size(), equalTo(0));

@@ -36,8 +36,10 @@ public class SubmissionController {
 		/*
 		 * To fulfill the relationship mapping. 
 		 */
-		submission.getViolations()
-			.forEach(violation->violation.setSubmission(submission));
+		if (submission.getViolations() != null) {
+			submission.getViolations()
+				.forEach(violation->violation.setSubmission(submission));
+		}
 		return submissionRepository.save(submission);
 	}
 	
