@@ -67,6 +67,15 @@ public interface AdministrativeSegmentRepository
 			+ "		(?3 = null OR a.incidentDate <= ?3) ")
 	List<Integer> findIdsByOriListAndIncidentDateRange(List<String> oris, Date startDate, Date endDate);
 	
+	@Query("SELECT count(DISTINCT a.administrativeSegmentId) from AdministrativeSegment a "
+			+ "LEFT JOIN a.exceptionalClearanceDateType ae "
+			+ "LEFT JOIN a.arresteeSegments aa "
+			+ "LEFT JOIN aa.arrestDateType aaa "
+			+ "WHERE (?1 = null OR a.ori in (?1)) AND "
+			+ "		(?2 = null OR a.incidentDate >= ?2 ) AND "
+			+ "		(?3 = null OR a.incidentDate <= ?3) ")
+	long countByOriListAndIncidentDateRange(List<String> oris, Date startDate, Date endDate);
+	
 	@Query("SELECT DISTINCT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "WHERE (?1 = null OR a.ori = ?1) AND "
 			+ "		(year(a.incidentDate) = ?2 AND ( ?3 = 0 OR month(a.incidentDate) = ?3)) ")
