@@ -22,13 +22,16 @@ import static org.search.nibrs.xml.NibrsNamespaceContext.Namespace.J;
 import static org.search.nibrs.xml.NibrsNamespaceContext.Namespace.NC;
 import static org.search.nibrs.xml.NibrsNamespaceContext.Namespace.NIBRS;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -36,6 +39,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -58,6 +62,7 @@ import org.search.nibrs.stagingdata.model.RaceOfPersonType;
 import org.search.nibrs.stagingdata.model.ResidentStatusOfPersonType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.SexOfPersonType;
+import org.search.nibrs.stagingdata.model.SubmissionTrigger;
 import org.search.nibrs.stagingdata.model.SuspectedDrugType;
 import org.search.nibrs.stagingdata.model.TypeInjuryType;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
@@ -73,11 +78,14 @@ import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.search.nibrs.stagingdata.model.segment.PropertySegment;
 import org.search.nibrs.stagingdata.model.segment.VictimSegment;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
+import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
+import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentRepository;
 import org.search.nibrs.stagingdata.service.AdministrativeSegmentService;
 import org.search.nibrs.xml.NibrsNamespaceContext;
 import org.search.nibrs.xml.NibrsNamespaceContext.Namespace;
 import org.search.nibrs.xml.XmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -85,12 +93,16 @@ import org.w3c.dom.Element;
 @Service
 public class XmlReportGenerator {
 
-	@SuppressWarnings("unused")
 	private final Log log = LogFactory.getLog(this.getClass());
 	
 	static final NumberFormat MONTH_NUMBER_FORMAT = new DecimalFormat("00");
 	static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 	static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	
+	@Autowired
+	public AdministrativeSegmentRepository administrativeSegmentRepository; 
+	@Autowired
+	public ArrestReportSegmentRepository arrestReportSegmentRepository; 
 
 	@Autowired
 	AdministrativeSegmentService administrativeSegmentService;
@@ -98,7 +110,109 @@ public class XmlReportGenerator {
 	public AgencyRepository agencyRepository; 
 	@Autowired
 	private AppProperties appProperties;
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmssSSS");
 
+	public long countTheIncidents(SubmissionTrigger submissionTrigger) {
+		java.sql.Date startDate = getSqlDate(submissionTrigger.getStartYear(), submissionTrigger.getStartMonth(), true);
+		java.sql.Date endDate = getSqlDate(submissionTrigger.getEndYear(), submissionTrigger.getEndMonth(), false);
+		long groupAIncidentCount = administrativeSegmentRepository.countByOriListAndIncidentDateRange(submissionTrigger.getOris(), startDate, endDate);
+		long groubBArrestReportCount = arrestReportSegmentRepository.countByOriListAndArrestDateRange(submissionTrigger.getOris(), startDate, endDate);
+		return groupAIncidentCount + groubBArrestReportCount; 
+	}
+
+	@Async
+	public void processSubmissionTrigger(SubmissionTrigger submissionTrigger){
+		
+	    File directorty = new File(appProperties.getNibrsNiemDocumentFolder()); 
+	    if (!directorty.exists()){
+	    	directorty.mkdirs(); 
+	    }
+
+	    java.sql.Date startDate = getSqlDate(submissionTrigger.getStartYear(), submissionTrigger.getStartMonth(), true);
+	    java.sql.Date endDate = getSqlDate(submissionTrigger.getEndYear(), submissionTrigger.getEndMonth(), false);
+	    
+	    writeGroupAIncidentReport(submissionTrigger.getOris(), startDate, endDate);
+	    writeGroupBIncidentReport(submissionTrigger.getOris(), startDate, endDate);
+	}
+	
+	private void writeGroupAIncidentReport(List<String> oris, java.sql.Date startDate, java.sql.Date endDate) {
+		
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriListAndIncidentDateRange(oris, startDate, endDate);
+		
+		for (Integer administrativeSegmentId : ids) {
+			log.info("Generating group A report for pkId " + administrativeSegmentId);
+			AdministrativeSegment administrativeSegment = administrativeSegmentRepository.findByAdministrativeSegmentId(administrativeSegmentId);
+			
+			try {
+				Document document = this.createGroupAIncidentReport(administrativeSegment);
+				
+				String fileName = appProperties.getNibrsNiemDocumentFolder() + "/GroupAIncident" + administrativeSegment.getIncidentNumber() + "-" + LocalDateTime.now().format(formatter) + ".xml";
+				FileUtils.writeStringToFile(new File(fileName), XmlUtils.nodeToString(document), "UTF-8");
+			}
+			catch (Exception e) {
+				log.error("Failed to generate and write the report for GroupA Incident:\n " + administrativeSegment);
+				log.error(e.getMessage());
+			}
+		}
+	}
+	
+	public void writeGroupBIncidentReport(List<String> oris, java.sql.Date startDate, java.sql.Date endDate){
+		
+		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriListAndArrestDateRange(oris, startDate, endDate);
+		
+		for (Integer arrestReportSegmentId : ids) {
+			log.info("Generating arrest report for pkId " + arrestReportSegmentId);
+			
+			ArrestReportSegment arrestReportSegment = arrestReportSegmentRepository.findByArrestReportSegmentId(arrestReportSegmentId);
+			
+			try {
+				Document document = createGroupBArrestReport(arrestReportSegment);
+				
+				String fileName = appProperties.getNibrsNiemDocumentFolder() + "/GroupBArrestReport" + arrestReportSegment.getArrestTransactionNumber() + "-" + LocalDateTime.now().format(formatter) + ".xml";
+				
+				FileUtils.writeStringToFile(new File(fileName), XmlUtils.nodeToString(document), "UTF-8");			
+			}
+			catch (Exception e) {
+				log.error("Failed to generate and write the report for Group B Arrest Report:\n " + arrestReportSegment);
+				log.error(e.getMessage());
+			}
+		}
+	}
+
+	private java.sql.Date getSqlDate(Integer year, Integer month, boolean isStartDate ) {
+		java.sql.Date date = null;
+		if (year != null && year > 0) {
+			LocalDate localDate = null;;
+			if (isValidMonth(month)) {
+				if (isStartDate) {
+					localDate = LocalDate.of(year, month, 1);
+				}
+				else {
+					if (month < 12) {
+						localDate = LocalDate.of(year, month+1, 1).minusDays(1);
+					}
+					else {
+						localDate = LocalDate.of(year, 12, 31);
+					}
+				}
+			}
+			else {
+				if (isStartDate) {
+					localDate = LocalDate.of(year, 1, 1);
+				}
+				else {
+					localDate = LocalDate.of(year, 12, 31);
+				}
+			}
+			date = java.sql.Date.valueOf(localDate);
+		}
+		
+		return date;
+	}
+
+	private boolean isValidMonth(Integer month) {
+		return month != null && month > 0 && month <=12;
+	}
 
 	public Document createGroupAIncidentReport(AdministrativeSegment administrativeSegment) throws ParserConfigurationException {
 		Document document = XmlUtils.createNewDocument();

@@ -22,9 +22,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties("app")
+@ConfigurationProperties("staging.data")
 public class AppProperties {
-
+	
+	private String nibrsNiemDocumentFolder = "/tmp/nibrs/niemSubmission/input";
     private String submittingAgencyOri = "SUBORI123";
 	private Map<String, String> nonNumericAgeCodeMapping = new HashMap<>();
 
@@ -46,6 +47,14 @@ public class AppProperties {
 
 	public Map<String, String> getNonNumericAgeCodeMapping() {
 		return nonNumericAgeCodeMapping;
+	}
+
+	public String getNibrsNiemDocumentFolder() {
+		return nibrsNiemDocumentFolder;
+	}
+
+	public void setNibrsNiemDocumentFolder(String nibrsNiemDocumentFolder) {
+		this.nibrsNiemDocumentFolder = nibrsNiemDocumentFolder;
 	}
 
 }
