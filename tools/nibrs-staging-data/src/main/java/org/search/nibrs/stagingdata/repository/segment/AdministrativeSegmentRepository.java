@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.repository.segment;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -62,12 +63,9 @@ public interface AdministrativeSegmentRepository
 			+ "LEFT JOIN a.arresteeSegments aa "
 			+ "LEFT JOIN aa.arrestDateType aaa "
 			+ "WHERE (?1 = null OR a.ori in (?1)) AND "
-			+ "		(?2 = null OR year(a.incidentDate) >= ?2 ) AND "
-			+ "		(?3 = null OR month(a.incidentDate) >= ?3) AND  "
-			+ "		(?4 = null OR year(a.incidentDate) <= ?4)  AND "
-			+ "     (?5 = null OR month(a.incidentDate) <= ?5) ")
-	List<Integer> findIdsByOriListAndIncidentDateRange(List<String> oris, Integer startYear, 
-			Integer startMonth, Integer endYear, Integer endMonth);
+			+ "		(?2 = null OR a.incidentDate >= ?2 ) AND "
+			+ "		(?3 = null OR a.incidentDate <= ?3) ")
+	List<Integer> findIdsByOriListAndIncidentDateRange(List<String> oris, Date startDate, Date endDate);
 	
 	@Query("SELECT DISTINCT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "WHERE (?1 = null OR a.ori = ?1) AND "

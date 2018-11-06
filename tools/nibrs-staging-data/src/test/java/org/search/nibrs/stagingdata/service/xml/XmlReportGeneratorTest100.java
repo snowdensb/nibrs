@@ -40,10 +40,6 @@ import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentRepository;
-import org.search.nibrs.stagingdata.service.AdministrativeSegmentFactory;
-import org.search.nibrs.stagingdata.service.ArrestReportSegmentFactory;
-import org.search.nibrs.stagingdata.service.ArrestReportService;
-import org.search.nibrs.stagingdata.service.GroupAIncidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -61,14 +57,6 @@ public class XmlReportGeneratorTest100 {
 	public AdministrativeSegmentRepository administrativeSegmentRepository; 
 	@Autowired
 	public ArrestReportSegmentRepository arrestReportSegmentRepository; 
-	@Autowired
-	public AdministrativeSegmentFactory administrativeSegmentFactory; 
-	@Autowired
-	public ArrestReportSegmentFactory arrestReportSegmentFactory; 
-	@Autowired
-	public GroupAIncidentService groupAIncidentService;
-	@Autowired
-	public ArrestReportService arrestReportService;
 	@Autowired
 	public XmlReportGenerator xmlReportGenerator;
 

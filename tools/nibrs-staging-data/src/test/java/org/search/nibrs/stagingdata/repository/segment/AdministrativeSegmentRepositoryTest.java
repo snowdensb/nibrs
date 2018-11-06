@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -84,7 +85,7 @@ public class AdministrativeSegmentRepositoryTest {
 
 		administrativeSegmentRepository.findAll().forEach(i->log.info(i.getIncidentNumber()));
 		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
-				.findIdsByOriListAndIncidentDateRange(Arrays.asList("WA1234567"), 2016, 5, 2016, 5);
+				.findIdsByOriListAndIncidentDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)));
 		assertThat(administrativeSegmentIds.size(), equalTo(3));
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAll(administrativeSegmentIds);

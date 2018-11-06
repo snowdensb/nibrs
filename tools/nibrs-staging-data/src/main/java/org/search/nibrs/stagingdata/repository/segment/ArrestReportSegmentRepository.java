@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.repository.segment;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -44,12 +45,10 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 
 	@Query("SELECT DISTINCT a.arrestReportSegmentId from ArrestReportSegment a "
 			+ "WHERE (?1 = null OR a.ori = ?1) AND "
-			+ "		(?2 = null OR year(a.arrestDate) >= ?2)  AND "
-			+ "		(?3 = null OR month(a.arrestDate) >= ?3)  AND "
-			+ "		(?4 = null OR year(a.arrestDate) <= ?4)  AND "
-			+ "		(?5 = null OR month(a.arrestDate) <= ?5) ")
-	List<Integer> findIdsByOriListAndArrestDateRange(List<String> ori, Integer startYear, 
-			Integer startMonth, Integer endYear, Integer endMonth);
+			+ "		(?2 = null OR a.arrestDate >= ?2) AND "
+			+ "		(?3 = null OR a.arrestDate <= ?3) ")
+	List<Integer> findIdsByOriListAndArrestDateRange(List<String> ori, Date startDate, 
+			Date endDate);
 	
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)
 	List<ArrestReportSegment> findAll(Iterable<Integer> ids);
