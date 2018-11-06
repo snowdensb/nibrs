@@ -42,6 +42,15 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 			+ "		(year(a.arrestDate) = ?2 AND ( ?3 = 0 OR month(a.arrestDate) = ?3)) ")
 	List<Integer> findIdsByOriAndArrestDate(String ori, Integer year, Integer month);
 
+	@Query("SELECT DISTINCT a.arrestReportSegmentId from ArrestReportSegment a "
+			+ "WHERE (?1 = null OR a.ori = ?1) AND "
+			+ "		(?2 = null OR year(a.arrestDate) >= ?2)  AND "
+			+ "		(?3 = null OR month(a.arrestDate) >= ?3)  AND "
+			+ "		(?4 = null OR year(a.arrestDate) <= ?4)  AND "
+			+ "		(?5 = null OR month(a.arrestDate) <= ?5) ")
+	List<Integer> findIdsByOriListAndArrestDateRange(List<String> ori, Integer startYear, 
+			Integer startMonth, Integer endYear, Integer endMonth);
+	
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)
 	List<ArrestReportSegment> findAll(Iterable<Integer> ids);
 }

@@ -58,6 +58,18 @@ public interface AdministrativeSegmentRepository
 	List<Integer> findIdsByOriAndClearanceDate(String ori, Integer year, Integer month);
 	
 	@Query("SELECT DISTINCT a.administrativeSegmentId from AdministrativeSegment a "
+			+ "LEFT JOIN a.exceptionalClearanceDateType ae "
+			+ "LEFT JOIN a.arresteeSegments aa "
+			+ "LEFT JOIN aa.arrestDateType aaa "
+			+ "WHERE (?1 = null OR a.ori in (?1)) AND "
+			+ "		(?2 = null OR year(a.incidentDate) >= ?2 ) AND "
+			+ "		(?3 = null OR month(a.incidentDate) >= ?3) AND  "
+			+ "		(?4 = null OR year(a.incidentDate) <= ?4)  AND "
+			+ "     (?5 = null OR month(a.incidentDate) <= ?5) ")
+	List<Integer> findIdsByOriListAndIncidentDateRange(List<String> oris, Integer startYear, 
+			Integer startMonth, Integer endYear, Integer endMonth);
+	
+	@Query("SELECT DISTINCT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "WHERE (?1 = null OR a.ori = ?1) AND "
 			+ "		(year(a.incidentDate) = ?2 AND ( ?3 = 0 OR month(a.incidentDate) = ?3)) ")
 	List<Integer> findIdsByOriAndIncidentDate(String ori, Integer year, Integer month);

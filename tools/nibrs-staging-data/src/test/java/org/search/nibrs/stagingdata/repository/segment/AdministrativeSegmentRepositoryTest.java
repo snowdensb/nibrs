@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +42,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class AdministrativeSegmentRepositoryTest {
+	private static final Log log = LogFactory.getLog(AdministrativeSegmentRepositoryTest.class);
 
 	@Autowired
 	public AdministrativeSegmentRepository administrativeSegmentRepository; 
@@ -76,6 +79,22 @@ public class AdministrativeSegmentRepositoryTest {
 
 	}
 		
+	@Test
+	public void testFindDistinctByOriListAndIncidentDateRange() {
+
+		administrativeSegmentRepository.findAll().forEach(i->log.info(i.getIncidentNumber()));
+		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
+				.findIdsByOriListAndIncidentDateRange(Arrays.asList("WA1234567"), 2016, 5, 2016, 5);
+		assertThat(administrativeSegmentIds.size(), equalTo(3));
+		
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAll(administrativeSegmentIds);
+		List<String> incidentNumbers = administrativeSegments.stream()
+				.map(AdministrativeSegment::getIncidentNumber)
+				.collect(Collectors.toList()); 
+		assertTrue(incidentNumbers.containsAll(Arrays.asList("12345678", "54236732", "12345679")));
+		
+	}
+	
 	@Test
 	public void testFindIdsByOriAndClearanceDateAndFindAll() {
 		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
