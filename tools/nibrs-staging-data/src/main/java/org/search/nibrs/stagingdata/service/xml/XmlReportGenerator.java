@@ -26,7 +26,6 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -113,10 +112,14 @@ public class XmlReportGenerator {
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmssSSS");
 
 	public long countTheIncidents(SubmissionTrigger submissionTrigger) {
-		java.sql.Date startDate = getSqlDate(submissionTrigger.getStartYear(), submissionTrigger.getStartMonth(), true);
-		java.sql.Date endDate = getSqlDate(submissionTrigger.getEndYear(), submissionTrigger.getEndMonth(), false);
-		long groupAIncidentCount = administrativeSegmentRepository.countByOriListAndIncidentDateRange(submissionTrigger.getOris(), startDate, endDate);
-		long groubBArrestReportCount = arrestReportSegmentRepository.countByOriListAndArrestDateRange(submissionTrigger.getOris(), startDate, endDate);
+		long groupAIncidentCount = administrativeSegmentRepository
+				.countByOriListAndIncidentDateRange(submissionTrigger.getOris(), 
+						submissionTrigger.getStartDate(), 
+						submissionTrigger.getEndDate());
+		long groubBArrestReportCount = arrestReportSegmentRepository
+				.countByOriListAndArrestDateRange(submissionTrigger.getOris(), 
+						submissionTrigger.getStartDate(), 
+						submissionTrigger.getEndDate());
 		return groupAIncidentCount + groubBArrestReportCount; 
 	}
 
@@ -128,11 +131,8 @@ public class XmlReportGenerator {
 	    	directorty.mkdirs(); 
 	    }
 
-	    java.sql.Date startDate = getSqlDate(submissionTrigger.getStartYear(), submissionTrigger.getStartMonth(), true);
-	    java.sql.Date endDate = getSqlDate(submissionTrigger.getEndYear(), submissionTrigger.getEndMonth(), false);
-	    
-	    writeGroupAIncidentReport(submissionTrigger.getOris(), startDate, endDate);
-	    writeGroupBIncidentReport(submissionTrigger.getOris(), startDate, endDate);
+	    writeGroupAIncidentReport(submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate());
+	    writeGroupBIncidentReport(submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate());
 	}
 	
 	private void writeGroupAIncidentReport(List<String> oris, java.sql.Date startDate, java.sql.Date endDate) {
@@ -177,41 +177,6 @@ public class XmlReportGenerator {
 				log.error(e.getMessage());
 			}
 		}
-	}
-
-	private java.sql.Date getSqlDate(Integer year, Integer month, boolean isStartDate ) {
-		java.sql.Date date = null;
-		if (year != null && year > 0) {
-			LocalDate localDate = null;;
-			if (isValidMonth(month)) {
-				if (isStartDate) {
-					localDate = LocalDate.of(year, month, 1);
-				}
-				else {
-					if (month < 12) {
-						localDate = LocalDate.of(year, month+1, 1).minusDays(1);
-					}
-					else {
-						localDate = LocalDate.of(year, 12, 31);
-					}
-				}
-			}
-			else {
-				if (isStartDate) {
-					localDate = LocalDate.of(year, 1, 1);
-				}
-				else {
-					localDate = LocalDate.of(year, 12, 31);
-				}
-			}
-			date = java.sql.Date.valueOf(localDate);
-		}
-		
-		return date;
-	}
-
-	private boolean isValidMonth(Integer month) {
-		return month != null && month > 0 && month <=12;
 	}
 
 	public Document createGroupAIncidentReport(AdministrativeSegment administrativeSegment) throws ParserConfigurationException {

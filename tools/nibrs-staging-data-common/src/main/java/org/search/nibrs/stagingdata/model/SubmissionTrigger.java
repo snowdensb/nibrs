@@ -15,11 +15,15 @@
  */
 package org.search.nibrs.stagingdata.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class SubmissionTrigger {
 	private List<String> oris; 
 	private Integer startYear; 
@@ -69,6 +73,45 @@ public class SubmissionTrigger {
 
 	public void setEndMonth(Integer endMonth) {
 		this.endMonth = endMonth;
+	}
+
+	public java.sql.Date getStartDate() {
+		java.sql.Date date = null;
+		if (startYear != null && startYear > 0) {
+			LocalDate localDate = LocalDate.of(startYear, 1, 1);
+			
+			if (isValidMonth(startMonth)) {
+					localDate = LocalDate.of(startYear, startMonth, 1);
+			}
+			date = java.sql.Date.valueOf(localDate);
+		}
+		
+		return date;
+	}
+	
+	public java.sql.Date getEndDate() {
+		
+		java.sql.Date date = null;
+		if (endYear != null && endYear > 0) {
+			LocalDate localDate = LocalDate.of(endYear, 12, 31);
+			
+			if (isValidMonth(endMonth)) {
+					if (endMonth < 12) {
+						localDate = LocalDate.of(endYear, endMonth+1, 1).minusDays(1);
+					}
+					else {
+						localDate = LocalDate.of(endYear, 12, 31);
+					}
+			}
+			
+			date = java.sql.Date.valueOf(localDate);
+		}
+		
+		return date;
+	}
+	
+	private boolean isValidMonth(Integer month) {
+		return month != null && month > 0 && month <=12;
 	}
 
 }
