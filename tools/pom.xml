@@ -32,11 +32,18 @@
   <modules>
  	  <module>nibrs-common</module>
  	  <module>nibrs-validate-common</module>
+ 	   <module>nibrs-staging-data-common</module>
 	  <module>nibrs-flatfile</module>
 	  <module>nibrs-resources</module>
+	  <module>nibrs-route</module>
 	  <module>nibrs-validation</module>
 	  <module>nibrs-xmlfile</module>
       <module>nibrs-apps</module>
+      <module>nibrs-fbi-service</module>
+      <module>nibrs-staging-data</module>
+      <module>nibrs-summary-report</module> 
+<!--       <module>nibrs-ndex-conversion</module> -->
+	  <module>nibrs-xml</module>
   </modules>
 
 </project>
