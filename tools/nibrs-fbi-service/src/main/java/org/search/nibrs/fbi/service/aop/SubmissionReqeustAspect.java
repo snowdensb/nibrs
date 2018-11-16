@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.apache.camel.Exchange;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -97,7 +98,7 @@ public class SubmissionReqeustAspect {
 			
 			
 			String status = XmlUtils.xPathStringSearch(returnedDocument, "//return/ingestResponse/status");
-			switch (status) {
+			switch (StringUtils.trimToEmpty(status)) {
 			case "ACCEPTED":
 				submission.setAcceptedIndicator(true);
 				break; 
