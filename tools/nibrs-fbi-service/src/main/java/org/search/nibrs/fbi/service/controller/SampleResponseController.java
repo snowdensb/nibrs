@@ -38,8 +38,16 @@ public class SampleResponseController {
 	}
 	
 	@RequestMapping(value="/response/error")
+	@ResponseBody
 	public String getSampleErrorResponse() throws Exception{
 		Document document = XmlUtils.parseFileToDocument(new File("src/main/resources/xmlInstances/NIBRS-Error-Response.xml"));
+		return XmlUtils.nodeToString(document);
+	}
+	
+	@RequestMapping(value="/response/warning" )
+	@ResponseBody
+	public String getSampleWarningResponse() throws Exception{
+		Document document = XmlUtils.parseFileToDocument(new File("src/main/resources/xmlInstances/NIBRS-Warnings-Response.xml"));
 		return XmlUtils.nodeToString(document);
 	}
 	

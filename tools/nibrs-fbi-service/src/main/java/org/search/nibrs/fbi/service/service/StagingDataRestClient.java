@@ -46,6 +46,7 @@ public class StagingDataRestClient {
 	}
 
 	public void persistSubmission(Submission submission) {
+		logger.debug("about to persist submission " + submission);
 		restTemplate.postForLocation(appProperties.getStagingDataRestServiceBaseUrl() + "submissions", submission);
 		logger.info("Called the %s%s to persist the  ", appProperties.getStagingDataRestServiceBaseUrl(),  "submissions"); 
 	}

@@ -105,20 +105,15 @@ public class SubmissionReqeustAspect {
 			case "ERRORS":
 				submission.setAcceptedIndicator(false);
 				
-				Set<Violation> violationSet = new HashSet<>();
-				NodeList violationsNodes = (NodeList) XmlUtils.xPathNodeListSearch(returnedDocument, "//return/ingestResponse/violations");
-				
-				for (int i=0; i<violationsNodes.getLength(); i++) {
-					Node violations = (Node)violationsNodes.item(i);
-					Violation violation = new Violation(); 
-					violation.setViolationCode(XmlUtils.xPathStringSearch(violations, "violationCode"));
-					violation.setViolationLevel(XmlUtils.xPathStringSearch(violations, "violationLevel"));
-					violation.setViolationTimestamp(submission.getResponseTimestamp());
-					violationSet.add(violation);
-				}
-				
-				submission.setViolations(violationSet);
+				processViolations(submission, returnedDocument);
 				break;
+			case "WARNINGS":
+				submission.setAcceptedIndicator(true);
+				processViolations(submission, returnedDocument);
+				
+				break;
+			default:  //did not get a response back from the web service
+				submission.setAcceptedIndicator(false);
 			}
 			
 
@@ -128,4 +123,20 @@ public class SubmissionReqeustAspect {
     	
 		stagingDataRestClient.persistSubmission(submission);
     }
+
+	private void processViolations(Submission submission, Document returnedDocument) {
+		Set<Violation> violationSet = new HashSet<>();
+		NodeList violationsNodes = (NodeList) XmlUtils.xPathNodeListSearch(returnedDocument, "//return/ingestResponse/violations");
+		
+		for (int i=0; i<violationsNodes.getLength(); i++) {
+			Node violations = (Node)violationsNodes.item(i);
+			Violation violation = new Violation(); 
+			violation.setViolationCode(XmlUtils.xPathStringSearch(violations, "violationCode"));
+			violation.setViolationLevel(XmlUtils.xPathStringSearch(violations, "violationLevel"));
+			violation.setViolationTimestamp(submission.getResponseTimestamp());
+			violationSet.add(violation);
+		}
+		
+		submission.setViolations(violationSet);
+	}
 }
