@@ -18,7 +18,7 @@
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:output method="xml" indent="yes" version="1.0" encoding="UTF-16" standalone="yes" />
+	<xsl:output method="xml" indent="yes" version="1.0" encoding="UTF-8"/>
 	<xsl:template match="/">
 		<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.nibrs.ucr.cjis.fbi.gov/">
 			<soap:Header/>
