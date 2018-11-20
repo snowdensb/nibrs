@@ -44,14 +44,18 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 	List<Integer> findIdsByOriAndArrestDate(String ori, Integer year, Integer month);
 
 	@Query("SELECT DISTINCT a.arrestReportSegmentId from ArrestReportSegment a "
-			+ "WHERE (?1 = null OR a.ori = ?1) AND "
+			+ "INNER JOIN a.ucrOffenseCodeType u "
+			+ "WHERE u.nibrsCode != '90I' AND "
+			+ "		(?1 = null OR a.ori in (?1)) AND "
 			+ "		(?2 = null OR a.arrestDate >= ?2) AND "
 			+ "		(?3 = null OR a.arrestDate <= ?3) ")
 	List<Integer> findIdsByOriListAndArrestDateRange(List<String> ori, Date startDate, 
 			Date endDate);
 	
 	@Query("SELECT count(DISTINCT a.arrestReportSegmentId) from ArrestReportSegment a "
-			+ "WHERE (?1 = null OR a.ori = ?1) AND "
+			+ "INNER JOIN a.ucrOffenseCodeType u "
+			+ "WHERE u.nibrsCode != '90I' AND "
+			+ "		(?1 = null OR a.ori in (?1)) AND "
 			+ "		(?2 = null OR a.arrestDate >= ?2) AND "
 			+ "		(?3 = null OR a.arrestDate <= ?3) ")
 	long countByOriListAndArrestDateRange(List<String> oris, Date startDate, 
