@@ -41,6 +41,8 @@ public class Submission {
 	private String requestFilePath;
 	private String responseFilePath;
 	
+	private String faultCode; 
+	private String faultDescription; 
 	private Boolean acceptedIndicator;
 	private LocalDateTime submissionTimestamp;
 	private LocalDateTime responseTimestamp;
@@ -108,12 +110,37 @@ public class Submission {
 		this.responseTimestamp = responseTimestamp;
 	}
 
+	public Set<Violation> getViolations() {
+		return violations;
+	}
+
+	public void setViolations(Set<Violation> violations) {
+		this.violations = violations;
+	}
+
+	public String getFaultCode() {
+		return faultCode;
+	}
+
+	public void setFaultCode(String faultCode) {
+		this.faultCode = faultCode;
+	}
+
+	public String getFaultDescription() {
+		return faultDescription;
+	}
+
+	public void setFaultDescription(String faultDescription) {
+		this.faultDescription = faultDescription;
+	}
+
 	@Override
 	public String toString() {
 		return "Submission [submissionId=" + submissionId + ", incidentIdentifier=" + incidentIdentifier
-				+ ", requestFilePath=" + requestFilePath + ", responseFilePath=" + responseFilePath
-				+ ", acceptedIndicator=" + acceptedIndicator + ", submissionTimestamp=" + submissionTimestamp
-				+ ", responseTimestamp=" + responseTimestamp + ", violations=" + getViolations() + "]";
+				+ ", requestFilePath=" + requestFilePath + ", responseFilePath=" + responseFilePath + ", faultCode="
+				+ faultCode + ", faultDescription=" + faultDescription + ", acceptedIndicator=" + acceptedIndicator
+				+ ", submissionTimestamp=" + submissionTimestamp + ", responseTimestamp=" + responseTimestamp
+				+ ", violations=" + violations + "]";
 	}
 
 	@Override
@@ -121,6 +148,8 @@ public class Submission {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((acceptedIndicator == null) ? 0 : acceptedIndicator.hashCode());
+		result = prime * result + ((faultCode == null) ? 0 : faultCode.hashCode());
+		result = prime * result + ((faultDescription == null) ? 0 : faultDescription.hashCode());
 		result = prime * result + ((incidentIdentifier == null) ? 0 : incidentIdentifier.hashCode());
 		result = prime * result + ((requestFilePath == null) ? 0 : requestFilePath.hashCode());
 		result = prime * result + ((responseFilePath == null) ? 0 : responseFilePath.hashCode());
@@ -143,6 +172,16 @@ public class Submission {
 			if (other.acceptedIndicator != null)
 				return false;
 		} else if (!acceptedIndicator.equals(other.acceptedIndicator))
+			return false;
+		if (faultCode == null) {
+			if (other.faultCode != null)
+				return false;
+		} else if (!faultCode.equals(other.faultCode))
+			return false;
+		if (faultDescription == null) {
+			if (other.faultDescription != null)
+				return false;
+		} else if (!faultDescription.equals(other.faultDescription))
 			return false;
 		if (incidentIdentifier == null) {
 			if (other.incidentIdentifier != null)
@@ -174,20 +213,12 @@ public class Submission {
 				return false;
 		} else if (!submissionTimestamp.equals(other.submissionTimestamp))
 			return false;
-		if (getViolations() == null) {
-			if (other.getViolations() != null)
+		if (violations == null) {
+			if (other.violations != null)
 				return false;
-		} else if (!getViolations().equals(other.getViolations()))
+		} else if (!violations.equals(other.violations))
 			return false;
 		return true;
-	}
-
-	public Set<Violation> getViolations() {
-		return violations;
-	}
-
-	public void setViolations(Set<Violation> violations) {
-		this.violations = violations;
 	}
 
 }

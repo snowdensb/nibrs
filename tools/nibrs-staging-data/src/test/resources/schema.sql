@@ -26,19 +26,21 @@ Use search_nibrs_staging;
 
 
 CREATE TABLE Submission (
-                SubmissionID INTEGER NOT NULL AUTO_INCREMENT,
+                SubmissionID IDENTITY NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
                 RequestFilePath VARCHAR(300) NOT NULL,
                 ResponseFilePath VARCHAR(300),
                 AcceptedIndicator BOOLEAN DEFAULT false NOT NULL,
                 ResponseTimestamp TIMESTAMP,
+                FaultCode VARCHAR(100),
+                FaultDescription VARCHAR(500),
                 SubmissionTimestamp TIMESTAMP NOT NULL,
                 CONSTRAINT SubmissionID PRIMARY KEY (SubmissionID)
 );
 
 
 CREATE TABLE Violation (
-                ViolationID INTEGER NOT NULL AUTO_INCREMENT,
+                ViolationID IDENTITY NOT NULL,
                 SubmissionID INTEGER NOT NULL,
                 ViolationCode VARCHAR(3) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
@@ -48,7 +50,7 @@ CREATE TABLE Violation (
 
 
 CREATE TABLE CargoTheftIndicatorType (
-                CargoTheftIndicatorTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                CargoTheftIndicatorTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(7) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -58,7 +60,7 @@ CREATE TABLE CargoTheftIndicatorType (
 
 
 CREATE TABLE AgencyType (
-                AgencyTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                AgencyTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(80) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -68,7 +70,7 @@ CREATE TABLE AgencyType (
 
 
 CREATE TABLE DateType (
-                DateTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                DateTypeID IDENTITY NOT NULL,
                 CalendarDate DATE NOT NULL,
                 Year INTEGER NOT NULL,
                 YearLabel CHAR(4) NOT NULL,
@@ -85,7 +87,7 @@ CREATE TABLE DateType (
 
 
 CREATE TABLE Agency (
-                AgencyID INTEGER NOT NULL AUTO_INCREMENT,
+                AgencyID IDENTITY NOT NULL,
                 AgencyORI CHAR(9) NOT NULL,
                 AgencyName VARCHAR(60) NOT NULL,
                 AgencyTypeID INTEGER NOT NULL,
@@ -97,7 +99,7 @@ CREATE TABLE Agency (
 
 
 CREATE TABLE OfficerAssignmentTypeType (
-                OfficerAssignmentTypeTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                OfficerAssignmentTypeTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(100) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -107,7 +109,7 @@ CREATE TABLE OfficerAssignmentTypeType (
 
 
 CREATE TABLE OfficerActivityCircumstanceType (
-                OfficerActivityCircumstanceTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                OfficerActivityCircumstanceTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(75) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -117,7 +119,7 @@ CREATE TABLE OfficerActivityCircumstanceType (
 
 
 CREATE TABLE TypeOfWeaponForceInvolvedType (
-                TypeOfWeaponForceInvolvedTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                TypeOfWeaponForceInvolvedTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(30) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -127,7 +129,7 @@ CREATE TABLE TypeOfWeaponForceInvolvedType (
 
 
 CREATE TABLE SuspectedDrugTypeType (
-                SuspectedDrugTypeTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                SuspectedDrugTypeTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(32) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -137,7 +139,7 @@ CREATE TABLE SuspectedDrugTypeType (
 
 
 CREATE TABLE BiasMotivationType (
-                BiasMotivationTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                BiasMotivationTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(60) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -148,7 +150,7 @@ CREATE TABLE BiasMotivationType (
 
 
 CREATE TABLE MethodOfEntryType (
-                MethodOfEntryTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                MethodOfEntryTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(10) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -158,7 +160,7 @@ CREATE TABLE MethodOfEntryType (
 
 
 CREATE TABLE LocationTypeType (
-                LocationTypeTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                LocationTypeTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(45) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -168,7 +170,7 @@ CREATE TABLE LocationTypeType (
 
 
 CREATE TABLE ClearedExceptionallyType (
-                ClearedExceptionallyTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                ClearedExceptionallyTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(220) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -178,7 +180,7 @@ CREATE TABLE ClearedExceptionallyType (
 
 
 CREATE TABLE DispositionOfArresteeUnder18Type (
-                DispositionOfArresteeUnder18TypeID INTEGER NOT NULL AUTO_INCREMENT,
+                DispositionOfArresteeUnder18TypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(30) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -188,7 +190,7 @@ CREATE TABLE DispositionOfArresteeUnder18Type (
 
 
 CREATE TABLE ArresteeWasArmedWithType (
-                ArresteeWasArmedWithTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                ArresteeWasArmedWithTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(30) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -198,7 +200,7 @@ CREATE TABLE ArresteeWasArmedWithType (
 
 
 CREATE TABLE MultipleArresteeSegmentsIndicatorType (
-                MultipleArresteeSegmentsIndicatorTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                MultipleArresteeSegmentsIndicatorTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(15) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -208,7 +210,7 @@ CREATE TABLE MultipleArresteeSegmentsIndicatorType (
 
 
 CREATE TABLE TypeOfArrestType (
-                TypeOfArrestTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                TypeOfArrestTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(20) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -218,7 +220,7 @@ CREATE TABLE TypeOfArrestType (
 
 
 CREATE TABLE AdditionalJustifiableHomicideCircumstancesType (
-                AdditionalJustifiableHomicideCircumstancesTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                AdditionalJustifiableHomicideCircumstancesTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(80) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -228,7 +230,7 @@ CREATE TABLE AdditionalJustifiableHomicideCircumstancesType (
 
 
 CREATE TABLE TypeInjuryType (
-                TypeInjuryTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                TypeInjuryTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(25) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -238,7 +240,7 @@ CREATE TABLE TypeInjuryType (
 
 
 CREATE TABLE ResidentStatusOfPersonType (
-                ResidentStatusOfPersonTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                ResidentStatusOfPersonTypeID IDENTITY NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
                 NIBRSDescription VARCHAR(25) NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
@@ -248,7 +250,7 @@ CREATE TABLE ResidentStatusOfPersonType (
 
 
 CREATE TABLE EthnicityOfPersonType (
-                EthnicityOfPersonTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                EthnicityOfPersonTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(25) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -258,7 +260,7 @@ CREATE TABLE EthnicityOfPersonType (
 
 
 CREATE TABLE TypeOfVictimType (
-                TypeOfVictimTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                TypeOfVictimTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(75) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -268,7 +270,7 @@ CREATE TABLE TypeOfVictimType (
 
 
 CREATE TABLE TypeDrugMeasurementType (
-                TypeDrugMeasurementTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                TypeDrugMeasurementTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(20) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -278,7 +280,7 @@ CREATE TABLE TypeDrugMeasurementType (
 
 
 CREATE TABLE PropertyDescriptionType (
-                PropertyDescriptionTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                PropertyDescriptionTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(70) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -288,7 +290,7 @@ CREATE TABLE PropertyDescriptionType (
 
 
 CREATE TABLE RaceOfPersonType (
-                RaceOfPersonTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                RaceOfPersonTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(42) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -298,7 +300,7 @@ CREATE TABLE RaceOfPersonType (
 
 
 CREATE TABLE SexOfPersonType (
-                SexOfPersonTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                SexOfPersonTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(35) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -308,7 +310,7 @@ CREATE TABLE SexOfPersonType (
 
 
 CREATE TABLE TypeOfCriminalActivityType (
-                TypeOfCriminalActivityTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                TypeOfCriminalActivityTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(80) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -318,7 +320,7 @@ CREATE TABLE TypeOfCriminalActivityType (
 
 
 CREATE TABLE OffenderSuspectedOfUsingType (
-                OffenderSuspectedOfUsingTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                OffenderSuspectedOfUsingTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(20) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -328,7 +330,7 @@ CREATE TABLE OffenderSuspectedOfUsingType (
 
 
 CREATE TABLE SegmentActionTypeType (
-                SegmentActionTypeTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                SegmentActionTypeTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(25) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -338,7 +340,7 @@ CREATE TABLE SegmentActionTypeType (
 
 
 CREATE TABLE VictimOffenderRelationshipType (
-                VictimOffenderRelationshipTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                VictimOffenderRelationshipTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
                 StateDescription VARCHAR(50) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
@@ -348,7 +350,7 @@ CREATE TABLE VictimOffenderRelationshipType (
 
 
 CREATE TABLE AggravatedAssaultHomicideCircumstancesType (
-                AggravatedAssaultHomicideCircumstancesTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                AggravatedAssaultHomicideCircumstancesTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(3) NOT NULL,
                 StateDescription VARCHAR(55) NOT NULL,
                 NIBRSCode VARCHAR(3) NOT NULL,
@@ -358,7 +360,7 @@ CREATE TABLE AggravatedAssaultHomicideCircumstancesType (
 
 
 CREATE TABLE TypePropertyLossEtcType (
-                TypePropertyLossEtcTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                TypePropertyLossEtcTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
                 StateDescription VARCHAR(85) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
@@ -368,7 +370,7 @@ CREATE TABLE TypePropertyLossEtcType (
 
 
 CREATE TABLE UCROffenseCodeType (
-                UCROffenseCodeTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                UCROffenseCodeTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(3) NOT NULL,
                 StateDescription VARCHAR(70) NOT NULL,
                 NIBRSCode VARCHAR(3) NOT NULL,
@@ -382,7 +384,7 @@ CREATE TABLE UCROffenseCodeType (
 
 
 CREATE TABLE ArrestReportSegment (
-                ArrestReportSegmentID INTEGER NOT NULL AUTO_INCREMENT,
+                ArrestReportSegmentID IDENTITY NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
@@ -408,7 +410,7 @@ CREATE TABLE ArrestReportSegment (
 
 
 CREATE TABLE ArrestReportSegmentWasArmedWith (
-                ArrestReportSegmentWasArmedWithID INTEGER NOT NULL AUTO_INCREMENT,
+                ArrestReportSegmentWasArmedWithID IDENTITY NOT NULL,
                 ArrestReportSegmentID INTEGER NOT NULL,
                 ArresteeWasArmedWithTypeID INTEGER NOT NULL,
                 AutomaticWeaponIndicator VARCHAR(1),
@@ -417,7 +419,7 @@ CREATE TABLE ArrestReportSegmentWasArmedWith (
 
 
 CREATE TABLE AdministrativeSegment (
-                AdministrativeSegmentID INTEGER NOT NULL AUTO_INCREMENT,
+                AdministrativeSegmentID IDENTITY NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
@@ -438,7 +440,7 @@ CREATE TABLE AdministrativeSegment (
 
 
 CREATE TABLE ArresteeSegment (
-                ArresteeSegmentID INTEGER NOT NULL AUTO_INCREMENT,
+                ArresteeSegmentID IDENTITY NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
                 AdministrativeSegmentID INTEGER NOT NULL,
                 ArresteeSequenceNumber INTEGER NOT NULL,
@@ -461,7 +463,7 @@ CREATE TABLE ArresteeSegment (
 
 
 CREATE TABLE ArresteeSegmentWasArmedWith (
-                ArresteeSegmentWasArmedWithID INTEGER NOT NULL AUTO_INCREMENT,
+                ArresteeSegmentWasArmedWithID IDENTITY NOT NULL,
                 ArresteeSegmentID INTEGER NOT NULL,
                 ArresteeWasArmedWithTypeID INTEGER NOT NULL,
                 AutomaticWeaponIndicator VARCHAR(1),
@@ -470,7 +472,7 @@ CREATE TABLE ArresteeSegmentWasArmedWith (
 
 
 CREATE TABLE OffenderSegment (
-                OffenderSegmentID INTEGER NOT NULL AUTO_INCREMENT,
+                OffenderSegmentID IDENTITY NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
                 AdministrativeSegmentID INTEGER NOT NULL,
                 OffenderSequenceNumber INTEGER,
@@ -485,7 +487,7 @@ CREATE TABLE OffenderSegment (
 
 
 CREATE TABLE VictimSegment (
-                VictimSegmentID INTEGER NOT NULL AUTO_INCREMENT,
+                VictimSegmentID IDENTITY NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
                 AdministrativeSegmentID INTEGER NOT NULL,
                 VictimSequenceNumber INTEGER,
@@ -509,7 +511,7 @@ CREATE TABLE VictimSegment (
 
 
 CREATE TABLE TypeInjury (
-                TypeInjuryID INTEGER NOT NULL AUTO_INCREMENT,
+                TypeInjuryID IDENTITY NOT NULL,
                 VictimSegmentID INTEGER NOT NULL,
                 TypeInjuryTypeID INTEGER NOT NULL,
                 CONSTRAINT TypeInjury_pk PRIMARY KEY (TypeInjuryID)
@@ -517,7 +519,7 @@ CREATE TABLE TypeInjury (
 
 
 CREATE TABLE AggravatedAssaultHomicideCircumstances (
-                AggravatedAssaultHomicideCircumstancesID INTEGER NOT NULL AUTO_INCREMENT,
+                AggravatedAssaultHomicideCircumstancesID IDENTITY NOT NULL,
                 VictimSegmentID INTEGER NOT NULL,
                 AggravatedAssaultHomicideCircumstancesTypeID INTEGER NOT NULL,
                 CONSTRAINT AggravatedAssaultHomicideCircumstances_pk PRIMARY KEY (AggravatedAssaultHomicideCircumstancesID)
@@ -525,7 +527,7 @@ CREATE TABLE AggravatedAssaultHomicideCircumstances (
 
 
 CREATE TABLE VictimOffenderAssociation (
-                VictimOffenderAssociationID INTEGER NOT NULL AUTO_INCREMENT,
+                VictimOffenderAssociationID IDENTITY NOT NULL,
                 VictimSegmentID INTEGER NOT NULL,
                 OffenderSegmentID INTEGER NOT NULL,
                 VictimOffenderRelationshipTypeID INTEGER NOT NULL,
@@ -534,7 +536,7 @@ CREATE TABLE VictimOffenderAssociation (
 
 
 CREATE TABLE PropertySegment (
-                PropertySegmentID INTEGER NOT NULL AUTO_INCREMENT,
+                PropertySegmentID IDENTITY NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
                 AdministrativeSegmentID INTEGER NOT NULL,
                 TypePropertyLossEtcTypeID INTEGER NOT NULL,
@@ -545,7 +547,7 @@ CREATE TABLE PropertySegment (
 
 
 CREATE TABLE PropertyType (
-                PropertyTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                PropertyTypeID IDENTITY NOT NULL,
                 PropertySegmentID INTEGER NOT NULL,
                 PropertyDescriptionTypeID INTEGER NOT NULL,
                 ValueOfProperty NUMERIC,
@@ -556,7 +558,7 @@ CREATE TABLE PropertyType (
 
 
 CREATE TABLE SuspectedDrugType (
-                SuspectedDrugTypeID INTEGER NOT NULL AUTO_INCREMENT,
+                SuspectedDrugTypeID IDENTITY NOT NULL,
                 PropertySegmentID INTEGER NOT NULL,
                 SuspectedDrugTypeTypeID INTEGER NOT NULL,
                 TypeDrugMeasurementTypeID INTEGER NOT NULL,
@@ -566,7 +568,7 @@ CREATE TABLE SuspectedDrugType (
 
 
 CREATE TABLE OffenseSegment (
-                OffenseSegmentID INTEGER NOT NULL AUTO_INCREMENT,
+                OffenseSegmentID IDENTITY NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
                 AdministrativeSegmentID INTEGER NOT NULL,
                 UCROffenseCodeTypeID INTEGER NOT NULL,
@@ -579,7 +581,7 @@ CREATE TABLE OffenseSegment (
 
 
 CREATE TABLE BiasMotivation (
-                BiasMotivationID INTEGER NOT NULL AUTO_INCREMENT,
+                BiasMotivationID IDENTITY NOT NULL,
                 OffenseSegmentID INTEGER NOT NULL,
                 BiasMotivationTypeID INTEGER NOT NULL,
                 CONSTRAINT BiasMotivationID PRIMARY KEY (BiasMotivationID)
@@ -587,7 +589,7 @@ CREATE TABLE BiasMotivation (
 
 
 CREATE TABLE VictimOffenseAssociation (
-                VictimOffenseAssociationID INTEGER NOT NULL AUTO_INCREMENT,
+                VictimOffenseAssociationID IDENTITY NOT NULL,
                 VictimSegmentID INTEGER NOT NULL,
                 OffenseSegmentID INTEGER NOT NULL,
                 CONSTRAINT VictimOffenseAssociation_pk PRIMARY KEY (VictimOffenseAssociationID)
@@ -595,7 +597,7 @@ CREATE TABLE VictimOffenseAssociation (
 
 
 CREATE TABLE TypeOfWeaponForceInvolved (
-                TypeOfWeaponForceInvolvedID INTEGER NOT NULL AUTO_INCREMENT,
+                TypeOfWeaponForceInvolvedID IDENTITY NOT NULL,
                 AutomaticWeaponIndicator VARCHAR(1) NOT NULL,
                 OffenseSegmentID INTEGER NOT NULL,
                 TypeOfWeaponForceInvolvedTypeID INTEGER NOT NULL,
@@ -604,7 +606,7 @@ CREATE TABLE TypeOfWeaponForceInvolved (
 
 
 CREATE TABLE TypeCriminalActivity (
-                TypeCriminalActivityID INTEGER NOT NULL AUTO_INCREMENT,
+                TypeCriminalActivityID IDENTITY NOT NULL,
                 OffenseSegmentID INTEGER NOT NULL,
                 TypeOfCriminalActivityTypeID INTEGER NOT NULL,
                 CONSTRAINT TypeCriminalActivity_pk PRIMARY KEY (TypeCriminalActivityID)
@@ -612,7 +614,7 @@ CREATE TABLE TypeCriminalActivity (
 
 
 CREATE TABLE OffenderSuspectedOfUsing (
-                OffenderSuspectedOfUsingID INTEGER NOT NULL AUTO_INCREMENT,
+                OffenderSuspectedOfUsingID IDENTITY NOT NULL,
                 OffenseSegmentID INTEGER NOT NULL,
                 OffenderSuspectedOfUsingTypeID INTEGER NOT NULL,
                 CONSTRAINT OffenderSuspectedOfUsing_pk PRIMARY KEY (OffenderSuspectedOfUsingID)
@@ -620,7 +622,7 @@ CREATE TABLE OffenderSuspectedOfUsing (
 
 
 CREATE TABLE ZeroReportingSegment (
-                ZeroReportingSegmentID INTEGER NOT NULL AUTO_INCREMENT,
+                ZeroReportingSegmentID IDENTITY NOT NULL,
                 AdministrativeSegmentID INTEGER NOT NULL,
                 RecordDescriptionWord VARCHAR(4),
                 SegmentLevel VARCHAR(1),
@@ -638,7 +640,7 @@ CREATE TABLE ZeroReportingSegment (
 
 
 CREATE TABLE LEOKASegment (
-                LEOKASegmentID INTEGER NOT NULL AUTO_INCREMENT,
+                LEOKASegmentID IDENTITY NOT NULL,
                 AdministrativeSegmentID INTEGER NOT NULL,
                 RecordDescriptionWord VARCHAR(4),
                 SegmentLevel VARCHAR(1),
