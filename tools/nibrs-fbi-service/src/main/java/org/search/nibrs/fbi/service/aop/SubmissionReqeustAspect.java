@@ -112,8 +112,10 @@ public class SubmissionReqeustAspect {
 				processViolations(submission, returnedDocument);
 				
 				break;
-			default:  //did not get a response back from the web service
+			default:  //get no response or a response other than the three types above
 				submission.setAcceptedIndicator(false);
+				submission.setFaultCode(XmlUtils.xPathStringSearch(returnedDocument, "//faultcode"));
+				submission.setFaultDescription(StringUtils.normalizeSpace(XmlUtils.xPathStringSearch(returnedDocument, "//faultstring")));
 			}
 			
 

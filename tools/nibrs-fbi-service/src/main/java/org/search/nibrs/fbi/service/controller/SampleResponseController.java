@@ -51,4 +51,11 @@ public class SampleResponseController {
 		return XmlUtils.nodeToString(document);
 	}
 	
+	@RequestMapping(value="/response/fault" )
+	@ResponseBody
+	public String getSampleFaultResponse() throws Exception{
+		Document document = XmlUtils.parseFileToDocument(new File("src/main/resources/xmlInstances/NIBRS-Fault-Response.xml"));
+		return XmlUtils.nodeToString(document);
+	}
+	
 }
