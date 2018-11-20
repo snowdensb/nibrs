@@ -30,6 +30,8 @@ CREATE TABLE Submission (
                 ResponseFilePath VARCHAR(300),
                 AcceptedIndicator BOOLEAN DEFAULT false NOT NULL,
                 ResponseTimestamp timestamp,
+                FaultCode VARCHAR(100),
+                FaultDescription VARCHAR(500),
                 SubmissionTimestamp TIMESTAMP NOT NULL,
                 PRIMARY KEY (SubmissionID)
 );
