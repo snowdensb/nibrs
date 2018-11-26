@@ -113,11 +113,11 @@ public class XmlReportGenerator {
 
 	public long countTheIncidents(SubmissionTrigger submissionTrigger) {
 		long groupAIncidentCount = administrativeSegmentRepository
-				.countByOriListAndIncidentDateRange(submissionTrigger.getOris(), 
+				.countByOriListAndSubmissionDateRange(submissionTrigger.getOris(), 
 						submissionTrigger.getStartDate(), 
 						submissionTrigger.getEndDate());
 		long groubBArrestReportCount = arrestReportSegmentRepository
-				.countByOriListAndArrestDateRange(submissionTrigger.getOris(), 
+				.countByOriListAndSubmissionDateRange(submissionTrigger.getOris(), 
 						submissionTrigger.getStartDate(), 
 						submissionTrigger.getEndDate());
 		return groupAIncidentCount + groubBArrestReportCount; 
@@ -137,7 +137,7 @@ public class XmlReportGenerator {
 	
 	private void writeGroupAIncidentReport(List<String> oris, java.sql.Date startDate, java.sql.Date endDate) {
 		
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriListAndIncidentDateRange(oris, startDate, endDate);
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriListAndSubmissionDateRange(oris, startDate, endDate);
 		
 		for (Integer administrativeSegmentId : ids) {
 			log.info("Generating group A report for pkId " + administrativeSegmentId);
@@ -158,7 +158,7 @@ public class XmlReportGenerator {
 	
 	public void writeGroupBIncidentReport(List<String> oris, java.sql.Date startDate, java.sql.Date endDate){
 		
-		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriListAndArrestDateRange(oris, startDate, endDate);
+		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriListAndSubmissionDateRange(oris, startDate, endDate);
 		
 		for (Integer arrestReportSegmentId : ids) {
 			log.info("Generating arrest report for pkId " + arrestReportSegmentId);

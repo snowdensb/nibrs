@@ -81,15 +81,15 @@ public class AdministrativeSegmentRepositoryTest {
 	}
 		
 	@Test
-	public void testFindDistinctByOriListAndIncidentDateRange() {
+	public void testFindDistinctByOriListAndSubmissionDateRange() {
 
 		administrativeSegmentRepository.findAll().forEach(i->log.info(i.getIncidentNumber()));
 		
 		long count = administrativeSegmentRepository
-				.countByOriListAndIncidentDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)));
+				.countByOriListAndSubmissionDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)));
 		assertThat(count, equalTo(3L));
 		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
-				.findIdsByOriListAndIncidentDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)));
+				.findIdsByOriListAndSubmissionDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)));
 		assertThat(administrativeSegmentIds.size(), equalTo(3));
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAll(administrativeSegmentIds);
