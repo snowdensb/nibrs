@@ -130,6 +130,7 @@ public class ArrestReportSegmentFactory {
 			add(arrestReportSegmentWasArmedWith2);
 		}});
 		
+		arrestReportSegment.setReportTimestamp(LocalDateTime.now());
 		return arrestReportSegment; 
 	}
 

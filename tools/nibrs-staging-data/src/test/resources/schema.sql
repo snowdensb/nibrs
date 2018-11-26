@@ -25,6 +25,7 @@ Use search_nibrs_staging;
 
 
 
+
 CREATE TABLE Submission (
                 SubmissionID IDENTITY NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
@@ -405,6 +406,7 @@ CREATE TABLE ArrestReportSegment (
                 ResidentStatusOfPersonTypeID INTEGER NOT NULL,
                 DispositionOfArresteeUnder18TypeID INTEGER NOT NULL,
                 UCROffenseCodeTypeID INTEGER NOT NULL,
+                ReportTimestamp TIMESTAMP DEFAULT NOW() NOT NULL,
                 CONSTRAINT ArresteReport_pk PRIMARY KEY (ArrestReportSegmentID)
 );
 
@@ -435,6 +437,7 @@ CREATE TABLE AdministrativeSegment (
                 ExceptionalClearanceDate DATE,
                 ExceptionalClearanceDateID INTEGER NOT NULL,
                 CargoTheftIndicatorTypeID INTEGER NOT NULL,
+                ReportTimestamp TIMESTAMP DEFAULT NOW() NOT NULL,
                 CONSTRAINT AdministrativeSegment_pk PRIMARY KEY (AdministrativeSegmentID)
 );
 
@@ -635,6 +638,7 @@ CREATE TABLE ZeroReportingSegment (
                 IncidentHour VARCHAR(4),
                 CleardExceptionally VARCHAR(1),
                 ExceptionalClearanceDate DATE,
+                ReportTimestamp TIMESTAMP DEFAULT NOW() NOT NULL,
                 CONSTRAINT ZeroReportingSegment_Pk PRIMARY KEY (ZeroReportingSegmentID)
 );
 
@@ -649,6 +653,7 @@ CREATE TABLE LEOKASegment (
                 CityIndicator VARCHAR(4),
                 Filler VARCHAR(12),
                 LEOKAData VARCHAR(600),
+                ReportTimestamp TIMESTAMP DEFAULT NOW() NOT NULL,
                 CONSTRAINT idLEOKASegment PRIMARY KEY (LEOKASegmentID)
 );
 

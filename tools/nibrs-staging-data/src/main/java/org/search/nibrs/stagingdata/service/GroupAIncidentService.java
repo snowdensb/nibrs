@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -280,7 +281,7 @@ public class GroupAIncidentService {
 					codeTableService.getCodeTableType(groupAIncidentReport.getCargoTheftIndicator(), 
 							cargoTheftIndicatorTypeRepository::findFirstByStateCode, CargoTheftIndicatorType::new); 
 			administrativeSegment.setCargoTheftIndicatorType(cargoTheftIndicatorType);
-			
+			administrativeSegment.setReportTimestamp(LocalDateTime.now());
 			processProperties(administrativeSegment, groupAIncidentReport);
 			processOffenses(administrativeSegment, groupAIncidentReport);
 			processOffenders(administrativeSegment, groupAIncidentReport);

@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -261,6 +262,7 @@ public class ArrestReportService {
 					ucrOffenseCodeTypeRepository::findFirstByStateCode, 
 					UcrOffenseCodeType::new);;
 			arrestReportSegment.setUcrOffenseCodeType(ucrOffenseCodeType);
+			arrestReportSegment.setReportTimestamp(LocalDateTime.now());
 			
 			processArrestReportSegmentArmedWiths(arrestReportSegment, arrestee);
 			

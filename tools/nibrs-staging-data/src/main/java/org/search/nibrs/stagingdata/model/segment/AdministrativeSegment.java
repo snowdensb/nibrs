@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.model.segment;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -112,6 +113,8 @@ public class AdministrativeSegment {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="cargoTheftIndicatorTypeId") 
 	private CargoTheftIndicatorType cargoTheftIndicatorType; 
+	
+	private LocalDateTime reportTimestamp;
 	
     public Set<OffenseSegment> getOffenseSegments() {
         return offenseSegments;
@@ -410,5 +413,13 @@ public class AdministrativeSegment {
 		} else if (!yearOfTape.equals(other.yearOfTape))
 			return false;
 		return true;
+	}
+
+	public LocalDateTime getReportTimestamp() {
+		return reportTimestamp;
+	}
+
+	public void setReportTimestamp(LocalDateTime reportTimestamp) {
+		this.reportTimestamp = reportTimestamp;
 	}
 }

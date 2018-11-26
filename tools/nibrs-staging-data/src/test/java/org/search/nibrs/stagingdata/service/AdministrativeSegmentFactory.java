@@ -151,6 +151,7 @@ public class AdministrativeSegmentFactory {
 	public AdministrativeSegment getBasicAdministrativeSegment(){
 		
 		AdministrativeSegment administrativeSegment = new AdministrativeSegment();
+		administrativeSegment.setReportTimestamp(LocalDateTime.now());
 		SegmentActionTypeType segmentActionTypeType = segmentActionTypeRepository.findFirstByStateCode("I");
 		administrativeSegment.setSegmentActionType(segmentActionTypeType);
 		administrativeSegment.setMonthOfTape("12");

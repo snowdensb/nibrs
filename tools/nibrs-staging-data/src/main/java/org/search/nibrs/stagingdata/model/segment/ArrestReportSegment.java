@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.model.segment;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -115,6 +116,8 @@ public class ArrestReportSegment {
 	@OneToMany(mappedBy = "arrestReportSegment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ArrestReportSegmentWasArmedWith> arrestReportSegmentWasArmedWiths;
 	
+	private LocalDateTime reportTimestamp;
+
 	public Integer getArrestReportSegmentId() {
 		return arrestReportSegmentId;
 	}
@@ -400,5 +403,11 @@ public class ArrestReportSegment {
 	}
 	public void setNonNumericAge(String nonNumericAge) {
 		this.nonNumericAge = nonNumericAge;
+	}
+	public LocalDateTime getReportTimestamp() {
+		return reportTimestamp;
+	}
+	public void setReportTimestamp(LocalDateTime reportTimestamp) {
+		this.reportTimestamp = reportTimestamp;
 	}
 }
