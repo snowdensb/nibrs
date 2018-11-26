@@ -33,7 +33,7 @@ public interface AdministrativeSegmentRepository
 	long deleteByIncidentNumber(String incidentNumber);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
-	AdministrativeSegment findByIncidentNumber(String incidentNumber);
+	List<AdministrativeSegment> findByIncidentNumber(String incidentNumber);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	AdministrativeSegment findByAdministrativeSegmentId(Integer administrativeSegmentId);

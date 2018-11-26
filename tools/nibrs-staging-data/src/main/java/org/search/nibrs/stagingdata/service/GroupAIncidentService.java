@@ -230,15 +230,8 @@ public class GroupAIncidentService {
 		List<AdministrativeSegment> administrativeSegments = new ArrayList<>();
 		
 		for (GroupAIncidentReport groupAIncidentReport: groupAIncidentReports){
-			if (administrativeSegmentRepository.existsByIncidentNumber(groupAIncidentReport.getIncidentNumber())){
-				administrativeSegmentRepository.deleteByIncidentNumber(groupAIncidentReport.getIncidentNumber());
-			}
 			
 			AdministrativeSegment administrativeSegment = new AdministrativeSegment(); 
-//			Optional<AdministrativeSegment> existingAdministrativeSegment = 
-//					Optional.ofNullable(administrativeSegmentRepository.findFirstByIncidentNumber(groupAIncidentReport.getIncidentNumber()));
-//				
-//			AdministrativeSegment administrativeSegment = existingAdministrativeSegment.orElseGet(AdministrativeSegment::new); 
 			
 			log.info("Persisting GroupAIncident: " + groupAIncidentReport.getIncidentNumber());
 			administrativeSegment.setAgency(agencyRepository.findFirstByAgencyOri(groupAIncidentReport.getOri()));

@@ -16,7 +16,7 @@
 package org.search.nibrs.stagingdata.service.xml;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
@@ -82,11 +82,10 @@ public class XmlReportGeneratorTest {
 		GroupAIncidentReport groupAIncidentReport = BaselineIncidentFactory.getBaselineIncident();
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
-		AdministrativeSegment administrativeSegment =  administrativeSegmentRepository.findByIncidentNumber("54236732");
-		assertNotNull(administrativeSegment);
-		log.info(administrativeSegment);
+		List<AdministrativeSegment> administrativeSegments =  administrativeSegmentRepository.findByIncidentNumber("54236732");
+		assertThat(administrativeSegments.size(), not(equalTo(0)));
 		
-		Document document = xmlReportGenerator.createGroupAIncidentReport(administrativeSegment);
+		Document document = xmlReportGenerator.createGroupAIncidentReport(administrativeSegments.get(0));
 		XmlUtils.printNode(document);
 		
         compareGroupAIncident("src/test/resources/xmlInstances/groupAIncidentWithNormalAgeFromBaselineIncident.xml", document); 
@@ -98,11 +97,11 @@ public class XmlReportGeneratorTest {
 		GroupAIncidentReport groupAIncidentReport = BaselineIncidentFactory.getBaselineIncidentWithNonNumericAges();
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
-		AdministrativeSegment administrativeSegment =  administrativeSegmentRepository.findByIncidentNumber("54236733");
-		assertNotNull(administrativeSegment);
-		log.info(administrativeSegment);
+		List<AdministrativeSegment> administrativeSegments =  administrativeSegmentRepository.findByIncidentNumber("54236733");
+		assertThat(administrativeSegments.size(), not(equalTo(0)));
+		log.info(administrativeSegments);
 		
-		Document document = xmlReportGenerator.createGroupAIncidentReport(administrativeSegment);
+		Document document = xmlReportGenerator.createGroupAIncidentReport(administrativeSegments.get(0));
 		XmlUtils.printNode(document);
 		
 		compareGroupAIncident("src/test/resources/xmlInstances/groupAIncidentWithNonNumericAgeFromBaselineIncident.xml", document); 
@@ -145,22 +144,22 @@ public class XmlReportGeneratorTest {
 		arrestReportService.saveGroupBArrestReports(groupBArrestReport);
 		
 		ArrestReportSegment arrestReportSegment = arrestReportSegmentFactory.getBasicArrestReportSegment();
-		arrestReportSegmentRepository.save(arrestReportSegment);
+		arrestReportSegment = arrestReportSegmentRepository.save(arrestReportSegment);
 		
-		arrestReportSegment =  arrestReportSegmentRepository.findByArrestTransactionNumber("12345");
-		assertNotNull(arrestReportSegment);
-		log.info(arrestReportSegment);
+		List<ArrestReportSegment> arrestReportSegments =  arrestReportSegmentRepository.findByArrestTransactionNumber("12345");
+		assertThat(arrestReportSegments.size(), not(equalTo(0)));
+		log.info(arrestReportSegments);
 		
-		Document document = xmlReportGenerator.createGroupBArrestReport(arrestReportSegment);
+		Document document = xmlReportGenerator.createGroupBArrestReport(arrestReportSegments.get(0));
 		XmlUtils.printNode(document.getDocumentElement());
 		
 		compareGroupBArrestReport("src/test/resources/xmlInstances/groupBArrestFromBaselineIncident.xml", document);
 
-		arrestReportSegment =  arrestReportSegmentRepository.findByArrestTransactionNumber("arrestTr");
-		assertNotNull(arrestReportSegment);
-		log.info(arrestReportSegment);
+		arrestReportSegments =  arrestReportSegmentRepository.findByArrestTransactionNumber("arrestTr");
+		assertThat(arrestReportSegments.size(), not(equalTo(0)));
+		log.info(arrestReportSegments);
 		
-		document = xmlReportGenerator.createGroupBArrestReport(arrestReportSegment);
+		document = xmlReportGenerator.createGroupBArrestReport(arrestReportSegments.get(0));
 		XmlUtils.printNode(document.getDocumentElement());
 		compareGroupBArrestReport("src/test/resources/xmlInstances/groupBArrestFromArrestReportFactory.xml", document);
 		
@@ -171,11 +170,11 @@ public class XmlReportGeneratorTest {
 		GroupBArrestReport groupBArrestReport = BaselineIncidentFactory.getBaselineGroupBArrestReportWithUnknownAge();
 		arrestReportService.saveGroupBArrestReports(groupBArrestReport);
 		
-		ArrestReportSegment arrestReportSegment =  arrestReportSegmentRepository.findByArrestTransactionNumber("45678");
-		assertNotNull(arrestReportSegment);
-		log.info(arrestReportSegment);
+		List<ArrestReportSegment> arrestReportSegments =  arrestReportSegmentRepository.findByArrestTransactionNumber("45678");
+		assertThat(arrestReportSegments.size(), not(equalTo(0)));
+		log.info(arrestReportSegments.size());
 		
-		Document document = xmlReportGenerator.createGroupBArrestReport(arrestReportSegment);
+		Document document = xmlReportGenerator.createGroupBArrestReport(arrestReportSegments.get(0));
 		XmlUtils.printNode(document.getDocumentElement());
 		
 		compareGroupBArrestReport("src/test/resources/xmlInstances/groupBArrestWithUnknownAgeFromBaselineIncident.xml", document);

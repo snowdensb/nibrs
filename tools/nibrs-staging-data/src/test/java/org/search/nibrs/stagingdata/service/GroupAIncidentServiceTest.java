@@ -16,6 +16,7 @@
 package org.search.nibrs.stagingdata.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -1096,13 +1097,13 @@ public class GroupAIncidentServiceTest {
 		
 	}
 	private void testDeleteGroupAIncidentReport(GroupAIncidentReport groupAIncidentReport) {
-		AdministrativeSegment beforeDeletion = 
+		List<AdministrativeSegment> beforeDeletion = 
 				administrativeSegmentRepository.findByIncidentNumber(groupAIncidentReport.getIncidentNumber());
-		assertNotNull(beforeDeletion);
+		assertThat(beforeDeletion.size(), not(equalTo(0)));
 		groupAIncidentService.deleteGroupAIncidentReport(groupAIncidentReport.getIncidentNumber());
-		AdministrativeSegment deleted = 
+		List<AdministrativeSegment> deleted = 
 				administrativeSegmentRepository.findByIncidentNumber(groupAIncidentReport.getIncidentNumber());
-		assertThat(deleted, equalTo(null));
+		assertThat(deleted.size(), equalTo(0));
 	}
 
 	private void testUpdateGroupAIncidentReport(GroupAIncidentReport groupAIncidentReport) {
@@ -1137,10 +1138,10 @@ public class GroupAIncidentServiceTest {
 
 		groupAIncidentReport.removeProperty(2);
 		
-		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
+		Iterable<AdministrativeSegment> saved = groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
 		AdministrativeSegment updated = 
-				administrativeSegmentRepository.findByIncidentNumber(groupAIncidentReport.getIncidentNumber());
+				administrativeSegmentRepository.findByAdministrativeSegmentId(saved.iterator().next().getAdministrativeSegmentId());
 
 		assertNotNull(updated);
 		assertThat(updated.getSegmentActionType().getStateCode(), equalTo("I"));

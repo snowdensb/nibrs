@@ -38,6 +38,7 @@ import org.search.nibrs.stagingdata.service.GroupAIncidentService;
 import org.search.nibrs.stagingdata.util.BaselineIncidentFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -68,6 +69,7 @@ public class AdministrativeSegmentRepositoryTest {
 	}
 	
 	@Test
+	@DirtiesContext
 	public void testFindDistinctByOriAndIncidentDateTypeYearAndIncidentDateTypeMonth() {
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository
@@ -81,6 +83,7 @@ public class AdministrativeSegmentRepositoryTest {
 	}
 		
 	@Test
+	@DirtiesContext
 	public void testFindDistinctByOriListAndSubmissionDateRange() {
 
 		administrativeSegmentRepository.findAll().forEach(i->log.info(i.getIncidentNumber()));
@@ -101,6 +104,7 @@ public class AdministrativeSegmentRepositoryTest {
 	}
 	
 	@Test
+	@DirtiesContext
 	public void testFindIdsByOriAndClearanceDateAndFindAll() {
 		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
 				.findIdsByOriAndClearanceDate("WA1234567", 2016, 5);

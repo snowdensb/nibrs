@@ -31,7 +31,7 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 	long deleteByArrestTransactionNumber(String arrestTransactionNumber);
 	
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)
-	ArrestReportSegment findByArrestTransactionNumber(String arrestTransactionNumber);
+	List<ArrestReportSegment> findByArrestTransactionNumber(String arrestTransactionNumber);
 	
 	boolean existsByArrestTransactionNumber(String arrestTransactionNumber);
 	

@@ -187,16 +187,8 @@ public class ArrestReportService {
 				continue;
 			}
 			
-			if (arrestReportSegmentRepository.existsByArrestTransactionNumber(groupBArrestReport.getIdentifier())){
-				arrestReportSegmentRepository.deleteByArrestTransactionNumber(groupBArrestReport.getIdentifier());
-			}
 			ArrestReportSegment arrestReportSegment = new ArrestReportSegment();
 			
-//			Optional<ArrestReportSegment> existingArrestReportSegment = 
-//					Optional.ofNullable(arrestReportSegmentRepository.findFirstByArrestTransactionNumber(groupBArrestReport.getIdentifier()));
-//				
-//			ArrestReportSegment arrestReportSegment = existingArrestReportSegment.orElseGet(ArrestReportSegment::new); 
-
 			arrestReportSegment.setArrestTransactionNumber(groupBArrestReport.getIdentifier());
 			arrestReportSegment.setAgency(agencyRepository.findFirstByAgencyOri(groupBArrestReport.getOri()));
 			
