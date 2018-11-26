@@ -84,25 +84,15 @@ public class StagingDataRestClient {
 	public void persistAbstractReport(AbstractReport abstractReport) {
 		if (abstractReport instanceof GroupAIncidentReport){
 			GroupAIncidentReport groupAIncidentReport = (GroupAIncidentReport) abstractReport; 
-			if (groupAIncidentReport.getReportActionType() == 'D'){
-				log.info("About to delete group A incident report " + groupAIncidentReport.getIncidentNumber());
-				restTemplate.delete(appProperties.getStagingDataRestServiceBaseUrl() + "groupAIncidentReports/" + groupAIncidentReport.getIdentifier() );
-			}
-			else{
-				log.info("About to post for group A incident report " + groupAIncidentReport.getIncidentNumber());
-				restTemplate.postForLocation(appProperties.getStagingDataRestServiceBaseUrl() + "groupAIncidentReports", groupAIncidentReport);
-			}
+			log.info("About to post for group A incident report " + groupAIncidentReport.getIncidentNumber());
+			log.info("Action category " + groupAIncidentReport.getReportActionType());
+			restTemplate.postForLocation(appProperties.getStagingDataRestServiceBaseUrl() + "groupAIncidentReports", groupAIncidentReport);
 		}
 		else if (abstractReport instanceof GroupBArrestReport){
 			GroupBArrestReport groupBArrestReport = (GroupBArrestReport) abstractReport; 
-			if (groupBArrestReport.getReportActionType() == 'D') {
-				log.info("About to delete group B Arrest Report" + groupBArrestReport.getIdentifier());
-				restTemplate.delete(appProperties.getStagingDataRestServiceBaseUrl() + "arrestReports/" + groupBArrestReport.getIdentifier() );
-			}
-			else {
-				log.info("About to post for group B Arrest Report" + groupBArrestReport.getIdentifier());
-				restTemplate.postForLocation(appProperties.getStagingDataRestServiceBaseUrl() + "arrestReports", groupBArrestReport);
-			}
+			log.info("About to post for group B Arrest Report" + groupBArrestReport.getIdentifier());
+			log.info("Action category " + groupBArrestReport.getReportActionType());
+			restTemplate.postForLocation(appProperties.getStagingDataRestServiceBaseUrl() + "arrestReports", groupBArrestReport);
 		}
 		else {
 			log.warn("The report type " +  abstractReport.getClass().getName() + "is not supported");
