@@ -38,6 +38,11 @@ public interface AdministrativeSegmentRepository
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	AdministrativeSegment findByAdministrativeSegmentId(Integer administrativeSegmentId);
 	
+	@Query("SELECT count(*) > 0 from AdministrativeSegment a "
+			+ "LEFT JOIN a.segmentActionType s "
+			+ "WHERE a.administrativeSegmentId = "
+			+ "			(SELECT max(administrativeSegmentId) FROM AdministrativeSegment where incidentNumber = ?1 ) "
+			+ "		AND s.nibrsCode != 'D' ")
 	boolean existsByIncidentNumber(String incidentNumber);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)

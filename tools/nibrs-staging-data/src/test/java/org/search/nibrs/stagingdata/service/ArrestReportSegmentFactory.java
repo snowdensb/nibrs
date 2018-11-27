@@ -103,7 +103,7 @@ public class ArrestReportSegmentFactory {
 		ResidentStatusOfPersonType residentStatusOfPersonType = residentStatusOfPersonTypeRepository.findFirstByStateCode("N");
 		arrestReportSegment.setResidentStatusOfPersonType(residentStatusOfPersonType);
 		
-		SegmentActionTypeType segmentActionTypeType = segmentActionTypeRepository.findFirstByStateCode("I");
+		SegmentActionTypeType segmentActionTypeType = segmentActionTypeRepository.findFirstByStateCode("A");
 		arrestReportSegment.setSegmentActionType(segmentActionTypeType);
 		
 		SexOfPersonType sexOfPersonType = sexOfPersonTypeRepository.findFirstByStateCode("F");

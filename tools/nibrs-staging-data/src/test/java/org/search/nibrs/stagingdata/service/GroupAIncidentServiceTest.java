@@ -1144,7 +1144,7 @@ public class GroupAIncidentServiceTest {
 				administrativeSegmentRepository.findByAdministrativeSegmentId(saved.iterator().next().getAdministrativeSegmentId());
 
 		assertNotNull(updated);
-		assertThat(updated.getSegmentActionType().getStateCode(), equalTo("I"));
+		assertThat(updated.getSegmentActionType().getStateCode(), equalTo("R"));
 		assertThat(updated.getMonthOfTape(), equalTo("05"));
 		assertThat(updated.getYearOfTape(), equalTo("2016"));
 		assertThat(updated.getCityIndicator(), equalTo("Y"));
@@ -1179,7 +1179,7 @@ public class GroupAIncidentServiceTest {
 		
 		for (OffenseSegment offenseSegment: offenseSegments){
 			assertThat(offenseSegment.getBiasMotivationTypes().stream().findFirst().get().getStateCode(), equalTo("15"));
-			assertThat(offenseSegment.getSegmentActionType().getStateCode(), equalTo("I"));
+			assertThat(offenseSegment.getSegmentActionType().getStateCode(), equalTo("R"));
 			assertThat(offenseSegment.getOffenseAttemptedCompleted(), equalTo("C"));
 			assertThat(offenseSegment.getLocationType().getStateCode(), equalTo("15"));
 			assertThat(offenseSegment.getNumberOfPremisesEntered(), equalTo(null));
@@ -1207,7 +1207,7 @@ public class GroupAIncidentServiceTest {
 		OffenderSegment offenderSegment = offenderSegments.stream().findFirst().get();
 		
 		assertThat(offenderSegment.getOffenderSequenceNumber(), equalTo(1)); 
-		assertThat(offenderSegment.getSegmentActionType().getStateCode(), equalTo("I"));
+		assertThat(offenderSegment.getSegmentActionType().getStateCode(), equalTo("R"));
 		assertThat(offenderSegment.getAgeOfOffenderMax(), equalTo(22));
 		assertThat(offenderSegment.getAgeOfOffenderMin(), equalTo(22));
 		assertThat(offenderSegment.getSexOfPersonType().getStateCode(), equalTo("M"));
@@ -1262,7 +1262,7 @@ public class GroupAIncidentServiceTest {
 //		v.setUcrOffenseCodeConnection(0, "13B");
 		for (VictimSegment victimSegment: victimSegments){
 			assertThat(victimSegment.getAdministrativeSegment().getAdministrativeSegmentId(), equalTo(updated.getAdministrativeSegmentId())); 
-			assertThat(victimSegment.getSegmentActionType().getStateCode(), equalTo("I")); 
+			assertThat(victimSegment.getSegmentActionType().getStateCode(), equalTo("R")); 
 			assertThat(victimSegment.getTypeOfVictimType().getStateCode(), equalTo("I")); 
 			assertThat(victimSegment.getOfficerActivityCircumstanceType().getOfficerActivityCircumstanceTypeId(), equalTo(99998)); 
 			assertThat(victimSegment.getOfficerAssignmentTypeType().getOfficerAssignmentTypeTypeId(), equalTo(99998)); 

@@ -110,7 +110,7 @@ public class ArrestReportServiceTest {
 		assertThat(persisted.getOri(), equalTo("ori"));;
 		assertThat(persisted.getRaceOfPersonType().getStateCode(), equalTo("W"));
 		assertThat(persisted.getResidentStatusOfPersonType().getStateCode(), equalTo("N"));
-		assertThat(persisted.getSegmentActionType().getStateCode(), equalTo("I"));
+		assertThat(persisted.getSegmentActionType().getStateCode(), equalTo("A"));
 		assertThat(persisted.getSexOfPersonType().getStateCode(), equalTo("F"));
 		assertThat(persisted.getTypeOfArrestType().getTypeOfArrestTypeId(), equalTo(1));
 		assertThat(persisted.getUcrOffenseCodeType().getUcrOffenseCodeTypeId(), equalTo(520));
@@ -143,10 +143,10 @@ public class ArrestReportServiceTest {
 		persisted.setAgeOfArresteeMin(20);
 		persisted.setTypeOfArrestType(new TypeOfArrestType(2));
 		persisted.getArrestReportSegmentWasArmedWiths().removeIf(item -> item.getAutomaticWeaponIndicator().equals(""));
-		arrestReportService.saveArrestReportSegment(persisted); 
+		ArrestReportSegment saved = arrestReportService.saveArrestReportSegment(persisted); 
 		
 		ArrestReportSegment updated = 
-				arrestReportService.findArrestReportSegment(persisted.getArrestReportSegmentId());
+				arrestReportService.findArrestReportSegment(saved.getArrestReportSegmentId());
 
 		assertThat(updated.getAgeOfArresteeMax(), equalTo(25));
 		assertThat(updated.getAgeOfArresteeMin(), equalTo(20));
@@ -165,7 +165,7 @@ public class ArrestReportServiceTest {
 		assertThat(updated.getOri(), equalTo("ori"));;
 		assertThat(updated.getRaceOfPersonType().getStateCode(), equalTo("W"));
 		assertThat(updated.getResidentStatusOfPersonType().getStateCode(), equalTo("N"));
-		assertThat(updated.getSegmentActionType().getSegmentActionTypeTypeId(), equalTo(1));
+		assertThat(updated.getSegmentActionType().getNibrsCode(), equalTo("A"));
 		assertThat(updated.getSexOfPersonType().getStateCode(), equalTo("F"));
 		assertThat(updated.getTypeOfArrestType().getTypeOfArrestTypeId(), equalTo(2));
 		assertThat(updated.getUcrOffenseCodeType().getUcrOffenseCodeTypeId(), equalTo(520));
@@ -209,7 +209,7 @@ public class ArrestReportServiceTest {
 				arrestReportService.findArrestReportSegment(arrestReportSegment.getArrestReportSegmentId());
 
 		assertNotNull(persisted);
-		assertThat(persisted.getSegmentActionType().getStateCode(), equalTo("I"));
+		assertThat(persisted.getSegmentActionType().getStateCode(), equalTo("A"));
 		assertThat(persisted.getMonthOfTape(), equalTo("05"));
 		assertThat(persisted.getYearOfTape(), equalTo("2017"));
 		assertThat(persisted.getCityIndicator(), equalTo("Y"));
@@ -260,7 +260,7 @@ public class ArrestReportServiceTest {
 		ArrestReportSegment updated = 
 				arrestReportSegmentRepository.findByArrestReportSegmentId(saved.iterator().next().getArrestReportSegmentId());
 
-		assertThat(updated.getSegmentActionType().getStateCode(), equalTo("I"));
+		assertThat(updated.getSegmentActionType().getStateCode(), equalTo("R"));
 		assertThat(updated.getMonthOfTape(), equalTo("11"));
 		assertThat(updated.getYearOfTape(), equalTo("2017"));
 		assertThat(updated.getCityIndicator(), equalTo("Y"));

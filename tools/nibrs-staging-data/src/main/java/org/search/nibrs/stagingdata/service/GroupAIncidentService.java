@@ -230,13 +230,19 @@ public class GroupAIncidentService {
 		List<AdministrativeSegment> administrativeSegments = new ArrayList<>();
 		
 		for (GroupAIncidentReport groupAIncidentReport: groupAIncidentReports){
-			
-			AdministrativeSegment administrativeSegment = new AdministrativeSegment(); 
+			AdministrativeSegment administrativeSegment = new AdministrativeSegment();
 			
 			log.info("Persisting GroupAIncident: " + groupAIncidentReport.getIncidentNumber());
 			administrativeSegment.setAgency(agencyRepository.findFirstByAgencyOri(groupAIncidentReport.getOri()));
 			
 			String reportActionType = String.valueOf(groupAIncidentReport.getReportActionType()).trim();
+			
+			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
+				if (administrativeSegmentRepository.existsByIncidentNumber(groupAIncidentReport.getIncidentNumber())){
+					reportActionType = "R"; 
+				}
+			}
+			
 			administrativeSegment.setSegmentActionType(segmentActionTypeRepository.findFirstByStateCode(reportActionType));
 			
 			Optional<Integer> monthOfTape = Optional.ofNullable(groupAIncidentReport.getMonthOfTape());

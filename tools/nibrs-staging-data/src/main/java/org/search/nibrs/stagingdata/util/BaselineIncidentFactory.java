@@ -378,7 +378,7 @@ public final class BaselineIncidentFactory {
 		source.setSourceName(BaselineIncidentFactory.class.getName());
 		report.setSource(source);
 		
-		report.setReportActionType('I');
+		report.setReportActionType('A');
 		report.setMonthOfTape(null);
 		report.setYearOfTape(2017);
 		report.setMonthOfTape(5);
@@ -412,7 +412,7 @@ public final class BaselineIncidentFactory {
 		source.setSourceName(BaselineIncidentFactory.class.getName());
 		report.setSource(source);
 		
-		report.setReportActionType('I');
+		report.setReportActionType('A');
 		report.setMonthOfTape(null);
 		report.setYearOfTape(2017);
 		report.setMonthOfTape(5);

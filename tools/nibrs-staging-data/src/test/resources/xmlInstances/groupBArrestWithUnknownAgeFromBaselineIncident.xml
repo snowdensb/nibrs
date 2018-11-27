@@ -33,7 +33,7 @@
     <nibrs:Report>
         <nibrs:ReportHeader>
             <nibrs:NIBRSReportCategoryCode>GROUP B ARREST REPORT</nibrs:NIBRSReportCategoryCode>
-            <nibrs:ReportActionCategoryCode>I</nibrs:ReportActionCategoryCode>
+            <nibrs:ReportActionCategoryCode>A</nibrs:ReportActionCategoryCode>
             <nibrs:ReportDate>
                 <nc:YearMonthDate>2017-05</nc:YearMonthDate>
             </nibrs:ReportDate>

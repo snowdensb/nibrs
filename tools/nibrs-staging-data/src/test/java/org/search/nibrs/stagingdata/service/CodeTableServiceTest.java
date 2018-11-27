@@ -42,7 +42,7 @@ public class CodeTableServiceTest {
 	public void getCodeTableTypeTest() {
 		SegmentActionTypeType segmentActionTypeType = 
 				codeTableService.getCodeTableType("I", segmentActionTypeRepository::findFirstByStateCode, SegmentActionTypeType::new);
-		assertThat(segmentActionTypeType.getSegmentActionTypeTypeId(), equalTo(1));
+		assertThat(segmentActionTypeType.getSegmentActionTypeTypeId(), equalTo(3));
 		
 		SegmentActionTypeType segmentActionTypeTypeBlank = 
 				codeTableService.getCodeTableType(null, segmentActionTypeRepository::findFirstByStateCode, SegmentActionTypeType::new);
@@ -51,7 +51,7 @@ public class CodeTableServiceTest {
 		Map<String, SegmentActionTypeType> map = new HashMap<>();
 		segmentActionTypeRepository.findAll().forEach((i) -> map.put(i.getStateCode(), i) );
 		
-		assertThat(map.size(), equalTo(7));
+		assertThat(map.size(), equalTo(6));
 	}
 
 

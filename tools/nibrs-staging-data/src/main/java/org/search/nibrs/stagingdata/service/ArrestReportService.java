@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -193,6 +194,13 @@ public class ArrestReportService {
 			arrestReportSegment.setAgency(agencyRepository.findFirstByAgencyOri(groupBArrestReport.getOri()));
 			
 			String reportActionType = String.valueOf(groupBArrestReport.getReportActionType()).trim();
+			
+			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
+				if (arrestReportSegmentRepository.existsByArrestTransactionNumber(groupBArrestReport.getIdentifier())){
+					reportActionType = "R"; 
+				}
+			}
+
 			SegmentActionTypeType segmentActionType = codeTableService.getCodeTableType(reportActionType, 
 					segmentActionTypeRepository::findFirstByStateCode, SegmentActionTypeType::new);
 			arrestReportSegment.setSegmentActionType(segmentActionType);
