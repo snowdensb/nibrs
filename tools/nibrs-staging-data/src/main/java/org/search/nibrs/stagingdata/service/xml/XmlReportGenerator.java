@@ -439,26 +439,28 @@ public class XmlReportGenerator {
 
 	private void addItemElements(AdministrativeSegment administrativeSegment, Element reportElement) {
 		for (PropertySegment property : administrativeSegment.getPropertySegments()) {
-			if ("NONE".equalsIgnoreCase(property.getTypePropertyLossEtcType().getNibrsDescription())){
+			if ("NONE".equalsIgnoreCase(property.getTypePropertyLossEtcType().getNibrsDescription()) || 
+					"UNKNOWN".equalsIgnoreCase(property.getTypePropertyLossEtcType().getNibrsDescription())){
 			
 				Element itemElement = XmlUtils.appendChildElement(reportElement, Namespace.NC, "Item");
 				Element itemStatus = XmlUtils.appendChildElement(itemElement, Namespace.NC, "ItemStatus");
-				XmlUtils.appendElementAndValue(itemStatus, Namespace.CJIS, "ItemStatusCode", "NONE");
+				XmlUtils.appendElementAndValue(itemStatus, Namespace.CJIS, "ItemStatusCode", 
+						property.getTypePropertyLossEtcType().getNibrsDescription().toUpperCase());
 				continue;
 			}
 			
 			for (PropertyType propertyType: property.getPropertyTypes()) {
-				String description = propertyType.getPropertyDescriptionType().getNibrsCode();
-				if (description != null && !"10".equals(description)) {
+				String nibrsCode = propertyType.getPropertyDescriptionType().getNibrsCode();
+				if (nibrsCode != null && !"10".equals(nibrsCode)) {
 					Element itemElement = XmlUtils.appendChildElement(reportElement, Namespace.NC, "Item");
 					
 					addItemStatus(property, itemElement);
 						
 					addItemValueAndAmount(propertyType, itemElement);
 					
-					XmlUtils.appendElementAndValue(itemElement, Namespace.J, "ItemCategoryNIBRSPropertyCategoryCode", description);
+					XmlUtils.appendElementAndValue(itemElement, Namespace.J, "ItemCategoryNIBRSPropertyCategoryCode", nibrsCode);
 					
-					if (PropertyDescriptionCode.isMotorVehicleCode(description)){
+					if (PropertyDescriptionCode.isMotorVehicleCode(nibrsCode)){
 						Integer rmv = property.getNumberOfRecoveredMotorVehicles();
 						Integer smv = property.getNumberOfStolenMotorVehicles();
 						if (rmv != null || smv != null) {
@@ -502,28 +504,37 @@ public class XmlReportGenerator {
 				String description = propertyType.getPropertyDescriptionType().getNibrsCode();
 				if ("10".equals(description)) {
 					
-					for (SuspectedDrugType suspectedDrugType : property.getSuspectedDrugTypes()){
+					if (property.getSuspectedDrugTypes().size() > 0){
+						for (SuspectedDrugType suspectedDrugType : property.getSuspectedDrugTypes()){
+							Element substanceElement = XmlUtils.appendChildElement(reportElement, Namespace.NC, "Substance");
+							
+							addItemStatus(property, substanceElement);
+							addItemValueAndAmount(propertyType, substanceElement);
+							XmlUtils.appendElementAndValue(substanceElement, Namespace.J, "ItemCategoryNIBRSPropertyCategoryCode", description);
+	
+							XmlUtils.appendElementAndValue(substanceElement, J, "DrugCategoryCode", 
+									suspectedDrugType.getSuspectedDrugTypeType().getNibrsCode());
+							
+							if (suspectedDrugType.getEstimatedDrugQuantity()!= null || (suspectedDrugType.getTypeDrugMeasurementType() != null && 
+									suspectedDrugType.getTypeDrugMeasurementType().getTypeDrugMeasurementTypeId() != 99998)){
+								Element substanceQuantityMeasure = XmlUtils.appendChildElement(substanceElement, Namespace.NC, "SubstanceQuantityMeasure");
+								
+								String estimatedDrugQuantityString = Optional.ofNullable(suspectedDrugType.getEstimatedDrugQuantity())
+										.map(String::valueOf)
+										.map(item->{return "1.0".equals(item)? "1":item;})
+										.orElse(null); 
+								XmlUtils.appendElementAndValue(substanceQuantityMeasure, Namespace.NC, "MeasureDecimalValue", estimatedDrugQuantityString);
+								XmlUtils.appendElementAndValue(substanceQuantityMeasure, Namespace.J, "SubstanceUnitCode",
+										suspectedDrugType.getTypeDrugMeasurementType().getNibrsCode());
+							}
+						}
+					}
+					else{
 						Element substanceElement = XmlUtils.appendChildElement(reportElement, Namespace.NC, "Substance");
 						
 						addItemStatus(property, substanceElement);
 						addItemValueAndAmount(propertyType, substanceElement);
 						XmlUtils.appendElementAndValue(substanceElement, Namespace.J, "ItemCategoryNIBRSPropertyCategoryCode", description);
-
-						XmlUtils.appendElementAndValue(substanceElement, J, "DrugCategoryCode", 
-								suspectedDrugType.getSuspectedDrugTypeType().getNibrsCode());
-						
-						if (suspectedDrugType.getEstimatedDrugQuantity()!= null || (suspectedDrugType.getTypeDrugMeasurementType() != null && 
-								suspectedDrugType.getTypeDrugMeasurementType().getTypeDrugMeasurementTypeId() != 99998)){
-							Element substanceQuantityMeasure = XmlUtils.appendChildElement(substanceElement, Namespace.NC, "SubstanceQuantityMeasure");
-							
-							String estimatedDrugQuantityString = Optional.ofNullable(suspectedDrugType.getEstimatedDrugQuantity())
-									.map(String::valueOf)
-									.map(item->{return "1.0".equals(item)? "1":item;})
-									.orElse(null); 
-							XmlUtils.appendElementAndValue(substanceQuantityMeasure, Namespace.NC, "MeasureDecimalValue", estimatedDrugQuantityString);
-							XmlUtils.appendElementAndValue(substanceQuantityMeasure, Namespace.J, "SubstanceUnitCode",
-									suspectedDrugType.getTypeDrugMeasurementType().getNibrsCode());
-						}
 					}
 				}
 			}
