@@ -45,7 +45,7 @@ public class SqlScriptFromExcelGenerator {
      
     public static void main(String[] args) throws IOException {
         generatePolulateCodeTableScript("src/test/resources/db/data.sql", 
-        		"src/test/resources/codeSpreadSheets/NIBRSCodeTables.xlsx", false);
+        		"src/test/resources/codeSpreadSheets/NIBRSCodeTablesGeneral.xlsx", false);
 //        generatePolulateCodeTableScript("src/test/resources/db/dataHawaii.sql", 
 //        		"src/test/resources/codeSpreadSheets/NIBRSCodeTablesHawaii.xlsx", false);
     }

@@ -131,32 +131,47 @@ public class XmlReportGenerator {
 	    	directorty.mkdirs(); 
 	    }
 
-	    writeGroupAIncidentReport(submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate());
-	    writeGroupBIncidentReport(submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate());
+	    writeGroupAIncidentReports(submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate());
+	    writeGroupBIncidentReports(submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate());
 	}
 	
-	private void writeGroupAIncidentReport(List<String> oris, java.sql.Date startDate, java.sql.Date endDate) {
+	@Async
+	public void processGroupASubmission(Integer administrativeSegmentId){
+		
+		File directorty = new File(appProperties.getNibrsNiemDocumentFolder()); 
+		if (!directorty.exists()){
+			directorty.mkdirs(); 
+		}
+
+		writeGroupAIncidentReport(administrativeSegmentId);
+	}
+	
+	private void writeGroupAIncidentReports(List<String> oris, java.sql.Date startDate, java.sql.Date endDate) {
 		
 		List<Integer> ids = administrativeSegmentRepository.findIdsByOriListAndSubmissionDateRange(oris, startDate, endDate);
 		
 		for (Integer administrativeSegmentId : ids) {
-			log.info("Generating group A report for pkId " + administrativeSegmentId);
-			AdministrativeSegment administrativeSegment = administrativeSegmentRepository.findByAdministrativeSegmentId(administrativeSegmentId);
+			writeGroupAIncidentReport(administrativeSegmentId);
+		}
+	}
+
+	private void writeGroupAIncidentReport(Integer administrativeSegmentId) {
+		log.info("Generating group A report for pkId " + administrativeSegmentId);
+		AdministrativeSegment administrativeSegment = administrativeSegmentRepository.findByAdministrativeSegmentId(administrativeSegmentId);
+		
+		try {
+			Document document = this.createGroupAIncidentReport(administrativeSegment);
 			
-			try {
-				Document document = this.createGroupAIncidentReport(administrativeSegment);
-				
-				String fileName = appProperties.getNibrsNiemDocumentFolder() + "/GroupAIncident" + administrativeSegment.getIncidentNumber() + "-" + LocalDateTime.now().format(formatter) + ".xml";
-				FileUtils.writeStringToFile(new File(fileName), XmlUtils.nodeToString(document), "UTF-8");
-			}
-			catch (Exception e) {
-				log.error("Failed to generate and write the report for GroupA Incident:\n " + administrativeSegment);
-				log.error(e.getMessage());
-			}
+			String fileName = appProperties.getNibrsNiemDocumentFolder() + "/GroupAIncident" + administrativeSegment.getIncidentNumber() + "-" + LocalDateTime.now().format(formatter) + ".xml";
+			FileUtils.writeStringToFile(new File(fileName), XmlUtils.nodeToString(document), "UTF-8");
+		}
+		catch (Exception e) {
+			log.error("Failed to generate and write the report for GroupA Incident:\n " + administrativeSegment);
+			log.error(e.getMessage());
 		}
 	}
 	
-	public void writeGroupBIncidentReport(List<String> oris, java.sql.Date startDate, java.sql.Date endDate){
+	public void writeGroupBIncidentReports(List<String> oris, java.sql.Date startDate, java.sql.Date endDate){
 		
 		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriListAndSubmissionDateRange(oris, startDate, endDate);
 		

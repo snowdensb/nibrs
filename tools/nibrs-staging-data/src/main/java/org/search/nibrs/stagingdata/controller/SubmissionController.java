@@ -25,6 +25,7 @@ import org.search.nibrs.stagingdata.repository.SubmissionRepository;
 import org.search.nibrs.stagingdata.service.xml.XmlReportGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,6 +61,18 @@ public class SubmissionController {
 		StringBuilder sb = new StringBuilder(180); 
 		sb.append(countOfReportsToGenerate);
 		sb.append(" NIBRS reports will be generated and sent to ");
+		sb.append(appProperties.getNibrsNiemDocumentFolder());
+		
+		return sb.toString();
+	}
+	
+	@PostMapping("/submissions/trigger/groupa/{id}")
+	public @ResponseBody String generateSubmissionFile(@PathVariable("id") Integer administrativeSegmentId){
+		
+		xmlReportGenerator.processGroupASubmission(administrativeSegmentId);
+		
+		StringBuilder sb = new StringBuilder(180); 
+		sb.append("The NIBRS reports will be generated and sent to ");
 		sb.append(appProperties.getNibrsNiemDocumentFolder());
 		
 		return sb.toString();
