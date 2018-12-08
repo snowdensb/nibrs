@@ -32,11 +32,12 @@ public class CamelRouter extends RouteBuilder {
 	
     @Override
     public void configure() throws Exception {
-        fromF("file:%s/input?idempotent=true&moveFailed=%s/error&move=processed/", 
+        
+        fromF("file:%s/input?idempotent=true&moveFailed=%s/error&move=processed/&sortBy=file:modified;file:name", 
         		appProperties.getNibrsNiemDocumentFolder(), appProperties.getNibrsNiemDocumentFolder()).routeId("niemDocumentFileInput")
-	        	.log(LoggingLevel.INFO, "File Name before calling is ${in.header.CamelFileName}")
-        		.transform().method("submissionRequestProcessor", "processSubmissionRequest")
-                .end();
+        .log(LoggingLevel.INFO, "File Name before calling is ${in.header.CamelFileName}")
+        .transform().method("submissionRequestProcessor", "processSubmissionRequest")
+        .end();
         
         from("direct:submitNiemDocument").routeId("callFBINibrsNiemService")
         	.to("xslt:xsl/SOAPWrapper.xsl")
