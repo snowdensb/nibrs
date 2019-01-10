@@ -109,7 +109,7 @@ public class ReturnAFormService {
 		processReportedOffenses(ori, year, month, returnAForm);
 		processOffenseClearances(ori, year, month, returnAForm);
 		
-		fillTheForcibleRapTotalRow(returnAForm);
+		fillTheForcibleRapeTotalRow(returnAForm);
 		fillTheRobberyTotalRow(returnAForm);
 		fillTheAssaultTotalRow(returnAForm);
 		fillTheBurglaryTotalRow(returnAForm);
@@ -358,7 +358,7 @@ public class ReturnAFormService {
 					break; 
 				case _09C: 
 					returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE; 
-					returnAForm.getRows()[returnARowName.ordinal()].increaseUnfoundedOffenses(1);
+					returnAForm.getRows()[returnARowName.ordinal()].increaseUnfoundedOffenses(1); ///?why
 					break; 
 				case _11A: 
 					returnARowName = getRowFor11AOffense(administrativeSegment, offense);
@@ -477,7 +477,7 @@ public class ReturnAFormService {
 				ReturnARowName.STRONG_ARM_ROBBERY);
 	}
 
-	private void fillTheForcibleRapTotalRow(ReturnAForm returnAForm) {
+	private void fillTheForcibleRapeTotalRow(ReturnAForm returnAForm) {
 		ReturnARowName totalRow = ReturnARowName.FORCIBLE_RAPE_TOTAL; 
 		
 		fillTheTotalRow(returnAForm, totalRow, ReturnARowName.RAPE_BY_FORCE, 
