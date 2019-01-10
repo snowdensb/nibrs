@@ -56,7 +56,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReturnAFormService {
 
-	@SuppressWarnings("unused")
 	private final Log log = LogFactory.getLog(this.getClass());
 	@Autowired
 	AdministrativeSegmentService administrativeSegmentService;
@@ -405,36 +404,40 @@ public class ReturnAFormService {
 				}
 				
 				if (returnARowName != null || hasBurglaryOffense || hasMotorVehicleTheftOffense){
-					for (PropertySegment propertySegment: administrativeSegment.getPropertySegments()){
-						List<PropertyType> propertyTypes = propertySegment.getPropertyTypes()
-								.stream()
-								.filter(propertyType -> propertyType.getValueOfProperty() > 0)
-								.collect(Collectors.toList()); 
-						
-						if (propertyTypes.size() > 0){
-							for (PropertyType propertyType: propertyTypes){
-								String propertyDescription = appProperties.getPropertyCodeMapping().get(propertyType.getPropertyDescriptionType().getNibrsCode());
-								PropertyTypeValueRowName rowName = PropertyTypeValueRowName.valueOf(propertyDescription); 
-								switch (propertySegment.getTypePropertyLossEtcType().getNibrsCode()){
-								case "7":
-									returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseStolen(propertyType.getValueOfProperty());
-									returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseStolen(propertyType.getValueOfProperty());
-									break; 
-								case "5":
-									returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
-									returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
-									break; 
-								default:
-								}
-							}
-						}
-						
-					}
+					sumPropertyValuesByType(returnAForm, administrativeSegment);
 				}
 			}
 			
 		}
 		
+	}
+
+	private void sumPropertyValuesByType(ReturnAForm returnAForm, AdministrativeSegment administrativeSegment) {
+		for (PropertySegment propertySegment: administrativeSegment.getPropertySegments()){
+			List<PropertyType> propertyTypes = propertySegment.getPropertyTypes()
+					.stream()
+					.filter(propertyType -> propertyType.getValueOfProperty() > 0)
+					.collect(Collectors.toList()); 
+			
+			if (propertyTypes.size() > 0){
+				for (PropertyType propertyType: propertyTypes){
+					String propertyDescription = appProperties.getPropertyCodeMapping().get(propertyType.getPropertyDescriptionType().getNibrsCode());
+					PropertyTypeValueRowName rowName = PropertyTypeValueRowName.valueOf(propertyDescription); 
+					switch (propertySegment.getTypePropertyLossEtcType().getNibrsCode()){
+					case "7":
+						returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseStolen(propertyType.getValueOfProperty());
+						returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseStolen(propertyType.getValueOfProperty());
+						break; 
+					case "5":
+						returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
+						returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
+						break; 
+					default:
+					}
+				}
+			}
+			
+		}
 	}
 
 	private void fillTheMotorVehicleTheftTotalRow(ReturnAForm returnAForm) {
