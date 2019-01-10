@@ -16,13 +16,15 @@
 package org.search.nibrs.model.reports;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang3.StringUtils;
 
 public class ReturnAForm implements Serializable{
 	private static final long serialVersionUID = -2340194364781985383L;
 	private ReturnAFormRow[] rows = new ReturnAFormRow[ReturnARowName.values().length]; 
+	private PropertyTypeValue[] propertyTypeValues = new PropertyTypeValue[PropertyTypeValueRowName.values().length]; 
 	private String ori; 
 	private String agencyName; 
 	private String stateName;
@@ -35,6 +37,10 @@ public class ReturnAForm implements Serializable{
 		super();
 		for (int i = 0; i < getRows().length; i++){
 			getRows()[i] = new ReturnAFormRow(); 
+		}
+		
+		for (int i=0; i< getPropertyTypeValues().length; i++){
+			getPropertyTypeValues()[i] = new PropertyTypeValue();
 		}
 	}
 	
@@ -98,12 +104,9 @@ public class ReturnAForm implements Serializable{
 	}
 
 	
-	@Override
-	public String toString() {
-		return "ReturnAForm [rows=" + Arrays.toString(rows) + ", ori=" + ori + ", agencyName=" + agencyName
-				+ ", stateName=" + stateName + ", month=" + month + ", year=" + year + "]";
+	public String toString(){
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
-
 	public String getStateCode() {
 		return stateCode;
 	}
@@ -122,6 +125,14 @@ public class ReturnAForm implements Serializable{
 	
 	public void setPopulation(Integer population) {
 		this.population = population;
+	}
+
+	public PropertyTypeValue[] getPropertyTypeValues() {
+		return propertyTypeValues;
+	}
+
+	public void setPropertyTypeValues(PropertyTypeValue[] propertyTypeValues) {
+		this.propertyTypeValues = propertyTypeValues;
 	}
 
 }

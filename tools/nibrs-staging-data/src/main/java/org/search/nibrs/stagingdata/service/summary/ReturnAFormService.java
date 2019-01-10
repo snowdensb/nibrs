@@ -34,9 +34,12 @@ import org.search.nibrs.model.codes.LocationTypeCode;
 import org.search.nibrs.model.codes.OffenseCode;
 import org.search.nibrs.model.codes.PropertyDescriptionCode;
 import org.search.nibrs.model.codes.TypeOfPropertyLossCode;
+import org.search.nibrs.model.reports.PropertyTypeValueRowName;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.ReturnARowName;
+import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
+import org.search.nibrs.stagingdata.model.PropertyType;
 import org.search.nibrs.stagingdata.model.TypeOfWeaponForceInvolved;
 import org.search.nibrs.stagingdata.model.TypeOfWeaponForceInvolvedType;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -59,6 +62,8 @@ public class ReturnAFormService {
 	AdministrativeSegmentService administrativeSegmentService;
 	@Autowired
 	public AgencyRepository agencyRepository; 
+	@Autowired
+	public AppProperties appProperties; 
 
 	private Map<String, Integer> partIOffensesMap; 
 	
@@ -116,6 +121,7 @@ public class ReturnAFormService {
 		fillTheMotorVehicleTheftTotalRow(returnAForm);
 		fillTheGrandTotalRow(returnAForm);
 
+		log.info("returnAForm: " + returnAForm);
 		return returnAForm;
 	}
 
@@ -349,6 +355,8 @@ public class ReturnAFormService {
 			for (OffenseSegment offense: offensesToReport){
 				
 				ReturnARowName returnARowName = null; 
+				boolean hasBurglaryOffense = false; 
+				boolean hasMotorVehicleTheftOffense = false; 
 				switch (OffenseCode.forCode(offense.getUcrOffenseCodeType().getNibrsCode())){
 				case _09A:
 					returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE; 
@@ -356,10 +364,10 @@ public class ReturnAFormService {
 				case _09B: 
 					returnARowName = ReturnARowName.MANSLAUGHTER_BY_NEGLIGENCE; 
 					break; 
-				case _09C: 
-					returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE; 
-					returnAForm.getRows()[returnARowName.ordinal()].increaseUnfoundedOffenses(1); ///?why
-					break; 
+				//case _09C: // TODO  Not finding anything about 09C in the "Conversion of NIBRS Data to Summary Data" document. comment out this block -hw 20190110
+				//	returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE; 
+				//	returnAForm.getRows()[returnARowName.ordinal()].increaseUnfoundedOffenses(1); ///?why
+				//	break; 
 				case _11A: 
 					returnARowName = getRowFor11AOffense(administrativeSegment, offense);
 					break;
@@ -374,7 +382,7 @@ public class ReturnAFormService {
 					returnARowName = getReturnARowFor13B13COffense(offense);
 					break;
 				case _220: 
-					countBurglaryOffense(returnAForm, offense);
+					hasBurglaryOffense = countBurglaryOffense(returnAForm, offense);
 					break;
 				case _23A: 
 				case _23B:
@@ -387,13 +395,41 @@ public class ReturnAFormService {
 					returnARowName = ReturnARowName.LARCENCY_THEFT_TOTAL; 
 					break; 
 				case _240: 
-					countMotorVehicleTheftOffense(returnAForm, offense);
+					hasMotorVehicleTheftOffense = countMotorVehicleTheftOffense(returnAForm, offense);
 					break; 
 				default: 
 				}
 				
 				if (returnARowName != null){
 					returnAForm.getRows()[returnARowName.ordinal()].increaseReportedOffenses(1);
+				}
+				
+				if (returnARowName != null || hasBurglaryOffense || hasMotorVehicleTheftOffense){
+					for (PropertySegment propertySegment: administrativeSegment.getPropertySegments()){
+						List<PropertyType> propertyTypes = propertySegment.getPropertyTypes()
+								.stream()
+								.filter(propertyType -> propertyType.getValueOfProperty() > 0)
+								.collect(Collectors.toList()); 
+						
+						if (propertyTypes.size() > 0){
+							for (PropertyType propertyType: propertyTypes){
+								String propertyDescription = appProperties.getPropertyCodeMapping().get(propertyType.getPropertyDescriptionType().getNibrsCode());
+								PropertyTypeValueRowName rowName = PropertyTypeValueRowName.valueOf(propertyDescription); 
+								switch (propertySegment.getTypePropertyLossEtcType().getNibrsCode()){
+								case "7":
+									returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseStolen(propertyType.getValueOfProperty());
+									returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseStolen(propertyType.getValueOfProperty());
+									break; 
+								case "5":
+									returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
+									returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
+									break; 
+								default:
+								}
+							}
+						}
+						
+					}
 				}
 			}
 			
@@ -484,8 +520,9 @@ public class ReturnAFormService {
 				ReturnARowName.ATTEMPTS_TO_COMMIT_FORCIBLE_RAPE);
 	}
 
-	private void countMotorVehicleTheftOffense(ReturnAForm returnAForm, OffenseSegment offense) {
+	private boolean countMotorVehicleTheftOffense(ReturnAForm returnAForm, OffenseSegment offense) {
 		
+		boolean hasMotorVehicleTheftOffense = false; 
 		List<PropertySegment> properties =  offense.getAdministrativeSegment().getPropertySegments()
 				.stream().filter(property->TypeOfPropertyLossCode._7.code.equals(property.getTypePropertyLossEtcType().getNibrsCode()))
 				.collect(Collectors.toList());
@@ -500,6 +537,7 @@ public class ReturnAFormService {
 			
 			if ("A".equals(offense.getOffenseAttemptedCompleted())){
 				returnAForm.getRows()[ReturnARowName.AUTOS_THEFT.ordinal()].increaseReportedOffenses(motorVehicleCodes.size());
+				hasMotorVehicleTheftOffense = motorVehicleCodes.size() > 0;
 			}
 			else if ( numberOfStolenMotorVehicles > 0){
 				if (motorVehicleCodes.contains(PropertyDescriptionCode._03.code)){
@@ -520,6 +558,7 @@ public class ReturnAFormService {
 					
 					if (numberOfStolenMotorVehicles > 0){
 						returnAForm.getRows()[ReturnARowName.AUTOS_THEFT.ordinal()].increaseReportedOffenses(numberOfStolenMotorVehicles);
+						hasMotorVehicleTheftOffense = true; 
 					}
 				}
 				else if (CollectionUtils.containsAny(motorVehicleCodes, 
@@ -532,18 +571,23 @@ public class ReturnAFormService {
 					if (numberOfStolenMotorVehicles > 0){
 						returnAForm.getRows()[ReturnARowName.TRUCKS_BUSES_THEFT.ordinal()].increaseReportedOffenses(numberOfStolenMotorVehicles);
 					}
+					
+					hasMotorVehicleTheftOffense = numberOfStolenMotorVehicles > 0 || countOfOtherVehicles > 0;
 				}
 				else if (motorVehicleCodes.contains(PropertyDescriptionCode._24.code)){
 					returnAForm.getRows()[ReturnARowName.OTHER_VEHICLES_THEFT.ordinal()].increaseReportedOffenses(numberOfStolenMotorVehicles);
+					hasMotorVehicleTheftOffense = numberOfStolenMotorVehicles > 0;
 				}
 			}
 		}
 		
+		return hasMotorVehicleTheftOffense; 
 	}
 
-	private void countBurglaryOffense(ReturnAForm returnAForm, OffenseSegment offense) {
+	private boolean countBurglaryOffense(ReturnAForm returnAForm, OffenseSegment offense) {
 		ReturnARowName returnARowName = getBurglaryRow(offense);
 		
+		boolean hasBurglaryOffense = false; 
 //		If there is an entry in Data Element 10 (Number of Premises Entered) and an entry of 19 
 //		(Rental Storage Facility) in Data Element 9 (Location Type), use the number of premises 
 //		listed in Data Element 10 as the number of burglaries to be counted.
@@ -557,7 +601,10 @@ public class ReturnAFormService {
 			else {
 				returnAForm.getRows()[returnARowName.ordinal()].increaseReportedOffenses(1);
 			}
+			
+			hasBurglaryOffense = true; 
 		}
+		return hasBurglaryOffense; 
 	}
 
 	private ReturnARowName getReturnARowFor13B13COffense(OffenseSegment offense) {
