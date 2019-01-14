@@ -158,7 +158,7 @@ public class AppProperties {
 		getLocationCodeMapping().put("51", "MISCELLANEOUS");
 		getLocationCodeMapping().put("52", "MISCELLANEOUS");
 		getLocationCodeMapping().put("53", "MISCELLANEOUS");
-		getLocationCodeMapping().put("54", "COMMERCIAL_HOUSE");
+		getLocationCodeMapping().put("54", "MISCELLANEOUS"); // according to the conversion of NIBRS Data to Summary Data.pdf
 		getLocationCodeMapping().put("55", "COMMERCIAL_HOUSE");
 		getLocationCodeMapping().put("56", "MISCELLANEOUS");
 		getLocationCodeMapping().put("57", "MISCELLANEOUS");

@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.model.codes.ClearedExceptionallyCode;
@@ -34,6 +35,8 @@ import org.search.nibrs.model.codes.LocationTypeCode;
 import org.search.nibrs.model.codes.OffenseCode;
 import org.search.nibrs.model.codes.PropertyDescriptionCode;
 import org.search.nibrs.model.codes.TypeOfPropertyLossCode;
+import org.search.nibrs.model.reports.PropertyStolenByClassification;
+import org.search.nibrs.model.reports.PropertyStolenByClassificationRowName;
 import org.search.nibrs.model.reports.PropertyTypeValueRowName;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.ReturnARowName;
@@ -347,6 +350,7 @@ public class ReturnAFormService {
 	private void processReportedOffenses(String ori, Integer year, Integer month, ReturnAForm returnAForm) {
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findByOriAndIncidentDate(ori, year, month);
 
+		PropertyStolenByClassification[] stolenProperties = returnAForm.getPropertyStolenByClassifications();
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue; 
 			
@@ -356,12 +360,17 @@ public class ReturnAFormService {
 				ReturnARowName returnARowName = null; 
 				boolean hasBurglaryOffense = false; 
 				boolean hasMotorVehicleTheftOffense = false; 
+				double stolenPropertyValue = 0.0;
 				switch (OffenseCode.forCode(offense.getUcrOffenseCodeType().getNibrsCode())){
 				case _09A:
 					returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE; 
+					processStolenProperties(stolenProperties, administrativeSegment, PropertyStolenByClassificationRowName.MURDER_AND_NONNEGLIGENT_MANSLAUGHTER);	
+							
 					break; 
 				case _09B: 
 					returnARowName = ReturnARowName.MANSLAUGHTER_BY_NEGLIGENCE; 
+					stolenPropertyValue = getStolenPropertyValue(administrativeSegment);
+					log.info("09B offense stolen property value: " + stolenPropertyValue); 
 					break; 
 				//case _09C: // TODO  Not finding anything about 09C in the "Conversion of NIBRS Data to Summary Data" document. comment out this block -hw 20190110
 				//	returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE; 
@@ -369,9 +378,15 @@ public class ReturnAFormService {
 				//	break; 
 				case _11A: 
 					returnARowName = getRowFor11AOffense(administrativeSegment, offense);
+					if (returnARowName != null){
+						processStolenProperties(stolenProperties, administrativeSegment, PropertyStolenByClassificationRowName.RAPE);
+					}
 					break;
 				case _120:
 					returnARowName = getReturnARowForRobbery(offense);
+					if (returnARowName != null){
+						processRobberyStolenPropertyByLocation(stolenProperties, offense);
+					}
 					break; 
 				case _13A:
 					returnARowName = getReturnARowForAssault(offense);
@@ -382,6 +397,7 @@ public class ReturnAFormService {
 					break;
 				case _220: 
 					hasBurglaryOffense = countBurglaryOffense(returnAForm, offense);
+					//Add a method to process stolen properties for burglary TODO
 					break;
 				case _23A: 
 				case _23B:
@@ -392,6 +408,7 @@ public class ReturnAFormService {
 				case _23G: 
 				case _23H: 
 					returnARowName = ReturnARowName.LARCENCY_THEFT_TOTAL; 
+					//Add a method to process stolen properties for larcency TODO
 					break; 
 				case _240: 
 					hasMotorVehicleTheftOffense = countMotorVehicleTheftOffense(returnAForm, offense);
@@ -410,6 +427,43 @@ public class ReturnAFormService {
 			
 		}
 		
+	}
+
+	private void processRobberyStolenPropertyByLocation(PropertyStolenByClassification[] stolenProperties,
+			OffenseSegment offenseSegment) {
+		log.info("offense segment LocationType: " + offenseSegment.getLocationType().getNibrsCode());
+		String locationType = appProperties.getLocationCodeMapping().get(offenseSegment.getLocationType().getNibrsCode());
+		if ( StringUtils.isNotBlank(locationType)){
+			PropertyStolenByClassificationRowName rowName = PropertyStolenByClassificationRowName.valueOf("ROBBERY_" + locationType);
+			stolenProperties[rowName.ordinal()].increaseNumberOfOffenses(1);
+			stolenProperties[PropertyStolenByClassificationRowName.ROBBERY_TOTAL.ordinal()].increaseNumberOfOffenses(1);
+			stolenProperties[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()].increaseNumberOfOffenses(1);
+			
+			Double stolenPropertyValue = getStolenPropertyValue(offenseSegment.getAdministrativeSegment());
+			stolenProperties[rowName.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+			stolenProperties[PropertyStolenByClassificationRowName.ROBBERY_TOTAL.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+			stolenProperties[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+		}
+	}
+
+	private void processStolenProperties(PropertyStolenByClassification[] stolenProperties,
+			AdministrativeSegment administrativeSegment, PropertyStolenByClassificationRowName propertyStolenByClassificationRowName) {
+		double stolenPropertyValue;
+		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseNumberOfOffenses(1);
+		stolenProperties[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()].increaseNumberOfOffenses(1);
+		stolenPropertyValue = getStolenPropertyValue(administrativeSegment);
+		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+		stolenProperties[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+	}
+
+	private Double getStolenPropertyValue(AdministrativeSegment administrativeSegment) {
+		return administrativeSegment.getPropertySegments()
+				.stream()
+				.filter(propertySegment -> propertySegment.getTypePropertyLossEtcType().getNibrsCode().equals("7"))
+				.flatMap(i->i.getPropertyTypes().stream())
+				.filter(i->i.getValueOfProperty() > 0)
+				.map(PropertyType::getValueOfProperty)
+				.reduce(Double::sum).orElse(0.0);
 	}
 
 	private void sumPropertyValuesByType(ReturnAForm returnAForm, AdministrativeSegment administrativeSegment) {
@@ -525,12 +579,13 @@ public class ReturnAFormService {
 
 	private boolean countMotorVehicleTheftOffense(ReturnAForm returnAForm, OffenseSegment offense) {
 		
-		boolean hasMotorVehicleTheftOffense = false; 
 		List<PropertySegment> properties =  offense.getAdministrativeSegment().getPropertySegments()
 				.stream().filter(property->TypeOfPropertyLossCode._7.code.equals(property.getTypePropertyLossEtcType().getNibrsCode()))
 				.collect(Collectors.toList());
 		
+		int totalOffenseCount = 0;
 		for (PropertySegment property: properties){
+			int offenseCountInThisProperty = 0;
 			List<String> motorVehicleCodes = property.getPropertyTypes().stream()
 					.map(propertyType -> propertyType.getPropertyDescriptionType().getNibrsCode())
 					.filter(code -> PropertyDescriptionCode.isMotorVehicleCode(code))
@@ -540,9 +595,10 @@ public class ReturnAFormService {
 			
 			if ("A".equals(offense.getOffenseAttemptedCompleted())){
 				returnAForm.getRows()[ReturnARowName.AUTOS_THEFT.ordinal()].increaseReportedOffenses(motorVehicleCodes.size());
-				hasMotorVehicleTheftOffense = motorVehicleCodes.size() > 0;
+				offenseCountInThisProperty += motorVehicleCodes.size();
 			}
 			else if ( numberOfStolenMotorVehicles > 0){
+				offenseCountInThisProperty += numberOfStolenMotorVehicles;
 				if (motorVehicleCodes.contains(PropertyDescriptionCode._03.code)){
 					for (String code: motorVehicleCodes){
 						switch (code){
@@ -561,7 +617,6 @@ public class ReturnAFormService {
 					
 					if (numberOfStolenMotorVehicles > 0){
 						returnAForm.getRows()[ReturnARowName.AUTOS_THEFT.ordinal()].increaseReportedOffenses(numberOfStolenMotorVehicles);
-						hasMotorVehicleTheftOffense = true; 
 					}
 				}
 				else if (CollectionUtils.containsAny(motorVehicleCodes, 
@@ -574,17 +629,37 @@ public class ReturnAFormService {
 					if (numberOfStolenMotorVehicles > 0){
 						returnAForm.getRows()[ReturnARowName.TRUCKS_BUSES_THEFT.ordinal()].increaseReportedOffenses(numberOfStolenMotorVehicles);
 					}
-					
-					hasMotorVehicleTheftOffense = numberOfStolenMotorVehicles > 0 || countOfOtherVehicles > 0;
 				}
 				else if (motorVehicleCodes.contains(PropertyDescriptionCode._24.code)){
 					returnAForm.getRows()[ReturnARowName.OTHER_VEHICLES_THEFT.ordinal()].increaseReportedOffenses(numberOfStolenMotorVehicles);
-					hasMotorVehicleTheftOffense = numberOfStolenMotorVehicles > 0;
 				}
 			}
+			
+			totalOffenseCount += offenseCountInThisProperty;
+			
+			if (offenseCountInThisProperty > 0){
+				double valueOfStolenVehicles = property.getPropertyTypes().stream()
+						.filter(propertyType -> PropertyDescriptionCode.isMotorVehicleCode(propertyType.getPropertyDescriptionType().getNibrsCode()))
+						.filter(propertyType->propertyType.getValueOfProperty() > 0)
+						.map(PropertyType::getValueOfProperty)
+						.reduce((a,b)->a+b).orElse(0.0);
+				returnAForm.getPropertyStolenByClassifications()
+					[PropertyStolenByClassificationRowName.MOTOR_VEHICLE_THEFT.ordinal()]
+						.increaseMonetaryValue(valueOfStolenVehicles);
+				returnAForm.getPropertyStolenByClassifications()
+					[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()]
+					.increaseMonetaryValue(valueOfStolenVehicles);
+			}
+
 		}
 		
-		return hasMotorVehicleTheftOffense; 
+		returnAForm.getPropertyStolenByClassifications()
+			[PropertyStolenByClassificationRowName.MOTOR_VEHICLE_THEFT.ordinal()]
+					.increaseNumberOfOffenses(totalOffenseCount);
+		returnAForm.getPropertyStolenByClassifications()
+			[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()]
+				.increaseNumberOfOffenses(totalOffenseCount);
+		return totalOffenseCount > 0; 
 	}
 
 	private boolean countBurglaryOffense(ReturnAForm returnAForm, OffenseSegment offense) {

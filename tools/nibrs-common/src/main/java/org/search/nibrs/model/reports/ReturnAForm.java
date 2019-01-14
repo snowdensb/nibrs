@@ -25,6 +25,7 @@ public class ReturnAForm implements Serializable{
 	private static final long serialVersionUID = -2340194364781985383L;
 	private ReturnAFormRow[] rows = new ReturnAFormRow[ReturnARowName.values().length]; 
 	private PropertyTypeValue[] propertyTypeValues = new PropertyTypeValue[PropertyTypeValueRowName.values().length]; 
+	private PropertyStolenByClassification[] propertyStolenByClassifications = new PropertyStolenByClassification[PropertyStolenByClassificationRowName.values().length]; 
 	private String ori; 
 	private String agencyName; 
 	private String stateName;
@@ -41,6 +42,10 @@ public class ReturnAForm implements Serializable{
 		
 		for (int i=0; i< getPropertyTypeValues().length; i++){
 			getPropertyTypeValues()[i] = new PropertyTypeValue();
+		}
+		
+		for (int i=0; i< getPropertyStolenByClassifications().length; i++){
+			getPropertyStolenByClassifications()[i] = new PropertyStolenByClassification();
 		}
 	}
 	
@@ -133,6 +138,14 @@ public class ReturnAForm implements Serializable{
 
 	public void setPropertyTypeValues(PropertyTypeValue[] propertyTypeValues) {
 		this.propertyTypeValues = propertyTypeValues;
+	}
+
+	public PropertyStolenByClassification[] getPropertyStolenByClassifications() {
+		return propertyStolenByClassifications;
+	}
+
+	public void setPropertyStolenByClassifications(PropertyStolenByClassification[] propertyStolenByClassifications) {
+		this.propertyStolenByClassifications = propertyStolenByClassifications;
 	}
 
 }
