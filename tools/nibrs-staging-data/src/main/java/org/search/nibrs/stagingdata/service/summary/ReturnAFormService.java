@@ -362,7 +362,8 @@ public class ReturnAFormService {
 				boolean hasMotorVehicleTheftOffense = false; 
 				double stolenPropertyValue = 0.0;
 				boolean countTheProperty = false; 
-				switch (OffenseCode.forCode(offense.getUcrOffenseCodeType().getNibrsCode())){
+				OffenseCode offenseCode = OffenseCode.forCode(offense.getUcrOffenseCodeType().getNibrsCode()); 
+				switch (offenseCode){
 				case _09A:
 					returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE; 
 					countTheProperty = true; 
@@ -413,6 +414,7 @@ public class ReturnAFormService {
 					returnARowName = ReturnARowName.LARCENCY_THEFT_TOTAL; 
 					countTheProperty = true; 
 					processLarcencyStolenPropertyByValue(stolenProperties, administrativeSegment);
+					processLarcencyStolenPropertyByNature(stolenProperties, offenseCode, administrativeSegment);
 					break; 
 				case _240: 
 					hasMotorVehicleTheftOffense = countMotorVehicleTheftOffense(returnAForm, offense);
@@ -431,6 +433,46 @@ public class ReturnAFormService {
 			
 		}
 		
+	}
+
+	private void processLarcencyStolenPropertyByNature(PropertyStolenByClassification[] stolenProperties, OffenseCode offenseCode, 
+			AdministrativeSegment administrativeSegment) {
+		PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = null;
+		
+		switch(offenseCode){
+		case _23A: 
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_POCKET_PICKING; 
+			break; 
+		case _23B: 
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_PURSE_SNATCHING; 
+			break; 
+		case _23C: 
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_SHOPLIFTING; 
+			break; 
+		case _23D: 
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_FROM_BUILDING; 
+			break; 
+		case _23E: 
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_FROM_COIN_OPERATED_MACHINES; 
+			break; 
+		case _23F: 
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_FROM_MOTOR_VEHICLES; 
+			break; 
+		case _23G: 
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_MOTOR_VEHICLE_PARTS_AND_ACCESSORIES; 
+			break; 
+		case _23H: 
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_ALL_OTHER; 
+			break; 
+			default: 
+		}
+		
+		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseNumberOfOffenses(1);
+		stolenProperties[PropertyStolenByClassificationRowName.LARCENIES_TOTAL_BY_NATURE.ordinal()].increaseNumberOfOffenses(1);
+
+		double stolenPropertyValue = getStolenPropertyValue(administrativeSegment);
+		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+		stolenProperties[PropertyStolenByClassificationRowName.LARCENIES_TOTAL_BY_NATURE.ordinal()].increaseMonetaryValue(stolenPropertyValue);
 	}
 
 	private void processLarcencyStolenPropertyByValue(PropertyStolenByClassification[] stolenProperties, AdministrativeSegment administrativeSegment) {
@@ -457,7 +499,6 @@ public class ReturnAFormService {
 
 	private void processRobberyStolenPropertyByLocation(PropertyStolenByClassification[] stolenProperties,
 			OffenseSegment offenseSegment) {
-		log.info("offense segment LocationType: " + offenseSegment.getLocationType().getNibrsCode());
 		String locationType = appProperties.getLocationCodeMapping().get(offenseSegment.getLocationType().getNibrsCode());
 		if ( StringUtils.isNotBlank(locationType)){
 			PropertyStolenByClassificationRowName rowName = PropertyStolenByClassificationRowName.valueOf("ROBBERY_" + locationType);
