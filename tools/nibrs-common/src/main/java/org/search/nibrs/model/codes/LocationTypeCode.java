@@ -47,6 +47,9 @@ public enum LocationTypeCode {
 	 * Rental Storage Facility
 	 */
 	_19("19","Rental Storage Facility"),
+	/**
+	 * Residence
+	 */
 	_20("20","Residence/Home"),
 	_21("21","Restaurant"),
 	_22("22","School/College"),

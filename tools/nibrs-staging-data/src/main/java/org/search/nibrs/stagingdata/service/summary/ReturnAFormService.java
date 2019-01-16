@@ -358,12 +358,14 @@ public class ReturnAFormService {
 			for (OffenseSegment offense: offensesToReport){
 				
 				ReturnARowName returnARowName = null; 
-				boolean hasBurglaryOffense = false; 
+				int burglaryOffenseCount = 0; 
 				boolean hasMotorVehicleTheftOffense = false; 
 				double stolenPropertyValue = 0.0;
+				boolean countTheProperty = false; 
 				switch (OffenseCode.forCode(offense.getUcrOffenseCodeType().getNibrsCode())){
 				case _09A:
 					returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE; 
+					countTheProperty = true; 
 					processStolenProperties(stolenProperties, administrativeSegment, PropertyStolenByClassificationRowName.MURDER_AND_NONNEGLIGENT_MANSLAUGHTER);	
 							
 					break; 
@@ -379,12 +381,14 @@ public class ReturnAFormService {
 				case _11A: 
 					returnARowName = getRowFor11AOffense(administrativeSegment, offense);
 					if (returnARowName != null){
+						countTheProperty = true; 
 						processStolenProperties(stolenProperties, administrativeSegment, PropertyStolenByClassificationRowName.RAPE);
 					}
 					break;
 				case _120:
 					returnARowName = getReturnARowForRobbery(offense);
 					if (returnARowName != null){
+						countTheProperty = true;
 						processRobberyStolenPropertyByLocation(stolenProperties, offense);
 					}
 					break; 
@@ -396,8 +400,7 @@ public class ReturnAFormService {
 					returnARowName = getReturnARowFor13B13COffense(offense);
 					break;
 				case _220: 
-					hasBurglaryOffense = countBurglaryOffense(returnAForm, offense);
-					//Add a method to process stolen properties for burglary TODO
+					burglaryOffenseCount = countBurglaryOffense(returnAForm, offense);
 					break;
 				case _23A: 
 				case _23B:
@@ -408,7 +411,8 @@ public class ReturnAFormService {
 				case _23G: 
 				case _23H: 
 					returnARowName = ReturnARowName.LARCENCY_THEFT_TOTAL; 
-					//Add a method to process stolen properties for larcency TODO
+					countTheProperty = true; 
+					processLarcencyStolenPropertyByValue(stolenProperties, administrativeSegment);
 					break; 
 				case _240: 
 					hasMotorVehicleTheftOffense = countMotorVehicleTheftOffense(returnAForm, offense);
@@ -420,13 +424,35 @@ public class ReturnAFormService {
 					returnAForm.getRows()[returnARowName.ordinal()].increaseReportedOffenses(1);
 				}
 				
-				if (returnARowName != null || hasBurglaryOffense || hasMotorVehicleTheftOffense){
+				if ( countTheProperty  || burglaryOffenseCount > 0 || hasMotorVehicleTheftOffense){
 					sumPropertyValuesByType(returnAForm, administrativeSegment);
 				}
 			}
 			
 		}
 		
+	}
+
+	private void processLarcencyStolenPropertyByValue(PropertyStolenByClassification[] stolenProperties, AdministrativeSegment administrativeSegment) {
+		double stolenPropertyValue = getStolenPropertyValue(administrativeSegment);
+		PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = null;
+		
+		if (stolenPropertyValue >= 200.0){
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_200_PLUS;
+		}
+		else if (stolenPropertyValue >= 50 ){
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_50_199;
+		}
+		else{
+			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_UNDER_50;
+		}
+		
+		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseNumberOfOffenses(1);
+		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+		stolenProperties[PropertyStolenByClassificationRowName.LARCENY_TOTAL.ordinal()].increaseNumberOfOffenses(1);
+		stolenProperties[PropertyStolenByClassificationRowName.LARCENY_TOTAL.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+		stolenProperties[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()].increaseNumberOfOffenses(1);
+		stolenProperties[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()].increaseMonetaryValue(stolenPropertyValue);
 	}
 
 	private void processRobberyStolenPropertyByLocation(PropertyStolenByClassification[] stolenProperties,
@@ -662,10 +688,10 @@ public class ReturnAFormService {
 		return totalOffenseCount > 0; 
 	}
 
-	private boolean countBurglaryOffense(ReturnAForm returnAForm, OffenseSegment offense) {
+	private int countBurglaryOffense(ReturnAForm returnAForm, OffenseSegment offense) {
 		ReturnARowName returnARowName = getBurglaryRow(offense);
 		
-		boolean hasBurglaryOffense = false; 
+		int burglaryOffenseCount = 0; 
 //		If there is an entry in Data Element 10 (Number of Premises Entered) and an entry of 19 
 //		(Rental Storage Facility) in Data Element 9 (Location Type), use the number of premises 
 //		listed in Data Element 10 as the number of burglaries to be counted.
@@ -674,15 +700,62 @@ public class ReturnAFormService {
 			int numberOfPremisesEntered = Optional.ofNullable(offense.getNumberOfPremisesEntered()).orElse(0);
 			if ( numberOfPremisesEntered > 0 
 					&& LocationTypeCode._19.code.equals(offense.getLocationType().getNibrsCode())){
-				returnAForm.getRows()[returnARowName.ordinal()].increaseReportedOffenses(offense.getNumberOfPremisesEntered());
+				burglaryOffenseCount = offense.getNumberOfPremisesEntered();
 			}
 			else {
-				returnAForm.getRows()[returnARowName.ordinal()].increaseReportedOffenses(1);
+				burglaryOffenseCount = 1; 
 			}
 			
-			hasBurglaryOffense = true; 
+			returnAForm.getRows()[returnARowName.ordinal()].increaseReportedOffenses(burglaryOffenseCount);
 		}
-		return hasBurglaryOffense; 
+		
+		if (burglaryOffenseCount > 0){
+			PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = 
+					getPropertyStolenByClassificationBurglaryRowName(offense.getLocationType().getNibrsCode(), offense.getAdministrativeSegment().getIncidentHour());
+			returnAForm.getPropertyStolenByClassifications()[propertyStolenByClassificationRowName.ordinal()]
+					.increaseNumberOfOffenses(burglaryOffenseCount);
+			returnAForm.getPropertyStolenByClassifications()[PropertyStolenByClassificationRowName.BURGLARY_TOTAL.ordinal()]
+					.increaseNumberOfOffenses(burglaryOffenseCount);
+			returnAForm.getPropertyStolenByClassifications()[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()]
+					.increaseNumberOfOffenses(burglaryOffenseCount);
+			
+			double stolenPropertyValue = getStolenPropertyValue(offense.getAdministrativeSegment());
+			returnAForm.getPropertyStolenByClassifications()[propertyStolenByClassificationRowName.ordinal()]
+					.increaseMonetaryValue(stolenPropertyValue);
+			returnAForm.getPropertyStolenByClassifications()[PropertyStolenByClassificationRowName.BURGLARY_TOTAL.ordinal()]
+					.increaseMonetaryValue(stolenPropertyValue);
+			returnAForm.getPropertyStolenByClassifications()[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()]
+					.increaseMonetaryValue(stolenPropertyValue);
+		}
+		return burglaryOffenseCount; 
+	}
+
+	private PropertyStolenByClassificationRowName getPropertyStolenByClassificationBurglaryRowName(String locationCode,
+			String incidentHour) {
+		PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = null;
+		if (LocationTypeCode._20.code.equals(locationCode)){
+			if (StringUtils.isBlank(incidentHour)){
+				propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.BURGLARY_RESIDENCE_UNKNOWN;
+			}
+			else if (Integer.valueOf(incidentHour) >= 6 && Integer.valueOf(incidentHour) < 18){
+				propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.BURGLARY_RESIDENCE_DAY; 
+			}
+			else{
+				propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.BURGLARY_RESIDENCE_NIGHT; 
+			}
+		}
+		else{
+			if (StringUtils.isBlank(incidentHour)){
+				propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.BURGLARY_NON_RESIDENCE_UNKNOWN;
+			}
+			else if (Integer.valueOf(incidentHour) >= 6 && Integer.valueOf(incidentHour) < 18){
+				propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.BURGLARY_NON_RESIDENCE_DAY; 
+			}
+			else{
+				propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.BURGLARY_NON_RESIDENCE_NIGHT; 
+			}
+		}
+		return propertyStolenByClassificationRowName;
 	}
 
 	private ReturnARowName getReturnARowFor13B13COffense(OffenseSegment offense) {
