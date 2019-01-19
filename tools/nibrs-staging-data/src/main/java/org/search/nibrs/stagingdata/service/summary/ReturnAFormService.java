@@ -169,7 +169,7 @@ public class ReturnAFormService {
 				case _23F: 
 				case _23G: 
 				case _23H: 
-					returnARowName = ReturnARowName.LARCENCY_THEFT_TOTAL; 
+					returnARowName = ReturnARowName.LARCENY_THEFT_TOTAL; 
 					break; 
 				case _240: 
 					countClearedMotorVehicleTheftOffense(returnAForm, offense, isClearanceInvolvingOnlyJuvenile );
@@ -409,9 +409,9 @@ public class ReturnAFormService {
 				case _23F: 
 				case _23G: 
 				case _23H: 
-					returnARowName = ReturnARowName.LARCENCY_THEFT_TOTAL; 
-					processLarcencyStolenPropertyByValue(stolenProperties, administrativeSegment);
-					processLarcencyStolenPropertyByNature(stolenProperties, offenseCode, administrativeSegment);
+					returnARowName = ReturnARowName.LARCENY_THEFT_TOTAL; 
+					processLarcenyStolenPropertyByValue(stolenProperties, administrativeSegment);
+					processLarcenyStolenPropertyByNature(stolenProperties, offenseCode, administrativeSegment);
 					sumPropertyValuesByType(returnAForm, administrativeSegment);
 					break; 
 				case _240: 
@@ -437,7 +437,8 @@ public class ReturnAFormService {
 		
 	}
 
-	private void processLarcencyStolenPropertyByNature(PropertyStolenByClassification[] stolenProperties, OffenseCode offenseCode, 
+	//TODO need to honor the Larceny Hierarchy. 
+	private void processLarcenyStolenPropertyByNature(PropertyStolenByClassification[] stolenProperties, OffenseCode offenseCode, 
 			AdministrativeSegment administrativeSegment) {
 		PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = null;
 		
@@ -477,7 +478,7 @@ public class ReturnAFormService {
 		stolenProperties[PropertyStolenByClassificationRowName.LARCENIES_TOTAL_BY_NATURE.ordinal()].increaseMonetaryValue(stolenPropertyValue);
 	}
 
-	private void processLarcencyStolenPropertyByValue(PropertyStolenByClassification[] stolenProperties, AdministrativeSegment administrativeSegment) {
+	private void processLarcenyStolenPropertyByValue(PropertyStolenByClassification[] stolenProperties, AdministrativeSegment administrativeSegment) {
 		double stolenPropertyValue = getStolenPropertyValue(administrativeSegment);
 		PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = null;
 		
@@ -598,7 +599,7 @@ public class ReturnAFormService {
 				ReturnARowName.ROBBERY_TOTAL, 
 				ReturnARowName.ASSAULT_TOTAL, 
 				ReturnARowName.BURGLARY_TOTAL, 
-				ReturnARowName.LARCENCY_THEFT_TOTAL, 
+				ReturnARowName.LARCENY_THEFT_TOTAL, 
 				ReturnARowName.MOTOR_VEHICLE_THEFT_TOTAL);
 		
 	}

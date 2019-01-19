@@ -38,7 +38,7 @@ public enum ReturnARowName{
 	/**
 	 * Larceny-Theft Total (Except Motor Vehicle Theft) 
 	 */
-	LARCENCY_THEFT_TOTAL("6. LARCENCY - THEFT TOTAL \n\t\t\t\t(Except Motor Vehicle Theft)", "60"),
+	LARCENY_THEFT_TOTAL("6. LARCENCY - THEFT TOTAL \n\t\t\t\t(Except Motor Vehicle Theft)", "60"),
 	MOTOR_VEHICLE_THEFT_TOTAL("7. MOTOR VEHICLE THEFT TOTAL", "70"), 
 	AUTOS_THEFT("\t\t\t\ta. Autos", "71"), 
 	TRUCKS_BUSES_THEFT("\t\t\t\tb.Trucks and Buses", "72"), 
