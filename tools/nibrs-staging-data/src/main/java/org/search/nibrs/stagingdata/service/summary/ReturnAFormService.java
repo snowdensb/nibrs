@@ -19,6 +19,8 @@ package org.search.nibrs.stagingdata.service.summary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,7 @@ public class ReturnAFormService {
 	public AppProperties appProperties; 
 
 	private Map<String, Integer> partIOffensesMap; 
+	private Map<String, PropertyStolenByClassificationRowName> larcenyOffenseByNatureMap; 
 	
 	public ReturnAFormService() {
 		partIOffensesMap = new HashMap<>();
@@ -88,6 +91,18 @@ public class ReturnAFormService {
 		partIOffensesMap.put("23H", 8); 
 		partIOffensesMap.put("240", 9); 
 		partIOffensesMap.put("23F", 10); 
+		
+		larcenyOffenseByNatureMap = new HashMap<>();
+		larcenyOffenseByNatureMap.put("23B", PropertyStolenByClassificationRowName.LARCENY_PURSE_SNATCHING);  // Purse-snatching
+		larcenyOffenseByNatureMap.put("23A", PropertyStolenByClassificationRowName.LARCENY_POCKET_PICKING);  // Pocket-picking
+		larcenyOffenseByNatureMap.put("23C", PropertyStolenByClassificationRowName.LARCENY_SHOPLIFTING); // Shoplifting
+		larcenyOffenseByNatureMap.put("23D", PropertyStolenByClassificationRowName.LARCENY_FROM_BUILDING); // Theft from building
+		larcenyOffenseByNatureMap.put("23G", PropertyStolenByClassificationRowName.LARCENY_MOTOR_VEHICLE_PARTS_AND_ACCESSORIES);  // Theft of Motor Vehicle Parts or Accessories
+		larcenyOffenseByNatureMap.put("23H38", PropertyStolenByClassificationRowName.LARCENY_MOTOR_VEHICLE_PARTS_AND_ACCESSORIES); // Theft of Motor Vehicle Parts or Accessories
+		larcenyOffenseByNatureMap.put("23F", PropertyStolenByClassificationRowName.LARCENY_FROM_MOTOR_VEHICLES);  // Theft from motor Vehicles
+		larcenyOffenseByNatureMap.put("23E", PropertyStolenByClassificationRowName.LARCENY_FROM_COIN_OPERATED_MACHINES);  // Theft from Coin Operated machines and device
+		larcenyOffenseByNatureMap.put("23H04", PropertyStolenByClassificationRowName.LARCENY_BICYCLES); // Bicycles 
+		larcenyOffenseByNatureMap.put("23H", PropertyStolenByClassificationRowName.LARCENY_ALL_OTHER);  // All Other 
 	}
 	
 	public ReturnAForm createReturnASummaryReport(String ori, Integer year,  Integer month ) {
@@ -437,38 +452,28 @@ public class ReturnAFormService {
 		
 	}
 
-	//TODO need to honor the Larceny Hierarchy. 
 	private void processLarcenyStolenPropertyByNature(PropertyStolenByClassification[] stolenProperties, OffenseCode offenseCode, 
 			AdministrativeSegment administrativeSegment) {
-		PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = null;
 		
-		switch(offenseCode){
-		case _23A: 
-			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_POCKET_PICKING; 
-			break; 
-		case _23B: 
-			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_PURSE_SNATCHING; 
-			break; 
-		case _23C: 
-			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_SHOPLIFTING; 
-			break; 
-		case _23D: 
-			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_FROM_BUILDING; 
-			break; 
-		case _23E: 
-			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_FROM_COIN_OPERATED_MACHINES; 
-			break; 
-		case _23F: 
-			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_FROM_MOTOR_VEHICLES; 
-			break; 
-		case _23G: 
-			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_MOTOR_VEHICLE_PARTS_AND_ACCESSORIES; 
-			break; 
-		case _23H: 
-			propertyStolenByClassificationRowName = PropertyStolenByClassificationRowName.LARCENY_ALL_OTHER; 
-			break; 
-			default: 
+		String offenseCodeString = offenseCode.code;
+		if ("23H".equals(offenseCodeString)){
+			List<PropertyType> stolenPropertyTypes =  administrativeSegment.getPropertySegments()
+					.stream()
+					.filter(propertySegment -> propertySegment.getTypePropertyLossEtcType().getNibrsCode().equals("7"))
+					.flatMap(i->i.getPropertyTypes().stream())
+					.filter(i->i.getValueOfProperty() > 0)
+					.collect(Collectors.toList());
+			
+			if (stolenPropertyTypes.size() > 0){
+				PropertyType propertyTypeWithMaxValue = Collections.max(stolenPropertyTypes, Comparator.comparing(PropertyType::getValueOfProperty));
+				if ("38".equals(propertyTypeWithMaxValue.getPropertyDescriptionType().getNibrsCode())
+						|| "04".equals(propertyTypeWithMaxValue.getPropertyDescriptionType().getNibrsCode())){
+					offenseCodeString += propertyTypeWithMaxValue.getPropertyDescriptionType().getNibrsCode(); 
+				}
+			}
 		}
+		
+		PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = larcenyOffenseByNatureMap.get(offenseCodeString);
 		
 		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseNumberOfOffenses(1);
 		stolenProperties[PropertyStolenByClassificationRowName.LARCENIES_TOTAL_BY_NATURE.ordinal()].increaseNumberOfOffenses(1);
