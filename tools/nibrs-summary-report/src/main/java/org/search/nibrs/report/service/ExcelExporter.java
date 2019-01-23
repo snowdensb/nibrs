@@ -288,7 +288,7 @@ public class ExcelExporter {
 		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(31, 42, 5, 5), sheet);
 		
         try {
-        	String fileName = appProperties.getReturnAFormOutputPath() + "/ReturnAForm" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
+        	String fileName = appProperties.getReturnAFormOutputPath() + "/AsrAdult" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();
@@ -425,7 +425,7 @@ public class ExcelExporter {
         
         switch(rowName){
     	case MURDER_NONNEGLIGENT_HOMICIDE: 
-    	case LARCENCY_THEFT_TOTAL:
+    	case LARCENY_THEFT_TOTAL:
         	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
             cell.setCellStyle(wrapStyle);
             XSSFRichTextString s1 = new XSSFRichTextString(rowName.getLabel());
@@ -478,7 +478,7 @@ public class ExcelExporter {
 
 	public static void main(String[] args) {
 
-//        ReturnAForm [rows=
+//        AsrAdult [rows=
 //        	[Summary [reportedOffenses=4, unfoundedOffenses=0, actualOffenses=4, clearedOffense=3, clearanceInvolvingJuvenile=0], 
 //        	Summary [reportedOffenses=0, unfoundedOffenses=0, actualOffenses=0, clearedOffense=0, clearanceInvolvingJuvenile=0], 
 //        	Summary [reportedOffenses=24, unfoundedOffenses=0, actualOffenses=24, clearedOffense=7, clearanceInvolvingJuvenile=0], 
