@@ -27,9 +27,9 @@ public class AsrAdultRow implements Serializable{
 	private int[] raceGroups;
 	private int[] ethnicityGroups;
 	
-	enum Race{WHITE, BLACK, AMERICAN_INDIAN_OR_ALASKAN_NATIVE, ASIAN, NATIVE_HAWAII_OR_OTHER_PACIFIC_ISLANDER}
-	enum Ethnicity{HISPANIC_LATINO, NOT_HISPANIC_LATINO}; 
-	enum AgeGroups{
+	public enum Race{W, B, I, A, P}
+	public enum Ethnicity{H, N}; 
+	public enum AdultAgeGroup{
 		_18, 
 		_19,
 		_20, 
@@ -50,8 +50,8 @@ public class AsrAdultRow implements Serializable{
 	}; 
 	public AsrAdultRow() {
 		super();
-		setMaleAgeGroups(new int[AgeGroups.values().length]);
-		setFemaleAgeGroups(new int[AgeGroups.values().length]);
+		setMaleAgeGroups(new int[AdultAgeGroup.values().length]);
+		setFemaleAgeGroups(new int[AdultAgeGroup.values().length]);
 		setRaceGroups(new int[Race.values().length]);
 		setEthnicityGroups(new int[Ethnicity.values().length]);
 	}

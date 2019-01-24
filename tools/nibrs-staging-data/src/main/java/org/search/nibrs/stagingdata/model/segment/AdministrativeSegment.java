@@ -48,7 +48,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
         @NamedAttributeNode("segmentActionType"),
         @NamedAttributeNode("offenseSegments"),
         @NamedAttributeNode("propertySegments"),
-        @NamedAttributeNode("arresteeSegments"),
         @NamedAttributeNode("offenderSegments"),
         @NamedAttributeNode("victimSegments"),
         @NamedAttributeNode("arresteeSegments"),

@@ -120,4 +120,29 @@ public class AdministrativeSegmentRepositoryTest {
 
 	}
 
+	@Test
+	@DirtiesContext
+	public void testFindIdsByOriAndArrestDateAndFindAll() {
+		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
+				.findIdsByOriAndArrestDate("WA1234567", 2016, 5);
+		
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository
+				.findAll(administrativeSegmentIds).stream().distinct().collect(Collectors.toList());
+		
+		assertThat(administrativeSegments.size(), equalTo(1));
+		List<String> incidentNumbers = administrativeSegments.stream()
+				.map(AdministrativeSegment::getIncidentNumber)
+				.collect(Collectors.toList()); 
+		assertTrue(incidentNumbers.containsAll(Arrays.asList("12345679")));
+		
+		List<org.search.nibrs.stagingdata.model.segment.ArresteeSegment> arresteeSegments =  administrativeSegments.stream()
+				.flatMap(i->i.getArresteeSegments().stream())
+				.filter(i-> i.getArrestDateType().getYear() == 2016 && i.getArrestDateType().getMonth() == 5)
+				.collect(Collectors.toList());
+		
+		assertThat(arresteeSegments.size(), equalTo(1));
+		
+		org.search.nibrs.stagingdata.model.segment.ArresteeSegment arresteeSegment = arresteeSegments.get(0);
+	}
+	
 }

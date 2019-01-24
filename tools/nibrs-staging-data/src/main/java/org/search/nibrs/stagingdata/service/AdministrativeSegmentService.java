@@ -17,12 +17,18 @@ package org.search.nibrs.stagingdata.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
+import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import ch.qos.logback.core.net.SyslogOutputStream;
 
 /**
  * Service to process Group B Arrest Report.  
@@ -30,7 +36,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AdministrativeSegmentService {
-//	private static final Log log = LogFactory.getLog(AdministrativeSegmentService.class);
+	private static final Log log = LogFactory.getLog(AdministrativeSegmentService.class);
 	
 	@Autowired
 	AdministrativeSegmentRepository administrativeSegmentRepository;
@@ -73,5 +79,25 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
+	public List<ArresteeSegment> findArresteeSegmentByOriAndArrestDate(String ori, Integer arrestYear, Integer arrestMonth){
+		if ("StateWide".equalsIgnoreCase(ori)){
+			ori = null;
+		}
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndArrestDate(ori, arrestYear, arrestMonth);
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAll(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		log.info("ids size" + ids.size());
+		log.info("administrativeSegments size" + administrativeSegments.size());
+		
+		List<ArresteeSegment> arresteeSegments = administrativeSegments.stream()
+				.flatMap(i->i.getArresteeSegments().stream())
+				.filter(i->Objects.equals(i.getArrestDateType().getYear(), arrestYear) &&  Objects.equals(i.getArrestDateType().getMonth(),arrestMonth))
+				.collect(Collectors.toList());
+		return arresteeSegments; 
+		
+	}
 	
 }
