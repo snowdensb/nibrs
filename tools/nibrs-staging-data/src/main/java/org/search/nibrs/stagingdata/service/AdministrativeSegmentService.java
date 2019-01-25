@@ -28,8 +28,6 @@ import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-
 /**
  * Service to process Group B Arrest Report.  
  *
