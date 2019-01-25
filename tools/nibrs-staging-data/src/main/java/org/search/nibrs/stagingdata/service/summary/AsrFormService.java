@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -166,6 +167,9 @@ public class AsrFormService {
 			if ("35A".equals(offenseCode)){
 				//TODO resolve the row name. 
 			}
+			if ("11A".equals(offenseCode)){
+				asrAdultRowName = offenseCodeRowNameMap.get(offenseCode + getVictimGender(arresteeSegment));
+			}
 			else{
 				asrAdultRowName = offenseCodeRowNameMap.get(offenseCode); 
 			}
@@ -185,12 +189,23 @@ public class AsrFormService {
 		
 	}
 
+	private String getVictimGender(ArresteeSegment arresteeSegment) {
+		String offenseCode = arresteeSegment.getUcrOffenseCodeType().getNibrsCode(); 
+		String victimGender = arresteeSegment.getAdministrativeSegment()
+				.getVictimSegments()
+				.stream()
+				.filter(i->i.getOffenseSegments().stream().anyMatch(o->Objects.equals(offenseCode, o.getUcrOffenseCodeType().getNibrsCode())))
+				.map(i->i.getSexOfPersonType().getNibrsCode()).findFirst().orElse("");
+		return victimGender;
+	}
+
 	private void countToEthnicityGroups(AsrAdultRow[] asrAdultRows, ArresteeSegment arresteeSegment,
 			AsrAdultRowName asrAdultRowName) {
 		String ethnicityString = arresteeSegment.getEthnicityOfPersonType().getNibrsCode();
 		if (StringUtils.isNotBlank(ethnicityString) && !"U".equals(ethnicityString)){
 			Ethnicity ethnicity = Ethnicity.valueOf(ethnicityString); 
 			asrAdultRows[asrAdultRowName.ordinal()].getEthnicityGroups()[ethnicity.ordinal()]++;
+			asrAdultRows[AsrAdultRowName.TOTAL.ordinal()].getEthnicityGroups()[ethnicity.ordinal()]++;
 		}
 	}
 
@@ -200,6 +215,7 @@ public class AsrFormService {
 		if (StringUtils.isNotBlank(raceString) && !"U".equals(raceString)){
 			Race race = Race.valueOf(raceString); 
 			asrAdultRows[asrAdultRowName.ordinal()].getRaceGroups()[race.ordinal()]++;
+			asrAdultRows[AsrAdultRowName.TOTAL.ordinal()].getRaceGroups()[race.ordinal()]++;
 		}
 	}
 	
@@ -207,14 +223,18 @@ public class AsrFormService {
 			AsrAdultRowName asrAdultRowName) {
 		AdultAgeGroup ageGroup = getAgeGroup(arresteeSegment);
 		if (ageGroup != null){
-			switch( arresteeSegment.getSexOfPersonType().getNibrsCode()){
+			switch( arresteeSegment.getSexOfPersonType().getNibrsCode() ){
 			case "M":
 				asrAdultRows[asrAdultRowName.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
 				asrAdultRows[asrAdultRowName.ordinal()].getMaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
+				asrAdultRows[AsrAdultRowName.TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+				asrAdultRows[AsrAdultRowName.TOTAL.ordinal()].getMaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
 				break; 
 			case "F":
 				asrAdultRows[asrAdultRowName.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
 				asrAdultRows[asrAdultRowName.ordinal()].getFemaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
+				asrAdultRows[AsrAdultRowName.TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+				asrAdultRows[AsrAdultRowName.TOTAL.ordinal()].getMaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
 				break; 
 			}
 		}
