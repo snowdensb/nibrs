@@ -142,7 +142,6 @@ public class AdministrativeSegmentRepositoryTest {
 		
 		assertThat(arresteeSegments.size(), equalTo(1));
 		
-		org.search.nibrs.stagingdata.model.segment.ArresteeSegment arresteeSegment = arresteeSegments.get(0);
 	}
 	
 }
