@@ -42,6 +42,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -67,6 +68,23 @@ public class UploadFileController {
 
 		log.info("processing file: " + multipartFiles.length);
 		
+		List<NIBRSError> filteredErrorList = getNibrsErrors(multipartFiles); 
+		model.addAttribute("errorList", filteredErrorList);
+        return "validationReport :: #content";
+    }
+
+    @PostMapping("/json")
+    public @ResponseBody List<NIBRSError> getNibrsErrorInJson(@RequestParam("file") MultipartFile[] multipartFiles,
+    		RedirectAttributes redirectAttributes, Model model) throws IOException, ParserConfigurationException {
+    	
+    	log.info("processing file: " + multipartFiles.length);
+    	
+    	List<NIBRSError> filteredErrorList = getNibrsErrors(multipartFiles); 
+    	return filteredErrorList;
+    }
+    
+	private List<NIBRSError> getNibrsErrors(MultipartFile[] multipartFiles)
+			throws IOException, ParserConfigurationException {
 		final List<NIBRSError> errorList = new ArrayList<>();
 		ReportListener validatorListener = new ReportListener() {
 			@Override
@@ -93,10 +111,9 @@ public class UploadFileController {
 		
 		List<NIBRSError> filteredErrorList = errorList.stream()
 				.filter(error->error.getReport() != null)
-				.collect(Collectors.toList()); 
-		model.addAttribute("errorList", filteredErrorList);
-        return "validationReport :: #content";
-    }
+				.collect(Collectors.toList());
+		return filteredErrorList;
+	}
 
 	@GetMapping("/about")
 	public String getAbout(Model model){
