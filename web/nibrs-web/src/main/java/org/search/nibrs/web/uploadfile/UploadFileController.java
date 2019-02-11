@@ -80,6 +80,15 @@ public class UploadFileController {
     	log.info("processing file: " + multipartFiles.length);
     	
     	List<NIBRSError> filteredErrorList = getNibrsErrors(multipartFiles); 
+    	//TODO translate NIBRSError to a new model class 
+    	/*
+    	 *     1. add a model whose instance variable matches what’s on the results page.  
+    	 *	   2. translate the NibrsError object into this new model and return as JSON to user.  
+    	 *			Note there are some special handling in the web page to special handle certain errors.  
+    	 *			We should copy those logic to the translator as well. 
+    	 *     submission file /git/nibrs-private/extracts/BCA_NIBRS_Submission_January2016.txt
+    	 */
+    	
     	return filteredErrorList;
     }
     
