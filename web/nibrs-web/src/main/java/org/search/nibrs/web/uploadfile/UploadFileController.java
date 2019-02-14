@@ -28,9 +28,11 @@ import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.common.NIBRSError;
+import org.search.nibrs.common.NIBRSJsonError;
 import org.search.nibrs.importer.ReportListener;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.util.NibrsFileUtils;
@@ -74,23 +76,72 @@ public class UploadFileController {
     }
 
     @PostMapping("/json")
-    public @ResponseBody List<NIBRSError> getNibrsErrorInJson(@RequestParam("file") MultipartFile[] multipartFiles,
+    public @ResponseBody List<NIBRSJsonError> getNibrsErrorInJson(@RequestParam("file") MultipartFile[] multipartFiles,
     		RedirectAttributes redirectAttributes, Model model) throws IOException, ParserConfigurationException {
     	
     	log.info("processing file: " + multipartFiles.length);
     	
     	List<NIBRSError> filteredErrorList = getNibrsErrors(multipartFiles); 
-    	//TODO translate NIBRSError to a new model class 
-    	/*
-    	 *     1. add a model whose instance variable matches what’s on the results page.  
-    	 *	   2. translate the NibrsError object into this new model and return as JSON to user.  
-    	 *			Note there are some special handling in the web page to special handle certain errors.  
-    	 *			We should copy those logic to the translator as well. 
-    	 *     submission file /git/nibrs-private/extracts/BCA_NIBRS_Submission_January2016.txt
-    	 */
     	
-    	return filteredErrorList;
+    	//Translate NIBRSError to a simplified JSON error class so it can be more easily consumed 
+    	
+    	//Create array here
+    	List<NIBRSJsonError> jsonErrors = new ArrayList<NIBRSJsonError>();
+    	
+    	for (NIBRSError nibrsError : filteredErrorList)
+    	{
+    		NIBRSJsonError nibrsJsonError = createNibrsJsonError(nibrsError);
+    		
+    		jsonErrors.add(nibrsJsonError);
+    	}	
+    	
+    	return jsonErrors;
     }
+
+	private NIBRSJsonError createNibrsJsonError(NIBRSError nibrsError) {
+		NIBRSJsonError nibrsJsonError = new NIBRSJsonError();
+		
+		nibrsJsonError.setSubmissionDate(nibrsError.getDateOfTape());
+		
+		nibrsJsonError.setSourceLocation(nibrsError.getContext().getSourceLocation());
+		
+		nibrsJsonError.setActionType(nibrsError.getReport().getReportActionType());
+		
+		nibrsJsonError.setOri(nibrsError.getReport().getOri());
+		
+		nibrsJsonError.setIncidentNumber(nibrsError.getReportUniqueIdentifier());
+		
+		nibrsJsonError.setSegment(nibrsError.getSegmentTypeOutput());
+		
+		nibrsJsonError.setWithinSegmentIdentifier(nibrsError.getOffenseSegmentIdentifier());
+		
+		nibrsJsonError.setWithinOffenderArrestVictim(nibrsError.getOffenderArresteeVictimSegmentIdentifier());
+		
+		nibrsJsonError.setWithinProperty(nibrsError.getPropertySegmentIdentifier());
+		
+		nibrsJsonError.setDataElement(nibrsError.getDataElementIdentifierOutput());
+		
+		nibrsJsonError.setErrorCode(nibrsError.getNIBRSErrorCode().getCode());
+		
+		//Add if statement here
+		if (StringUtils.isNotBlank(nibrsError.getRuleNumber()))
+		{
+			if (nibrsError.getRuleNumber().equals("404") || nibrsError.getRuleNumber().equals("35") || nibrsError.getRuleNumber().equals("342"))
+			{
+				if (nibrsError.getValue() != null)
+				{	
+					nibrsJsonError.setRejectedValue(nibrsError.getValue().toString());
+				}
+			}
+			else
+			{
+				nibrsJsonError.setRejectedValue(nibrsError.getOffendingValues());
+			}	
+		}
+			
+		nibrsJsonError.setErrorMessage(nibrsError.getErrorMessage());
+		return nibrsJsonError;
+	}
     
 	private List<NIBRSError> getNibrsErrors(MultipartFile[] multipartFiles)
 			throws IOException, ParserConfigurationException {
