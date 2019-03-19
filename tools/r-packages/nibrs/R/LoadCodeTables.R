@@ -18,7 +18,7 @@
 #' @import purrr
 #' @import tibble
 #' @export
-loadCodeTables <- function(spreadsheetFile=NULL, conn=NULL) {
+loadCodeTables <- function(spreadsheetFile=NULL, conn=NULL, quiet=FALSE) {
 
   if (is.null(spreadsheetFile)) {
     spreadsheetFile <- system.file("raw", "NIBRSCodeTables.xlsx", package=getPackageName())
@@ -29,7 +29,7 @@ loadCodeTables <- function(spreadsheetFile=NULL, conn=NULL) {
   map2(TOC$Table, TOC$Tab, function(codeTableName, tabName) {
     ct <- read_excel(spreadsheetFile, sheet=tabName) %>%
       select(-starts_with('X_')) %>% as_tibble()
-    writeLines(paste0("Loading code table: ", codeTableName))
+    if (!quiet) writeLines(paste0("Loading code table: ", codeTableName))
     if (!is.null(conn)) dbClearResult(dbSendQuery(conn, paste0("truncate ", codeTableName)))
     if (codeTableName=='UCROffenseCodeType') {
       colnames(ct) <- c('UCROffenseCodeTypeID', 'StateCode', 'StateDescription', 'OffenseCategory1',
