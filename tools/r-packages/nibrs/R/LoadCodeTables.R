@@ -18,7 +18,11 @@
 #' @import purrr
 #' @import tibble
 #' @export
-loadCodeTables <- function(spreadsheetFile, conn) {
+loadCodeTables <- function(spreadsheetFile=NULL, conn=NULL) {
+
+  if (is.null(spreadsheetFile)) {
+    spreadsheetFile <- system.file("raw", "NIBRSCodeTables.xlsx", package=getPackageName())
+  }
 
   TOC <- read_excel(spreadsheetFile, sheet='TOC')
 
@@ -26,7 +30,7 @@ loadCodeTables <- function(spreadsheetFile, conn) {
     ct <- read_excel(spreadsheetFile, sheet=tabName) %>%
       select(-starts_with('X_')) %>% as_tibble()
     writeLines(paste0("Loading code table: ", codeTableName))
-    dbClearResult(dbSendQuery(conn, paste0("truncate ", codeTableName)))
+    if (!is.null(conn)) dbClearResult(dbSendQuery(conn, paste0("truncate ", codeTableName)))
     if (codeTableName=='UCROffenseCodeType') {
       colnames(ct) <- c('UCROffenseCodeTypeID', 'StateCode', 'StateDescription', 'OffenseCategory1',
                         'OffenseCategory2', 'OffenseCategory3', 'OffenseCategory4')
@@ -44,7 +48,7 @@ loadCodeTables <- function(spreadsheetFile, conn) {
         StateCode=case_when(is.na(StateCode) & StateDescription=='Blank' ~ ' ', TRUE ~ StateCode),
         NIBRSCode=case_when(is.na(NIBRSCode) & NIBRSDescription=='Blank' ~ ' ', TRUE ~ NIBRSCode)
       )
-    dbWriteTable(conn=conn, value=ct, name=codeTableName, append=TRUE, row.names = FALSE)
+    if (!is.null(conn)) dbWriteTable(conn=conn, value=ct, name=codeTableName, append=TRUE, row.names = FALSE)
     attr(ct, 'type') <- 'CT'
     ct
   }) %>% set_names(TOC$Table)
