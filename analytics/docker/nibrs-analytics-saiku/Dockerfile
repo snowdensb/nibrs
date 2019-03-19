@@ -16,7 +16,7 @@
 
 # Dockerfile that extends base saiku to add demo data sources
 
-FROM ojbc/saiku:ojbc-3.17
+FROM ojbc/saiku:ojbc-3.17-saml
 
 # set this arg to dev to create an image where the default (admin) saiku user has admin privileges
 # do this by passing --build-arg MODE=dev
