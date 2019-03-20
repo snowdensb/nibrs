@@ -43,6 +43,7 @@ loadCDEDataToStaging <- function(directory, codeTableList=NULL) {
   ret <- c(ret, loadCDEArresteeData(ret, agencyDf, directory))
   ret$AdministrativeSegment <- ret$AdministrativeSegment %>% anti_join(ret$ArrestReportSegment, by=c('AdministrativeSegmentID'='ArrestReportSegmentID'))
   ret$OffenderSegment <- loadCDEOffenderData(ret, directory)
+  ret <- c(ret, loadCDEPropertyData(ret, directory))
 
   ret$AgencyType <- bind_rows(ret$AgencyType,
                               tibble(AgencyTypeID=100, StateCode='100', StateDescription='Other') %>% mutate(NIBRSCode=StateCode, NIBRSDescription=StateDescription))
@@ -62,6 +63,90 @@ loadCDEDataToStaging <- function(directory, codeTableList=NULL) {
     )) %>%
     left_join(ret$AgencyType %>% select(NIBRSDescription, AgencyTypeID), by=c('AGENCY_TYPE_NAME'='NIBRSDescription')) %>%
     select(AgencyID, AgencyORI, AgencyName, AgencyTypeID, StateCode, StateName, Population)
+
+  ret
+
+}
+
+loadCDEPropertyData <- function(tableList, directory) {
+
+  writeLines('Loading Property Segment data')
+
+  ret <- list()
+
+  tdf <- read_csv(file.path(directory, 'NIBRS_PROPERTY.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    mutate_at(vars(matches('_ID$|_NUM$')), as.integer) %>%
+    rename(NumberOfStolenMotorVehicles=STOLEN_COUNT,
+           NumberOfRecoveredMotorVehicles=RECOVERED_COUNT,
+           TypePropertyLossEtcTypeID=PROP_LOSS_ID
+    ) %>%
+    mutate(TypePropertyLossEtcTypeID=case_when(
+      TypePropertyLossEtcTypeID==8 ~ 99999L,
+      is.na(TypePropertyLossEtcTypeID) ~ 99998L,
+      TRUE ~ TypePropertyLossEtcTypeID
+    ),
+    SegmentActionTypeTypeID=99998L
+    ) %>%
+    select(PropertySegmentID=PROPERTY_ID,
+           SegmentActionTypeTypeID,
+           AdministrativeSegmentID=INCIDENT_ID,
+           TypePropertyLossEtcTypeID,
+           NumberOfStolenMotorVehicles,
+           NumberOfRecoveredMotorVehicles
+           )
+
+  ret$PropertySegment <- tdf
+  writeLines(paste0('Loaded ', nrow(tdf), ' Property Segment records'))
+
+  propertyTypeCt <- read_csv(file.path(directory, 'NIBRS_PROP_DESC_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    select(PROP_DESC_ID, PROP_DESC_CODE) %>%
+    inner_join(tableList$PropertyDescriptionType, by=c('PROP_DESC_CODE'='NIBRSCode')) %>%
+    select(PROP_DESC_ID, PropertyDescriptionTypeID)
+
+  tdf <- read_csv(file.path(directory, 'NIBRS_PROPERTY_DESC.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    mutate_at(vars(matches('_ID$')), as.integer) %>%
+    mutate(PROPERTY_VALUE=as.double(PROPERTY_VALUE),
+           DATE_RECOVERED=dmy(DATE_RECOVERED)) %>%
+    left_join(propertyTypeCt, by='PROP_DESC_ID') %>%
+    mutate(PropertyDescriptionTypeID=case_when(is.na(PropertyDescriptionTypeID) ~ 99998L, TRUE ~ PropertyDescriptionTypeID)) %>%
+    select(
+      PropertyTypeID=NIBRS_PROP_DESC_ID,
+      PropertySegmentID=PROPERTY_ID,
+      PropertyDescriptionTypeID,
+      ValueOfProperty=PROPERTY_VALUE,
+      RecoveredDate=DATE_RECOVERED
+    ) %>% mutate(RecoveredDateID=createKeyFromDate(RecoveredDate))
+
+  ret$PropertyType <- tdf
+  writeLines(paste0('Loaded ', nrow(tdf), ' Property Type records'))
+
+  drugTypeCt <- read_csv(file.path(directory, 'NIBRS_SUSPECTED_DRUG_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    select(SUSPECTED_DRUG_TYPE_ID, SUSPECTED_DRUG_CODE) %>%
+    inner_join(tableList$SuspectedDrugTypeType, by=c('SUSPECTED_DRUG_CODE'='NIBRSCode')) %>%
+    select(SUSPECTED_DRUG_TYPE_ID, SuspectedDrugTypeTypeID)
+
+  drugMeasureTypeCt <- read_csv(file.path(directory, 'NIBRS_DRUG_MEASURE_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    select(DRUG_MEASURE_TYPE_ID, DRUG_MEASURE_CODE) %>%
+    inner_join(tableList$TypeDrugMeasurementType, by=c('DRUG_MEASURE_CODE'='NIBRSCode')) %>%
+    select(DRUG_MEASURE_TYPE_ID, TypeDrugMeasurementTypeID)
+
+  tdf <- read_csv(file.path(directory, 'NIBRS_SUSPECTED_DRUG.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    mutate_at(vars(matches('_ID$')), as.integer) %>%
+    mutate(EstimatedDrugQuantity=as.numeric(EST_DRUG_QTY)) %>%
+    left_join(drugTypeCt, by='SUSPECTED_DRUG_TYPE_ID') %>%
+    left_join(drugMeasureTypeCt, by='DRUG_MEASURE_TYPE_ID') %>%
+    mutate(SuspectedDrugTypeTypeID=case_when(is.na(SuspectedDrugTypeTypeID) ~ 99998L, TRUE ~ SuspectedDrugTypeTypeID)) %>%
+    mutate(TypeDrugMeasurementTypeID=case_when(is.na(TypeDrugMeasurementTypeID) ~ 99998L, TRUE ~ TypeDrugMeasurementTypeID)) %>%
+    select(
+      SuspectedDrugTypeID=NIBRS_SUSPECTED_DRUG_ID,
+      PropertySegmentID=PROPERTY_ID,
+      SuspectedDrugTypeTypeID,
+      TypeDrugMeasurementTypeID,
+      EstimatedDrugQuantity
+    )
+
+  ret$SuspectedDrugType <- tdf
+  writeLines(paste0('Loaded ', nrow(tdf), ' Drug records'))
 
   ret
 
