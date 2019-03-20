@@ -27,7 +27,7 @@ truncateDate <- function(conn) {
 #' @importFrom lubridate as_date year quarter month wday day
 #' @import dplyr
 #' @import tibble
-writeDateDimensionTable <- function(conn, minDate, maxDate, datesToExclude=as_date(x = integer(0))) {
+writeDateDimensionTable <- function(minDate, maxDate, conn=NULL, datesToExclude=as_date(x = integer(0))) {
   minDate <- as_date(minDate)
   maxDate <- as_date(maxDate)
   writeLines(paste0("Building date dimension, earliest date=", minDate, ", latestDate=", maxDate))
@@ -73,7 +73,7 @@ writeDateDimensionTable <- function(conn, minDate, maxDate, datesToExclude=as_da
   writeLines(paste0("Adding ", nrow(DateDf), " new dates to the Date dimension"))
 
   writeLines(paste0("Writing ", nrow(DateDf), " Date rows to database"))
-  dbWriteTable(conn=conn, name="DateType", value=DateDf, append=TRUE, row.names = FALSE)
+  if (!is.null(conn)) dbWriteTable(conn=conn, name="DateType", value=DateDf, append=TRUE, row.names = FALSE)
 
   attr(DateDf, 'type') <- 'CT'
   DateDf
@@ -137,7 +137,7 @@ loadICPSRRaw <- function(conn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhos
     minDate <- min(allDates, na.rm=TRUE)
     maxDate <- max(allDates, na.rm=TRUE)
 
-    ret$Date <- writeDateDimensionTable(conn, minDate, maxDate)
+    ret$Date <- writeDateDimensionTable(minDate, maxDate, conn)
 
     ret$OffenseSegment <- select(ret$OffenseSegment, -UCROffenseCode)
 
