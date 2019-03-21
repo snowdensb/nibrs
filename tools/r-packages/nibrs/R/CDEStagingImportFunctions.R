@@ -1,26 +1,96 @@
-# todo: remove once done with iterative development
-# but update createKeyFromDate with new code to handle nulls
-# directory <- '/tmp/nibrs-cde/WA'
-#
-# createKeyFromDate <- function(d) {
-#   ret <- as.integer(format(d, "%Y%m%d"))
-#   case_when(is.na(ret) ~ 99998L, TRUE ~ ret)
-# }
-#
-# spreadsheetFile <- 'inst/raw/NIBRSCodeTables.xlsx'
-# conn <- NULL
-# end todo
+#' Process a directory of FBI Crime Data Explorer extract zips
+#'
+#' Process a directory of FBI Crime Data Explorer extract zips.  We load each zip file into the staging format, then after doing that for all zip files, we
+#' concatenate each staging table across input extracts to make one big list of tables in the staging format.
+#'
+#' By default this list is returned.  However, it is also possible to pass in a function for parameter resultHandler, in which case the return value is a list of all the individual
+#' return values obtained by calling resultHandler on each extract's staging table list.
+#' @param zipDirectory the directory containing the CDE extract zips
+#' @param codeTableList a list of staging code tables, or NULL to read them from the package
+#' @param zipFileSampleFraction a value between 0 and 1 used to sample the input files (default is 1, to use all input files)
+#' @param stateAbbreviationRegex a regex to select input files, as applied to the state abbreviation portion of the filename; it's advised to use non-capturing groups around the regex (e.g., (?:AR|AL|MI) would select
+#' Arkansas, Alabama, and Michigan)
+#' @param yearRegex a regex to select input files, as applied to the year portion of the filename
+#' @param resultHandler a function called after the creation of the list of tables in staging format; the value returned from this function will be added to the list of values returned from the caller
+#' @return a list, containing the concatenated staging tables from the parsed input extracts, by default, or containing the results of each call to the resultHandler parameter function
+#' @import dplyr
+#' @import purrr
+#' @export
+loadMultiStateYearDataToStaging <- function(zipDirectory, codeTableList=NULL, zipFileSampleFraction=1, stateAbbreviationRegex=NULL, yearRegex=NULL, resultHandler=NULL) {
 
-# and uncomment the following
-#spreadsheetFile <- system.file("raw", "NIBRSCodeTables.xlsx", package=getPackageName())
-# end uncomment
+  if (is.null(codeTableList)) {
+    writeLines('Loading code tables')
+    codeTableList <- loadCodeTables(quiet=TRUE)
+  }
 
+  pattern <- '.+\\.zip$'
+
+  if (is.null(stateAbbreviationRegex)) {
+    stateAbbreviationRegex <- '[A-Z]{2}'
+  }
+
+  if (is.null(yearRegex)) {
+    yearRegex <- '[0-9]{4}'
+  }
+
+  pattern <- paste0('^', stateAbbreviationRegex, '-', yearRegex, '\\.zip$')
+
+  files <- list.files(zipDirectory, pattern=pattern, full.names=TRUE)
+
+  files <- sample(files, zipFileSampleFraction*length(files))
+
+  ret <- files %>% map(function(file) {
+    state <- gsub(x=basename(file), pattern='^(.{2})-.+', replacement='\\1')
+    year <- gsub(x=basename(file), pattern='.+\\-([0-9]{4})\\.zip$', replacement='\\1')
+    writeLines(paste0('Processing NIBRS CDE file ', file, ', (state=', state, ', year=', year, ')'))
+    directory <- tempdir()
+    unzip(file, exdir=directory, junkpaths=TRUE)
+    sdfs <- loadCDEDataToStaging(directory, codeTableList)
+    unlink(directory, TRUE)
+    sdfs$AdministrativeSegment <- sdfs$AdministrativeSegment %>% mutate(CDEState=state, CDEYear=year)
+    attr(sdfs$AdministrativeSegment, 'type') <- 'FT'
+    sdfs$ArrestReportSegment <- sdfs$ArrestReportSegment %>% mutate(State=state, Year=year)
+    attr(sdfs$ArrestReportSegment, 'type') <- 'FT'
+    if (!is.null(resultHandler)) {
+      ret <- resultHandler(sdfs, file)
+    } else {
+      ret <- sdfs
+    }
+  })
+
+  if (is.null(resultHandler)) {
+    ret <- reduce(ret, function(accumDfs, theDfs) {
+      accumDfs %>%
+        imap(function(accumDf, dfName, theDfs) {
+          theDf <- theDfs[[dfName]]
+          if (attr(theDf, 'type')=='FT' || dfName %in% c('Agency','DateType')) {
+            ret <- accumDf %>% bind_rows(theDf)
+            attr(ret, 'type') <- attr(theDf, 'type')
+          } else {
+            ret <- accumDf
+          }
+          ret
+        }, theDfs) %>% set_names(names(accumDfs))
+    })
+    ret$Agency <- ret$Agency %>% distinct()
+    ret$DateType <- ret$DateType %>% distinct()
+  } else {
+    ret <- unlist(ret)
+  }
+
+  ret
+
+}
+
+#' Load FBI Crime Data Explorer extracts into a list of tables in the staging db format
+#' @param singleStateYearDirectory a directory containing the files in a single state+year extract downloaded from the CDE site
+#' @param codeTableList a list of staging code tables, or NULL to read them from the package
 #' @import stringr
 #' @import dplyr
 #' @import readr
 #' @importFrom lubridate dmy
 #' @export
-loadCDEDataToStaging <- function(directory, codeTableList=NULL) {
+loadCDEDataToStaging <- function(singleStateYearDirectory, codeTableList=NULL) {
 
   if (is.null(codeTableList)) {
     writeLines('Loading code tables')
@@ -29,25 +99,68 @@ loadCDEDataToStaging <- function(directory, codeTableList=NULL) {
     ret <- c(list(), codeTableList)
   }
 
+  ret <- map(ret, function(ct) {
+    # just in case they are passed in without the attributes set
+    attr(ct, 'type') <- 'CT'
+    ct
+  })
+
   writeLines('Loading agencies')
-  # we spell out the cols for agencies.csv because there are columns with illegal names ("0")
-  agencyDf <- read_csv(file.path(directory, 'agencies.csv'),
-                       skip=1,
-                       col_types='-iicc-----cccc--cc------ci---------------------------------',
-                       col_names=c('AGENCY_ID','DATA_YEAR','ORI','LEGACY_ORI','UCR_AGENCY_NAME','NCIC_AGENCY_NAME','PUB_AGENCY_NAME','PUB_AGENCY_UNIT','STATE_NAME','STATE_ABBR','AGENCY_TYPE_NAME','POPULATION'))
+
+  # found out there are two different formats for the agencies table, depending on state/year
+
+  if (file.exists(file.path(singleStateYearDirectory, 'agencies.csv'))) {
+
+    # we spell out the cols for agencies.csv because there are columns with illegal names ("0")
+    agencyDf <- read_csv(file.path(singleStateYearDirectory, 'agencies.csv'),
+                         skip=1,
+                         col_types='-i-cc-----cccc--cc------ci---------------------------------',
+                         col_names=c('AGENCY_ID','ORI','LEGACY_ORI','UCR_AGENCY_NAME','NCIC_AGENCY_NAME','PUB_AGENCY_NAME','PUB_AGENCY_UNIT','STATE_NAME','STATE_ABBR','AGENCY_TYPE_NAME','POPULATION'))
+
+  } else {
+
+    stateLookup <- datasets::state.name %>% set_names(datasets::state.abb)
+    agencyDf <- read_csv(file.path(singleStateYearDirectory, 'cde_agencies.csv'),
+                         col_types=c('icccc-c-----c----------i--i-----------------')) %>%
+      select(AGENCY_ID=agency_id,
+             ORI=ori,
+             NCIC_AGENCY_NAME=agency_name,
+             AGENCY_TYPE_NAME=agency_type_name,
+             STATE_ABBR=state_abbr,
+             POPULATION=population
+             ) %>%
+      mutate(STATE_NAME=case_when(STATE_ABBR=='DC' ~ 'District of Columbia', TRUE ~ stateLookup[STATE_ABBR]))
+
+  }
+
+  # there are occasionally duplicates of agencies, where some columns have different values for the same agency, but those aren't columns we care about
+  agencyDf <- agencyDf %>%
+    select(AGENCY_ID, ORI, NCIC_AGENCY_NAME, POPULATION, STATE_ABBR, STATE_NAME, AGENCY_TYPE_NAME) %>%
+    distinct()
 
   writeLines(paste0('Loaded ', nrow(agencyDf), ' Agency records'))
 
-  ret$AdministrativeSegment <- loadCDEIncidentData(ret, agencyDf, directory)
-  ret <- c(ret, loadCDEVictimData(ret, agencyDf, directory))
-  ret <- c(ret, loadCDEOffenseData(ret, directory))
-  ret <- c(ret, loadCDEArresteeData(ret, directory))
-  ret$AdministrativeSegment <- ret$AdministrativeSegment %>% anti_join(ret$ArrestReportSegment, by=c('AdministrativeSegmentID'='ArrestReportSegmentID'))
-  ret$OffenderSegment <- loadCDEOffenderData(ret, directory)
-  ret <- c(ret, loadCDEPropertyData(ret, directory))
+  setFactTableAttribute <- function(tdf) {
+    attr(tdf, 'type') <- 'FT'
+    tdf
+  }
+
+  dupAgencies <- agencyDf %>% group_by(AGENCY_ID) %>% filter(n()>1)
+  if (nrow(dupAgencies) > 0) {
+    warning(paste0('Duplicate agencies found, agencyIDs: ', paste0(dupAgencies$AGENCY_ID, collapse=',')))
+  }
+
+  ret$AdministrativeSegment <- loadCDEIncidentData(ret, agencyDf, singleStateYearDirectory)
+  ret <- c(ret, map(loadCDEVictimData(ret, agencyDf, singleStateYearDirectory), setFactTableAttribute))
+  ret <- c(ret, map(loadCDEOffenseData(ret, singleStateYearDirectory), setFactTableAttribute))
+  ret <- c(ret, map(loadCDEArresteeData(ret, singleStateYearDirectory), setFactTableAttribute))
+  ret$AdministrativeSegment <- ret$AdministrativeSegment %>% anti_join(ret$ArrestReportSegment, by=c('AdministrativeSegmentID'='ArrestReportSegmentID')) %>% setFactTableAttribute()
+  ret$OffenderSegment <- loadCDEOffenderData(ret, singleStateYearDirectory) %>% setFactTableAttribute()
+  ret <- c(ret, map(loadCDEPropertyData(ret, singleStateYearDirectory), setFactTableAttribute))
 
   ret$AgencyType <- bind_rows(ret$AgencyType,
                               tibble(AgencyTypeID=100, StateCode='100', StateDescription='Other') %>% mutate(NIBRSCode=StateCode, NIBRSDescription=StateDescription))
+  attr(ret$AgencyType, 'type') <- 'CT'
 
   ret$Agency <- agencyDf %>%
     rename(AgencyID=AGENCY_ID,
@@ -65,6 +178,8 @@ loadCDEDataToStaging <- function(directory, codeTableList=NULL) {
     left_join(ret$AgencyType %>% select(NIBRSDescription, AgencyTypeID), by=c('AGENCY_TYPE_NAME'='NIBRSDescription')) %>%
     select(AgencyID, AgencyORI, AgencyName, AgencyTypeID, StateCode, StateName, Population)
 
+  attr(ret$Agency, 'type') <- 'CT'
+
   allDates <- c(
     ret$AdministrativeSegment$IncidentDate,
     ret$PropertyType$RecoveredDate,
@@ -75,7 +190,7 @@ loadCDEDataToStaging <- function(directory, codeTableList=NULL) {
   minDate <- min(allDates, na.rm=TRUE)
   maxDate <- max(allDates, na.rm=TRUE)
 
-  ret$Date <- writeDateDimensionTable(minDate, maxDate)
+  ret$DateType <- writeDateDimensionTable(minDate, maxDate)
 
   ret
 
@@ -88,11 +203,13 @@ loadCDEPropertyData <- function(tableList, directory) {
   ret <- list()
 
   tdf <- read_csv(file.path(directory, 'NIBRS_PROPERTY.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$|_NUM$')), as.integer) %>%
     rename(NumberOfStolenMotorVehicles=STOLEN_COUNT,
            NumberOfRecoveredMotorVehicles=RECOVERED_COUNT,
            TypePropertyLossEtcTypeID=PROP_LOSS_ID
     ) %>%
+    mutate_at(vars(ends_with('MotorVehicles')), as.integer) %>%
     mutate(TypePropertyLossEtcTypeID=case_when(
       TypePropertyLossEtcTypeID==8 ~ 99999L,
       is.na(TypePropertyLossEtcTypeID) ~ 99998L,
@@ -112,14 +229,16 @@ loadCDEPropertyData <- function(tableList, directory) {
   writeLines(paste0('Loaded ', nrow(tdf), ' Property Segment records'))
 
   propertyTypeCt <- read_csv(file.path(directory, 'NIBRS_PROP_DESC_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(PROP_DESC_ID, PROP_DESC_CODE) %>%
     inner_join(tableList$PropertyDescriptionType, by=c('PROP_DESC_CODE'='NIBRSCode')) %>%
     select(PROP_DESC_ID, PropertyDescriptionTypeID)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_PROPERTY_DESC.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$')), as.integer) %>%
     mutate(PROPERTY_VALUE=as.double(PROPERTY_VALUE),
-           DATE_RECOVERED=dmy(DATE_RECOVERED)) %>%
+           DATE_RECOVERED=convertDate(DATE_RECOVERED)) %>%
     left_join(propertyTypeCt, by='PROP_DESC_ID') %>%
     mutate(PropertyDescriptionTypeID=case_when(is.na(PropertyDescriptionTypeID) ~ 99998L, TRUE ~ PropertyDescriptionTypeID)) %>%
     select(
@@ -134,16 +253,19 @@ loadCDEPropertyData <- function(tableList, directory) {
   writeLines(paste0('Loaded ', nrow(tdf), ' Property Type records'))
 
   drugTypeCt <- read_csv(file.path(directory, 'NIBRS_SUSPECTED_DRUG_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(SUSPECTED_DRUG_TYPE_ID, SUSPECTED_DRUG_CODE) %>%
     inner_join(tableList$SuspectedDrugTypeType, by=c('SUSPECTED_DRUG_CODE'='NIBRSCode')) %>%
     select(SUSPECTED_DRUG_TYPE_ID, SuspectedDrugTypeTypeID)
 
   drugMeasureTypeCt <- read_csv(file.path(directory, 'NIBRS_DRUG_MEASURE_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(DRUG_MEASURE_TYPE_ID, DRUG_MEASURE_CODE) %>%
     inner_join(tableList$TypeDrugMeasurementType, by=c('DRUG_MEASURE_CODE'='NIBRSCode')) %>%
     select(DRUG_MEASURE_TYPE_ID, TypeDrugMeasurementTypeID)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_SUSPECTED_DRUG.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$')), as.integer) %>%
     mutate(EstimatedDrugQuantity=as.numeric(EST_DRUG_QTY)) %>%
     left_join(drugTypeCt, by='SUSPECTED_DRUG_TYPE_ID') %>%
@@ -176,21 +298,25 @@ loadCDEVictimData <- function(tableList, agencyDf, directory) {
   ageCt <- buildAgeCodeLookup(tableList, directory)
 
   victimTypeCt <- read_csv(file.path(directory, 'NIBRS_VICTIM_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(VICTIM_TYPE_ID, VICTIM_TYPE_CODE) %>%
     inner_join(tableList$TypeOfVictimType, by=c('VICTIM_TYPE_CODE'='NIBRSCode')) %>%
     select(VICTIM_TYPE_ID, TypeOfVictimTypeID)
 
   circumstanceTypeCt <- read_csv(file.path(directory, 'NIBRS_ACTIVITY_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(ACTIVITY_TYPE_ID, ACTIVITY_TYPE_CODE) %>%
     inner_join(tableList$OfficerActivityCircumstanceType, by=c('ACTIVITY_TYPE_CODE'='NIBRSCode')) %>%
     select(ACTIVITY_TYPE_ID, OfficerActivityCircumstanceTypeID)
 
   assignmentTypeCt <- read_csv(file.path(directory, 'NIBRS_ASSIGNMENT_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(ASSIGNMENT_TYPE_ID, ASSIGNMENT_TYPE_CODE) %>%
     inner_join(tableList$OfficerAssignmentTypeType, by=c('ASSIGNMENT_TYPE_CODE'='NIBRSCode')) %>%
     select(ASSIGNMENT_TYPE_ID, OfficerAssignmentTypeTypeID)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_VICTIM.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$|_NUM$')), as.integer) %>%
     rename(
       VictimSequenceNumber=VICTIM_SEQ_NUM,
@@ -236,17 +362,20 @@ loadCDEVictimData <- function(tableList, agencyDf, directory) {
     )
 
   circumstanceTypeCt <- read_csv(file.path(directory, 'NIBRS_CIRCUMSTANCES.csv'), col_types='i-c-', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(CIRCUMSTANCES_ID, CIRCUMSTANCES_CODE) %>%
     mutate(CIRCUMSTANCES_CODE=str_pad(CIRCUMSTANCES_CODE, 2, 'left', '0')) %>%
     inner_join(tableList$AggravatedAssaultHomicideCircumstancesType, by=c('CIRCUMSTANCES_CODE'='NIBRSCode')) %>%
     select(CIRCUMSTANCES_ID, AggravatedAssaultHomicideCircumstancesTypeID)
 
   justTypeCt <- read_csv(file.path(directory, 'NIBRS_JUSTIFIABLE_FORCE.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(JUSTIFIABLE_FORCE_ID, JUSTIFIABLE_FORCE_CODE) %>%
     inner_join(tableList$AdditionalJustifiableHomicideCircumstancesType, by=c('JUSTIFIABLE_FORCE_CODE'='NIBRSCode')) %>%
     select(JUSTIFIABLE_FORCE_ID, AdditionalJustifiableHomicideCircumstancesTypeID)
 
   victimCircumstances <- read_csv(file.path(directory, 'NIBRS_VICTIM_CIRCUMSTANCES.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$')), as.integer) %>%
     rename(VictimSegmentID=VICTIM_ID)
 
@@ -270,37 +399,46 @@ loadCDEVictimData <- function(tableList, agencyDf, directory) {
 
   tdf <- victimCircumstances %>%
     inner_join(circumstanceTypeCt, by='CIRCUMSTANCES_ID') %>%
-    select(VictimSegmentID, AggravatedAssaultHomicideCircumstancesTypeID)
+    select(VictimSegmentID, AggravatedAssaultHomicideCircumstancesTypeID) %>%
+    ungroup() %>% mutate(AggravatedAssaultHomicideCircumstancesID=row_number())
 
   ret$AggravatedAssaultHomicideCircumstances <- tdf
 
   injuryTypeCt <- read_csv(file.path(directory, 'NIBRS_INJURY.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(INJURY_ID, INJURY_CODE) %>%
     inner_join(tableList$TypeInjuryType, by=c('INJURY_CODE'='NIBRSCode')) %>%
     select(INJURY_ID, TypeInjuryTypeID)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_VICTIM_INJURY.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$')), as.integer) %>%
     rename(VictimSegmentID=VICTIM_ID) %>%
     inner_join(injuryTypeCt, by='INJURY_ID') %>%
-    select(VictimSegmentID, TypeInjuryTypeID)
+    select(VictimSegmentID, TypeInjuryTypeID) %>%
+    ungroup() %>% mutate(TypeInjuryID=row_number())
 
   ret$TypeInjury <- tdf
 
   ret$VictimOffenseAssociation <- read_csv(file.path(directory, 'NIBRS_VICTIM_OFFENSE.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$')), as.integer) %>%
-    rename(VictimSegmentID=VICTIM_ID, OffenseSegmentID=OFFENSE_ID)
+    rename(VictimSegmentID=VICTIM_ID, OffenseSegmentID=OFFENSE_ID) %>%
+    ungroup() %>% mutate(VictimOffenseAssociationID=row_number())
 
   relationshipTypeCt <- read_csv(file.path(directory, 'NIBRS_RELATIONSHIP.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(RELATIONSHIP_ID, RELATIONSHIP_CODE) %>%
     inner_join(tableList$VictimOffenderRelationshipType, by=c('RELATIONSHIP_CODE'='NIBRSCode')) %>%
     select(RELATIONSHIP_ID, VictimOffenderRelationshipTypeID)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_VICTIM_OFFENDER_REL.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$')), as.integer) %>%
     rename(VictimSegmentID=VICTIM_ID, OffenderSegmentID=OFFENDER_ID) %>%
     inner_join(relationshipTypeCt, by='RELATIONSHIP_ID') %>%
-    select(VictimSegmentID, OffenderSegmentID, VictimOffenderRelationshipTypeID)
+    select(VictimSegmentID, OffenderSegmentID, VictimOffenderRelationshipTypeID) %>%
+    ungroup() %>% mutate(VictimOffenderAssociationID=row_number())
 
   ret$VictimOffenderAssociation <- tdf
 
@@ -317,6 +455,7 @@ loadCDEOffenderData <- function(tableList, directory) {
   ageCt <- buildAgeCodeLookup(tableList, directory)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_OFFENDER.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$|_NUM$')), as.integer) %>%
     rename(
       AgeOfOffenderMin=AGE_RANGE_LOW_NUM,
@@ -351,6 +490,7 @@ loadCDEArresteeData <- function(tableList, directory) {
   writeLines('Loading Arrestee Segment data')
 
   arrestTypeCt <- read_csv(file.path(directory, 'NIBRS_ARREST_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(ARREST_TYPE_ID, ARREST_TYPE_CODE) %>%
     inner_join(tableList$TypeOfArrestType, by=c('ARREST_TYPE_CODE'='NIBRSCode')) %>%
     select(ARREST_TYPE_ID, TypeOfArrestTypeID)
@@ -361,19 +501,26 @@ loadCDEArresteeData <- function(tableList, directory) {
   offenseTypeCt <- buildOffenseTypeLookup(tableList, directory, TRUE)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_ARRESTEE.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
-    mutate_at(vars(matches('_ID$|_NUM$')), as.integer) %>%
+    set_names(toupper(colnames(.)))
+
+  if (!('ARREST_NUM' %in% colnames(tdf))) {
+    tdf <- tdf %>% mutate(ARREST_NUM=str_pad(ARRESTEE_ID, 12, 'left', '0'))
+  }
+
+  tdf <- tdf %>%
+    mutate_at(vars(matches('_ID$|AGE_.+_NUM$|_SEQ_NUM$')), as.integer) %>%
     rename(
+      ArrestTransactionNumber=ARREST_NUM,
       ArresteeSequenceNumber=ARRESTEE_SEQ_NUM,
       AgeOfArresteeMin=AGE_RANGE_LOW_NUM,
       AgeOfArresteeMax=AGE_RANGE_HIGH_NUM) %>%
     mutate(
       SegmentActionTypeTypeID=99998L,
-      ArrestTransactionNumber=str_pad(ARRESTEE_ID, 12, 'left', '0'),
       SEX_CODE=case_when(is.na(SEX_CODE) ~ ' ', TRUE ~ SEX_CODE),
       RESIDENT_CODE=case_when(is.na(RESIDENT_CODE) ~ ' ', TRUE ~ RESIDENT_CODE),
       UNDER_18_DISPOSITION_CODE=case_when(is.na(UNDER_18_DISPOSITION_CODE) ~ ' ', TRUE ~ UNDER_18_DISPOSITION_CODE),
       MULTIPLE_INDICATOR=case_when(is.na(MULTIPLE_INDICATOR) ~ ' ', TRUE ~ MULTIPLE_INDICATOR),
-      ArrestDate=dmy(ARREST_DATE),
+      ArrestDate=convertDate(ARREST_DATE),
       ArrestDateID=createKeyFromDate(ArrestDate)
     ) %>%
     left_join(offenseTypeCt, by='OFFENSE_TYPE_ID') %>%
@@ -393,9 +540,11 @@ loadCDEArresteeData <- function(tableList, directory) {
     )
 
   weaponCt <- read_csv(file.path(directory, 'NIBRS_WEAPON_TYPE.csv'), col_types='ic--', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate(WEAPON_ID=as.integer(WEAPON_ID))
 
   weaponDf <- read_csv(file.path(directory, 'NIBRS_ARRESTEE_WEAPON.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$')), as.integer) %>%
     select(WEAPON_ID, ARRESTEE_ID) %>%
     left_join(weaponCt, by='WEAPON_ID') %>%
@@ -426,7 +575,8 @@ loadCDEArresteeData <- function(tableList, directory) {
 
   ret$ArresteeSegmentWasArmedWith <- weaponDf %>%
     semi_join(ret$ArresteeSegment, by=c('ARRESTEE_ID'='ArresteeSegmentID')) %>%
-    rename(ArresteeSegmentID=ARRESTEE_ID)
+    rename(ArresteeSegmentID=ARRESTEE_ID) %>%
+    ungroup() %>% mutate(ArresteeSegmentWasArmedWithID=row_number())
 
   ret$ArrestReportSegment <- tdf %>%
     filter(OffenseCategory1=='Group B') %>% select(-OffenseCategory1) %>%
@@ -447,7 +597,8 @@ loadCDEArresteeData <- function(tableList, directory) {
 
   ret$ArrestReportSegmentWasArmedWith <- weaponDf %>%
     semi_join(ret$ArrestReportSegment, by=c('ARRESTEE_ID'='ArrestReportSegmentID')) %>%
-    rename(ArrestReportSegmentID=ARRESTEE_ID)
+    rename(ArrestReportSegmentID=ARRESTEE_ID) %>%
+    ungroup() %>% mutate(ArrestReportSegmentWasArmedWithID=row_number())
 
   writeLines(paste0('Loaded ', nrow(ret$ArresteeSegment), ' Group A Arrestee Segment records'))
   writeLines(paste0('Loaded ', nrow(ret$ArrestReportSegment), ' Group B Arrest Report Segment records'))
@@ -458,27 +609,41 @@ loadCDEArresteeData <- function(tableList, directory) {
 
 buildRaceLookup <- function(tableList, directory) {
   read_csv(file.path(directory, 'REF_RACE.csv'), col_types='ic-----') %>%
+    set_names(toupper(colnames(.))) %>%
     select(RACE_ID, RACE_CODE) %>%
     inner_join(tableList$RaceOfPersonType, by=c('RACE_CODE'='NIBRSCode')) %>%
     select(RACE_ID, RaceOfPersonTypeID)
 }
 
 buildEthnicityLookup <- function(tableList, directory) {
-  read_csv(file.path(directory, 'NIBRS_ETHNICITY.csv'), col_types='icc') %>%
+
+  ret <- read_csv(file.path(directory, 'NIBRS_ETHNICITY.csv'), col_types=cols(.default=col_character())) %>%
+    set_names(toupper(colnames(.)))
+
+  if ('HC_FLAG' %in% colnames(ret)) {
+    ret <- select(ret, -HC_FLAG)
+  }
+
+  ret %>%
     select(ETHNICITY_ID, ETHNICITY_CODE) %>%
+    mutate(ETHNICITY_ID=as.integer(ETHNICITY_ID)) %>%
     inner_join(tableList$EthnicityOfPersonType, by=c('ETHNICITY_CODE'='NIBRSCode')) %>%
     select(ETHNICITY_ID, EthnicityOfPersonTypeID)
+
 }
 
 buildAgeCodeLookup <- function(tableList, directory) {
   read_csv(file.path(directory, 'NIBRS_AGE.csv'), col_types='icc') %>%
+    set_names(toupper(colnames(.))) %>%
     select(AGE_ID, AGE_CODE) %>% filter(AGE_CODE %in% c('NN','NB','BB')) %>%
     rename(NonNumericAge=AGE_CODE)
 }
 
 buildOffenseTypeLookup <- function(tableList, directory, includeGroupIndicatorField=FALSE) {
-  ret <- read_csv(file.path(directory, 'NIBRS_OFFENSE_TYPE.csv'), col_types='ic-------') %>%
+  ret <- read_csv(file.path(directory, 'NIBRS_OFFENSE_TYPE.csv'), col_types=cols(.default=col_character())) %>%
+    set_names(toupper(colnames(.))) %>%
     select(OFFENSE_TYPE_ID, OFFENSE_CODE) %>%
+    mutate_at(vars(ends_with('_ID')), as.integer) %>%
     inner_join(tableList$UCROffenseCodeType, by=c('OFFENSE_CODE'='NIBRSCode')) %>%
     select(OFFENSE_TYPE_ID, UCROffenseCodeTypeID, OffenseCategory1)
   if (!includeGroupIndicatorField) {
@@ -494,18 +659,30 @@ loadCDEOffenseData <- function(tableList, directory) {
   ret <- list()
 
   locationTypeCt <- read_csv(file.path(directory, 'NIBRS_LOCATION_TYPE.csv'), col_types='icc', progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(LOCATION_ID, LOCATION_CODE) %>%
     inner_join(tableList$LocationTypeType, by=c('LOCATION_CODE'='NIBRSCode')) %>%
     select(LOCATION_ID, LocationTypeTypeID)
 
   offenseTypeCt <- buildOffenseTypeLookup(tableList, directory)
 
+  offenseTypes <- read_csv(file.path(directory, 'NIBRS_OFFENSE_TYPE.csv'), col_types=cols(.default=col_character())) %>%
+    set_names(toupper(colnames(.))) %>%
+    select(OFFENSE_TYPE_ID, OFFENSE_CODE) %>%
+    mutate_at(vars(ends_with('_ID')), as.integer) %>%
+    filter(OFFENSE_CODE %in% c('23*', '23H'))
+
+  star23 <- offenseTypes %>% filter(OFFENSE_CODE=='23*') %>% .$OFFENSE_TYPE_ID
+  h23 <- offenseTypes %>% filter(OFFENSE_CODE=='23H') %>% .$OFFENSE_TYPE_ID
+
   tdf <- read_csv(file.path(directory, 'NIBRS_OFFENSE.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(ends_with('_ID')), as.integer) %>%
     mutate(NumberOfPremisesEntered=as.integer(NUM_PREMISES_ENTERED),
            SegmentActionTypeTypeID=99998L,
            OffenseSegmentID=OFFENSE_ID, AdministrativeSegmentID=INCIDENT_ID,
            OffenseAttemptedCompleted=ATTEMPT_COMPLETE_FLAG,
+           OFFENSE_TYPE_ID=case_when(OFFENSE_TYPE_ID==star23 ~ h23, TRUE ~ OFFENSE_TYPE_ID), # 23* is not a valid nibrs offense code, 23H is closest per Becki
            METHOD_ENTRY_CODE=case_when(is.na(METHOD_ENTRY_CODE) ~ ' ', TRUE ~ METHOD_ENTRY_CODE)) %>%
     left_join(locationTypeCt, by='LOCATION_ID') %>%
     left_join(offenseTypeCt, by='OFFENSE_TYPE_ID') %>%
@@ -521,68 +698,93 @@ loadCDEOffenseData <- function(tableList, directory) {
 
   writeLines(paste0('Loaded ', nrow(ret$OffenseSegment), ' Offense Segment records'))
 
-  ct <- read_csv(file.path(directory, 'NIBRS_BIAS_LIST.csv'), col_types='ic--', progress=FALSE) %>%
+  ct <- read_csv(file.path(directory, 'NIBRS_BIAS_LIST.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
+    mutate_at(vars(ends_with('_ID')), as.integer) %>%
     select(BIAS_ID, BIAS_CODE) %>%
     inner_join(tableList$BiasMotivationType, by=c('BIAS_CODE'='NIBRSCode')) %>%
     select(BIAS_ID, BiasMotivationTypeID)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_BIAS_MOTIVATION.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(ends_with('_ID')), as.integer) %>%
     left_join(ct, by='BIAS_ID') %>%
-    select(OffenseSegmentID=OFFENSE_ID, BiasMotivationTypeID)
+    select(OffenseSegmentID=OFFENSE_ID, BiasMotivationTypeID) %>%
+    ungroup() %>% mutate(BiasMotivationID=row_number())
 
   ret$BiasMotivation <- tdf
 
-  ct <- read_csv(file.path(directory, 'NIBRS_CRIMINAL_ACT_TYPE.csv'), col_types='ic--', progress=FALSE) %>%
+  ct <- read_csv(file.path(directory, 'NIBRS_CRIMINAL_ACT_TYPE.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(CRIMINAL_ACT_ID, CRIMINAL_ACT_CODE) %>%
+    mutate_at(vars(ends_with('_ID')), as.integer) %>%
     inner_join(tableList$TypeOfCriminalActivityType, by=c('CRIMINAL_ACT_CODE'='NIBRSCode')) %>%
     select(CRIMINAL_ACT_ID, TypeOfCriminalActivityTypeID)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_CRIMINAL_ACT.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(ends_with('_ID')), as.integer) %>%
     left_join(ct, by='CRIMINAL_ACT_ID') %>%
-    select(OffenseSegmentID=OFFENSE_ID, TypeOfCriminalActivityTypeID)
+    select(OffenseSegmentID=OFFENSE_ID, TypeOfCriminalActivityTypeID) %>%
+    ungroup() %>% mutate(TypeCriminalActivityID=row_number())
 
   ret$TypeCriminalActivity <- tdf
 
-  ct <- read_csv(file.path(directory, 'NIBRS_USING_LIST.csv'), col_types='ic-', progress=FALSE) %>%
+  ct <- read_csv(file.path(directory, 'NIBRS_USING_LIST.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(SUSPECT_USING_ID, SUSPECT_USING_CODE) %>%
+    mutate_at(vars(ends_with('_ID')), as.integer) %>%
     inner_join(tableList$OffenderSuspectedOfUsingType, by=c('SUSPECT_USING_CODE'='NIBRSCode')) %>%
     select(SUSPECT_USING_ID, OffenderSuspectedOfUsingTypeID)
 
   tdf <- read_csv(file.path(directory, 'NIBRS_SUSPECT_USING.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(ends_with('_ID')), as.integer) %>%
     left_join(ct, by='SUSPECT_USING_ID') %>%
-    select(OffenseSegmentID=OFFENSE_ID, OffenderSuspectedOfUsingTypeID)
+    select(OffenseSegmentID=OFFENSE_ID, OffenderSuspectedOfUsingTypeID) %>%
+    ungroup() %>% mutate(OffenderSuspectedOfUsingID=row_number())
 
   ret$OffenderSuspectedOfUsing <- tdf
 
-  weaponCt <- read_csv(file.path(directory, 'NIBRS_WEAPON_TYPE.csv'), col_types='ic--', progress=FALSE) %>%
+  weaponCt <- read_csv(file.path(directory, 'NIBRS_WEAPON_TYPE.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate(WEAPON_ID=as.integer(WEAPON_ID))
 
   ret$TypeOfWeaponForceInvolved <- read_csv(file.path(directory, 'NIBRS_WEAPON.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     mutate_at(vars(matches('_ID$')), as.integer) %>%
     select(WEAPON_ID, OFFENSE_ID) %>%
     left_join(weaponCt, by='WEAPON_ID') %>%
     mutate(WEAPON_CODE=case_when(is.na(WEAPON_CODE) ~ ' ', TRUE ~ WEAPON_CODE),
            AutomaticWeaponIndicator=str_sub(WEAPON_CODE, 3, 3), WEAPON_CODE=str_sub(WEAPON_CODE, 1, 2)) %>%
     left_join(tableList$TypeOfWeaponForceInvolvedType %>% select(TypeOfWeaponForceInvolvedTypeID, NIBRSCode), by=c('WEAPON_CODE'='NIBRSCode')) %>%
-    select(OffenseSegmentID=OFFENSE_ID, TypeOfWeaponForceInvolvedTypeID, AutomaticWeaponIndicator)
+    select(OffenseSegmentID=OFFENSE_ID, TypeOfWeaponForceInvolvedTypeID, AutomaticWeaponIndicator) %>%
+    ungroup() %>% mutate(TypeOfWeaponForceInvolvedID=row_number())
 
   ret
 
+}
+
+#' @importFrom lubridate dmy ymd_hms parse_date_time as_date
+convertDate <- function(val) {
+  parse_date_time(val, c('y-m-d H:M:S', 'd-b!-y!*')) %>% as_date()
 }
 
 loadCDEIncidentData <- function(tableList, agencyDf, directory) {
 
   writeLines('Loading Administrative Segment data')
 
-  exceptionalClearanceCt <- read_csv(file.path(directory, 'NIBRS_CLEARED_EXCEPT.csv'), col_types='iccc', progress=FALSE) %>%
+  exceptionalClearanceCt <- read_csv(file.path(directory, 'NIBRS_CLEARED_EXCEPT.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.))) %>%
     select(CLEARED_EXCEPT_ID, CLEARED_EXCEPT_CODE) %>%
+    mutate_at(vars(ends_with('_ID')), as.integer) %>%
     inner_join(tableList$ClearedExceptionallyType, by=c('CLEARED_EXCEPT_CODE'='NIBRSCode')) %>%
     select(CLEARED_EXCEPT_ID, ClearedExceptionallyTypeID)
 
   ret <- read_csv(file.path(directory, 'NIBRS_incident.csv'), col_types=cols(.default=col_character()), progress=FALSE) %>%
+    set_names(toupper(colnames(.)))
+
+  ret <- ret %>%
     mutate_at(vars(ends_with('_ID')), as.integer) %>%
     inner_join(agencyDf %>% select(ORI, AGENCY_ID), by='AGENCY_ID') %>%
     rename(AgencyID=AGENCY_ID,
@@ -590,8 +792,8 @@ loadCDEIncidentData <- function(tableList, agencyDf, directory) {
            ReportDateIndicator=REPORT_DATE_FLAG) %>%
     mutate(IncidentNumber=str_pad(INCIDENT_ID, 12, 'left', '0'),
            SegmentActionTypeTypeID=99998L,
-           IncidentDate=dmy(INCIDENT_DATE),
-           ExceptionalClearanceDate=dmy(CLEARED_EXCEPT_DATE),
+           IncidentDate=convertDate(INCIDENT_DATE),
+           ExceptionalClearanceDate=convertDate(CLEARED_EXCEPT_DATE),
            IncidentDateID=createKeyFromDate(IncidentDate),
            ExceptionalClearanceDateID=createKeyFromDate(ExceptionalClearanceDate),
            CARGO_THEFT_FLAG=case_when(is.na(CARGO_THEFT_FLAG) ~ ' ', TRUE ~ CARGO_THEFT_FLAG)) %>%

@@ -28,7 +28,7 @@
 #' @param seed random seed.  Set this to the same value in subsequent calls to generate the same random sample.
 #' @return a list with all the dimensional database tables, as tibbles
 #' @export
-loadDimensional <- function(
+loadDimensionalFromStagingDatabase <- function(
   stagingConn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhost", dbname="search_nibrs_staging", username="root"),
   dimensionalConn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhost", dbname="search_nibrs_dimensional", username="root"),
   writeToDatabase=TRUE, sampleFraction=NULL, seed=12341234) {
@@ -90,20 +90,50 @@ loadDimensional <- function(
   writeLines('Reading dimension tables from staging')
   dimensionTables <- map(dimensionTables, function(tableName) {
     dbReadTable(stagingConn, tableName) %>% as_tibble()
-  }) %>% set_names(dimensionTables) %>%
-    enhanceDimensionTables()
+  }) %>% set_names(dimensionTables)
 
   writeLines('Reading fact tables from staging')
   stagingTables <- map(stagingTables, function(tableName) {
-    ret <- dbReadTable(stagingConn, tableName) %>% as_tibble()
-    if ('SegmentActionTypeTypeID' %in% colnames(ret)) {
-      ret <- ret %>% select(-SegmentActionTypeTypeID)
-    }
-    if ('NonNumericAge' %in% colnames(ret)) {
-      ret <- ret %>% select(-NonNumericAge)
-    }
-    ret
+    dbReadTable(stagingConn, tableName) %>% as_tibble()
   }) %>% set_names(stagingTables)
+
+  loadDimensionalFromObjectLists(dimensionTables, stagingTables, stagingConn, writeToDatabase, sampleFraction, seed)
+
+}
+
+#' Load the NIBRS dimensional database from lists of dimension and fact tables
+#'
+#' Load the NIBRS dimensional database from lists of dimension and fact tables, optionally taking a random sample of Administrative Segment
+#' and Group B Arrest Segment records.
+#' @importFrom DBI dbReadTable
+#' @importFrom lubridate is.Date
+#' @import dplyr
+#' @import purrr
+#' @import tibble
+#' @param dimensionTables list of dimension tables in the staging format
+#' @param factTables list of fact tables in the staging format
+#' @param dimensionalConn connection to the dimensional database
+#' @param writeToDatabase whether to write to the dimensional database or not
+#' @param sampleFraction numeric value between 0 and 1 indicating percentage of records in the sample.  NULL to take all records.
+#' @param seed random seed.  Set this to the same value in subsequent calls to generate the same random sample.
+#' @return a list with all the dimensional database tables, as tibbles
+#' @export
+loadDimensionalFromObjectLists <- function(
+  dimensionTables, factTables,
+  dimensionalConn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhost", dbname="search_nibrs_dimensional", username="root"),
+  writeToDatabase=TRUE, sampleFraction=NULL, seed=12341234) {
+
+  factTables <- map(factTables, function(factTableDf) {
+    if ('SegmentActionTypeTypeID' %in% colnames(factTableDf)) {
+      factTableDf <- factTableDf %>% select(-SegmentActionTypeTypeID)
+    }
+    if ('NonNumericAge' %in% colnames(factTableDf)) {
+      factTableDf <- factTableDf %>% select(-NonNumericAge)
+    }
+    factTableDf
+  })
+
+  dimensionTables <- enhanceDimensionTables(dimensionTables)
 
   createOffenderAgeDim <- function(AgeOfOffenderMin) {
     case_when(
@@ -287,28 +317,28 @@ loadDimensional <- function(
   }
 
   writeLines('Creating Incident View')
-  ret$FullIncidentView <- stagingTables$AdministrativeSegment %>%
+  ret$FullIncidentView <- factTables$AdministrativeSegment %>%
     samp() %>%
-    left_join(stagingTables$OffenseSegment, by='AdministrativeSegmentID') %>%
-    left_join(stagingTables$VictimSegment, by='AdministrativeSegmentID') %>%
-    left_join(stagingTables$VictimOffenseAssociation, by=c('VictimSegmentID', 'OffenseSegmentID')) %>%
-    left_join(stagingTables$OffenderSuspectedOfUsing, by='OffenseSegmentID') %>%
-    left_join(stagingTables$TypeCriminalActivity, by='OffenseSegmentID') %>%
-    left_join(stagingTables$BiasMotivation, by='OffenseSegmentID') %>%
-    left_join(stagingTables$TypeOfWeaponForceInvolved, by='OffenseSegmentID') %>%
-    left_join(stagingTables$TypeInjury, by='VictimSegmentID') %>%
-    left_join(stagingTables$AggravatedAssaultHomicideCircumstances, by='VictimSegmentID') %>%
-    left_join(stagingTables$OffenderSegment %>%
+    left_join(factTables$OffenseSegment, by='AdministrativeSegmentID') %>%
+    left_join(factTables$VictimSegment, by='AdministrativeSegmentID') %>%
+    left_join(factTables$VictimOffenseAssociation, by=c('VictimSegmentID', 'OffenseSegmentID')) %>%
+    left_join(factTables$OffenderSuspectedOfUsing, by='OffenseSegmentID') %>%
+    left_join(factTables$TypeCriminalActivity, by='OffenseSegmentID') %>%
+    left_join(factTables$BiasMotivation, by='OffenseSegmentID') %>%
+    left_join(factTables$TypeOfWeaponForceInvolved, by='OffenseSegmentID') %>%
+    left_join(factTables$TypeInjury, by='VictimSegmentID') %>%
+    left_join(factTables$AggravatedAssaultHomicideCircumstances, by='VictimSegmentID') %>%
+    left_join(factTables$OffenderSegment %>%
                 rename(
                   OffenderSexOfPersonTypeID=SexOfPersonTypeID,
                   OffenderRaceOfPersonTypeID=RaceOfPersonTypeID,
                   OffenderEthnicityOfPersonTypeID=EthnicityOfPersonTypeID
                 ), by='AdministrativeSegmentID') %>%
-    left_join(stagingTables$VictimOffenderAssociation, by=c('VictimSegmentID', 'OffenderSegmentID')) %>%
-    left_join(stagingTables$PropertySegment, by='AdministrativeSegmentID') %>%
-    left_join(stagingTables$PropertyType, by='PropertySegmentID') %>%
-    left_join(stagingTables$SuspectedDrugType, by='PropertySegmentID') %>%
-    left_join(stagingTables$ArresteeSegment %>% select(AdministrativeSegmentID, ArresteeSegmentID), by='AdministrativeSegmentID') %>%
+    left_join(factTables$VictimOffenderAssociation, by=c('VictimSegmentID', 'OffenderSegmentID')) %>%
+    left_join(factTables$PropertySegment, by='AdministrativeSegmentID') %>%
+    left_join(factTables$PropertyType, by='PropertySegmentID') %>%
+    left_join(factTables$SuspectedDrugType, by='PropertySegmentID') %>%
+    left_join(factTables$ArresteeSegment %>% select(AdministrativeSegmentID, ArresteeSegmentID), by='AdministrativeSegmentID') %>%
     mutate_at(vars(ends_with('ID')), as.integer) %>%
     mutate(
       NumberOfPremisesEnteredDim=case_when(is.na(NumberOfPremisesEntered) ~ 'N/A', TRUE ~ as.character(NumberOfPremisesEntered)),
@@ -346,7 +376,7 @@ loadDimensional <- function(
       EstimatedDrugQuantity=case_when(is.na(EstimatedDrugQuantity) ~ 0, TRUE ~ EstimatedDrugQuantity),
       IncidentHour=as.integer(IncidentHour)
     ) %>%
-    left_join(stagingTables$OffenseSegment %>% select(AdministrativeSegmentID, OffenseSegmentID) %>% distinct() %>%
+    left_join(factTables$OffenseSegment %>% select(AdministrativeSegmentID, OffenseSegmentID) %>% distinct() %>%
                 group_by(AdministrativeSegmentID) %>% summarize(OffensesPerIncident=n()), by='AdministrativeSegmentID') %>%
     mutate(OffensesPerIncident=case_when(is.na(OffensesPerIncident) ~ 0L, TRUE ~ OffensesPerIncident),
            OffensesPerIncidentDim=case_when(
@@ -429,18 +459,18 @@ loadDimensional <- function(
     )
 
   writeLines('Creating Victim-Offense View')
-  ret$FullVictimOffenseView <- stagingTables$AdministrativeSegment %>%
+  ret$FullVictimOffenseView <- factTables$AdministrativeSegment %>%
     samp() %>%
-    left_join(stagingTables$OffenseSegment, by='AdministrativeSegmentID') %>%
-    left_join(stagingTables$VictimSegment, by='AdministrativeSegmentID') %>%
-    left_join(stagingTables$VictimOffenseAssociation, by=c('OffenseSegmentID', 'VictimSegmentID')) %>%
-    left_join(stagingTables$OffenderSuspectedOfUsing, by='OffenseSegmentID') %>%
-    left_join(stagingTables$TypeCriminalActivity, by='OffenseSegmentID') %>%
-    left_join(stagingTables$BiasMotivation, by='OffenseSegmentID') %>%
-    left_join(stagingTables$TypeOfWeaponForceInvolved, by='OffenseSegmentID') %>%
-    left_join(stagingTables$TypeInjury, by='VictimSegmentID') %>%
-    left_join(stagingTables$AggravatedAssaultHomicideCircumstances, by='VictimSegmentID') %>%
-    left_join(stagingTables$ArresteeSegment %>% select(AdministrativeSegmentID, ArresteeSegmentID), by='AdministrativeSegmentID') %>%
+    left_join(factTables$OffenseSegment, by='AdministrativeSegmentID') %>%
+    left_join(factTables$VictimSegment, by='AdministrativeSegmentID') %>%
+    left_join(factTables$VictimOffenseAssociation, by=c('OffenseSegmentID', 'VictimSegmentID')) %>%
+    left_join(factTables$OffenderSuspectedOfUsing, by='OffenseSegmentID') %>%
+    left_join(factTables$TypeCriminalActivity, by='OffenseSegmentID') %>%
+    left_join(factTables$BiasMotivation, by='OffenseSegmentID') %>%
+    left_join(factTables$TypeOfWeaponForceInvolved, by='OffenseSegmentID') %>%
+    left_join(factTables$TypeInjury, by='VictimSegmentID') %>%
+    left_join(factTables$AggravatedAssaultHomicideCircumstances, by='VictimSegmentID') %>%
+    left_join(factTables$ArresteeSegment %>% select(AdministrativeSegmentID, ArresteeSegmentID), by='AdministrativeSegmentID') %>%
     mutate_at(vars(ends_with('ID')), as.integer) %>%
     mutate(
       NumberOfPremisesEnteredDim=case_when(is.na(NumberOfPremisesEntered) ~ 'N/A', TRUE ~ as.character(NumberOfPremisesEntered)),
@@ -506,25 +536,25 @@ loadDimensional <- function(
     )
 
   writeLines('Creating Victim-Offender View')
-  ret$FullVictimOffenderView <- stagingTables$AdministrativeSegment %>%
+  ret$FullVictimOffenderView <- factTables$AdministrativeSegment %>%
     samp() %>%
-    left_join(stagingTables$OffenderSegment %>%
+    left_join(factTables$OffenderSegment %>%
                 rename(
                   OffenderSexOfPersonTypeID=SexOfPersonTypeID,
                   OffenderRaceOfPersonTypeID=RaceOfPersonTypeID,
                   OffenderEthnicityOfPersonTypeID=EthnicityOfPersonTypeID,
                 ), by='AdministrativeSegmentID') %>%
-    left_join(stagingTables$VictimSegment %>%
+    left_join(factTables$VictimSegment %>%
                 rename(
                   VictimSexOfPersonTypeID=SexOfPersonTypeID,
                   VictimRaceOfPersonTypeID=RaceOfPersonTypeID,
                   VictimEthnicityOfPersonTypeID=EthnicityOfPersonTypeID,
                   VictimResidentStatusOfPersonTypeID=ResidentStatusOfPersonTypeID
                 ), by='AdministrativeSegmentID') %>%
-    left_join(stagingTables$VictimOffenderAssociation, by=c('OffenderSegmentID', 'VictimSegmentID')) %>%
-    left_join(stagingTables$TypeInjury, by='VictimSegmentID') %>%
-    left_join(stagingTables$AggravatedAssaultHomicideCircumstances, by='VictimSegmentID') %>%
-    left_join(stagingTables$ArresteeSegment %>% select(AdministrativeSegmentID, ArresteeSegmentID), by='AdministrativeSegmentID') %>%
+    left_join(factTables$VictimOffenderAssociation, by=c('OffenderSegmentID', 'VictimSegmentID')) %>%
+    left_join(factTables$TypeInjury, by='VictimSegmentID') %>%
+    left_join(factTables$AggravatedAssaultHomicideCircumstances, by='VictimSegmentID') %>%
+    left_join(factTables$ArresteeSegment %>% select(AdministrativeSegmentID, ArresteeSegmentID), by='AdministrativeSegmentID') %>%
     mutate_at(vars(ends_with('ID')), as.integer) %>%
     mutate(
       VictimAgeDim=createVictimAgeDim(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
@@ -591,10 +621,10 @@ loadDimensional <- function(
     )
 
   writeLines('Creating Group A Arrest View')
-  ret$FullGroupAArrestView <- stagingTables$AdministrativeSegment %>%
+  ret$FullGroupAArrestView <- factTables$AdministrativeSegment %>%
     samp() %>%
-    inner_join(stagingTables$ArresteeSegment, by='AdministrativeSegmentID') %>%
-    left_join(stagingTables$ArresteeSegmentWasArmedWith, by='ArresteeSegmentID') %>%
+    inner_join(factTables$ArresteeSegment, by='AdministrativeSegmentID') %>%
+    left_join(factTables$ArresteeSegmentWasArmedWith, by='ArresteeSegmentID') %>%
     mutate_at(vars(ends_with('ID')), as.integer) %>%
     mutate(
       ArresteeAgeDim=createOffenderAgeDim(AgeOfArresteeMin),
@@ -639,12 +669,12 @@ loadDimensional <- function(
     )
 
   writeLines('Creating Property View')
-  ret$FullPropertyView <- stagingTables$AdministrativeSegment %>%
+  ret$FullPropertyView <- factTables$AdministrativeSegment %>%
     samp() %>%
-    inner_join(stagingTables$PropertySegment, by='AdministrativeSegmentID') %>%
-    inner_join(stagingTables$PropertyType, by='PropertySegmentID') %>%
-    left_join(stagingTables$SuspectedDrugType, by='PropertySegmentID') %>%
-    left_join(stagingTables$ArresteeSegment, by='AdministrativeSegmentID') %>%
+    inner_join(factTables$PropertySegment, by='AdministrativeSegmentID') %>%
+    inner_join(factTables$PropertyType, by='PropertySegmentID') %>%
+    left_join(factTables$SuspectedDrugType, by='PropertySegmentID') %>%
+    left_join(factTables$ArresteeSegment, by='AdministrativeSegmentID') %>%
     mutate_at(vars(ends_with('ID')), as.integer) %>%
     mutate(
       StolenMotorVehiclesDim=createMotorVehiclesDim(NumberOfStolenMotorVehicles),
@@ -688,9 +718,9 @@ loadDimensional <- function(
     )
 
   writeLines('Creating Group B Arrest View')
-  ret$FullGroupBArrestView <- stagingTables$ArrestReportSegment %>%
+  ret$FullGroupBArrestView <- factTables$ArrestReportSegment %>%
     samp() %>%
-    left_join(stagingTables$ArrestReportSegmentWasArmedWith, by='ArrestReportSegmentID') %>%
+    left_join(factTables$ArrestReportSegmentWasArmedWith, by='ArrestReportSegmentID') %>%
     mutate_at(vars(ends_with('ID')), as.integer) %>%
     mutate(
       ArresteeAgeDim=createOffenderAgeDim(AgeOfArresteeMin),
