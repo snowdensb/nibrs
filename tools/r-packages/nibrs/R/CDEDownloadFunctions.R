@@ -18,7 +18,9 @@ downloadCDEData <- function(outputDir, constrainYears=NULL, constrainStates=NULL
     .[names(states)]
 
   map2_dfr(participationList, names(participationList), function(state, name) {
+
     ret <- NULL
+
     if (is.list(state$nibrs))  {
 
       years <- seq(state$nibrs$`initial-year`, 2017)
@@ -43,7 +45,9 @@ downloadCDEData <- function(outputDir, constrainYears=NULL, constrainStates=NULL
       })
 
     }
+
     ret
+
   })
 
 }
