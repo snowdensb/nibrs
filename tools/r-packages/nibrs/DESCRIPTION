@@ -11,6 +11,7 @@ Imports: tidyverse,
   DBI,
   RMariaDB,
   readxl,
-  lubridate
+  lubridate,
+  furrr
 LazyData: true
 RoxygenNote: 6.1.1
