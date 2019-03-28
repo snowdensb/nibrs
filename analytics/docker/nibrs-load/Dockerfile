@@ -28,17 +28,18 @@
 #   hostname from the container):
 
 # docker run -it --rm --network docker_nibrs_analytics_nw searchncjis/nibrs-load \
-#      R -e 'dfs <- nibrs::loadDimensional(stagingConn=DBI::dbConnect(RMariaDB::MariaDB(), host="nibrs-staging-db", dbname="search_nibrs_staging"),
+#      R -e 'dfs <- nibrs::loadDimensionalFromStagingDatabase(stagingConn=DBI::dbConnect(RMariaDB::MariaDB(), host="nibrs-staging-db", dbname="search_nibrs_staging"),
 #        dimensionalConn=DBI::dbConnect(RMariaDB::MariaDB(), host="nibrs-analytics-db", dbname="search_nibrs_dimensional", user="analytics", sampleFraction=.05))'
 
 # (Note that if you want to write the whole db rather than a random sample of records, remove the sampleFraction= parameter)
 
-FROM rocker/tidyverse:3.5.1
+FROM rocker/tidyverse:3.5.3
 
 LABEL maintainer="SEARCH" \
   org.label-schema.description="Image that loads NIBRS data from source datasets into mariadb"
 
 RUN apt-get update && apt-get install -y libmariadbclient-dev && R -e 'install.packages("RMariaDB")'
+RUN R -e 'install.packages(c("furrr","sergeant"))'
 
 COPY files/nibrs_1.0.0.tar.gz /tmp/
 RUN R -e 'install.packages("/tmp/nibrs_1.0.0.tar.gz", repos = NULL, type="source")'
