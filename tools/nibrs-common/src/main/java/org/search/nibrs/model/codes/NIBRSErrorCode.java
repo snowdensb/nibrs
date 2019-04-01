@@ -18,14 +18,6 @@ package org.search.nibrs.model.codes;
 public enum NIBRSErrorCode {
 
 
-	_015("015","Structure Check","CANNOT HAVE EMBEDDED BLANKS BETWEEN FIRST AND LAST NON-BLANK CHARACTERS","Zero-Reporting Segment (Level 0). Although Data Element 2 (Incident Number) should be entered with 12 zeros, a pre-edit found embedded blanks between the first and last significant characters."),
-/**
- * 016 not implemented
- */
-	_016("016","Structure Check","MUST BE LEFT-JUSTIFIED— BLANK DETECTED IN FIRST POSITION","Zero-Reporting Segment (Level 0). Although Data Element 2 (Incident Number) should be entered with 12 zeros, a pre-edit found a blank in the first position. It must begin in position 1 and must also contain 12 zeros."),
-/**
- * 017 not implemented
- */	
 /**
  * 028, 029 cannot be implemented	
  */
@@ -409,8 +401,8 @@ public enum NIBRSErrorCode {
 /**
  * 640 not in 3.1	
  */
-	_640("640","Arrestee Segment","WARNING–NO DISPOSITION FOR POSSIBLE JUVENILE ARRESTEE","Data Element 52 (Disposition of Arrestee Under 18) was not entered, but Data Element 47 (Age of Arrestee) indicates an age-range for a juvenile. The low age is a juvenile and the high age is an adult, but the average age is a juvenile. Note: When an age-range is not entered and the age is a juvenile, then the disposition must be entered. These circumstances were flagged by the computer as a possible discrepancy between age and disposition and should be checked for possible correction by the participant."),
-	_641("641","Arrestee Segment","WARNING - ARRESTEE HAD AN AGE OF 99 OR OLDER","Data Element 47 (Age of Arrestee) was entered with a value of 99 which means the arrestee was over 98 years old. Verify that the submitter of data is not confusing the 99=Over 98 Years Old with 00=Unknown."),
+	_1640("640","Arrestee Segment","WARNING–NO DISPOSITION FOR POSSIBLE JUVENILE ARRESTEE","Data Element 52 (Disposition of Arrestee Under 18) was not entered, but Data Element 47 (Age of Arrestee) indicates an age-range for a juvenile. The low age is a juvenile and the high age is an adult, but the average age is a juvenile. Note: When an age-range is not entered and the age is a juvenile, then the disposition must be entered. These circumstances were flagged by the computer as a possible discrepancy between age and disposition and should be checked for possible correction by the participant."),
+	_1641("641","Arrestee Segment","WARNING - ARRESTEE HAD AN AGE OF 99 OR OLDER","Data Element 47 (Age of Arrestee) was entered with a value of 99 which means the arrestee was over 98 years old. Verify that the submitter of data is not confusing the 99=Over 98 Years Old with 00=Unknown."),
 	_652("652","Arrestee Segment","DISPOSITION MUST BE ENTERED WHEN AGE IS LESS THAN 18","Data Element 52 (Disposition of Juvenile) was not entered, but Data Element 47 (Age of Arrestee) is under 18. Whenever an arrestee's age indicates a juvenile, the disposition must be entered."),
 	_653("653","Arrestee Segment","FOR AGE GREATER THAN 17 DISPOSITION SHOULD NOT BE ENTERED","Data Element 52 (Disposition of Juvenile) was entered, but Data Element 47 (Age of Arrestee) is 18 or greater. Whenever an arrestee's age indicates an adult, the juvenile disposition cannot be entered because it does not apply."),
 	_654("654","Arrestee Segment","AUTOMATIC INDICATOR MUST BE BLANK OR 'A'","Data Element 46 (Arrestee Was Armed With) does not have A=Automatic or a blank in the third position of field."),
