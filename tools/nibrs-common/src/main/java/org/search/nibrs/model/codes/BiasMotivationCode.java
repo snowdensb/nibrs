@@ -59,8 +59,8 @@ public enum BiasMotivationCode {
 	_62("62","Anti-Female", "ANTIFEMALE"),
 	_71("71","Anti-Transgender", "ANTITRANSGENDER"),
 	_72("72","Anti-Gender Non-Conforming", "ANTIGENDER_NONCONFORMING"),
-	_88("88","None (no bias)", "NONE"),
-	_99("99","Unknown (offender’s motivation not known)", "UNKNOWN");
+	_88("88","None (no bias)(mutually exclusive)", "NONE"),
+	_99("99","Unknown (offender’s motivation not known)(mutually exclusive)", "UNKNOWN");
 		
 	private BiasMotivationCode(String code, String description, String iepdCode){
 		this.code = code;

@@ -139,10 +139,10 @@ public enum NIBRSErrorCode {
  * 202 not implemented	
  */
 	_202("202","Offense Segment","CONTAINS NONNUMERIC ENTRY","Data Element 10 (Number of Premises Entered) is not a numeric entry of 01 through 99."),
-	_204("204","Offense Segment","INVALID DATA VALUE","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
+	_204("204","Offense Segment","INVALID DATA VALUE","The referenced data element must contain a valid data value when it is entered; blank is permissible on non-mandatory fields."),
 	_205("205","Offense Segment","ERROR–INVALID OFFENSE CODE FOR LOCATION TYPE CYBERSPACE","Data Element 9 (Location Type)=Cyberspace Can only be entered when Data Element 6 Offense Code is one of the violations listed below: 210=Extortion/Blackmail 250=Counterfeiting/Forgery 270=Embezzlement 280=Stolen Property Offenses 290=Destruction/Damage/Vandalism of Property 370=Pornography/Obscene Material 510=Bribery 26A =False Pretenses/Swindle/Confidence Game 26B =Credit Card/Automated Teller Machine Fraud 26C =Impersonation 26D =Welfare Fraud 26E =Wire Fraud 26F =Identity Theft 26G =Hacking/Computer Invasion 9A =Betting/Wagering 39B =Operating/Promoting/Assisting Gambling 39D =Gambling Equipment Violations 13C =Intimidation 35A =Drug/Narcotic Violations 35B =Drug Equipment Violations 520=Weapon Law Violations 64A =Human Trafficking, Commercial Sex Acts 64B =Human Trafficking, Involuntary Servitude 40A =Prostitution 40B =Assisting or Promoting Prostitution 40C =Purchasing Prostitution"),
 	_206("206","Offense Segment","ERROR - DUPLICATE VALUE=[value]","The referenced data element in error is one that contains multiple data values. When more than one code is entered, none can be duplicate codes."),
-	_207("207","Offense Segment","ERROR - MUTUALLY EXCLUSIVE VALUE=[value]","The data element in error can have multiple data values and was entered with multiple values. However, the entry shown cannot be entered with any other data value. Value N=None/Unknown is mutually exclusive with any other information codes."),
+	_207("207","Offense Segment","ERROR - MUTUALLY EXCLUSIVE VALUE=[value]","The data element in error can have multiple data values and was entered with multiple values. However, mutually exclusive values cannot be entered with any other data value. Refer to individual data elements for mutually exclusive data values."),
 /**
  * 215 not implemented	
  */
