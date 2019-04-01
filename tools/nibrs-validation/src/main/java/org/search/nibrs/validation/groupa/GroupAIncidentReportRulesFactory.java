@@ -146,6 +146,8 @@ public class GroupAIncidentReportRulesFactory {
 		cargoTheftOffenses.add(OffenseCode._26B.code);
 		cargoTheftOffenses.add(OffenseCode._26C.code);
 		cargoTheftOffenses.add(OffenseCode._26E.code);
+		cargoTheftOffenses.add(OffenseCode._26F.code);
+		cargoTheftOffenses.add(OffenseCode._26G.code);
 		cargoTheftOffenses.add(OffenseCode._510.code);
 		cargoTheftOffenses.add(OffenseCode._270.code);
 		
@@ -1271,8 +1273,7 @@ public class GroupAIncidentReportRulesFactory {
 				boolean cargoTheftIncident = offenses.stream()
 						.anyMatch(offense -> cargoTheftOffenses.contains(offense.getUcrOffenseCode()));
 				NIBRSError ret = null;
-				if (subject.getCargoTheftIndicator() != null 
-						&& subject.getCargoTheftIndicator().equalsIgnoreCase("Y")
+				if (StringUtils.isNotBlank(subject.getCargoTheftIndicator())
 						&& !cargoTheftIncident ) {
 					ret = subject.getErrorTemplate();
 					ret.setValue(null);
