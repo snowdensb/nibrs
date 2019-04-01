@@ -476,6 +476,7 @@ public class VictimSegmentRulesFactory {
 	}
 
 	Rule<VictimSegment> getRule404ForSexOfVictim(){
+		//TODO blank is permissable on non-mandatory fileds.it is mandatory only when the type of victim is I or L
 		return personSegmentRulesFactory.getSexValidNonBlankRule("27", NIBRSErrorCode._404);
 	}
 	
@@ -488,10 +489,12 @@ public class VictimSegmentRulesFactory {
 	}
 	
 	Rule<VictimSegment> getRule404ForRaceOfVictim(){
+		//TODO blank is permissable on non-mandatory fileds.it is mandatory only when the type of victim is I or L
 		return personSegmentRulesFactory.getRaceValidNonBlankRule("28", NIBRSErrorCode._404);
 	}
 	
 	Rule<VictimSegment> getRule404ForAgeOfVictim() {
+		//TODO blank is permissable on non-mandatory fileds.it is mandatory only when the type of victim is I or L
 		return personSegmentRulesFactory.getAgeValidRule("26", NIBRSErrorCode._404, false);
 	}
 
@@ -505,8 +508,12 @@ public class VictimSegmentRulesFactory {
 				List<String> aahcList = new ArrayList<>();
 				aahcList.addAll(victimSegment.getAggravatedAssaultHomicideCircumstancesList());
 				aahcList.removeIf(item -> item == null);
-				List<String> offenseCodeList = victimSegment.getUcrOffenseCodeList();
-				if (offenseCodeList.contains(OffenseCode._09C.code) && aahcList.isEmpty()) {
+				List<String> mandatoryOffenseCodeList = Arrays.asList(OffenseCode._09A.code, 
+						OffenseCode._09B.code, OffenseCode._09C.code, OffenseCode._13A.code); 
+				boolean isMandatory = victimSegment.getUcrOffenseCodeList()
+						.stream()
+						.anyMatch(mandatoryOffenseCodeList::contains);
+				if (isMandatory && aahcList.isEmpty()) {
 					e = victimSegment.getErrorTemplate();
 					e.setNIBRSErrorCode(NIBRSErrorCode._404);
 					e.setDataElementIdentifier("31");

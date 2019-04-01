@@ -15,8 +15,8 @@
  */
 package org.search.nibrs.validation.groupa;
 
-import static org.search.nibrs.util.ArrayUtils.allNull;
 import static org.search.nibrs.util.ArrayUtils.allMissing;
+import static org.search.nibrs.util.ArrayUtils.allNull;
 import static org.search.nibrs.util.ArrayUtils.notAllNull;
 
 import java.time.LocalDate;
@@ -311,7 +311,8 @@ public class PropertySegmentRulesFactory {
 				NIBRSError ret = null;
 				for (int i=0;i < 3;i++) {
 					if (SuspectedDrugTypeCode._X.code.equals(subject.getSuspectedDrugType(i)) && 
-							subject.getEstimatedDrugQuantity(i) != null && subject.getEstimatedDrugQuantity(i).getValue()!= null) {
+							subject.getEstimatedDrugQuantity(i) != null 
+							&& subject.getEstimatedDrugQuantity(i).getValue()!= null) {
 						ret = subject.getErrorTemplate();
 						ret.setNIBRSErrorCode(NIBRSErrorCode._363);
 						ret.setValue(subject.getEstimatedDrugQuantity(i).getValue());
@@ -845,7 +846,8 @@ public class PropertySegmentRulesFactory {
 					ParsedObject<Integer> valueOfPropertyPO = subject.getValueOfProperty(i);
 					String propertyDescription = subject.getPropertyDescription(i);
 					if (!(recoveredDate.isInvalid() || recoveredDate.isMissing() || recoveredDate.getValue() == null)  
-							&& (valueOfPropertyPO.isMissing() || valueOfPropertyPO.isInvalid() || valueOfPropertyPO.getValue() == null
+							&& (valueOfPropertyPO.isMissing() || valueOfPropertyPO.isInvalid() 
+							|| valueOfPropertyPO.getValue() == null
 							|| StringUtils.isBlank(propertyDescription))) {
 						ret = subject.getErrorTemplate();
 						ret.setNIBRSErrorCode(NIBRSErrorCode._356);
