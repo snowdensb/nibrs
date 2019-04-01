@@ -65,7 +65,7 @@ loadDimensionalFromStagingDatabase <- function(
     'AgencyType'
   )
 
-  stagingTables <- c(
+  factTables <- c(
     'AdministrativeSegment',
     'OffenseSegment',
     'VictimSegment',
@@ -93,11 +93,11 @@ loadDimensionalFromStagingDatabase <- function(
   }) %>% set_names(dimensionTables)
 
   writeLines('Reading fact tables from staging')
-  stagingTables <- map(stagingTables, function(tableName) {
+  factTables <- map(factTables, function(tableName) {
     dbReadTable(stagingConn, tableName) %>% as_tibble()
-  }) %>% set_names(stagingTables)
+  }) %>% set_names(factTables)
 
-  loadDimensionalFromObjectLists(dimensionTables, stagingTables, stagingConn, writeToDatabase, sampleFraction, seed)
+  loadDimensionalFromObjectLists(dimensionTables, factTables, dimensionalConn, writeToDatabase, sampleFraction, seed)
 
 }
 
