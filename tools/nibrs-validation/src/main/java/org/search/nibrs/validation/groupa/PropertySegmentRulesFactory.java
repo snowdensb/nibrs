@@ -548,7 +548,7 @@ public class PropertySegmentRulesFactory {
 						ret = subject.getErrorTemplate();
 						ret.setNIBRSErrorCode(NIBRSErrorCode._354);
 						ret.setValue(subject.getValueOfProperty(i).getValue());
-						ret.setDataElementIdentifier("15");
+						ret.setDataElementIdentifier("16");
 						break;
 					}
 				}
@@ -566,7 +566,8 @@ public class PropertySegmentRulesFactory {
 					ParsedObject<Integer> valueOfPropertyPO = subject.getValueOfProperty(i);
 					String propertyDescription = subject.getPropertyDescription(i);
 					if (propertyDescription != null && PropertyDescriptionCode._88.code.equals(propertyDescription) &&
-							!(valueOfPropertyPO.isMissing() || valueOfPropertyPO.isInvalid()) && valueOfPropertyPO.getValue() != 1) {
+							!(valueOfPropertyPO.isMissing() || valueOfPropertyPO.isInvalid()) 
+							&& valueOfPropertyPO.getValue() != 1) {
 						ret = subject.getErrorTemplate();
 						ret.setNIBRSErrorCode(NIBRSErrorCode._353);
 						ret.setValue(valueOfPropertyPO.getValue());

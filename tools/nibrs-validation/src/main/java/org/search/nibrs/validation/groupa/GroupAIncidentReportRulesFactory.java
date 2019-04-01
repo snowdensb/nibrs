@@ -1124,7 +1124,9 @@ public class GroupAIncidentReportRulesFactory {
 				NIBRSError ret = null;
 				PropertySegment recoveredSegment = subject.getRecoveredPropertySegment();
 				PropertySegment stolenSegment = subject.getStolenPropertySegment();
-				if (recoveredSegment != null && subject.getOffenseForOffenseCode(OffenseCode._250.code) == null && subject.getOffenseForOffenseCode(OffenseCode._280.code) == null) {
+				if (recoveredSegment != null 
+						&& subject.getOffenseForOffenseCode(OffenseCode._250.code) == null 
+						&& subject.getOffenseForOffenseCode(OffenseCode._280.code) == null) {
 					List<String> recoveredPropertyTypes = new ArrayList<>();
 					recoveredPropertyTypes.addAll(Arrays.asList(recoveredSegment.getPropertyDescription()));
 					recoveredPropertyTypes.removeIf(element -> element == null);

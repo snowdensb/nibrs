@@ -470,7 +470,7 @@ public class PropertySegmentRulesFactoryTest {
 		assertNotNull(e);
 		assertEquals(10, e.getValue());
 		assertEquals(NIBRSErrorCode._354, e.getNIBRSErrorCode());
-		assertEquals("15", e.getDataElementIdentifier());
+		assertEquals("16", e.getDataElementIdentifier());
 	}
 	
 	@Test
