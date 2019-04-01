@@ -1198,6 +1198,11 @@ public class GroupAIncidentReportRulesFactoryTest {
 		assertNull(e);
 		
 		report.setIncludesCargoTheft(true);
+		report.setCargoTheftIndicator("");
+		 e = rule104.apply(report);
+		assertNull(e);
+		
+		report.setIncludesCargoTheft(true);
 		report.setCargoTheftIndicator("Y");
 		e = rule104.apply(report);
 		assertNull(e);
