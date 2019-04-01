@@ -1198,7 +1198,7 @@ public class GroupAIncidentReportRulesFactoryTest {
 		assertNull(e);
 		
 		report.setIncludesCargoTheft(true);
-		report.setCargoTheftIndicator("");
+		report.setCargoTheftIndicator(" ");
 		 e = rule104.apply(report);
 		assertNull(e);
 		

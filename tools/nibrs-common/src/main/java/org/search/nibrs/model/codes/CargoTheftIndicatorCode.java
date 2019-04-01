@@ -26,7 +26,7 @@ public enum CargoTheftIndicatorCode {
 	
 	Y("Y" , "Yes"),
 	N("N" , "No"),
-	BLANK("", "Blank");
+	_blank(" ", " ");
 	
 	public String code;
 	public String description;
