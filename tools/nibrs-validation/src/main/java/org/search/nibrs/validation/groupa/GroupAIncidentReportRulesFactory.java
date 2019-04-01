@@ -389,7 +389,7 @@ public class GroupAIncidentReportRulesFactory {
 							.count();
 					if (allKnownOffenderCount == 0){
 						ret = subject.getErrorTemplate();
-						ret.setDataElementIdentifier("L 5");
+						ret.setDataElementIdentifier("37");
 						ret.setNIBRSErrorCode(NIBRSErrorCode._558);
 						ret.setWithinSegmentIdentifier(null);
 						ret.setCrossSegment(true);

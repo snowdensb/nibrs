@@ -196,7 +196,7 @@ public class GroupAIncidentReportRulesFactoryTest {
 		report.setExceptionalClearanceCode(ClearedExceptionallyCode.A.code);
 		e = rule.apply(report);
 		assertNotNull(e);
-		assertEquals("L 5", e.getDataElementIdentifier());
+		assertEquals("37", e.getDataElementIdentifier());
 		assertEquals(NIBRSErrorCode._558, e.getNIBRSErrorCode());
 		assertEquals(null, e.getValue());
 		os.setRace(RaceCode.U.code);
@@ -220,7 +220,7 @@ public class GroupAIncidentReportRulesFactoryTest {
 		os.setSex(SexCode.U.code);
 		e = rule.apply(report);
 		assertNotNull(e);
-		assertEquals("L 5", e.getDataElementIdentifier());
+		assertEquals("37", e.getDataElementIdentifier());
 		os.setSex(null);
 		e = rule.apply(report);
 		assertNotNull(e);
@@ -228,7 +228,7 @@ public class GroupAIncidentReportRulesFactoryTest {
 		os.setAge(NIBRSAge.getUnknownAge());
 		e = rule.apply(report);
 		assertNotNull(e);
-		assertEquals("L 5", e.getDataElementIdentifier());
+		assertEquals("37", e.getDataElementIdentifier());
 		os.setAge(null);
 		e = rule.apply(report);
 		assertNotNull(e);

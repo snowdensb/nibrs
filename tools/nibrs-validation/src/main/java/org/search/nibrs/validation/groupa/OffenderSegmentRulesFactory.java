@@ -294,11 +294,10 @@ public class OffenderSegmentRulesFactory {
 				String offenderSex = offenderSegment.getSex();
 				String victimSex = victimSegment.getSex();
 				NIBRSError e = null;
-				if ((RelationshipOfVictimToOffenderCode.HR.code.equals(relationship) && offenderSex != null && !offenderSex.equals(victimSex)) ||
-						(RelationshipOfVictimToOffenderCode.BG.code.equals(relationship) && offenderSex != null && offenderSex.equals(victimSex)) ||
-						(RelationshipOfVictimToOffenderCode.SE.code.equals(relationship) && offenderSex != null && offenderSex.equals(victimSex)) ||
-						(RelationshipOfVictimToOffenderCode.CS.code.equals(relationship) && offenderSex != null && offenderSex.equals(victimSex)) ||
-						(RelationshipOfVictimToOffenderCode.XS.code.equals(relationship) && offenderSex != null && offenderSex.equals(victimSex))) {
+				if ((RelationshipOfVictimToOffenderCode.BG.code.equals(relationship) && offenderSex != null && offenderSex.equals(victimSex)) ||
+					(RelationshipOfVictimToOffenderCode.SE.code.equals(relationship) && offenderSex != null && offenderSex.equals(victimSex)) ||
+					(RelationshipOfVictimToOffenderCode.CS.code.equals(relationship) && offenderSex != null && offenderSex.equals(victimSex)) ||
+					(RelationshipOfVictimToOffenderCode.XS.code.equals(relationship) && offenderSex != null && offenderSex.equals(victimSex))) {
 					e = offenderSegment.getErrorTemplate();
 					e.setDataElementIdentifier("38");
 					e.setValue(offenderSex);

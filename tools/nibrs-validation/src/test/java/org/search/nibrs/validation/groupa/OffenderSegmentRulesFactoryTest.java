@@ -312,14 +312,11 @@ public class OffenderSegmentRulesFactoryTest {
 		nibrsError = rule.apply(offenderSegment);
 		assertNull(nibrsError);
 		
-		victimSegment.setVictimOffenderRelationship(0, RelationshipOfVictimToOffenderCode.HR.code);
+		victimSegment.setVictimOffenderRelationship(0, RelationshipOfVictimToOffenderCode.AQ.code);
 		victimSegment.setSex(SexCode.M.code);
 		offenderSegment.setSex(SexCode.F.code);
 		nibrsError = rule.apply(offenderSegment);
-		assertNotNull(nibrsError);
-		assertEquals("38", nibrsError.getDataElementIdentifier());
-		assertEquals(SexCode.F.code, nibrsError.getValue());
-		assertEquals(NIBRSErrorCode._553, nibrsError.getNIBRSErrorCode());
+		assertNull(nibrsError);
 		
 		offenderSegment.setSex(SexCode.M.code);
 		nibrsError = rule.apply(offenderSegment);
