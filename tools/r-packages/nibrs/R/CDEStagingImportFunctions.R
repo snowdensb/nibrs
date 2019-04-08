@@ -199,7 +199,7 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
     })
 
   # make sure the the first mount source points to where the parquet results handler writes the csvh files, and the parquetOutputFileDir matches the second mount source
-  # docker run -dit --name nibrs-drill -p 8047:8047 --mount type=bind,source=/tmp/nibrs-csv,target=/nibrs/csv --mount type=bind,source=/opt/data/nibrs/cde-parquet,target=/nibrs/parquet nibrs-drill
+  # docker run -dit --name nibrs-drill -p 8047:8047 --mount type=bind,source=/tmp/nibrs-csv,target=/nibrs/csv --mount type=bind,source=/opt/data/nibrs/cde-parquet,target=/nibrs/parquet searchncjis/nibrs-drill drill-embedded
 
   db <- src_drill(host=drillHost, port=drillPort)
 
