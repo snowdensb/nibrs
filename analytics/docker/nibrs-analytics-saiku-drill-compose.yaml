@@ -1,0 +1,16 @@
+# Docker Compose file that creates a saiku instance backed by drill
+# this has to be run once the drill filesystem has been populated by a loading process
+
+version: '3.2'
+
+networks:
+  nibrs_analytics_nw:
+
+services:
+  nibrs-analytics-saiku:
+   container_name: nibrs-analytics-saiku
+   image: searchncjis/nibrs-analytics-saiku-drill
+   networks:
+     nibrs_analytics_nw:
+   ports:
+     - "8080:80"
