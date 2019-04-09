@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 -->
-
 <Schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="nibrs_analytics" metamodelVersion="4.0" xsi:noNamespaceSchemaLocation="mondrian4.xsd">
 
   <PhysicalSchema>
@@ -47,10 +46,11 @@
     <Table name="UCROffenseCodeType"/>
     <Table name="DateType"/>
     <Table name="HourType"/>
-    <Table name='CompletionStatusType'/>
-    <Table name='ClearanceType'/>
-    <Table name='LocationTypeType'/>
-    <Table name='VictimOffenderRelationshipType'/>
+    <Table name="CompletionStatusType"/>
+    <Table name="ClearanceType"/>
+    <Table name="LocationTypeType"/>
+    <Table name="VictimOffenderRelationshipType"/>
+    <Table name="State"/>
 
     <Table name="Agency" keyColumn="AgencyID"/>
     <Table name="AgencyType" keyColumn="AgencyTypeID"/>
@@ -96,6 +96,18 @@
       <Hierarchy name="Agency" caption="Agency" allMemberName="All Agencies">
         <Level attribute="AgencyTypeDescription" caption="Agency Type"/>
         <Level attribute="AgencyName" caption="Agency"/>
+      </Hierarchy>
+    </Hierarchies>
+  </Dimension>
+
+  <Dimension visible="true" name="State" key="StateID" table="State">
+    <Attributes>
+      <Attribute name="StateID" keyColumn="StateID" hasHierarchy="false"/>
+      <Attribute name="StateName" keyColumn="StateName" hasHierarchy="false"/>
+    </Attributes>
+    <Hierarchies>
+      <Hierarchy name="State" caption="State" allMemberName="All States">
+        <Level attribute="StateName" caption="State"/>
       </Hierarchy>
     </Hierarchies>
   </Dimension>
@@ -443,7 +455,7 @@
           <Column name="CalendarQuarter"/>
         </Name>
       </Attribute>
-      <Attribute name="Month" hasHierarchy="false" levelType="TimeMonths" orderByColumn="Month">
+      <Attribute name="Month" hasHierarchy="false" levelType="TimeMonths" orderByColumn="MonthNum">
         <Key>
           <Column name="YearLabel"/>
           <Column name="CalendarQuarter"/>
@@ -458,10 +470,10 @@
           <Column name="YearLabel"/>
           <Column name="CalendarQuarter"/>
           <Column name="MonthName"/>
-          <Column name="Day"/>
+          <Column name="DayNum"/>
         </Key>
         <Name>
-          <Column name="Day"/>
+          <Column name="DayNum"/>
         </Name>
       </Attribute>
       <Attribute name="Date" keyColumn="CalendarDate" hasHierarchy="false" levelType="TimeDays"/>
@@ -590,6 +602,7 @@
       <Dimension source="PropertyDescription"/>
       <Dimension source="SuspectedDrugType"/>
       <Dimension source="Clearance"/>
+      <Dimension source="State"/>
     </Dimensions>
     <MeasureGroups>
       <MeasureGroup table="FullIncidentView" name="Incidents Involving">
@@ -604,6 +617,7 @@
           <Measure name="Clearance Rate" column="ClearedIndicator" aggregator="avg" visible="true" caption="Clearance Rate" formatString="#0.0 %"/>
         </Measures>
         <DimensionLinks>
+          <ForeignKeyLink dimension="State" foreignKeyColumn="StateID"/>
           <ForeignKeyLink dimension="Clearance" foreignKeyColumn="ClearanceType"/>
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>
           <ForeignKeyLink dimension="TypeInjury" foreignKeyColumn="TypeInjuryTypeID"/>
@@ -695,7 +709,7 @@
         </Hierarchies>
       </Dimension>
       <Dimension source="Clearance"/>
-      <!-- TODO: AutomaticWeaponIndicator -->
+      <Dimension source="State"/>
     </Dimensions>
     <MeasureGroups>
       <MeasureGroup table="FullVictimOffenseView" name="Victim-Offense">
@@ -707,6 +721,7 @@
           <Measure name="Clearance Rate" column="ClearedIndicator" aggregator="avg" visible="true" caption="Clearance Rate" formatString="#0.0 %"/>
         </Measures>
         <DimensionLinks>
+          <ForeignKeyLink dimension="State" foreignKeyColumn="StateID"/>
           <ForeignKeyLink dimension="Clearance" foreignKeyColumn="ClearanceType"/>
           <ForeignKeyLink dimension="TypeInjury" foreignKeyColumn="TypeInjuryTypeID"/>
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>
@@ -790,6 +805,7 @@
       </Dimension>
       <Dimension source="VictimOffenderRelationship"/>
       <Dimension source="Clearance"/>
+      <Dimension source="State"/>
     </Dimensions>
     <MeasureGroups>
       <MeasureGroup table="FullVictimOffenderView" name="Victim-Offender">
@@ -801,6 +817,7 @@
           <Measure name="Clearance Rate" column="ClearedIndicator" aggregator="avg" visible="true" caption="Clearance Rate" formatString="#0.0 %"/>
         </Measures>
         <DimensionLinks>
+          <ForeignKeyLink dimension="State" foreignKeyColumn="StateID"/>
           <ForeignKeyLink dimension="Clearance" foreignKeyColumn="ClearanceType"/>
           <ForeignKeyLink dimension="TypeInjury" foreignKeyColumn="TypeInjuryTypeID"/>
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>
@@ -857,6 +874,7 @@
       <Dimension source="TypeOfArrest" caption="Type of Arrest"/>
       <Dimension source="DispositionOfArresteeUnder18" caption="Disposition Arrestee &lt; 18"/>
       <Dimension source="UCROffenseCode"/>
+      <Dimension source="State"/>
     </Dimensions>
     <MeasureGroups>
       <MeasureGroup table="FullGroupAArrestView" name="Group A Arrestee">
@@ -866,6 +884,7 @@
           <Measure name="Arrestee-Weapon Count" column="ArresteeSegmentWasArmedWithID" aggregator="distinct-count" visible="true" caption="Arrestee+Weapon Count" formatString="#,###"/>
         </Measures>
         <DimensionLinks>
+          <ForeignKeyLink dimension="State" foreignKeyColumn="StateID"/>
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>
           <ForeignKeyLink dimension="IncidentDate" foreignKeyColumn="IncidentDateID"/>
           <ForeignKeyLink dimension="Agency" foreignKeyColumn="AgencyID"/>
@@ -913,6 +932,7 @@
       <Dimension source="DispositionOfArresteeUnder18" caption="Disposition Arrestee &lt; 18"/>
       <Dimension source="ArresteeWasArmedWith" caption="Weapon Armed With"/>
       <Dimension source="UCROffenseCode"/>
+      <Dimension source="State"/>
     </Dimensions>
     <MeasureGroups>
       <MeasureGroup table="FullGroupBArrestView" name="Group B Arrestee">
@@ -932,6 +952,7 @@
           <ForeignKeyLink dimension="DispositionOfArresteeUnder18" foreignKeyColumn="DispositionOfArresteeUnder18TypeID"/>
           <ForeignKeyLink dimension="TypeOfArrest" foreignKeyColumn="TypeOfArrestTypeID"/>
           <ForeignKeyLink dimension="UCROffenseCode" foreignKeyColumn="UCROffenseCodeTypeID"/>
+          <ForeignKeyLink dimension="State" foreignKeyColumn="StateID"/>
         </DimensionLinks>
       </MeasureGroup>
     </MeasureGroups>
@@ -966,6 +987,7 @@
       <Dimension source="PropertyDescription"/>
       <Dimension source="SuspectedDrugType"/>
       <Dimension source="Clearance"/>
+      <Dimension source="State"/>
     </Dimensions>
     <MeasureGroups>
       <MeasureGroup table="FullPropertyView" name="Property">
@@ -977,6 +999,7 @@
           <Measure name="Clearance Rate" column="ClearedIndicator" aggregator="avg" visible="true" caption="Clearance Rate" formatString="#0.0 %"/>
         </Measures>
         <DimensionLinks>
+          <ForeignKeyLink dimension="State" foreignKeyColumn="StateID"/>
           <ForeignKeyLink dimension="Clearance" foreignKeyColumn="ClearanceType"/>
           <ForeignKeyLink dimension="Agency" foreignKeyColumn="AgencyID"/>
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>

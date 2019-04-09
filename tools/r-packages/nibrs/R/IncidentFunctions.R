@@ -20,7 +20,7 @@ truncateIncidents <- function(conn) {
 #' @import dplyr
 #' @importFrom DBI dbWriteTable
 #' @importFrom lubridate month year ymd
-writeRawAdministrativeSegmentTables <- function(conn, inputDfList, tableList, records=-1) {
+writeRawAdministrativeSegmentTables <- function(conn, inputDfList, state, tableList, records=-1) {
 
   dfName <- load(inputDfList[2])
   adminSegmentDf <- get(dfName) %>%  mutate_if(is.factor, as.character)
@@ -52,7 +52,6 @@ writeRawAdministrativeSegmentTables <- function(conn, inputDfList, tableList, re
            ExceptionalClearanceDateID=createKeyFromDate(ExceptionalClearanceDate),
            ExceptionalClearanceDateID=case_when(is.na(ExceptionalClearanceDateID) ~ 99998L, TRUE ~ ExceptionalClearanceDateID),
            MonthOfTape=currentMonth, YearOfTape=currentYear, CityIndicator=NA_character_, SegmentActionTypeTypeID=99998L,
-           V1016=ifelse(trimws(V1016)=='' | is.na(V1016), 99998L, V1016),
            IncidentHour=ifelse(is.na(IncidentHour), NA_integer_, as.integer(IncidentHour))) %>%
     select(-INCDATE) %>%
     mutate(AdministrativeSegmentID=row_number()) %>%
@@ -61,7 +60,9 @@ writeRawAdministrativeSegmentTables <- function(conn, inputDfList, tableList, re
     left_join(tableList$CargoTheftIndicatorType %>% select(CargoTheftIndicatorTypeID, StateCode), by=c('V1016'='StateCode')) %>%
     mutate(ClearedExceptionallyTypeID=ifelse(is.na(ClearedExceptionallyTypeID), 99998L, ClearedExceptionallyTypeID)) %>%
     mutate(CargoTheftIndicatorTypeID=ifelse(is.na(CargoTheftIndicatorTypeID), 99998L, CargoTheftIndicatorTypeID)) %>%
-    select(-V1013, -V1016, -V1014) %>% as_tibble()
+    select(-V1013, -V1016, -V1014) %>%
+    mutate(StateCode=state) %>%
+    as_tibble()
 
   rm(adminSegmentDf)
 

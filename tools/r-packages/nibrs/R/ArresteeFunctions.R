@@ -111,7 +111,7 @@ writeRawArresteeSegmentTables <- function(conn, inputDfList, tableList) {
 #' @import tibble
 #' @importFrom stringr str_sub
 #' @importFrom DBI dbWriteTable
-writeRawArrestReportSegmentTables <- function(conn, inputDfList, tableList, records=-1) {
+writeRawArrestReportSegmentTables <- function(conn, inputDfList, state, tableList, records=-1) {
 
   currentMonth <- formatC(month(Sys.Date()), width=2, flag="0")
   currentYear <- year(Sys.Date()) %>% as.integer()
@@ -153,7 +153,9 @@ writeRawArrestReportSegmentTables <- function(conn, inputDfList, tableList, reco
            TypeOfArrestTypeID=ifelse(is.na(TypeOfArrestTypeID), 99998L, TypeOfArrestTypeID),
            ResidentStatusOfPersonTypeID=ifelse(is.na(ResidentStatusOfPersonTypeID), 99998L, ResidentStatusOfPersonTypeID),
            DispositionOfArresteeUnder18TypeID=ifelse(is.na(DispositionOfArresteeUnder18TypeID), 99998L, DispositionOfArresteeUnder18TypeID),
-           SexOfPersonTypeID=ifelse(is.na(SexOfPersonTypeID), 99998L, SexOfPersonTypeID)) %>% as_tibble()
+           SexOfPersonTypeID=ifelse(is.na(SexOfPersonTypeID), 99998L, SexOfPersonTypeID)) %>%
+    mutate(StateCode=state) %>%
+    as_tibble()
 
   ArrestReportSegmentWasArmedWith <- ArrestReportSegment %>%
     select(ArrestReportSegmentID, V7010, V7011) %>%
