@@ -28,6 +28,4 @@ services:
 #    environment:
 #      - DRILL_MAX_DIRECT_MEMORY="8G"
     volumes:
-      - /opt/data/nibrs/cde-parquet:/nibrs/parquet
-# uncomment this to expose a directory of CDE csv files for the loading process
-      - /opt/data/nibrs/cde-csv:/nibrs/csv
+      - /opt/data/nibrs/cde/:/nibrs/
