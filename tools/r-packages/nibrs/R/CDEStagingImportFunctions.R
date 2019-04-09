@@ -6,7 +6,7 @@
 #' @import DBI
 #' @export
 loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableList=NULL, zipFileSampleFraction=1, stateAbbreviationRegex=NULL, yearRegex=NULL, parallel=FALSE,
-                                                       sharedCsvDir='/opt/data/nibrs/cde-csv',
+                                                       sharedCsvDir='/opt/data/nibrs/cde/csv',
                                                        drillHost='localhost',
                                                        drillPort=8047L) {
 
