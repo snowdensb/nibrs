@@ -19,13 +19,13 @@ services:
       nibrs_analytics_nw:
   nibrs-analytics-drill:
     container_name: nibrs-analytics-drill
-    image: nibrs-drill
+    image: searchncjis/nibrs-drill
     ports:
       - 8047:8047
     networks:
       nibrs_analytics_nw:
 # uncomment this to change memory to 8G or whatever is needed
 #    environment:
-#      - DRILL_MAX_DIRECT_MEMORY="8G"
+#      - DRILL_MAX_DIRECT_MEMORY=8G
     volumes:
       - /opt/data/nibrs/cde/:/nibrs/
