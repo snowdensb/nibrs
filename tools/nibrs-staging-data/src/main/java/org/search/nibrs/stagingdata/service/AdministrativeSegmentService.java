@@ -92,7 +92,7 @@ public class AdministrativeSegmentService {
 		
 		List<ArresteeSegment> arresteeSegments = administrativeSegments.stream()
 				.flatMap(i->i.getArresteeSegments().stream())
-				.filter(i->Objects.equals(i.getArrestDateType().getYear(), arrestYear) &&  Objects.equals(i.getArrestDateType().getMonth(),arrestMonth))
+				.filter(i->Objects.equals(i.getArrestDateType().getYearNum(), arrestYear) &&  Objects.equals(i.getArrestDateType().getMonthNum(),arrestMonth))
 				.collect(Collectors.toList());
 		return arresteeSegments; 
 		

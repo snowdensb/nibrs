@@ -24,6 +24,7 @@ use search_nibrs_staging;
 
 
 
+
 CREATE TABLE Submission (
                 SubmissionID INT AUTO_INCREMENT NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
@@ -71,13 +72,13 @@ CREATE TABLE AgencyType (
 CREATE TABLE DateType (
                 DateTypeID INT AUTO_INCREMENT NOT NULL,
                 CalendarDate DATE NOT NULL,
-                Year INT NOT NULL,
+                YearNum INT NOT NULL,
                 YearLabel CHAR(4) NOT NULL,
                 CalendarQuarter INT NOT NULL,
-                Month INT NOT NULL,
+                MonthNum INT NOT NULL,
                 MonthName VARCHAR(12) NOT NULL,
                 FullMonth CHAR(7) NOT NULL,
-                Day INT NOT NULL,
+                DayNum INT NOT NULL,
                 DayOfWeek VARCHAR(9) NOT NULL,
                 DayOfWeekSort INT NOT NULL,
                 DateMMDDYYYY CHAR(10) NOT NULL,
@@ -385,6 +386,7 @@ CREATE TABLE UCROffenseCodeType (
 CREATE TABLE ArrestReportSegment (
                 ArrestReportSegmentID INT AUTO_INCREMENT NOT NULL,
                 SegmentActionTypeTypeID INT NOT NULL,
+                StateCode CHAR(2) NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
                 CityIndicator VARCHAR(4),
@@ -421,6 +423,7 @@ CREATE TABLE ArrestReportSegmentWasArmedWith (
 CREATE TABLE AdministrativeSegment (
                 AdministrativeSegmentID INT AUTO_INCREMENT NOT NULL,
                 SegmentActionTypeTypeID INT NOT NULL,
+                StateCode CHAR(2) NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
                 CityIndicator VARCHAR(4),
@@ -627,6 +630,7 @@ CREATE TABLE ZeroReportingSegment (
                 AdministrativeSegmentID INT NOT NULL,
                 RecordDescriptionWord VARCHAR(4),
                 SegmentLevel VARCHAR(1),
+                StateCode CHAR(2) NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
                 CityIndicator VARCHAR(4),
@@ -646,6 +650,7 @@ CREATE TABLE LEOKASegment (
                 AdministrativeSegmentID INT NOT NULL,
                 RecordDescriptionWord VARCHAR(4),
                 SegmentLevel VARCHAR(1),
+                StateCode CHAR(2) NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
                 CityIndicator VARCHAR(4),
