@@ -157,7 +157,8 @@ public class AdministrativeSegmentFactory {
 		administrativeSegment.setMonthOfTape("12");
 		administrativeSegment.setYearOfTape("2016");
 		administrativeSegment.setCityIndicator("Y");
-		administrativeSegment.setOri("ori");;
+		administrativeSegment.setOri("ori");
+		administrativeSegment.setStateCode("NA");
 		
 		Agency agency = agencyRepository.findFirstByAgencyOri("agencyORI");
 		administrativeSegment.setAgency(agency);

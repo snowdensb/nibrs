@@ -27,52 +27,52 @@ truncateDate <- function(conn) {
 #' @importFrom lubridate as_date year quarter month wday day
 #' @import dplyr
 #' @import tibble
-writeDateDimensionTable <- function(minDate, maxDate, conn=NULL, datesToExclude=as_date(x = integer(0))) {
+writeDateDimensionTable <- function(minDate, maxDate, writeProgressDetail=TRUE, conn=NULL, datesToExclude=as_date(x = integer(0))) {
   minDate <- as_date(minDate)
   maxDate <- as_date(maxDate)
-  writeLines(paste0("Building date dimension, earliest date=", minDate, ", latestDate=", maxDate))
+  if (writeProgressDetail) writeLines(paste0("Building date dimension, earliest date=", minDate, ", latestDate=", maxDate))
   DateDf <- tibble(CalendarDate=seq(minDate, maxDate, by="days")) %>%
     mutate(DateID=createKeyFromDate(CalendarDate),
-           Year=year(CalendarDate),
-           YearLabel=as.character(Year),
+           YearNum=year(CalendarDate),
+           YearLabel=as.character(YearNum),
            CalendarQuarter=quarter(CalendarDate),
-           Month=month(CalendarDate),
+           MonthNum=month(CalendarDate),
            MonthName=as.character(month(CalendarDate, label=TRUE, abbr=FALSE)),
-           FullMonth=format(CalendarDate, paste0(Year, "-", Month)),
-           Day=day(CalendarDate),
+           FullMonth=format(CalendarDate, paste0(YearNum, "-", MonthNum)),
+           DayNum=day(CalendarDate),
            DayOfWeek=as.character(wday(CalendarDate, label=TRUE, abbr=FALSE)),
            DayOfWeekSort=wday(CalendarDate),
            DateMMDDYYYY=format(CalendarDate, "%m%d%Y")
     ) %>%
     bind_rows(tibble(CalendarDate=as_date("1899-01-01"),
                      DateID=UNKNOWN_DATE_VALUE,
-                     Year=0,
+                     YearNum=0,
                      YearLabel='Unk',
                      CalendarQuarter=0,
-                     Month=0,
+                     MonthNum=0,
                      MonthName='Unknown',
                      FullMonth='Unknown',
-                     Day=0,
+                     DayNum=0,
                      DayOfWeek='Unknown',
                      DayOfWeekSort=0,
                      DateMMDDYYYY='Unknown'),
               tibble(CalendarDate=as_date("1899-01-01"),
                      DateID=BLANK_DATE_VALUE,
-                     Year=0,
+                     YearNum=0,
                      YearLabel='Blk',
                      CalendarQuarter=0,
-                     Month=0,
+                     MonthNum=0,
                      MonthName='Blank',
                      FullMonth='Blank',
-                     Day=0,
+                     DayNum=0,
                      DayOfWeek='Blank',
                      DayOfWeekSort=0,
                      DateMMDDYYYY='Blank'))
   DateDf <- DateDf %>% filter(!(CalendarDate %in% datesToExclude)) %>%
     rename(DateTypeID=DateID)
-  writeLines(paste0("Adding ", nrow(DateDf), " new dates to the Date dimension"))
+  if (writeProgressDetail) writeLines(paste0("Adding ", nrow(DateDf), " new dates to the Date dimension"))
 
-  writeLines(paste0("Writing ", nrow(DateDf), " Date rows to database"))
+  if (writeProgressDetail) writeLines(paste0("Writing ", nrow(DateDf), " Date rows to database"))
   if (!is.null(conn)) dbWriteTable(conn=conn, name="DateType", value=DateDf, append=TRUE, row.names = FALSE)
 
   attr(DateDf, 'type') <- 'CT'
@@ -119,13 +119,13 @@ loadICPSRRaw <- function(conn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhos
     inputDfList <- sort(list.files(path=dataDir, pattern='*.rda', full.names=TRUE, recursive=TRUE))
 
     ret <- writeRawAgencyTables(conn, inputDfList, state, ret)
-    ret <- writeRawAdministrativeSegmentTables(conn, inputDfList, ret, records)
+    ret <- writeRawAdministrativeSegmentTables(conn, inputDfList, state, ret, records)
     ret <- writeRawOffenseSegmentTables(conn, inputDfList, ret)
     ret <- writeRawPropertySegmentTables(conn, inputDfList, ret)
     ret <- writeRawOffenderSegmentTables(conn, inputDfList, ret)
     ret <- writeRawVictimSegmentTables(conn, inputDfList, ret)
     ret <- writeRawArresteeSegmentTables(conn, inputDfList, ret)
-    ret <- writeRawArrestReportSegmentTables(conn, inputDfList, ret, records)
+    ret <- writeRawArrestReportSegmentTables(conn, inputDfList, state, ret, records)
 
     allDates <- c(
       ret$AdministrativeSegment$IncidentDate,
@@ -140,9 +140,6 @@ loadICPSRRaw <- function(conn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhos
     ret$Date <- writeDateDimensionTable(minDate, maxDate, conn)
 
     ret$OffenseSegment <- select(ret$OffenseSegment, -UCROffenseCode)
-
-    #materializedViewsSqlFile=system.file("raw", 'MaterializedViews.sql', package=getPackageName())
-    #createMaterializedViews(conn, materializedViewsSqlFile)
 
     ret
 

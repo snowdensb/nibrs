@@ -32,4 +32,6 @@ COPY files/server-config.sh /tmp/
 COPY files/schema-mysql.sql /tmp/
 RUN chmod a+x /tmp/server-config.sh && /tmp/server-config.sh
 
+RUN sed -i s/skip-networking/#skip-networking/g /etc/my.cnf.d/mariadb-server.cnf
+
 CMD ["bin/mysqld_safe", "--user=root"]

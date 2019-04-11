@@ -26,6 +26,8 @@ WORKDIR /tmp
 
 COPY files/server-config.sh /tmp/
 COPY files/Analytics.connection.json /tmp/
+
+# need to copy this from ../../mondrian/NIBRSAnalyticsMondrianSchema.xml to files/
 COPY files/NIBRSAnalyticsMondrianSchema.xml /tmp/
 
 RUN chmod a+x /tmp/server-config.sh

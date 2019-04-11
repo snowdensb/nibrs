@@ -216,6 +216,7 @@ public class ArrestReportService {
 			
 			arrestReportSegment.setCityIndicator(groupBArrestReport.getCityIndicator());
 			arrestReportSegment.setOri(groupBArrestReport.getOri());
+			arrestReportSegment.setStateCode(StringUtils.substring(groupBArrestReport.getOri(), 0, 2));
 			Agency agency = codeTableService.getCodeTableType(groupBArrestReport.getOri(), 
 					agencyRepository::findFirstByAgencyOri, Agency::new); 
 			arrestReportSegment.setAgency(agency);

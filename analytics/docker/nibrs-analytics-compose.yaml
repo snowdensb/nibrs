@@ -18,6 +18,9 @@ services:
     image: searchncjis/nibrs-analytics-db
     networks:
       nibrs_analytics_nw:
+# uncomment to open port for loading from host
+#    ports:
+#      - "23306:3306"
    nibrs-analytics-saiku:
     container_name: nibrs-analytics-saiku
     image: searchncjis/nibrs-analytics-saiku

@@ -1,0 +1,10 @@
+{
+  "connectionname": "Analytics",
+  "connectiontype": "MONDRIAN",
+  "jdbcurl": "jdbc:drill:zk=zoo",
+  "schema": "/datasources/Analytics.xml",
+  "driver": "org.apache.drill.jdbc.Driver",
+  "username": "",
+  "password": "",
+  "security_type": null
+}

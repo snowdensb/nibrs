@@ -255,6 +255,7 @@ public class GroupAIncidentService {
 			}
 			
 			administrativeSegment.setCityIndicator(groupAIncidentReport.getCityIndicator());
+			administrativeSegment.setStateCode(StringUtils.substring(groupAIncidentReport.getOri(), 0, 2));
 			administrativeSegment.setOri(groupAIncidentReport.getOri());
 			administrativeSegment.setIncidentNumber(groupAIncidentReport.getIncidentNumber());
 			administrativeSegment.setIncidentDate(DateUtils.asDate(groupAIncidentReport.getIncidentDate().getValue()));

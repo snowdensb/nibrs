@@ -65,7 +65,7 @@ loadDimensionalFromStagingDatabase <- function(
     'AgencyType'
   )
 
-  stagingTables <- c(
+  factTables <- c(
     'AdministrativeSegment',
     'OffenseSegment',
     'VictimSegment',
@@ -93,17 +93,25 @@ loadDimensionalFromStagingDatabase <- function(
   }) %>% set_names(dimensionTables)
 
   writeLines('Reading fact tables from staging')
-  stagingTables <- map(stagingTables, function(tableName) {
+  factTables <- map(factTables, function(tableName) {
     dbReadTable(stagingConn, tableName) %>% as_tibble()
-  }) %>% set_names(stagingTables)
+  }) %>% set_names(factTables)
 
-  loadDimensionalFromObjectLists(dimensionTables, stagingTables, stagingConn, writeToDatabase, sampleFraction, seed)
+  dimensionTables$State <- loadStatesForDimensional()
+
+  if (writeToDatabase) {
+    ret <- loadDimensionalFromObjectLists(dimensionTables, factTables, dimensionalConn, sampleFraction, seed)
+  } else {
+    ret <- convertStagingTablesToDimensional(dimensionTables, factTables, sampleFraction, seed)
+  }
+
+  ret
 
 }
 
-#' Load the NIBRS dimensional database from lists of dimension and fact tables
+#' Convert lists of dimension and fact tables from staging to dimensional format
 #'
-#' Load the NIBRS dimensional database from lists of dimension and fact tables, optionally taking a random sample of Administrative Segment
+#' Convert lists of dimension and fact tables from staging to dimensional format, optionally taking a random sample of Administrative Segment
 #' and Group B Arrest Segment records.
 #' @importFrom DBI dbReadTable
 #' @importFrom lubridate is.Date
@@ -112,16 +120,11 @@ loadDimensionalFromStagingDatabase <- function(
 #' @import tibble
 #' @param dimensionTables list of dimension tables in the staging format
 #' @param factTables list of fact tables in the staging format
-#' @param dimensionalConn connection to the dimensional database
-#' @param writeToDatabase whether to write to the dimensional database or not
 #' @param sampleFraction numeric value between 0 and 1 indicating percentage of records in the sample.  NULL to take all records.
 #' @param seed random seed.  Set this to the same value in subsequent calls to generate the same random sample.
 #' @return a list with all the dimensional database tables, as tibbles
 #' @export
-loadDimensionalFromObjectLists <- function(
-  dimensionTables, factTables,
-  dimensionalConn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhost", dbname="search_nibrs_dimensional", username="root"),
-  writeToDatabase=TRUE, sampleFraction=NULL, seed=12341234) {
+convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampleFraction=NULL, seed=12341234, writeProgressDetail=TRUE) {
 
   factTables <- map(factTables, function(factTableDf) {
     if ('SegmentActionTypeTypeID' %in% colnames(factTableDf)) {
@@ -316,7 +319,7 @@ loadDimensionalFromObjectLists <- function(
     ret
   }
 
-  writeLines('Creating Incident View')
+  if (writeProgressDetail) writeLines('Creating Incident View')
   ret$FullIncidentView <- factTables$AdministrativeSegment %>%
     samp() %>%
     left_join(factTables$OffenseSegment, by='AdministrativeSegmentID') %>%
@@ -383,8 +386,10 @@ loadDimensionalFromObjectLists <- function(
              OffensesPerIncident <= 4 ~ as.character(OffensesPerIncident),
              TRUE ~ '5+'
            )) %>%
+    left_join(dimensionTables$State %>% select(StateCode, StateID), by='StateCode') %>%
     select(
       AdministrativeSegmentID,
+      StateID,
       IncidentHour,
       ClearedExceptionallyTypeID,
       IncidentDate,
@@ -458,7 +463,7 @@ loadDimensionalFromObjectLists <- function(
       StolenMotorVehiclesDim
     )
 
-  writeLines('Creating Victim-Offense View')
+  if (writeProgressDetail) writeLines('Creating Victim-Offense View')
   ret$FullVictimOffenseView <- factTables$AdministrativeSegment %>%
     samp() %>%
     left_join(factTables$OffenseSegment, by='AdministrativeSegmentID') %>%
@@ -490,8 +495,10 @@ loadDimensionalFromObjectLists <- function(
       TypeInjuryTypeID=case_when(is.na(TypeInjuryTypeID) ~ 1L, TRUE ~ TypeInjuryTypeID),
       VictimOffenseAssociationID=case_when(is.na(VictimOffenseAssociationID) ~ -1L, TRUE ~ VictimOffenseAssociationID)
     ) %>%
+    left_join(dimensionTables$State %>% select(StateCode, StateID), by='StateCode') %>%
     select(
       AdministrativeSegmentID,
+      StateID,
       IncidentHour,
       ClearedExceptionallyTypeID,
       IncidentDate,
@@ -535,7 +542,7 @@ loadDimensionalFromObjectLists <- function(
       ClearanceType
     )
 
-  writeLines('Creating Victim-Offender View')
+  if (writeProgressDetail) writeLines('Creating Victim-Offender View')
   ret$FullVictimOffenderView <- factTables$AdministrativeSegment %>%
     samp() %>%
     left_join(factTables$OffenderSegment %>%
@@ -573,8 +580,10 @@ loadDimensionalFromObjectLists <- function(
       TypeInjuryTypeID=case_when(is.na(TypeInjuryTypeID) ~ 1L, TRUE ~ TypeInjuryTypeID),
       VictimOffenderAssociationID=case_when(is.na(VictimOffenderAssociationID) ~ -1L, TRUE ~ VictimOffenderAssociationID)
     ) %>%
+    left_join(dimensionTables$State %>% select(StateCode, StateID), by='StateCode') %>%
     select(
       AdministrativeSegmentID,
+      StateID,
       IncidentHour,
       ClearedExceptionallyTypeID,
       IncidentDate,
@@ -620,7 +629,7 @@ loadDimensionalFromObjectLists <- function(
       ClearanceType
     )
 
-  writeLines('Creating Group A Arrest View')
+  if (writeProgressDetail) writeLines('Creating Group A Arrest View')
   ret$FullGroupAArrestView <- factTables$AdministrativeSegment %>%
     samp() %>%
     inner_join(factTables$ArresteeSegment, by='AdministrativeSegmentID') %>%
@@ -636,8 +645,10 @@ loadDimensionalFromObjectLists <- function(
       AutomaticWeaponIndicator=case_when(is.na(AutomaticWeaponIndicator) ~ 'N', TRUE ~ AutomaticWeaponIndicator),
       ArrestDateID=case_when(is.na(ArrestDateID) ~ 99998L, TRUE ~ ArrestDateID)
     ) %>%
+    left_join(dimensionTables$State %>% select(StateCode, StateID), by='StateCode') %>%
     select(
       AdministrativeSegmentID,
+      StateID,
       IncidentHour,
       ClearedExceptionallyTypeID,
       IncidentDate,
@@ -668,7 +679,7 @@ loadDimensionalFromObjectLists <- function(
       AutomaticWeaponIndicator
     )
 
-  writeLines('Creating Property View')
+  if (writeProgressDetail) writeLines('Creating Property View')
   ret$FullPropertyView <- factTables$AdministrativeSegment %>%
     samp() %>%
     inner_join(factTables$PropertySegment, by='AdministrativeSegmentID') %>%
@@ -691,8 +702,10 @@ loadDimensionalFromObjectLists <- function(
       TypeDrugMeasurementTypeID=case_when(is.na(TypeDrugMeasurementTypeID) ~ 99998L, TRUE ~ TypeDrugMeasurementTypeID),
       EstimatedDrugQuantity=case_when(is.na(EstimatedDrugQuantity) ~ 0, TRUE ~ EstimatedDrugQuantity)
     ) %>%
+    left_join(dimensionTables$State %>% select(StateCode, StateID), by='StateCode') %>%
     select(
       AdministrativeSegmentID,
+      StateID,
       IncidentHour,
       ClearedExceptionallyTypeID,
       IncidentDate,
@@ -717,7 +730,7 @@ loadDimensionalFromObjectLists <- function(
       RecoveredMotorVehiclesDim
     )
 
-  writeLines('Creating Group B Arrest View')
+  if (writeProgressDetail) writeLines('Creating Group B Arrest View')
   ret$FullGroupBArrestView <- factTables$ArrestReportSegment %>%
     samp() %>%
     left_join(factTables$ArrestReportSegmentWasArmedWith, by='ArrestReportSegmentID') %>%
@@ -732,6 +745,7 @@ loadDimensionalFromObjectLists <- function(
       AutomaticWeaponIndicator=case_when(is.na(AutomaticWeaponIndicator) ~ 'N', TRUE ~ AutomaticWeaponIndicator),
       ArrestDateID=case_when(is.na(ArrestDateID) ~ 99998L, TRUE ~ ArrestDateID)
     ) %>%
+    left_join(dimensionTables$State %>% select(StateCode, StateID), by='StateCode') %>%
     select(
       ArrestDate,
       TypeOfArrestTypeID,
@@ -753,7 +767,8 @@ loadDimensionalFromObjectLists <- function(
       AgencyID,
       ArrestReportSegmentWasArmedWithID,
       ArresteeWasArmedWithTypeID,
-      AutomaticWeaponIndicator
+      AutomaticWeaponIndicator,
+      StateID
     )
 
   ret <- map(ret, function(fdf) {
@@ -762,22 +777,51 @@ loadDimensionalFromObjectLists <- function(
   }) %>%
     c(dimensionTables)
 
-  if (writeToDatabase) {
-    walk2(ret, names(ret), function(ddf, tableName) {
-      writeLines(paste0('Writing dimensional db table ', tableName))
-      writeDataFrameToDatabase(dimensionalConn, ddf, tableName, viaBulk=TRUE, localBulk=FALSE, append=FALSE)
-      writeLines(paste0('Creating indexes for table ', tableName))
-      if (attr(ddf, 'type') == 'CT') {
-        # note: "create index if not exists" only works on MariaDB...
-        dbExecute(dimensionalConn, paste0('create unique index if not exists ', tableName, '_pk on ', tableName, ' (', tableName, 'ID)'))
-      } else {
-        ddf %>% head(0) %>% select_if(~!(is.double(.x) | is.Date(.x))) %>% colnames() %>% walk(function(cnm) {
-          dbExecute(dimensionalConn, paste0('create index if not exists idx_', cnm, ' on ', tableName, ' (', cnm, ')'))
-        })
-      }
-    })
-    dbExecute(dimensionalConn, paste0('create index if not exists idx_AgencyTypeID on Agency (AgencyTypeID)'))
-  }
+  ret
+
+}
+
+#' Load the NIBRS dimensional database from lists of dimension and fact tables
+#'
+#' Load the NIBRS dimensional database from lists of dimension and fact tables, optionally taking a random sample of Administrative Segment
+#' and Group B Arrest Segment records.
+#' @importFrom DBI dbReadTable
+#' @importFrom lubridate is.Date
+#' @import dplyr
+#' @import purrr
+#' @import tibble
+#' @param dimensionTables list of dimension tables in the staging format
+#' @param factTables list of fact tables in the staging format
+#' @param dimensionalConn connection to the dimensional database
+#' @param sampleFraction numeric value between 0 and 1 indicating percentage of records in the sample.  NULL to take all records.
+#' @param seed random seed.  Set this to the same value in subsequent calls to generate the same random sample.
+#' @return a list with all the dimensional database tables, as tibbles
+#' @export
+loadDimensionalFromObjectLists <- function(
+  dimensionTables, factTables,
+  dimensionalConn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhost", dbname="search_nibrs_dimensional", username="root"),
+  sampleFraction=NULL, seed=12341234) {
+
+  ret <- convertStagingTablesToDimensional(dimensionTables, factTables, sampleFraction, seed)
+
+  iwalk(ret, function(ddf, tableName) {
+    writeLines(paste0('Writing dimensional db table ', tableName))
+    writeDataFrameToDatabase(dimensionalConn, ddf, tableName, viaBulk=TRUE, localBulk=FALSE, append=FALSE)
+    writeLines(paste0('Creating indexes for table ', tableName))
+    if (attr(ddf, 'type') == 'CT') {
+      # note: "create index if not exists" only works on MariaDB...
+      writeLines(paste0('Creating PK for code table ', tableName))
+      dbExecute(dimensionalConn, paste0('create unique index if not exists ', tableName, '_pk on ', tableName, ' (', tableName, 'ID)'))
+    } else {
+      ddf %>% head(0) %>% select_if(~!(is.double(.x) | is.Date(.x))) %>% colnames() %>% head(63) %>% walk(function(cnm) {
+        # head(63) because MariaDB only supports creating indexes for 64 columns
+        writeLines(paste0('Creating index for FK ', cnm))
+        dbExecute(dimensionalConn, paste0('create index if not exists idx_', cnm, ' on ', tableName, ' (', cnm, ')'))
+      })
+    }
+  })
+
+  dbExecute(dimensionalConn, paste0('create index if not exists idx_AgencyTypeID on Agency (AgencyTypeID)'))
 
   ret
 
@@ -889,6 +933,3 @@ enhanceDimensionTables <- function(dimensionTables) {
   })
 
 }
-
-
-

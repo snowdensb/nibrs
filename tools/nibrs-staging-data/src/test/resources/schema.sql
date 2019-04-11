@@ -26,6 +26,7 @@ Use search_nibrs_staging;
 
 
 
+
 CREATE TABLE Submission (
                 SubmissionID IDENTITY NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
@@ -73,13 +74,13 @@ CREATE TABLE AgencyType (
 CREATE TABLE DateType (
                 DateTypeID IDENTITY NOT NULL,
                 CalendarDate DATE NOT NULL,
-                Year INTEGER NOT NULL,
+                YearNum INTEGER NOT NULL,
                 YearLabel CHAR(4) NOT NULL,
                 CalendarQuarter INTEGER NOT NULL,
-                Month INTEGER NOT NULL,
+                MonthNum INTEGER NOT NULL,
                 MonthName VARCHAR(12) NOT NULL,
                 FullMonth CHAR(7) NOT NULL,
-                Day INTEGER NOT NULL,
+                DayNum INTEGER NOT NULL,
                 DayOfWeek VARCHAR(9) NOT NULL,
                 DayOfWeekSort INTEGER NOT NULL,
                 DateMMDDYYYY CHAR(10) NOT NULL,
@@ -387,6 +388,7 @@ CREATE TABLE UCROffenseCodeType (
 CREATE TABLE ArrestReportSegment (
                 ArrestReportSegmentID IDENTITY NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
+                StateCode CHAR(2) NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
                 CityIndicator VARCHAR(4),
@@ -406,7 +408,7 @@ CREATE TABLE ArrestReportSegment (
                 ResidentStatusOfPersonTypeID INTEGER NOT NULL,
                 DispositionOfArresteeUnder18TypeID INTEGER NOT NULL,
                 UCROffenseCodeTypeID INTEGER NOT NULL,
-                ReportTimestamp TIMESTAMP DEFAULT NOW() NOT NULL,
+                ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT ArresteReport_pk PRIMARY KEY (ArrestReportSegmentID)
 );
 
@@ -423,6 +425,7 @@ CREATE TABLE ArrestReportSegmentWasArmedWith (
 CREATE TABLE AdministrativeSegment (
                 AdministrativeSegmentID IDENTITY NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
+                StateCode CHAR(2) NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
                 CityIndicator VARCHAR(4),
@@ -437,7 +440,7 @@ CREATE TABLE AdministrativeSegment (
                 ExceptionalClearanceDate DATE,
                 ExceptionalClearanceDateID INTEGER NOT NULL,
                 CargoTheftIndicatorTypeID INTEGER NOT NULL,
-                ReportTimestamp TIMESTAMP DEFAULT NOW() NOT NULL,
+                ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT AdministrativeSegment_pk PRIMARY KEY (AdministrativeSegmentID)
 );
 
@@ -629,6 +632,7 @@ CREATE TABLE ZeroReportingSegment (
                 AdministrativeSegmentID INTEGER NOT NULL,
                 RecordDescriptionWord VARCHAR(4),
                 SegmentLevel VARCHAR(1),
+                StateCode CHAR(2) NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
                 CityIndicator VARCHAR(4),
@@ -638,7 +642,7 @@ CREATE TABLE ZeroReportingSegment (
                 IncidentHour VARCHAR(4),
                 CleardExceptionally VARCHAR(1),
                 ExceptionalClearanceDate DATE,
-                ReportTimestamp TIMESTAMP DEFAULT NOW() NOT NULL,
+                ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT ZeroReportingSegment_Pk PRIMARY KEY (ZeroReportingSegmentID)
 );
 
@@ -648,12 +652,13 @@ CREATE TABLE LEOKASegment (
                 AdministrativeSegmentID INTEGER NOT NULL,
                 RecordDescriptionWord VARCHAR(4),
                 SegmentLevel VARCHAR(1),
+                StateCode CHAR(2) NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
                 CityIndicator VARCHAR(4),
                 Filler VARCHAR(12),
                 LEOKAData VARCHAR(600),
-                ReportTimestamp TIMESTAMP DEFAULT NOW() NOT NULL,
+                ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT idLEOKASegment PRIMARY KEY (LEOKASegmentID)
 );
 

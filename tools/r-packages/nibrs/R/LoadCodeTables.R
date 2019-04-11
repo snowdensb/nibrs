@@ -54,3 +54,10 @@ loadCodeTables <- function(spreadsheetFile=NULL, conn=NULL, quiet=FALSE) {
   }) %>% set_names(TOC$Table)
 
 }
+
+#' @importFrom readr read_csv
+loadStatesForDimensional <- function() {
+  ret <- read_csv(system.file("raw", "states.csv", package=getPackageName()), col_types='icc')
+  attr(ret, 'type') <- 'CT'
+  ret
+}

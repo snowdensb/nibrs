@@ -33,13 +33,13 @@ public class DateType {
 	private Integer dateTypeId; 
 	
 	private Date calendarDate; 
-	private Integer year; 
+	private Integer yearNum; 
 	private String yearLabel; 
 	private Integer calendarQuarter; 
-	private Integer month; 
+	private Integer monthNum; 
 	private String monthName; 
 	private String fullMonth; 
-	private Integer day; 
+	private Integer dayNum; 
 	private String dayOfWeek; 
 	private Integer dayOfWeekSort; 
 	private String dateMMDDYYYY; 
@@ -59,13 +59,13 @@ public class DateType {
 		this();
 		this.dateTypeId = dateTypeId;
 		this.calendarDate = calendarDate;
-		this.year = year;
+		this.yearNum = year;
 		this.yearLabel = yearLabel;
 		this.calendarQuarter = calendarQuarter;
-		this.month = month;
+		this.monthNum = month;
 		this.monthName = monthName;
 		this.fullMonth = fullMonth;
-		this.day = day;
+		this.dayNum = day;
 		this.dayOfWeek = dayOfWeek;
 		this.dayOfWeekSort = dayOfWeekSort;
 		this.dateMMDDYYYY = dateMMDDYYYY;
@@ -91,12 +91,12 @@ public class DateType {
 		this.calendarDate = calendarDate;
 	}
 
-	public Integer getYear() {
-		return year;
+	public Integer getYearNum() {
+		return yearNum;
 	}
 
-	public void setYear(Integer year) {
-		this.year = year;
+	public void setYearNum(Integer yearNum) {
+		this.yearNum = yearNum;
 	}
 
 	public String getYearLabel() {
@@ -115,12 +115,12 @@ public class DateType {
 		this.calendarQuarter = calendarQuarter;
 	}
 
-	public Integer getMonth() {
-		return month;
+	public Integer getMonthNum() {
+		return monthNum;
 	}
 
-	public void setMonth(Integer month) {
-		this.month = month;
+	public void setMonthNum(Integer monthNum) {
+		this.monthNum = monthNum;
 	}
 
 	public String getMonthName() {
@@ -139,12 +139,12 @@ public class DateType {
 		this.fullMonth = fullMonth;
 	}
 
-	public Integer getDay() {
-		return day;
+	public Integer getDayNum() {
+		return dayNum;
 	}
 
-	public void setDay(Integer day) {
-		this.day = day;
+	public void setDayNum(Integer dayNum) {
+		this.dayNum = dayNum;
 	}
 
 	public String getDayOfWeek() {
@@ -179,13 +179,13 @@ public class DateType {
 		result = prime * result + ((calendarQuarter == null) ? 0 : calendarQuarter.hashCode());
 		result = prime * result + ((dateMMDDYYYY == null) ? 0 : dateMMDDYYYY.hashCode());
 		result = prime * result + ((dateTypeId == null) ? 0 : dateTypeId.hashCode());
-		result = prime * result + ((day == null) ? 0 : day.hashCode());
+		result = prime * result + ((dayNum == null) ? 0 : dayNum.hashCode());
 		result = prime * result + ((dayOfWeek == null) ? 0 : dayOfWeek.hashCode());
 		result = prime * result + ((dayOfWeekSort == null) ? 0 : dayOfWeekSort.hashCode());
 		result = prime * result + ((fullMonth == null) ? 0 : fullMonth.hashCode());
-		result = prime * result + ((month == null) ? 0 : month.hashCode());
+		result = prime * result + ((monthNum == null) ? 0 : monthNum.hashCode());
 		result = prime * result + ((monthName == null) ? 0 : monthName.hashCode());
-		result = prime * result + ((year == null) ? 0 : year.hashCode());
+		result = prime * result + ((yearNum == null) ? 0 : yearNum.hashCode());
 		result = prime * result + ((yearLabel == null) ? 0 : yearLabel.hashCode());
 		return result;
 	}
@@ -219,10 +219,10 @@ public class DateType {
 				return false;
 		} else if (!dateTypeId.equals(other.dateTypeId))
 			return false;
-		if (day == null) {
-			if (other.day != null)
+		if (dayNum == null) {
+			if (other.dayNum != null)
 				return false;
-		} else if (!day.equals(other.day))
+		} else if (!dayNum.equals(other.dayNum))
 			return false;
 		if (dayOfWeek == null) {
 			if (other.dayOfWeek != null)
@@ -239,20 +239,20 @@ public class DateType {
 				return false;
 		} else if (!fullMonth.equals(other.fullMonth))
 			return false;
-		if (month == null) {
-			if (other.month != null)
+		if (monthNum == null) {
+			if (other.monthNum != null)
 				return false;
-		} else if (!month.equals(other.month))
+		} else if (!monthNum.equals(other.monthNum))
 			return false;
 		if (monthName == null) {
 			if (other.monthName != null)
 				return false;
 		} else if (!monthName.equals(other.monthName))
 			return false;
-		if (year == null) {
-			if (other.year != null)
+		if (yearNum == null) {
+			if (other.yearNum != null)
 				return false;
-		} else if (!year.equals(other.year))
+		} else if (!yearNum.equals(other.yearNum))
 			return false;
 		if (yearLabel == null) {
 			if (other.yearLabel != null)

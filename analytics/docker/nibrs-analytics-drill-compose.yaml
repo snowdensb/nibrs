@@ -1,0 +1,31 @@
+# Docker Compose file that brings up containers necessary for NIBRS analytics using drill as the dimensional persistence layer
+
+version: '3.2'
+
+networks:
+  nibrs_analytics_nw:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+       subnet: 172.15.0.0/16
+
+services:
+  zookeeper:
+    container_name: zoo
+    image: zookeeper
+    networks:
+      nibrs_analytics_nw:
+  nibrs-analytics-drill:
+    container_name: nibrs-analytics-drill
+    image: searchncjis/nibrs-drill
+    ports:
+      - 8047:8047
+    networks:
+      nibrs_analytics_nw:
+# uncomment this to change memory to 8G or whatever is needed
+#    environment:
+#      - DRILL_MAX_DIRECT_MEMORY=8G
+    volumes:
+      - /opt/data/nibrs/cde/:/nibrs/
