@@ -27,10 +27,10 @@ truncateDate <- function(conn) {
 #' @importFrom lubridate as_date year quarter month wday day
 #' @import dplyr
 #' @import tibble
-writeDateDimensionTable <- function(minDate, maxDate, conn=NULL, datesToExclude=as_date(x = integer(0))) {
+writeDateDimensionTable <- function(minDate, maxDate, writeProgressDetail=TRUE, conn=NULL, datesToExclude=as_date(x = integer(0))) {
   minDate <- as_date(minDate)
   maxDate <- as_date(maxDate)
-  writeLines(paste0("Building date dimension, earliest date=", minDate, ", latestDate=", maxDate))
+  if (writeProgressDetail) writeLines(paste0("Building date dimension, earliest date=", minDate, ", latestDate=", maxDate))
   DateDf <- tibble(CalendarDate=seq(minDate, maxDate, by="days")) %>%
     mutate(DateID=createKeyFromDate(CalendarDate),
            YearNum=year(CalendarDate),
@@ -70,9 +70,9 @@ writeDateDimensionTable <- function(minDate, maxDate, conn=NULL, datesToExclude=
                      DateMMDDYYYY='Blank'))
   DateDf <- DateDf %>% filter(!(CalendarDate %in% datesToExclude)) %>%
     rename(DateTypeID=DateID)
-  writeLines(paste0("Adding ", nrow(DateDf), " new dates to the Date dimension"))
+  if (writeProgressDetail) writeLines(paste0("Adding ", nrow(DateDf), " new dates to the Date dimension"))
 
-  writeLines(paste0("Writing ", nrow(DateDf), " Date rows to database"))
+  if (writeProgressDetail) writeLines(paste0("Writing ", nrow(DateDf), " Date rows to database"))
   if (!is.null(conn)) dbWriteTable(conn=conn, name="DateType", value=DateDf, append=TRUE, row.names = FALSE)
 
   attr(DateDf, 'type') <- 'CT'

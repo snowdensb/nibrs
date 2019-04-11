@@ -124,7 +124,7 @@ loadDimensionalFromStagingDatabase <- function(
 #' @param seed random seed.  Set this to the same value in subsequent calls to generate the same random sample.
 #' @return a list with all the dimensional database tables, as tibbles
 #' @export
-convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampleFraction=NULL, seed=12341234) {
+convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampleFraction=NULL, seed=12341234, writeProgressDetail=TRUE) {
 
   factTables <- map(factTables, function(factTableDf) {
     if ('SegmentActionTypeTypeID' %in% colnames(factTableDf)) {
@@ -319,7 +319,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     ret
   }
 
-  writeLines('Creating Incident View')
+  if (writeProgressDetail) writeLines('Creating Incident View')
   ret$FullIncidentView <- factTables$AdministrativeSegment %>%
     samp() %>%
     left_join(factTables$OffenseSegment, by='AdministrativeSegmentID') %>%
@@ -463,7 +463,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       StolenMotorVehiclesDim
     )
 
-  writeLines('Creating Victim-Offense View')
+  if (writeProgressDetail) writeLines('Creating Victim-Offense View')
   ret$FullVictimOffenseView <- factTables$AdministrativeSegment %>%
     samp() %>%
     left_join(factTables$OffenseSegment, by='AdministrativeSegmentID') %>%
@@ -542,7 +542,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       ClearanceType
     )
 
-  writeLines('Creating Victim-Offender View')
+  if (writeProgressDetail) writeLines('Creating Victim-Offender View')
   ret$FullVictimOffenderView <- factTables$AdministrativeSegment %>%
     samp() %>%
     left_join(factTables$OffenderSegment %>%
@@ -629,7 +629,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       ClearanceType
     )
 
-  writeLines('Creating Group A Arrest View')
+  if (writeProgressDetail) writeLines('Creating Group A Arrest View')
   ret$FullGroupAArrestView <- factTables$AdministrativeSegment %>%
     samp() %>%
     inner_join(factTables$ArresteeSegment, by='AdministrativeSegmentID') %>%
@@ -679,7 +679,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       AutomaticWeaponIndicator
     )
 
-  writeLines('Creating Property View')
+  if (writeProgressDetail) writeLines('Creating Property View')
   ret$FullPropertyView <- factTables$AdministrativeSegment %>%
     samp() %>%
     inner_join(factTables$PropertySegment, by='AdministrativeSegmentID') %>%
@@ -730,7 +730,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       RecoveredMotorVehiclesDim
     )
 
-  writeLines('Creating Group B Arrest View')
+  if (writeProgressDetail) writeLines('Creating Group B Arrest View')
   ret$FullGroupBArrestView <- factTables$ArrestReportSegment %>%
     samp() %>%
     left_join(factTables$ArrestReportSegmentWasArmedWith, by='ArrestReportSegmentID') %>%

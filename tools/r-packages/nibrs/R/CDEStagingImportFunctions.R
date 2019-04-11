@@ -8,7 +8,8 @@
 loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableList=NULL, zipFileSampleFraction=1, stateAbbreviationRegex=NULL, yearRegex=NULL, parallel=FALSE,
                                                        sharedCsvDir='/opt/data/nibrs/cde/csv',
                                                        drillHost='localhost',
-                                                       drillPort=8047L) {
+                                                       drillPort=8047L,
+                                                       writeProgressDetail=TRUE) {
 
   if (is.null(codeTableList)) {
     writeLines('Loading code tables')
@@ -37,6 +38,9 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
   if (parallel) {
     plan(multiprocess)
     mapf <- future_map
+    if (writeProgressDetail) {
+      warning('Writing progress detail with parallel processing can negate the benefit of parallelism because of the shared writeLines() connection.  Consider setting writeProgressDetail to FALSE.')
+    }
   }
 
   keepTablesOfType <- function(dfList, type) {
@@ -52,29 +56,31 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
     gsub(x=basename(file), pattern='^(.{2})-.+', replacement='\\1')
   }
 
+  writeLines(paste0('Processing ', length(files), ' input CDE files'))
+
   accumDfs <- files %>% mapf(function(file) {
 
     state <- getStateCodeFromFile(file)
     yr <- gsub(x=basename(file), pattern='.+\\-([0-9]{4})\\.zip$', replacement='\\1')
 
-    writeLines(paste0('Processing NIBRS CDE file ', file, ', (state=', state, ', yr=', yr, ')'))
+    if (writeProgressDetail) writeLines(paste0('Processing NIBRS CDE file ', file, ', (state=', state, ', yr=', yr, ')'))
 
     directory <- tempfile(pattern='dir')
     unzip(file, exdir=directory, junkpaths=TRUE)
-    sdfs <- loadCDEDataToStaging(directory, codeTableList, state)
+    sdfs <- loadCDEDataToStaging(directory, codeTableList, state, writeProgressDetail=writeProgressDetail)
     unlink(directory, TRUE)
 
     accumDfList <- NULL
 
     if (!is.null(sdfs)) {
 
-      ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs))
+      ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs), writeProgressDetail=writeProgressDetail)
 
       accumDfList <- list()
       accumDfList$DateType <- ddfs$DateType
       accumDfList$Agency <- ddfs$Agency %>% select(-Population)
 
-      writeLines(paste0('Writing out csvs for ', state, ' + ', yr, '...'))
+      if (writeProgressDetail) writeLines(paste0('Writing out csvs for ', state, ' + ', yr, '...'))
 
       viewDir <- file.path(sharedCsvDir, state, yr)
       unlink(viewDir, recursive=TRUE)
@@ -82,13 +88,13 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
 
       keepFactTables(ddfs) %>%
         iwalk(function(ftdf, tableName) {
-          writeLines(paste0('  writing fact table: ', tableName))
+          if (writeProgressDetail) writeLines(paste0('  writing fact table: ', tableName))
           write_csv(ftdf %>% mutate(CDEYear=yr), file.path(viewDir, paste0(tableName, '.csvh')), na='')
-          writeLines('  done')
+          if (writeProgressDetail) writeLines('  done')
         })
 
     } else {
-      writeLines(paste0('Cannot create parquet/drill data for ', file, ' because input data frame list is null'))
+      if (writeProgressDetail) writeLines(paste0('Cannot create parquet/drill data for ', file, ' because input data frame list is null'))
     }
 
     accumDfList
@@ -104,12 +110,13 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
     for (file in files) {
       directory <- tempfile(pattern='dir')
       unzip(file, exdir=directory, junkpaths=TRUE)
-      sdfs <- loadCDEDataToStaging(directory, codeTableList, getStateCodeFromFile(file))
+      sdfs <- loadCDEDataToStaging(directory, codeTableList, getStateCodeFromFile(file), writeProgressDetail=writeProgressDetail)
       unlink(directory, TRUE)
       if (!is.null(sdfs)) {
-        ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs))
+        ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs), writeProgressDetail=writeProgressDetail)
         enhancedCodeTableList <- keepCodeTables(ddfs)
         factTableList <- names(keepFactTables(ddfs))
+        break
       }
     }
   }
@@ -293,7 +300,7 @@ loadMultiStateYearDataToStaging <- function(zipDirectory, codeTableList=NULL, zi
 #' @import readr
 #' @importFrom lubridate dmy
 #' @export
-loadCDEDataToStaging <- function(singleStateYearDirectory, codeTableList=NULL, state) {
+loadCDEDataToStaging <- function(singleStateYearDirectory, codeTableList=NULL, state, writeProgressDetail=TRUE) {
 
   if (is.null(codeTableList)) {
     writeLines('Loading code tables')
@@ -308,7 +315,7 @@ loadCDEDataToStaging <- function(singleStateYearDirectory, codeTableList=NULL, s
     ct
   })
 
-  writeLines('Loading agencies')
+  if (writeProgressDetail) writeLines('Loading agencies')
 
   # found out there are two different formats for the agencies table, depending on state/year
 
@@ -346,7 +353,7 @@ loadCDEDataToStaging <- function(singleStateYearDirectory, codeTableList=NULL, s
     return(NULL)
   }
 
-  writeLines(paste0('Loaded ', nrow(agencyDf), ' Agency records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(agencyDf), ' Agency records'))
 
   setFactTableAttribute <- function(tdf) {
     attr(tdf, 'type') <- 'FT'
@@ -364,13 +371,13 @@ loadCDEDataToStaging <- function(singleStateYearDirectory, codeTableList=NULL, s
     fixFilename <- tolower
   }
 
-  ret$AdministrativeSegment <- loadCDEIncidentData(ret, agencyDf, singleStateYearDirectory, state, fixFilename)
-  ret <- c(ret, map(loadCDEVictimData(ret, agencyDf, singleStateYearDirectory, fixFilename), setFactTableAttribute))
-  ret <- c(ret, map(loadCDEOffenseData(ret, singleStateYearDirectory, fixFilename), setFactTableAttribute))
-  ret <- c(ret, map(loadCDEArresteeData(ret, singleStateYearDirectory, state, fixFilename), setFactTableAttribute))
+  ret$AdministrativeSegment <- loadCDEIncidentData(ret, agencyDf, singleStateYearDirectory, state, fixFilename, writeProgressDetail)
+  ret <- c(ret, map(loadCDEVictimData(ret, agencyDf, singleStateYearDirectory, fixFilename, writeProgressDetail), setFactTableAttribute))
+  ret <- c(ret, map(loadCDEOffenseData(ret, singleStateYearDirectory, fixFilename, writeProgressDetail), setFactTableAttribute))
+  ret <- c(ret, map(loadCDEArresteeData(ret, singleStateYearDirectory, state, fixFilename, writeProgressDetail), setFactTableAttribute))
   ret$AdministrativeSegment <- ret$AdministrativeSegment %>% anti_join(ret$ArrestReportSegment, by=c('AdministrativeSegmentID'='ArrestReportSegmentID')) %>% setFactTableAttribute()
-  ret$OffenderSegment <- loadCDEOffenderData(ret, singleStateYearDirectory, fixFilename) %>% setFactTableAttribute()
-  ret <- c(ret, map(loadCDEPropertyData(ret, singleStateYearDirectory, fixFilename), setFactTableAttribute))
+  ret$OffenderSegment <- loadCDEOffenderData(ret, singleStateYearDirectory, fixFilename, writeProgressDetail) %>% setFactTableAttribute()
+  ret <- c(ret, map(loadCDEPropertyData(ret, singleStateYearDirectory, fixFilename, writeProgressDetail), setFactTableAttribute))
 
   ret$AgencyType <- bind_rows(ret$AgencyType,
                               tibble(AgencyTypeID=100, StateCode='100', StateDescription='Other') %>% mutate(NIBRSCode=StateCode, NIBRSDescription=StateDescription))
@@ -404,15 +411,15 @@ loadCDEDataToStaging <- function(singleStateYearDirectory, codeTableList=NULL, s
   minDate <- min(allDates, na.rm=TRUE)
   maxDate <- max(allDates, na.rm=TRUE)
 
-  ret$DateType <- writeDateDimensionTable(minDate, maxDate)
+  ret$DateType <- writeDateDimensionTable(minDate, maxDate, writeProgressDetail=writeProgressDetail)
 
   ret
 
 }
 
-loadCDEPropertyData <- function(tableList, directory, fixFilename) {
+loadCDEPropertyData <- function(tableList, directory, fixFilename, writeProgressDetail) {
 
-  writeLines('Loading Property Segment data')
+  if (writeProgressDetail) writeLines('Loading Property Segment data')
 
   ret <- list()
 
@@ -440,7 +447,7 @@ loadCDEPropertyData <- function(tableList, directory, fixFilename) {
            )
 
   ret$PropertySegment <- tdf
-  writeLines(paste0('Loaded ', nrow(tdf), ' Property Segment records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(tdf), ' Property Segment records'))
 
   propertyTypeCt <- read_csv(file.path(directory, fixFilename('NIBRS_PROP_DESC_TYPE.csv')), col_types='icc', progress=FALSE) %>%
     set_names(toupper(colnames(.))) %>%
@@ -464,7 +471,7 @@ loadCDEPropertyData <- function(tableList, directory, fixFilename) {
     ) %>% mutate(RecoveredDateID=createKeyFromDate(RecoveredDate))
 
   ret$PropertyType <- tdf
-  writeLines(paste0('Loaded ', nrow(tdf), ' Property Type records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(tdf), ' Property Type records'))
 
   drugTypeCt <- read_csv(file.path(directory, fixFilename('NIBRS_SUSPECTED_DRUG_TYPE.csv')), col_types='icc', progress=FALSE) %>%
     set_names(toupper(colnames(.))) %>%
@@ -495,15 +502,15 @@ loadCDEPropertyData <- function(tableList, directory, fixFilename) {
     )
 
   ret$SuspectedDrugType <- tdf
-  writeLines(paste0('Loaded ', nrow(tdf), ' Drug records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(tdf), ' Drug records'))
 
   ret
 
 }
 
-loadCDEVictimData <- function(tableList, agencyDf, directory, fixFilename) {
+loadCDEVictimData <- function(tableList, agencyDf, directory, fixFilename, writeProgressDetail) {
 
-  writeLines('Loading Victim Segment data')
+  if (writeProgressDetail) writeLines('Loading Victim Segment data')
 
   ret <- list()
 
@@ -609,7 +616,7 @@ loadCDEVictimData <- function(tableList, agencyDf, directory, fixFilename) {
     mutate(AdditionalJustifiableHomicideCircumstancesTypeID=case_when(is.na(AdditionalJustifiableHomicideCircumstancesTypeID) ~ 99998L, TRUE ~ AdditionalJustifiableHomicideCircumstancesTypeID))
 
   ret$VictimSegment <- tdf
-  writeLines(paste0('Loaded ', nrow(tdf), ' Victim Segment records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(tdf), ' Victim Segment records'))
 
   tdf <- victimCircumstances %>%
     inner_join(circumstanceTypeCt, by='CIRCUMSTANCES_ID') %>%
@@ -660,9 +667,9 @@ loadCDEVictimData <- function(tableList, agencyDf, directory, fixFilename) {
 
 }
 
-loadCDEOffenderData <- function(tableList, directory, fixFilename) {
+loadCDEOffenderData <- function(tableList, directory, fixFilename, writeProgressDetail) {
 
-  writeLines('Loading Offender Segment data')
+  if (writeProgressDetail) writeLines('Loading Offender Segment data')
 
   raceCt <- buildRaceLookup(tableList, directory, fixFilename)
   ethnicityCt <- buildEthnicityLookup(tableList, directory, fixFilename)
@@ -693,15 +700,15 @@ loadCDEOffenderData <- function(tableList, directory, fixFilename) {
            NonNumericAge,
            ends_with('OfPersonTypeID'))
 
-  writeLines(paste0('Loaded ', nrow(tdf), ' Offender Segment records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(tdf), ' Offender Segment records'))
 
   tdf
 
 }
 
-loadCDEArresteeData <- function(tableList, directory, state, fixFilename) {
+loadCDEArresteeData <- function(tableList, directory, state, fixFilename, writeProgressDetail) {
 
-  writeLines('Loading Arrestee Segment data')
+  if (writeProgressDetail) writeLines('Loading Arrestee Segment data')
 
   arrestTypeCt <- read_csv(file.path(directory, fixFilename('NIBRS_ARREST_TYPE.csv')), col_types='icc', progress=FALSE) %>%
     set_names(toupper(colnames(.))) %>%
@@ -769,7 +776,7 @@ loadCDEArresteeData <- function(tableList, directory, state, fixFilename) {
 
   ret <- list()
 
-  writeLines('Separating Group A and Group B segment data')
+  if (writeProgressDetail) writeLines('Separating Group A and Group B segment data')
 
   ret$ArresteeSegment <- tdf %>%
     filter(OffenseCategory1=='Group A') %>% select(-OffenseCategory1) %>%
@@ -816,8 +823,8 @@ loadCDEArresteeData <- function(tableList, directory, state, fixFilename) {
     rename(ArrestReportSegmentID=ARRESTEE_ID) %>%
     ungroup() %>% mutate(ArrestReportSegmentWasArmedWithID=row_number())
 
-  writeLines(paste0('Loaded ', nrow(ret$ArresteeSegment), ' Group A Arrestee Segment records'))
-  writeLines(paste0('Loaded ', nrow(ret$ArrestReportSegment), ' Group B Arrest Report Segment records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(ret$ArresteeSegment), ' Group A Arrestee Segment records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(ret$ArrestReportSegment), ' Group B Arrest Report Segment records'))
 
   ret
 
@@ -868,9 +875,9 @@ buildOffenseTypeLookup <- function(tableList, directory, fixFilename, includeGro
   ret
 }
 
-loadCDEOffenseData <- function(tableList, directory, fixFilename) {
+loadCDEOffenseData <- function(tableList, directory, fixFilename, writeProgressDetail) {
 
-  writeLines('Loading Offense Segment data')
+  if (writeProgressDetail) writeLines('Loading Offense Segment data')
 
   ret <- list()
 
@@ -912,7 +919,7 @@ loadCDEOffenseData <- function(tableList, directory, fixFilename) {
 
   ret$OffenseSegment <- tdf
 
-  writeLines(paste0('Loaded ', nrow(ret$OffenseSegment), ' Offense Segment records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(ret$OffenseSegment), ' Offense Segment records'))
 
   ct <- read_csv(file.path(directory, fixFilename('NIBRS_BIAS_LIST.csv')), col_types=cols(.default=col_character()), progress=FALSE) %>%
     set_names(toupper(colnames(.))) %>%
@@ -986,9 +993,9 @@ convertDate <- function(val) {
   parse_date_time(val, c('y-m-d H:M:S', 'd-b!-y!*')) %>% as_date()
 }
 
-loadCDEIncidentData <- function(tableList, agencyDf, directory, state, fixFilename) {
+loadCDEIncidentData <- function(tableList, agencyDf, directory, state, fixFilename, writeProgressDetail) {
 
-  writeLines('Loading Administrative Segment data')
+  if (writeProgressDetail) writeLines('Loading Administrative Segment data')
 
   exceptionalClearanceCt <- read_csv(file.path(directory, fixFilename('NIBRS_CLEARED_EXCEPT.csv')), col_types=cols(.default=col_character()), progress=FALSE) %>%
     set_names(toupper(colnames(.))) %>%
@@ -1019,7 +1026,7 @@ loadCDEIncidentData <- function(tableList, agencyDf, directory, state, fixFilena
     select(AdministrativeSegmentID=INCIDENT_ID, SegmentActionTypeTypeID, StateCode, ORI, AgencyID, IncidentNumber,
            IncidentDate, IncidentDateID, ReportDateIndicator, IncidentHour, ClearedExceptionallyTypeID, ExceptionalClearanceDate, ExceptionalClearanceDateID, CargoTheftIndicatorTypeID)
 
-  writeLines(paste0('Loaded ', nrow(ret), ' Administrative Segment records'))
+  if (writeProgressDetail) writeLines(paste0('Loaded ', nrow(ret), ' Administrative Segment records'))
 
   ret
 
