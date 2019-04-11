@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Cacheable
 public class EthnicityOfPersonType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer ethnicityOfPersonTypeId; 
 	
 	private String stateCode; 

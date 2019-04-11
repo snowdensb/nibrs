@@ -270,7 +270,7 @@ public class ArrestReportService {
 			arrestReportSegments.add(arrestReportSegment);
 		}
 		
-		return arrestReportSegmentRepository.save(arrestReportSegments);
+		return arrestReportSegmentRepository.saveAll(arrestReportSegments);
 	}
 
 	private void processArrestReportSegmentArmedWiths(ArrestReportSegment arrestReportSegment, ArresteeSegment arrestee) {

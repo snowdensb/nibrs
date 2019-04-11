@@ -36,7 +36,7 @@ public class TypeOfWeaponForceInvolved implements Serializable{
 	private static final long serialVersionUID = 8597871552401839697L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer typeOfWeaponForceInvolvedId; 
 	
     @ManyToOne

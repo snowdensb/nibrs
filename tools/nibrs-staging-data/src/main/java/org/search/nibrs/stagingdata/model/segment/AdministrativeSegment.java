@@ -59,7 +59,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 	})
 public class AdministrativeSegment {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer administrativeSegmentId;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

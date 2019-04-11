@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Cacheable
 public class ClearedExceptionallyType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer clearedExceptionallyTypeId; 
 	
 	private String stateCode; 

@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Cacheable
 public class TypeOfWeaponForceInvolvedType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer typeOfWeaponForceInvolvedTypeId; 
 	
 	private String stateCode; 

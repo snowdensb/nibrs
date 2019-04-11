@@ -51,7 +51,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 	property = "arresteeSegmentId")
 public class ArresteeSegment {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer arresteeSegmentId;
 	
 	@ManyToOne

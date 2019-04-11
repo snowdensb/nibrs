@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Cacheable
 public class BiasMotivationType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer biasMotivationTypeId; 
 	
 	private String stateCode; 
