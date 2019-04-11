@@ -46,10 +46,10 @@ public interface AdministrativeSegmentRepository
 	boolean existsByIncidentNumber(String incidentNumber);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
-	List<AdministrativeSegment> findDistinctByOriAndIncidentDateTypeYearAndIncidentDateTypeMonth(String ori, Integer year,  Integer month);
+	List<AdministrativeSegment> findDistinctByOriAndIncidentDateTypeYearNumAndIncidentDateTypeMonthNum(String ori, Integer year,  Integer month);
 		
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
-	List<AdministrativeSegment> findDistinctByIncidentDateTypeYearAndIncidentDateTypeMonth(Integer year,  Integer month);
+	List<AdministrativeSegment> findDistinctByIncidentDateTypeYearNumAndIncidentDateTypeMonthNum(Integer year,  Integer month);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	List<AdministrativeSegment> findAll(Iterable<Integer> ids);
@@ -59,8 +59,8 @@ public interface AdministrativeSegmentRepository
 			+ "LEFT JOIN a.arresteeSegments aa "
 			+ "LEFT JOIN aa.arrestDateType aaa "
 			+ "WHERE (?1 = null OR a.ori = ?1) AND "
-			+ "		((ae.year = ?2 AND ( ?3 = 0 OR ae.month = ?3)) "
-			+ "			OR ( aaa.year = ?2 AND ( ?3 = 0 OR aaa.month = ?3 ))) ")
+			+ "		((ae.yearNum = ?2 AND ( ?3 = 0 OR ae.monthNum = ?3)) "
+			+ "			OR ( aaa.yearNum = ?2 AND ( ?3 = 0 OR aaa.monthNum = ?3 ))) ")
 	List<Integer> findIdsByOriAndClearanceDate(String ori, Integer year, Integer month);
 	
 	@Query("SELECT DISTINCT a.administrativeSegmentId from AdministrativeSegment a "

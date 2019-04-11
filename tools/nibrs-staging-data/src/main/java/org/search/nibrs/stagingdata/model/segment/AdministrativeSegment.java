@@ -64,7 +64,8 @@ public class AdministrativeSegment {
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="segmentActionTypeTypeID") 
-	private SegmentActionTypeType segmentActionType; 
+	private SegmentActionTypeType segmentActionType;
+	private String stateCode; 
 	private String monthOfTape; 
 	private String yearOfTape; 
 	private String cityIndicator;
@@ -286,7 +287,8 @@ public class AdministrativeSegment {
 	@Override
 	public String toString() {
 		return "AdministrativeSegment [administrativeSegmentId=" + administrativeSegmentId + ", segmentActionType="
-				+ segmentActionType + ", monthOfTape=" + monthOfTape + ", yearOfTape=" + yearOfTape + ", cityIndicator="
+				+ segmentActionType + ", stateCode =" + stateCode + ", monthOfTape=" + monthOfTape + ", "
+				+ "yearOfTape=" + yearOfTape + ", cityIndicator="
 				+ cityIndicator + ", ori=" + ori + ", offenseSegments=" + offenseSegments + ", propertySegments="
 				+ propertySegments + ", arresteeSegments=" + arresteeSegments + ", offenderSegments=" + offenderSegments
 				+ ", victimSegments=" + victimSegments + ", agency=" + agency + ", incidentNumber=" + incidentNumber
@@ -420,5 +422,13 @@ public class AdministrativeSegment {
 
 	public void setReportTimestamp(LocalDateTime reportTimestamp) {
 		this.reportTimestamp = reportTimestamp;
+	}
+
+	public String getStateCode() {
+		return stateCode;
+	}
+
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
 	}
 }

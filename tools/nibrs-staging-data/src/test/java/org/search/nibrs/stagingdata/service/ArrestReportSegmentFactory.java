@@ -95,7 +95,8 @@ public class ArrestReportSegmentFactory {
 		EthnicityOfPersonType ethnicityOfPersonType = ethnicityOfPersonTypeRepository.findFirstByStateCode("N");
 		arrestReportSegment.setEthnicityOfPersonType(ethnicityOfPersonType);
 		arrestReportSegment.setMonthOfTape("12");
-		arrestReportSegment.setOri("ori");;
+		arrestReportSegment.setOri("ori");
+		arrestReportSegment.setStateCode("NA");
 		
 		RaceOfPersonType raceOfPersonType = raceOfPersonTypeRepository.findFirstByStateCode("W");
 		arrestReportSegment.setRaceOfPersonType(raceOfPersonType);

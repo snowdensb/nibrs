@@ -73,7 +73,7 @@ public class AdministrativeSegmentRepositoryTest {
 	public void testFindDistinctByOriAndIncidentDateTypeYearAndIncidentDateTypeMonth() {
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository
-				.findDistinctByOriAndIncidentDateTypeYearAndIncidentDateTypeMonth("WA1234567", 2016, 5);
+				.findDistinctByOriAndIncidentDateTypeYearNumAndIncidentDateTypeMonthNum("WA1234567", 2016, 5);
 		assertThat(administrativeSegments.size(), equalTo(3));
 		List<String> incidentNumbers = administrativeSegments.stream()
 				.map(AdministrativeSegment::getIncidentNumber)
@@ -137,7 +137,7 @@ public class AdministrativeSegmentRepositoryTest {
 		
 		List<org.search.nibrs.stagingdata.model.segment.ArresteeSegment> arresteeSegments =  administrativeSegments.stream()
 				.flatMap(i->i.getArresteeSegments().stream())
-				.filter(i-> i.getArrestDateType().getYear() == 2016 && i.getArrestDateType().getMonth() == 5)
+				.filter(i-> i.getArrestDateType().getYearNum() == 2016 && i.getArrestDateType().getMonthNum() == 5)
 				.collect(Collectors.toList());
 		
 		assertThat(arresteeSegments.size(), equalTo(1));
