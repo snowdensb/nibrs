@@ -50,7 +50,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 	property = "offenseSegmentId")
 public class OffenseSegment {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer offenseSegmentId;
 	
 	@ManyToOne

@@ -61,7 +61,7 @@ public class ArrestReportSegmentRepositoryTest {
 				.findIdsByOriAndArrestDate("agencyORI", 2017, 5);
 		
 		List<ArrestReportSegment> arrestReportSegments = arrestReportSegmentRepository
-				.findAll(arrestReportSegmentIds).stream().distinct().collect(Collectors.toList());
+				.findAllById(arrestReportSegmentIds).stream().distinct().collect(Collectors.toList());
 		
 		assertThat(arrestReportSegmentIds.size(), equalTo(1));
 		List<String> arrestTransactionNumbers = arrestReportSegments.stream()

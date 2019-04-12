@@ -36,7 +36,7 @@ public interface SubmissionRepository
 	Submission findBySubmissionId(Integer submissionId);
 	
 	@EntityGraph(value="allSubmissionJoins", type=EntityGraphType.LOAD)
-	List<Submission> findAll(Iterable<Integer> ids);
+	List<Submission> findAllById(Iterable<Integer> ids);
 	
 	@Query("SELECT DISTINCT s.submissionId from Submission s "
 			+ "WHERE s.incidentIdentifier = ?1 ")

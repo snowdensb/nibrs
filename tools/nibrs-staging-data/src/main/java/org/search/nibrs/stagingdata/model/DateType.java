@@ -29,7 +29,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Cacheable
 public class DateType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer dateTypeId; 
 	
 	private Date calendarDate; 

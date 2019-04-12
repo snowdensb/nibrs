@@ -36,7 +36,7 @@ public class ArresteeSegmentWasArmedWith implements Serializable{
 	private static final long serialVersionUID = -869451478846730203L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer arresteeSegmentWasArmedWithId; 
 	
     @ManyToOne

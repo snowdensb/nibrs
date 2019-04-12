@@ -206,8 +206,8 @@ public class GroupAIncidentServiceTest {
 				Set<OffenderSuspectedOfUsingType> offenderSuspectedOfUsingTypes = 
 						offenseSegment.getOffenderSuspectedOfUsingTypes();  
 				assertThat(offenderSuspectedOfUsingTypes.size(), equalTo(2));
-				assertTrue(offenderSuspectedOfUsingTypes.contains(offenderSuspectedOfUsingTypeRepository.findOne(1)));
-				assertTrue(offenderSuspectedOfUsingTypes.contains(offenderSuspectedOfUsingTypeRepository.findOne(2)));
+				assertTrue(offenderSuspectedOfUsingTypes.contains(offenderSuspectedOfUsingTypeRepository.findById(1).get()));
+				assertTrue(offenderSuspectedOfUsingTypes.contains(offenderSuspectedOfUsingTypeRepository.findById(2).get()));
 				
 				Set<TypeOfCriminalActivityType> typeOfCriminalActivityTypes = 
 						offenseSegment.getTypeOfCriminalActivityTypes(); 
@@ -244,8 +244,8 @@ public class GroupAIncidentServiceTest {
 				Set<TypeOfCriminalActivityType> typeOfCriminalActivityTypes = 
 						offenseSegment.getTypeOfCriminalActivityTypes(); 
 				assertThat(typeOfCriminalActivityTypes.size(), equalTo(2));
-				assertTrue(typeOfCriminalActivityTypes.contains(typeOfCriminalActivityTypeRepository.findOne(3)));
-				assertTrue(typeOfCriminalActivityTypes.contains(typeOfCriminalActivityTypeRepository.findOne(4)));
+				assertTrue(typeOfCriminalActivityTypes.contains(typeOfCriminalActivityTypeRepository.findById(3).orElse(null)));
+				assertTrue(typeOfCriminalActivityTypes.contains(typeOfCriminalActivityTypeRepository.findById(4).orElse(null)));
 				
 				Set<TypeOfWeaponForceInvolved> typeOfWeaponForceInvolveds = 
 						offenseSegment.getTypeOfWeaponForceInvolveds();
@@ -489,7 +489,7 @@ public class GroupAIncidentServiceTest {
 		
 		administrativeSegmentRepository.deleteByIncidentNumber(persisted.getIncidentNumber());  
 		
-		AdministrativeSegment afterDelete = administrativeSegmentRepository.findOne(persisted.getAdministrativeSegmentId());
+		AdministrativeSegment afterDelete = administrativeSegmentRepository.findById(persisted.getAdministrativeSegmentId()).orElse(null);
 		assertThat(afterDelete,  equalTo(null));
 		
 		long countOfAdministrativeSegmentsAfterDelete = administrativeSegmentRepository.count(); 

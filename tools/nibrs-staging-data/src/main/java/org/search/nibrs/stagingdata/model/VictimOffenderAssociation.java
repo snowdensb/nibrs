@@ -39,7 +39,7 @@ public class VictimOffenderAssociation implements Serializable{
 	private static final long serialVersionUID = 6131252716830673798L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer victimOffenderAssociationId; 
 	
     @ManyToOne

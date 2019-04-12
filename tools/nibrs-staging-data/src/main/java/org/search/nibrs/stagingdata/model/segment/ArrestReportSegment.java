@@ -60,7 +60,7 @@ import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 	})
 public class ArrestReportSegment {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer arrestReportSegmentId;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

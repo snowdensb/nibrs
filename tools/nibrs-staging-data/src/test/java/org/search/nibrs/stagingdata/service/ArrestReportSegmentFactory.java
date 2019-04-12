@@ -119,12 +119,12 @@ public class ArrestReportSegmentFactory {
 		ArrestReportSegmentWasArmedWith arrestReportSegmentWasArmedWith1 = new ArrestReportSegmentWasArmedWith();
 		arrestReportSegmentWasArmedWith1.setArrestReportSegment(arrestReportSegment);
 		arrestReportSegmentWasArmedWith1.setAutomaticWeaponIndicator("A");
-		arrestReportSegmentWasArmedWith1.setArresteeWasArmedWithType(arresteeWasArmedWithTypeRepository.findOne(120));
+		arrestReportSegmentWasArmedWith1.setArresteeWasArmedWithType(arresteeWasArmedWithTypeRepository.findById(120).orElse(null));
 		
 		ArrestReportSegmentWasArmedWith arrestReportSegmentWasArmedWith2 = new ArrestReportSegmentWasArmedWith();
 		arrestReportSegmentWasArmedWith2.setArrestReportSegment(arrestReportSegment);
 		arrestReportSegmentWasArmedWith2.setAutomaticWeaponIndicator("");
-		arrestReportSegmentWasArmedWith2.setArresteeWasArmedWithType(arresteeWasArmedWithTypeRepository.findOne(110));
+		arrestReportSegmentWasArmedWith2.setArresteeWasArmedWithType(arresteeWasArmedWithTypeRepository.findById(110).orElse(null));
 		
 		arrestReportSegment.setArrestReportSegmentWasArmedWiths(new HashSet<ArrestReportSegmentWasArmedWith>(){{
 			add(arrestReportSegmentWasArmedWith1);

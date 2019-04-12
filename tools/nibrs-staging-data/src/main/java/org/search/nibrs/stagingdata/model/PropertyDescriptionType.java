@@ -31,7 +31,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Cacheable
 public class PropertyDescriptionType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer propertyDescriptionTypeId; 
 	
 	private String stateCode; 

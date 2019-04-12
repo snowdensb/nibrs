@@ -58,7 +58,7 @@ public class AdministrativeSegmentService {
 		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDate(ori, year, month);
 			
 		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAll(ids)
+				administrativeSegmentRepository.findAllById(ids)
 				.stream().distinct().collect(Collectors.toList());
 		return administrativeSegments; 
 	}
@@ -71,7 +71,7 @@ public class AdministrativeSegmentService {
 		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDate(ori, year, month);
 		
 		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAll(ids)
+				administrativeSegmentRepository.findAllById(ids)
 				.stream().distinct().collect(Collectors.toList());
 		
 		return administrativeSegments; 
@@ -84,7 +84,7 @@ public class AdministrativeSegmentService {
 		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndArrestDate(ori, arrestYear, arrestMonth);
 		
 		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAll(ids)
+				administrativeSegmentRepository.findAllById(ids)
 				.stream().distinct().collect(Collectors.toList());
 		
 		log.info("ids size" + ids.size());

@@ -33,7 +33,7 @@ import org.search.nibrs.stagingdata.model.segment.VictimSegment;
 @Cacheable
 public class TypeInjuryType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer typeInjuryTypeId; 
 	private String stateCode; 
 	private String stateDescription; 

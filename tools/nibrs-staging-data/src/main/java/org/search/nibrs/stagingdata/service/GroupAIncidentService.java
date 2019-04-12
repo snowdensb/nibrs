@@ -223,7 +223,7 @@ public class GroupAIncidentService {
 	}
 	
 	public Iterable<OffenseSegment> saveOffenseSegment(List<OffenseSegment> offenseSegments){
-		return offenseSegmentRepository.save(offenseSegments);
+		return offenseSegmentRepository.saveAll(offenseSegments);
 	}
 	
 	public Iterable<AdministrativeSegment> saveGroupAIncidentReports(GroupAIncidentReport... groupAIncidentReports){
@@ -290,7 +290,7 @@ public class GroupAIncidentService {
 			administrativeSegments.add(administrativeSegment);
 		}
 		
-		return administrativeSegmentRepository.save(administrativeSegments);
+		return administrativeSegmentRepository.saveAll(administrativeSegments);
 	}
 	private void processProperties(AdministrativeSegment administrativeSegment,
 			GroupAIncidentReport groupAIncidentReport) {

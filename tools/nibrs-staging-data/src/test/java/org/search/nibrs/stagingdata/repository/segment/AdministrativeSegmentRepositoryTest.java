@@ -95,7 +95,7 @@ public class AdministrativeSegmentRepositoryTest {
 				.findIdsByOriListAndSubmissionDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)));
 		assertThat(administrativeSegmentIds.size(), equalTo(3));
 		
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAll(administrativeSegmentIds);
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAllById(administrativeSegmentIds);
 		List<String> incidentNumbers = administrativeSegments.stream()
 				.map(AdministrativeSegment::getIncidentNumber)
 				.collect(Collectors.toList()); 
@@ -110,7 +110,7 @@ public class AdministrativeSegmentRepositoryTest {
 				.findIdsByOriAndClearanceDate("WA1234567", 2016, 5);
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository
-				.findAll(administrativeSegmentIds).stream().distinct().collect(Collectors.toList());
+				.findAllById(administrativeSegmentIds).stream().distinct().collect(Collectors.toList());
 		
 		assertThat(administrativeSegments.size(), equalTo(3));
 		List<String> incidentNumbers = administrativeSegments.stream()
@@ -127,7 +127,7 @@ public class AdministrativeSegmentRepositoryTest {
 				.findIdsByOriAndArrestDate("WA1234567", 2016, 5);
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository
-				.findAll(administrativeSegmentIds).stream().distinct().collect(Collectors.toList());
+				.findAllById(administrativeSegmentIds).stream().distinct().collect(Collectors.toList());
 		
 		assertThat(administrativeSegments.size(), equalTo(1));
 		List<String> incidentNumbers = administrativeSegments.stream()
