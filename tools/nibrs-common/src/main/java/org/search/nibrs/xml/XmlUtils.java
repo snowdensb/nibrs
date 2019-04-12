@@ -404,5 +404,29 @@ public class XmlUtils {
 		return domSource;
 	}
     
+    /**
+     * Original intent was to represent root node as a string without 
+     * any xml comments at the top 
+     */
+    public static String getRootNodeAsString(String fileClasspath) throws Exception{
+    	
+        File file = new File(fileClasspath);    	
+    	Document doc = XmlUtils.parseFileToDocument(file);    	
+    	Element rootElement = doc.getDocumentElement();    	
+    	String sRoot = XmlUtils.getStringFromNode(rootElement);
+    	
+    	return sRoot;
+    }
+    
+    public static String getStringFromNode(Node node) throws Exception{
+    	
+    	StringWriter writer = new StringWriter();
+    	Transformer transformer = TransformerFactory.newInstance().newTransformer();
+    	transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+    	transformer.transform(new DOMSource(node), new StreamResult(writer));
+    	String xml = writer.toString();
+    	
+    	return xml;
+    }
 }
 
