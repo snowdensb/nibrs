@@ -42,6 +42,8 @@ RUN /tmp/server-config.sh ${MODE}
 COPY files/help.html /opt/saiku-server/tomcat/webapps/ROOT/
 RUN sed -i "270i <a href='#' onclick='window.open(\"help.html\");return false;'>About this dataset...</a>" /opt/saiku-server/tomcat/webapps/ROOT/index.html
 
+COPY files/setenv.sh /opt/saiku-server/tomcat/bin/
+
 RUN cd /opt/saiku-server/tomcat
 
 CMD ["/opt/saiku-server/start-saiku.sh"]
