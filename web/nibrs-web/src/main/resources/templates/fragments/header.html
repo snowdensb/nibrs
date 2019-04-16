@@ -71,7 +71,7 @@
 			  <li><a th:href="@{/toolLimitations}">Tool Limitations</a></li>
 			  <li><a th:href="@{/testFiles}">Test Files</a></li>
 			  <li><a th:href="@{/about}" id="aboutLink">About</a></li>
-			  <li class="dropdown">
+			  <li class="dropdown" th:if="${#authentication.isAuthenticated() and showUserInfoDropdown}">
 		        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user"></i> <b class="caret"></b></a>
 		        <ul class="dropdown-menu">
 		          <li sec:authorize="isAuthenticated()"><a href="#" >Signed in as <strong><span sec:authentication="name"></span></strong></a></li>

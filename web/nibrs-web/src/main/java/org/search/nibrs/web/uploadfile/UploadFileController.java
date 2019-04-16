@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,6 +41,7 @@ import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.util.NibrsFileUtils;
 import org.search.nibrs.validate.common.NibrsValidationUtils;
 import org.search.nibrs.validation.SubmissionValidator;
+import org.search.nibrs.web.AppProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,21 +49,31 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@SessionAttributes({"showUserInfoDropdown"})
 public class UploadFileController {
 	private final Log log = LogFactory.getLog(this.getClass());
-	
+	@Resource
+	AppProperties appProperties;
+
 	@Autowired
 	SubmissionValidator submissionValidator;
 
 	final List<String> acceptedFileTypes = 
 			Arrays.asList("application/zip", "text/plain", "application/octet-stream", "text/xml", "application/xml");
+	
+	@ModelAttribute("showUserInfoDropdown")
+	public Boolean getShowUserInfoDropDown(){
+		return appProperties.getShowUserInfoDropdown(); 
+	}
 	
 	@GetMapping("/")
 	public String getFileUploadForm(Model model) throws IOException {
@@ -75,7 +87,7 @@ public class UploadFileController {
 	    if (auth != null){    
 	        new SecurityContextLogoutHandler().logout(request, response, auth);
 	    }
-	    return "redirect:/logoutSuccess";
+	    return "redirect:" + appProperties.getSignOutUrl();
 	}
 
 	@GetMapping("/logoutSuccess")

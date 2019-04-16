@@ -22,21 +22,18 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("pct")
 public class AppProperties {
 
-	private Boolean allowQueriesWithoutSAMLToken = true; 
+	/**
+	 * Default to true
+	 */
+	private Boolean allowAccessWithoutSamlToken = true;
+	private String signOutUrl = "/logoutSuccess"; 
+	private Boolean showUserInfoDropdown = true;
 	private Boolean demoLawEnforcementEmployerIndicator = true;
 	private Integer ajpPort = 9090; 
 	private Boolean ajpEnabled = true; 
 	
 	public AppProperties() {
 		super();
-	}
-
-	public Boolean getAllowQueriesWithoutSAMLToken() {
-		return allowQueriesWithoutSAMLToken;
-	}
-
-	public void setAllowQueriesWithoutSAMLToken(Boolean allowQueriesWithoutSAMLToken) {
-		this.allowQueriesWithoutSAMLToken = allowQueriesWithoutSAMLToken;
 	}
 
 	public Boolean getAjpEnabled() {
@@ -61,6 +58,30 @@ public class AppProperties {
 
 	public void setDemoLawEnforcementEmployerIndicator(Boolean demoLawEnforcementEmployerIndicator) {
 		this.demoLawEnforcementEmployerIndicator = demoLawEnforcementEmployerIndicator;
+	}
+
+	public String getSignOutUrl() {
+		return signOutUrl;
+	}
+
+	public void setSignOutUrl(String signOutUrl) {
+		this.signOutUrl = signOutUrl;
+	}
+
+	public Boolean getAllowAccessWithoutSamlToken() {
+		return allowAccessWithoutSamlToken;
+	}
+
+	public void setAllowAccessWithoutSamlToken(Boolean allowAccessWithoutSamlToken) {
+		this.allowAccessWithoutSamlToken = allowAccessWithoutSamlToken;
+	}
+
+	public Boolean getShowUserInfoDropdown() {
+		return showUserInfoDropdown;
+	}
+
+	public void setShowUserInfoDropdown(Boolean showUserInfoDropdown) {
+		this.showUserInfoDropdown = showUserInfoDropdown;
 	}
 
 }
