@@ -42,7 +42,8 @@ public class PortalAuthenticationDetailsSource implements
     public PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails buildDetails(
             HttpServletRequest context) {
         
-    	log.info("\nEnter portal authentication details source\n");
+    	log.info("Enter portal authentication details source");
+    	log.info("context:" + context.getRequestURL());
     	
         List<SimpleGrantedAuthority> grantedAuthorities = 
                 new ArrayList<SimpleGrantedAuthority>(); 

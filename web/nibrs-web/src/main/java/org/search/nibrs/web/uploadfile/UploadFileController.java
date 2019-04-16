@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +41,9 @@ import org.search.nibrs.util.NibrsFileUtils;
 import org.search.nibrs.validate.common.NibrsValidationUtils;
 import org.search.nibrs.validation.SubmissionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,6 +67,21 @@ public class UploadFileController {
 	public String getFileUploadForm(Model model) throws IOException {
 	
 	    return "index";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth != null){    
+	        new SecurityContextLogoutHandler().logout(request, response, auth);
+	    }
+	    return "redirect:/logoutSuccess";
+	}
+
+	@GetMapping("/logoutSuccess")
+	public String logoutSuccess(Model model) throws IOException {
+		
+		return "logoutSuccess";
 	}
 	
     @PostMapping("/")

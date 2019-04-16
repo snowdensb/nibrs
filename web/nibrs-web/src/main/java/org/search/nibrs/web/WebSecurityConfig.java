@@ -24,13 +24,11 @@ import org.search.nibrs.web.security.PortalAuthenticationDetailsSource;
 import org.search.nibrs.web.security.PortalPreAuthenticatedUserDetailsService;
 import org.search.nibrs.web.security.SamlAuthenticationFilter;
 import org.search.nibrs.web.security.saml.SamlService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -55,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/static/**");
+        web.ignoring().antMatchers("/css/**", "/images/**", "/js/**", "/testFiles/**", "/logoutSuccess/**", "/webjars/**");
     }
 
     @Override
@@ -63,16 +61,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	http
 		    .authorizeRequests()
 		    .anyRequest().authenticated()
-		    .and().securityContext()
 		    .and()
-		    .addFilterBefore(samlAuthenticationFilter(authenticationManager()),
-		      LogoutFilter.class);
-    }
-    
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(preauthAuthProvider());
-    }
+		    	.logout().logoutUrl("/logout").deleteCookies("JSESSIONID").clearAuthentication(true).permitAll()
+		    .and()
+		    	.addFilterBefore(samlAuthenticationFilter(authenticationManager()), LogoutFilter.class);
+    }    
     
     @Override
     @Bean
@@ -90,7 +83,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	return preauthAuthProvider;
     }
     
-    @Bean
+    /**
+     * Do not add the @Bean annotation to the customer filter, otherwise the filter will not be ignored by the 
+     *  web.ignoring() Urls.
+     */
     public SamlAuthenticationFilter samlAuthenticationFilter(
         final AuthenticationManager authenticationManager) {
     	SamlAuthenticationFilter filter = new SamlAuthenticationFilter();

@@ -156,6 +156,8 @@ public class SamlServiceImpl implements SamlService{
             //customAttributes.put(SamlAttribute.EmployerORI, "1234567890");
             customAttributes.put(SamlAttribute.FirearmsRegistrationRecordsPersonnelIndicator, "true");
             customAttributes.put(SamlAttribute.SupervisoryRoleIndicator, "true");
+            customAttributes.put(SamlAttribute.GivenName, "Demo");
+            customAttributes.put(SamlAttribute.SurName, "User");
 //            customAttributes.put(SamlAttribute.FederatedQueryUserIndicator, "");
 //                customAttributes.put("gfipm:2.0:user:EmployerORI", "H00000001");
             if (BooleanUtils.isNotTrue(appProperties.getDemoLawEnforcementEmployerIndicator())){
