@@ -46,7 +46,8 @@ public class NibrsNamespaceContext implements NamespaceContext {
 		LEXS31("lexs31", "http://usdoj.gov/leisp/lexs/3.1"),
 		LEXSPD31("lexspd31", "http://usdoj.gov/leisp/lexs/publishdiscover/3.1"),
 		LEXSDIGEST31("lexsdigest31", "http://usdoj.gov/leisp/lexs/digest/3.1"),
-		STRUCTURES20("structures20", "http://niem.gov/niem/structures/2.0");
+		STRUCTURES20("structures20", "http://niem.gov/niem/structures/2.0"),
+		SAML2("saml2", "urn:oasis:names:tc:SAML:2.0:assertion");
 		
 		public String prefix;
 		public String uri;
