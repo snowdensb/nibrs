@@ -68,5 +68,5 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 			Date endDate);
 	
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)
-	List<ArrestReportSegment> findAll(Iterable<Integer> ids);
+	List<ArrestReportSegment> findAllById(Iterable<Integer> ids);
 }

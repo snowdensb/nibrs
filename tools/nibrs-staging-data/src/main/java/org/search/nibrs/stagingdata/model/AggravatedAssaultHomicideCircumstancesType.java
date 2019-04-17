@@ -33,7 +33,7 @@ import org.search.nibrs.stagingdata.model.segment.VictimSegment;
 @Cacheable
 public class AggravatedAssaultHomicideCircumstancesType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer aggravatedAssaultHomicideCircumstancesTypeId; 
 	private String stateCode; 
 	private String stateDescription; 

@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Cacheable
 public class AdditionalJustifiableHomicideCircumstancesType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer additionalJustifiableHomicideCircumstancesTypeId; 
 	private String stateCode; 
 	private String stateDescription; 

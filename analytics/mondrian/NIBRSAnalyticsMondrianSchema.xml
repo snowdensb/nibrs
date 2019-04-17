@@ -52,7 +52,7 @@ limitations under the License.
     <Table name="VictimOffenderRelationshipType"/>
     <Table name="State"/>
 
-    <Table name="Agency" keyColumn="AgencyID"/>
+    <Table name="Agency"/>
     <Table name="AgencyType" keyColumn="AgencyTypeID"/>
 
     <Link source="AgencyType" target="Agency">
@@ -86,16 +86,21 @@ limitations under the License.
     </Hierarchies>
   </Dimension>
 
-  <Dimension visible="true" name="Agency" key="AgencyID">
+  <Dimension visible="true" name="Agency" key="AgencyORI">
     <Attributes>
       <Attribute name="AgencyID" keyColumn="AgencyID" table="Agency" hasHierarchy="false"/>
       <Attribute name="AgencyTypeDescription" keyColumn="StateDescription" table="AgencyType" hasHierarchy="false"/>
       <Attribute name="AgencyName" table="Agency" keyColumn="AgencyName" hasHierarchy="false"/>
+      <Attribute name="AgencyORI" table="Agency" keyColumn="AgencyORI" hasHierarchy="false"/>
     </Attributes>
     <Hierarchies>
       <Hierarchy name="Agency" caption="Agency" allMemberName="All Agencies">
         <Level attribute="AgencyTypeDescription" caption="Agency Type"/>
         <Level attribute="AgencyName" caption="Agency"/>
+      </Hierarchy>
+      <Hierarchy name="AgencyORI" caption="Agency ORI" allMemberName="All Agencies">
+        <Level attribute="AgencyTypeDescription" caption="Agency Type"/>
+        <Level attribute="AgencyORI" caption="Agency ORI"/>
       </Hierarchy>
     </Hierarchies>
   </Dimension>
@@ -622,7 +627,7 @@ limitations under the License.
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>
           <ForeignKeyLink dimension="TypeInjury" foreignKeyColumn="TypeInjuryTypeID"/>
           <ForeignKeyLink dimension="Date" foreignKeyColumn="IncidentDateID"/>
-          <ForeignKeyLink dimension="Agency" foreignKeyColumn="AgencyID"/>
+          <ForeignKeyLink dimension="Agency" foreignKeyColumn="ORI"/>
           <ForeignKeyLink dimension="LocationType" foreignKeyColumn="LocationTypeTypeID"/>
           <ForeignKeyLink dimension="MethodOfEntry" foreignKeyColumn="MethodOfEntryTypeID"/>
           <ForeignKeyLink dimension="BiasMotivation" foreignKeyColumn="BiasMotivationTypeID"/>
@@ -822,7 +827,7 @@ limitations under the License.
           <ForeignKeyLink dimension="TypeInjury" foreignKeyColumn="TypeInjuryTypeID"/>
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>
           <ForeignKeyLink dimension="Date" foreignKeyColumn="IncidentDateID"/>
-          <ForeignKeyLink dimension="Agency" foreignKeyColumn="AgencyID"/>
+          <ForeignKeyLink dimension="Agency" foreignKeyColumn="ORI"/>
           <ForeignKeyLink dimension="TypeOfVictim" foreignKeyColumn="TypeOfVictimTypeID"/>
           <ForeignKeyLink dimension="OfficerActivityCircumstance" foreignKeyColumn="OfficerActivityCircumstanceTypeID"/>
           <ForeignKeyLink dimension="OfficerAssignmentType" foreignKeyColumn="OfficerAssignmentTypeTypeID"/>
@@ -887,7 +892,7 @@ limitations under the License.
           <ForeignKeyLink dimension="State" foreignKeyColumn="StateID"/>
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>
           <ForeignKeyLink dimension="IncidentDate" foreignKeyColumn="IncidentDateID"/>
-          <ForeignKeyLink dimension="Agency" foreignKeyColumn="AgencyID"/>
+          <ForeignKeyLink dimension="Agency" foreignKeyColumn="ORI"/>
           <ForeignKeyLink dimension="ArrestDate" foreignKeyColumn="ArrestDateID"/>
           <ForeignKeyLink dimension="SexOfPerson" foreignKeyColumn="SexOfPersonTypeID"/>
           <ForeignKeyLink dimension="RaceOfPerson" foreignKeyColumn="RaceOfPersonTypeID"/>
@@ -941,7 +946,7 @@ limitations under the License.
           <Measure name="Arrestee-Weapon Count" column="ArrestReportSegmentWasArmedWithID" aggregator="distinct-count" visible="true" caption="Arrestee+Weapon Count" formatString="#,###"/>
         </Measures>
         <DimensionLinks>
-          <ForeignKeyLink dimension="Agency" foreignKeyColumn="AgencyID"/>
+          <ForeignKeyLink dimension="Agency" foreignKeyColumn="ORI"/>
           <ForeignKeyLink dimension="ArrestDate" foreignKeyColumn="ArrestDateID"/>
           <ForeignKeyLink dimension="SexOfPerson" foreignKeyColumn="SexOfPersonTypeID"/>
           <ForeignKeyLink dimension="RaceOfPerson" foreignKeyColumn="RaceOfPersonTypeID"/>

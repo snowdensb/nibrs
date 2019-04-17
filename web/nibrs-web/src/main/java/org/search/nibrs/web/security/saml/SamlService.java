@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.search.nibrs.stagingdata;
+package org.search.nibrs.web.security.saml;
 
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import javax.servlet.http.HttpServletRequest;
 
-public class ServletInitializer extends SpringBootServletInitializer {
+import org.w3c.dom.Element;
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(NibrsDataApplication.class);
-	}
-
+public interface SamlService {
+	
+	public Element getSamlAssertion(HttpServletRequest request); 
 }

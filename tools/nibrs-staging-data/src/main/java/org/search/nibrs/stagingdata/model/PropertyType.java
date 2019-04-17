@@ -39,7 +39,7 @@ public class PropertyType implements Serializable{
 	private static final long serialVersionUID = -2370698406499145556L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer propertyTypeId; 
 	
     @ManyToOne

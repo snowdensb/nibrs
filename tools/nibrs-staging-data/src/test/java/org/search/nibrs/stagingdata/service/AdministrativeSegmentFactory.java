@@ -203,19 +203,19 @@ public class AdministrativeSegmentFactory {
 		offenseSegment.setAdministrativeSegment(administrativeSegment);
 		
 		offenseSegment.setOffenderSuspectedOfUsingTypes(new HashSet<OffenderSuspectedOfUsingType>(){{
-			add(offenderSuspectedOfUsingTypeRepository.findOne(1));
-			add(offenderSuspectedOfUsingTypeRepository.findOne(2));
+			add(offenderSuspectedOfUsingTypeRepository.findById(1).orElse(null));
+			add(offenderSuspectedOfUsingTypeRepository.findById(2).orElse(null));
 		}});
 		
 		TypeOfWeaponForceInvolved typeOfWeaponForceInvolved1 = new TypeOfWeaponForceInvolved();
 		typeOfWeaponForceInvolved1.setOffenseSegment(offenseSegment);
 		typeOfWeaponForceInvolved1.setAutomaticWeaponIndicator("A");
-		typeOfWeaponForceInvolved1.setTypeOfWeaponForceInvolvedType(typeOfWeaponForceInvolvedTypeRepository.findOne(120));
+		typeOfWeaponForceInvolved1.setTypeOfWeaponForceInvolvedType(typeOfWeaponForceInvolvedTypeRepository.findById(120).orElse(null));
 		
 		TypeOfWeaponForceInvolved typeOfWeaponForceInvolved2 = new TypeOfWeaponForceInvolved();
 		typeOfWeaponForceInvolved2.setOffenseSegment(offenseSegment);
 		typeOfWeaponForceInvolved2.setAutomaticWeaponIndicator("");
-		typeOfWeaponForceInvolved2.setTypeOfWeaponForceInvolvedType(typeOfWeaponForceInvolvedTypeRepository.findOne(110));
+		typeOfWeaponForceInvolved2.setTypeOfWeaponForceInvolvedType(typeOfWeaponForceInvolvedTypeRepository.findById(110).orElse(null));
 		
 		offenseSegment.setTypeOfWeaponForceInvolveds(new HashSet<TypeOfWeaponForceInvolved>(){{
 			add(typeOfWeaponForceInvolved1);
@@ -246,8 +246,8 @@ public class AdministrativeSegmentFactory {
 		offenseSegment2.setAdministrativeSegment(administrativeSegment);
 
 		offenseSegment2.setTypeOfCriminalActivityTypes(new HashSet<TypeOfCriminalActivityType>(){{
-			add(typeOfCriminalActivityTypeRepository.findOne(3));
-			add(typeOfCriminalActivityTypeRepository.findOne(4));
+			add(typeOfCriminalActivityTypeRepository.findById(3).orElse(null));
+			add(typeOfCriminalActivityTypeRepository.findById(4).orElse(null));
 		}});
 
 		offenseSegments.add(offenseSegment2);
@@ -257,7 +257,7 @@ public class AdministrativeSegmentFactory {
 		PropertySegment propertySegment1 = new PropertySegment();
 		propertySegment1.setSegmentActionType(segmentActionTypeType);
 		propertySegment1.setAdministrativeSegment(administrativeSegment);
-		propertySegment1.setTypePropertyLossEtcType(typePropertyLossEtcTypeRepository.findOne(7));
+		propertySegment1.setTypePropertyLossEtcType(typePropertyLossEtcTypeRepository.findById(7).orElse(null));
 		propertySegment1.setNumberOfRecoveredMotorVehicles(0);
 		propertySegment1.setNumberOfStolenMotorVehicles(1);
 		
@@ -265,7 +265,7 @@ public class AdministrativeSegmentFactory {
 		propertyType1.setPropertySegment(propertySegment1);
 		propertyType1.setPropertyDescriptionType(propertyDescriptionTypeRepository.findFirstByStateCode("03"));
 		propertyType1.setValueOfProperty(10000.0);
-		propertyType1.setRecoveredDateType(dateTypeRepository.findOne(99998));
+		propertyType1.setRecoveredDateType(dateTypeRepository.findById(99998).orElse(null));
 		
 		propertySegment1.setPropertyTypes(new LinkedHashSet<PropertyType>(){{
 			add(propertyType1);
@@ -278,7 +278,7 @@ public class AdministrativeSegmentFactory {
 		PropertySegment propertySegment2 = new PropertySegment();
 		propertySegment2.setSegmentActionType(segmentActionTypeType);
 		propertySegment2.setAdministrativeSegment(administrativeSegment);
-		propertySegment2.setTypePropertyLossEtcType(typePropertyLossEtcTypeRepository.findOne(4));
+		propertySegment2.setTypePropertyLossEtcType(typePropertyLossEtcTypeRepository.findById(4).orElse(null));
 		propertySegment2.setNumberOfRecoveredMotorVehicles(0);
 		propertySegment2.setNumberOfStolenMotorVehicles(0);
 		
@@ -286,7 +286,7 @@ public class AdministrativeSegmentFactory {
 		suspectedDrugType1.setPropertySegment(propertySegment2);
 		suspectedDrugType1.setSuspectedDrugTypeType(suspectedDrugTypeTypeRepository.findFirstByStateCode("A"));
 		suspectedDrugType1.setEstimatedDrugQuantity(1.0);
-		suspectedDrugType1.setTypeDrugMeasurementType(typeDrugMeasurementTypeRepository.findOne(1));
+		suspectedDrugType1.setTypeDrugMeasurementType(typeDrugMeasurementTypeRepository.findById(1).orElse(null));
 		
 		SuspectedDrugType suspectedDrugType2 = new SuspectedDrugType();
 		suspectedDrugType2.setPropertySegment(propertySegment2);
@@ -337,12 +337,12 @@ public class AdministrativeSegmentFactory {
 		ArresteeSegmentWasArmedWith arresteeSegmentWasArmedWith1 = new ArresteeSegmentWasArmedWith();
 		arresteeSegmentWasArmedWith1.setArresteeSegment(arresteeSegment);
 		arresteeSegmentWasArmedWith1.setAutomaticWeaponIndicator("A");
-		arresteeSegmentWasArmedWith1.setArresteeWasArmedWithType(arresteeWasArmedWithTypeRepository.findOne(120));
+		arresteeSegmentWasArmedWith1.setArresteeWasArmedWithType(arresteeWasArmedWithTypeRepository.findById(120).orElse(null));
 		
 		ArresteeSegmentWasArmedWith arresteeSegmentWasArmedWith2 = new ArresteeSegmentWasArmedWith();
 		arresteeSegmentWasArmedWith2.setArresteeSegment(arresteeSegment);
 		arresteeSegmentWasArmedWith2.setAutomaticWeaponIndicator("");
-		arresteeSegmentWasArmedWith2.setArresteeWasArmedWithType(arresteeWasArmedWithTypeRepository.findOne(110));
+		arresteeSegmentWasArmedWith2.setArresteeWasArmedWithType(arresteeWasArmedWithTypeRepository.findById(110).orElse(null));
 		
 		arresteeSegment.setArresteeSegmentWasArmedWiths(new HashSet<ArresteeSegmentWasArmedWith>(){{
 			add(arresteeSegmentWasArmedWith1);

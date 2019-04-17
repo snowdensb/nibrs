@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Cacheable
 public class TypeOfCriminalActivityType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer typeOfCriminalActivityTypeId; 
 	
 	private String stateCode; 

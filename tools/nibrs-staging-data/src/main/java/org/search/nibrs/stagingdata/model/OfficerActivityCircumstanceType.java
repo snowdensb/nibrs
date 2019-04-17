@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Cacheable
 public class OfficerActivityCircumstanceType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer officerActivityCircumstanceTypeId; 
 	private String stateCode; 
 	private String stateDescription; 

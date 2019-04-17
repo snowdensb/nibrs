@@ -30,7 +30,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 @Cacheable
 public class ArresteeWasArmedWithType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer arresteeWasArmedWithTypeId; 
 	
 	private String stateCode; 

@@ -28,7 +28,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Cacheable
 public class SegmentActionTypeType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer segmentActionTypeTypeId; 
 	
 	private String stateCode; 

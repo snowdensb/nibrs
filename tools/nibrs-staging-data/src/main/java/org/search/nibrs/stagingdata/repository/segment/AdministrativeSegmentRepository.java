@@ -52,7 +52,7 @@ public interface AdministrativeSegmentRepository
 	List<AdministrativeSegment> findDistinctByIncidentDateTypeYearNumAndIncidentDateTypeMonthNum(Integer year,  Integer month);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
-	List<AdministrativeSegment> findAll(Iterable<Integer> ids);
+	List<AdministrativeSegment> findAllById(Iterable<Integer> ids);
 	
 	@Query("SELECT DISTINCT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "LEFT JOIN a.exceptionalClearanceDateType ae "
