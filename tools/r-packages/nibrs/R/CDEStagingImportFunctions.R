@@ -133,6 +133,14 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
     accumDfList
   })
 
+  accumDfs$Agency <- accumDfs$Agency %>%
+    group_by(AgencyORI) %>%
+    filter(!((AgencyName=='' | is.na(AgencyName)) & n() > 1)) %>%
+    arrange(AgencyName, .by_group=TRUE) %>%
+    filter(row_number()==1) %>%
+    mutate(AgencyName=toupper(AgencyName)) %>%
+    ungroup()
+
   # make sure the the sharedCsvDir is mounted into the nibrs-drill container at /nibrs/csv
 
   db <- src_drill(host=drillHost, port=drillPort)
