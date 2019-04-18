@@ -74,7 +74,7 @@ public enum NIBRSErrorCode {
  */
 	_091("091","Structure Check","ZERO-REPORTING YEAR IS INVALID","A Segment Level 0 was submitted that did not have four numeric digits in positions 40 through 43."),
 	_099("099","Structure Check","GROUP B ARREST REPORT CAN HAVE ONLY ONE ARRESTEE","Only one arrestee can be reported in a group B arrest report."),
-	_101("101","Admin Segment","MANDATORY FIELDS MISSING IN ADMIN SEGMENT","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
+	_101("101","Admin Segment","MUST BE PRESENT— MANDATORY FIELD","The referenced data element in a Group A Incident Report must contain data when the referenced data element is mandatory or when the conditions are met for data that must be entered into a conditionally mandatory field."),
 	_104("104","Admin Segment","INVALID DATA VALUE—NOT ON FBI VALIDATION TABLE","The referenced data element must contain a valid data value when it is entered."),
 	_105("105","Admin Segment","INVALID DATA VALUE FOR DATE","The data element in error contains a date that is not entered correctly. Each component of the date must be valid; that is, months must be 01 through 12, days must be 01 through 31, and year must include the century (i.e., 19xx, 20xx). In addition, days cannot exceed maximum for the month (e.g., June cannot have 31days). Also, the date cannot exceed the current date."),
 	_106("106","Admin Segment","INVALID DATA VALUE FOR HOUR","For Offenses of 09A, 13A, 13B and 13C ONLY–When data element 25 (Type of Victim) = L (Law Enforcement Officer) then Data Element 3 (Incident Date/Hour) must be populated with a valid hour (00-23). Incident Hour Unknown (Blank) is not a valid entry."),

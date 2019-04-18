@@ -16,13 +16,14 @@
 package org.search.nibrs.flatfile.importer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.common.ReportSource;
-import org.search.nibrs.flatfile.util.*;
+import org.search.nibrs.flatfile.util.StringUtils;
 import org.search.nibrs.model.codes.NIBRSErrorCode;
 
 /**
@@ -79,7 +80,13 @@ public class Segment
 	        } catch (NumberFormatException nfe) {
 	        	e = new NIBRSError();
 	        	e.setContext(reportSource);
-	        	e.setNIBRSErrorCode(NIBRSErrorCode._001);
+	        	
+	        	NIBRSErrorCode nibrsErrorCode = NIBRSErrorCode._001;
+	        	if (Arrays.asList('0', '1').contains(segmentType)) {
+	        		String errorCode = "_" + segmentType + "001";
+	        		nibrsErrorCode = NIBRSErrorCode.valueOf(errorCode);
+	        	}
+        		e.setNIBRSErrorCode(nibrsErrorCode);
 	        	e.setDataElementIdentifier("Segment Length");
 	        	e.setValue(sv);
 	        	ret.add(e);
