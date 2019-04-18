@@ -21,7 +21,7 @@ services:
   nibrs-analytics-drill:
     container_name: nibrs-analytics-drill
     image: searchncjis/nibrs-drill
-    restart:always
+    restart: always
     ports:
       - 8047:8047
     networks:
