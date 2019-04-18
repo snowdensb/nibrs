@@ -78,6 +78,7 @@ public class ReportBaseData
 				break;
 			}
 			
+			// TODO should have reject x01 errors based on segment level. 
 			if (StringUtils.isBlank(ori) 
 					|| StringUtils.isBlank(reportActionType)
 					|| StringUtils.isBlank(incidentNumber)){

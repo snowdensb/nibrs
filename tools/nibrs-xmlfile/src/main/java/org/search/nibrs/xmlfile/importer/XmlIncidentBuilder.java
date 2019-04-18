@@ -677,7 +677,7 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 					e.setReportUniqueIdentifier(incident.getIncidentNumber());
 					e.setSegmentType(segmentType);
 					e.setValue(sequenceNumberString);
-					e.setNIBRSErrorCode(NIBRSErrorCode._301);
+					e.setNIBRSErrorCode(NIBRSErrorCode._501);
 					e.setDataElementIdentifier("36");
 					errorList.add(e);
 					sequenceNumber.setInvalid(true);
