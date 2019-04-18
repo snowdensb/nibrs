@@ -435,6 +435,14 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			e.setValue(length);
 			e.setNIBRSErrorCode(NIBRSErrorCode._101);
 			newErrorList.add(e);
+			
+			if (s.getSegmentType() == '1') {
+				e = new NIBRSError();
+				e.setSegmentType(s.getSegmentType());
+				e.setValue(length);
+				e.setNIBRSErrorCode(NIBRSErrorCode._178);
+				newErrorList.add(e);
+			}
 		}
 		for (NIBRSError e : newErrorList) {
 			e.setReport(newIncident);
