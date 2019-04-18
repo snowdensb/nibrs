@@ -458,7 +458,7 @@ public class ArresteeSegmentRulesFactory {
 				
 				if ('D' != reportActionType && arresteeSegment.isJuvenile() && arresteeSegment.getDispositionOfArresteeUnder18() == null) {
 					e = arresteeSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(isGroupAMode() ? NIBRSErrorCode._640 : NIBRSErrorCode._740);
+					e.setNIBRSErrorCode(isGroupAMode() ? NIBRSErrorCode._1640 : NIBRSErrorCode._740);
 					e.setDataElementIdentifier("52");
 				}
 				return e;
