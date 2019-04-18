@@ -409,9 +409,9 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			
 			boolean cargoTheft = length == 88;
 			if (cargoTheft) {
-				String cargoTheftYN = StringUtils.getStringBetween(88, 88, segmentData);
+				String cargoTheftYN = StringUtils.getStringBetweenNoTrim(88, 88, segmentData);
 				
-				if (org.apache.commons.lang3.StringUtils.isNotBlank(cargoTheftYN)){
+				if (cargoTheftYN != null){
 					newIncident.setCargoTheftIndicator(cargoTheftYN);
 					newIncident.setIncludesCargoTheft(true);
 				}
@@ -433,16 +433,8 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 			e.setSegmentType(s.getSegmentType());
 			e.setValue(length);
-			e.setNIBRSErrorCode(NIBRSErrorCode._101);
+			e.setNIBRSErrorCode(NIBRSErrorCode._178);
 			newErrorList.add(e);
-			
-			if (s.getSegmentType() == '1') {
-				e = new NIBRSError();
-				e.setSegmentType(s.getSegmentType());
-				e.setValue(length);
-				e.setNIBRSErrorCode(NIBRSErrorCode._178);
-				newErrorList.add(e);
-			}
 		}
 		for (NIBRSError e : newErrorList) {
 			e.setReport(newIncident);

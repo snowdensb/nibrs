@@ -112,9 +112,6 @@ public enum NIBRSErrorCode {
  * 175 not implemented	
  */
 	_175("175","Admin Segment","CANNOT CALCULATE BASE DATE FROM INCIDENT DATE [yyymmdd]","The electronic submission control date (positions 7 through 12, month and year) and Data Element 3 (Incident Date/Hour) must both be valid dates for calculating timeframes."),
-/**
- * 178 not implemented	
- */
 	_178("178","Admin Segment","THIS ADMINISTRATIVE SEGMENT HAS A CONFLICTING LENGTH","Segment Length for the Administrative Segment (Level 1) must be 87 characters (not reporting Cargo Theft) or 88 characters (reporting Cargo Theft). All Administrative Segments in a submission must be formatted in only one of these two lengths."),
 /**
  * 197 not implemented	

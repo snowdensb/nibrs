@@ -22,9 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -130,18 +128,14 @@ public class TestIncidentBuilderErrors {
         	
     	DefaultReportListener incidentListener = new DefaultReportListener();
         List<NIBRSError> errorList = getErrorsForTestData(testData, incidentListener);
-        assertEquals(2, errorList.size());
-        
-        List<String> errorCodes = errorList.stream().map(NIBRSError::getNIBRSErrorCode)
-        		.map(NIBRSErrorCode::getCode)
-        		.collect(Collectors.toList()); 
-        assertTrue(errorCodes.containsAll(Arrays.asList("101", "178")));
+        assertEquals(1, errorList.size());
         
         NIBRSError e = errorList.get(0);
         assertEquals(GroupAIncidentReport.ADMIN_SEGMENT_TYPE_IDENTIFIER, e.getSegmentType());
         ReportSource reportSource = (ReportSource) e.getContext();
         assertEquals("1", reportSource.getSourceLocation());
         assertEquals(80, e.getValue());
+        assertEquals(NIBRSErrorCode._178, e.getNIBRSErrorCode());
     	
         GroupAIncidentReport incident = incidentListener.getGroupAIncidentList().get(0);
 		assertTrue(incident.getHasUpstreamErrors());

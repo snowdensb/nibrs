@@ -41,6 +41,16 @@ public final class StringUtils
         return substring.length() == 0 ? null : substring;
     }
 
+    public static final String getStringBetweenNoTrim(int begin, int end, String s)
+    {
+    	if (s == null || s.length() == 0 || s.length() < end)
+    	{
+    		return null;
+    	}
+    	String substring = s.substring(begin-1, end);
+    	return substring;
+    }
+    
     /**
      * Get the integer value represented by the substring between the beginning and ending positions.  (Same rules as for
      * getStringBetween(int, int, String) apply.)
