@@ -545,6 +545,75 @@ public class PropertySegmentRulesFactoryTest {
 	}
 
 	@Test
+	public void testRule372() {
+		
+		PropertySegment p = buildBaseSegment();
+		p.setTypeOfPropertyLoss(TypeOfPropertyLossCode._8.code);
+		
+		setAllNull(p.getPropertyDescription());
+		setAllNull(p.getValueOfProperty());
+		setAllNull(p.getDateRecovered());
+		setAllNull(p.getSuspectedDrugType());
+		setAllNull(p.getEstimatedDrugQuantity());
+		setAllNull(p.getTypeDrugMeasurement());
+		
+		Rule<PropertySegment> rule = rulesFactory.getRule372();
+		NIBRSError e = rule.apply(p);
+		assertNull(e);
+		
+		p.setTypeOfPropertyLoss(TypeOfPropertyLossCode._1.code);
+		e = rule.apply(p);
+		assertNull(e);
+		
+		for (String lossCode : TypeOfPropertyLossCode.requirePropertyDescriptionValueCodeSet()) {
+			p.setTypeOfPropertyLoss(lossCode);
+			e = rule.apply(p);
+			assertNotNull(e);
+			assertThat(e.getDataElementIdentifier(), is("14"));
+			assertThat(e.getValue(), is(lossCode));
+			assertThat(e.getNIBRSErrorCode(), is(NIBRSErrorCode._372));
+
+		}
+		
+		p.setPropertyDescription(0, PropertyDescriptionCode._01.code);
+		e = rule.apply(p);
+		assertNull(e);
+		setAllNull(p.getPropertyDescription());
+		
+		p.setValueOfProperty(0, new ParsedObject<Integer>(30));
+		e = rule.apply(p);
+		assertNull(e);
+		setAllNull(p.getValueOfProperty());
+		
+		p.setDateRecovered(0, new ParsedObject<LocalDate>(LocalDate.now()));
+		e = rule.apply(p);
+		assertNull(e);
+		setAllNull(p.getDateRecovered());
+
+		p.setSuspectedDrugType(0, SuspectedDrugTypeCode._A.code);
+		e = rule.apply(p);
+		assertNull(e);
+		setAllNull(p.getSuspectedDrugType());
+
+		p.setEstimatedDrugQuantity(0, new ParsedObject<Double>(Double.valueOf("33")));
+		e = rule.apply(p);
+		assertNull(e);
+		setAllNull(p.getEstimatedDrugQuantity());
+		
+		p.setTypeDrugMeasurement(0 , TypeOfDrugMeasurementCode._DU.code);
+		e = rule.apply(p);
+		assertNull(e);
+		setAllNull(p.getTypeDrugMeasurement());
+
+		e = rule.apply(p);
+		assertNotNull(e);
+		assertThat(e.getDataElementIdentifier(), is("14"));
+		assertThat(e.getValue(), is(p.getTypeOfPropertyLoss()));
+		assertThat(e.getNIBRSErrorCode(), is(NIBRSErrorCode._372));
+		
+	}
+	
+	@Test
 	public void testRule387() {
 		
 		Rule<PropertySegment> rule = rulesFactory.getRule387();

@@ -170,6 +170,7 @@ public class PropertySegmentRulesFactory {
 		rulesList.add(getRule366());
 		rulesList.add(getRule367());
 		rulesList.add(getRule368());
+		rulesList.add(getRule372());
 		rulesList.add(getRule375());
 		rulesList.add(getRule384());
 		rulesList.add(getRule387());
@@ -642,6 +643,35 @@ public class PropertySegmentRulesFactory {
 			}
 		};
 	}
+	
+	Rule<PropertySegment> getRule372() {
+		return new Rule<PropertySegment>() {
+			@Override
+			public NIBRSError apply(PropertySegment subject) {
+				NIBRSError ret = null;
+				String loss = subject.getTypeOfPropertyLoss();
+				
+				if (TypeOfPropertyLossCode.requirePropertyDescriptionValueCodeSet().contains(loss) 
+						&& (allNull(subject.getPropertyDescription()) &&
+								allNull(subject.getValueOfProperty()) &&
+								allNull(subject.getDateRecovered()) &&
+								(subject.getNumberOfRecoveredMotorVehicles().getValue() == null) &&
+								(subject.getNumberOfStolenMotorVehicles().getValue() == null) &&
+								allNull(subject.getSuspectedDrugType()) &&
+								allNull(subject.getEstimatedDrugQuantity()) &&
+								allNull(subject.getTypeDrugMeasurement())
+								)) {
+					ret = subject.getErrorTemplate();
+					ret.setValue(loss);
+					ret.setNIBRSErrorCode(NIBRSErrorCode._372);
+					ret.setDataElementIdentifier("14");
+				}
+				
+				return ret;
+			}
+		};
+	}
+	
 	
 	Rule<PropertySegment> getRule366() {
 		return new Rule<PropertySegment>() {
