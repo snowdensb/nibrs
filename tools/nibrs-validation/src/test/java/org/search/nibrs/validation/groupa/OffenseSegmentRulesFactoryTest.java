@@ -473,6 +473,55 @@ public class OffenseSegmentRulesFactoryTest {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testRule222() {
+		
+		Rule<OffenseSegment> rule = rulesFactory.getRule222();
+		OffenseSegment o = buildBaseSegment();
+		o.setTypeOfWeaponForceInvolved(0, null);
+		o.setTypeOfWeaponForceInvolved(1, null);
+		o.setTypeOfWeaponForceInvolved(2, null);
+		o.setUcrOffenseCode(null);
+		assertNull(rule.apply(o));
+		o.setUcrOffenseCode(OffenseCode._250.code);
+		assertNull(rule.apply(o));
+		
+		List<String>  offenseCodes = Arrays.asList(
+				OffenseCode._09A.code,
+				OffenseCode._09B.code,
+				OffenseCode._09C.code,
+				OffenseCode._100.code,
+				OffenseCode._11A.code,
+				OffenseCode._11B.code,
+				OffenseCode._11C.code,
+				OffenseCode._11D.code,
+				OffenseCode._120.code,
+				OffenseCode._13A.code,
+				OffenseCode._13B.code,
+				OffenseCode._210.code,
+				OffenseCode._520.code,
+				OffenseCode._64A.code,
+				OffenseCode._64B.code);
+		
+		NIBRSError e; 
+		for (String offenseCode : offenseCodes) {
+			o.setUcrOffenseCode(offenseCode);
+			e = rule.apply(o);
+			assertNull(e);
+		}
+
+		o.setUcrOffenseCode(OffenseCode._250.code);
+		o.setTypeOfWeaponForceInvolved(0, TypeOfWeaponForceCode._11.code);
+		e = rule.apply(o);
+		assertNotNull(e);
+		assertEquals(NIBRSErrorCode._222, e.getNIBRSErrorCode());
+		assertEquals('2', e.getSegmentType());
+		assertEquals("13", e.getDataElementIdentifier());
+		assertTrue(Arrays.asList("11").containsAll((List<String>) e.getValue()));
+		
+	}
+	
 	@Test
 	public void testRule220() {
 		

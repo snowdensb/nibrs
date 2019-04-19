@@ -20,7 +20,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +41,7 @@ import org.search.nibrs.model.codes.OffenseAttemptedCompletedCode;
 import org.search.nibrs.model.codes.OffenseCode;
 import org.search.nibrs.model.codes.TypeOfCriminalActivityCode;
 import org.search.nibrs.model.codes.TypeOfWeaponForceCode;
+import org.search.nibrs.util.ArrayUtils;
 import org.search.nibrs.validation.rules.DuplicateCodedValueRule;
 import org.search.nibrs.validation.rules.ExclusiveCodedValueRule;
 import org.search.nibrs.validation.rules.NotAllBlankRule;
@@ -181,6 +184,7 @@ public class OffenseSegmentRulesFactory {
 		rulesList.add(getRule219());
 		rulesList.add(getRule220());
 		rulesList.add(getRule221());
+		rulesList.add(getRule222());
 		rulesList.add(getRule251());
 		rulesList.add(getRule252());
 		rulesList.add(getRule253());
@@ -481,30 +485,35 @@ public class OffenseSegmentRulesFactory {
 		return new NotAllBlankRule<OffenseSegment>("typeOfWeaponForceInvolved", "13", OffenseSegment.class, NIBRSErrorCode._221) {
 			@Override
 			public boolean ignore(OffenseSegment o) {
-				Set<String> applicableOffenses = new HashSet<>();
-				applicableOffenses.addAll(Arrays.asList(new String[] {
-					OffenseCode._09A.code,
-					OffenseCode._09B.code,
-					OffenseCode._09C.code,
-					OffenseCode._100.code,
-					OffenseCode._11A.code,
-					OffenseCode._11B.code,
-					OffenseCode._11C.code,
-					OffenseCode._11D.code,
-					OffenseCode._120.code,
-					OffenseCode._13A.code,
-					OffenseCode._13B.code,
-					OffenseCode._210.code,
-					OffenseCode._520.code,
-					OffenseCode._64A.code,
-					OffenseCode._64B.code,
-				}));
 				String offenseCode = o.getUcrOffenseCode();
-				return offenseCode == null || !applicableOffenses.contains(offenseCode);
+				return offenseCode == null || !OffenseCode.isCrimeRequiringTypeOfWeaponForceInvolved(offenseCode);
 			}
 		};
 	}
 	
+	Rule<OffenseSegment> getRule222() {
+		return new Rule<OffenseSegment>() {
+			@Override
+			public NIBRSError apply(OffenseSegment subject) {
+				NIBRSError ret = null;
+				String offenseCode = subject.getUcrOffenseCode();
+				if (ArrayUtils.notAllNull(subject.getTypeOfWeaponForceInvolved()) 
+						&& !OffenseCode.isCrimeRequiringTypeOfWeaponForceInvolved(offenseCode)) {
+					List<String> typeOfWeaponForceInvovled  = 
+							Arrays.stream(subject.getTypeOfWeaponForceInvolved())
+							.filter(Objects::nonNull)
+							.collect(Collectors.toList());
+					ret = subject.getErrorTemplate();
+					ret.setValue(typeOfWeaponForceInvovled);
+					ret.setDataElementIdentifier("13");
+					ret.setNIBRSErrorCode(NIBRSErrorCode._222);
+				}
+				return ret;
+			}
+		};
+	}
+	
+
 	Rule<OffenseSegment> getRule220() {
 		return new NotAllBlankRule<OffenseSegment>("typeOfCriminalActivity", "12", OffenseSegment.class, NIBRSErrorCode._220) {
 			@Override

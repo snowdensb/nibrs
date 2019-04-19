@@ -224,6 +224,25 @@ public enum OffenseCode {
 		return Arrays.asList(_09A.code, _13A.code, _13B.code, _13C.code).contains(code);
 	}
 	
+	public static final boolean isCrimeRequiringTypeOfWeaponForceInvolved(String code) {
+		return Arrays.asList(
+				_09A.code,
+				_09B.code,
+				_09C.code,
+				_100.code,
+				_11A.code,
+				_11B.code,
+				_11C.code,
+				_11D.code,
+				_120.code,
+				_13A.code,
+				_13B.code,
+				_210.code,
+				_520.code,
+				_64A.code,
+				_64B.code).contains(code);
+	}
+	
 	public static final boolean isGamblingOffenseCode(String code) {
 		return codeMatchesRegex(code, "39[ABCD]");
 	}
