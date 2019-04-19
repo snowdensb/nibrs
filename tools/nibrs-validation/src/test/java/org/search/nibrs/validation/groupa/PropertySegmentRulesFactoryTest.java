@@ -1189,17 +1189,47 @@ public class PropertySegmentRulesFactoryTest {
 		assertNull(e);
 		p.setTypeOfPropertyLoss(null);
 		e = rule.apply(p);
+		assertNull(e);
+
+		p.setTypeOfPropertyLoss("9");
+		e = rule.apply(p);
 		assertNotNull(e);
 		assertEquals('3', e.getSegmentType());
 		assertEquals("14", e.getDataElementIdentifier());
 		assertEquals(NIBRSErrorCode._304, e.getNIBRSErrorCode());
-		assertNull(e.getValue());
-		assertEquals(NIBRSErrorCode._304, e.getNIBRSErrorCode());
-		p.setTypeOfPropertyLoss("XXX");
+		assertEquals("9", e.getValue());
+	}
+	
+	@Test
+	public void testRule301_typeOfPropertyLoss() {
+		Rule<PropertySegment> rule = rulesFactory.getRule301ForTypePropertyLoss();
+		PropertySegment p = buildBaseSegment();
+		
+		GroupAIncidentReport incident = (GroupAIncidentReport) p.getParentReport();
+		OffenseSegment o = new OffenseSegment();
+		incident.addOffense(o);
+		o.setUcrOffenseCode(null);
+
+		NIBRSError e = rule.apply(p);
+		assertNull(e);
+		p.setTypeOfPropertyLoss(null);
+		e = rule.apply(p);
+		assertNull(e);
+		p.setTypeOfPropertyLoss("");
+		e = rule.apply(p);
+		assertNull(e);
+		
+		o.setUcrOffenseCode("100");
 		e = rule.apply(p);
 		assertNotNull(e);
-		assertEquals("XXX", e.getValue());
-		assertEquals(NIBRSErrorCode._304, e.getNIBRSErrorCode());
+		assertEquals('3', e.getSegmentType());
+		assertEquals("14", e.getDataElementIdentifier());
+		assertEquals(NIBRSErrorCode._301, e.getNIBRSErrorCode());
+		assertThat(e.getValue(), is(""));
+		
+		p.setTypeOfPropertyLoss("1");
+		e = rule.apply(p);
+		assertNull(e);
 	}
 	
 	private PropertySegment buildBaseSegment() {

@@ -137,6 +137,7 @@ public class PropertySegmentRulesFactory {
 		zeroValuePropertyDescriptions.add(PropertyDescriptionCode._66.code);
 		
 		rulesList.add(getRule301ForSuspectedDrugType());
+		rulesList.add(getRule301ForTypePropertyLoss());
 		rulesList.add(getRule304ForTypePropertyLoss());
 		rulesList.add(getRule304ForListBoundElement("propertyDescription", "15", PropertyDescriptionCode.codeSet()));
 		rulesList.add(getRule304ForListBoundElement("typeDrugMeasurement", "22", TypeOfDrugMeasurementCode.codeSet()));
@@ -194,6 +195,22 @@ public class PropertySegmentRulesFactory {
 		};
 	}
 
+	Rule<PropertySegment> getRule301ForTypePropertyLoss() {
+		return new Rule<PropertySegment>() {
+			@Override
+			public NIBRSError apply(PropertySegment subject) {
+				NIBRSError ret = null;
+				if (subject.isTypeOfPropertyLossMandatory() && StringUtils.isBlank(subject.getTypeOfPropertyLoss())) {
+					ret = subject.getErrorTemplate();
+					ret.setDataElementIdentifier("14");
+					ret.setNIBRSErrorCode(NIBRSErrorCode._301);
+					ret.setValue(subject.getTypeOfPropertyLoss());
+				}
+				return ret;
+			}
+		};
+	}
+	
 	Rule<PropertySegment> getRule367() {
 		Set<String> allowedCodes = new HashSet<>();
 		allowedCodes.add(SuspectedDrugTypeCode._E.code);
@@ -1078,7 +1095,7 @@ public class PropertySegmentRulesFactory {
 	}
 
 	Rule<PropertySegment> getRule304ForTypePropertyLoss() {
-		return new ValidValueListRule<PropertySegment>("typeOfPropertyLoss", "14", PropertySegment.class, NIBRSErrorCode._304, TypeOfPropertyLossCode.codeSet(), false);
+		return new ValidValueListRule<PropertySegment>("typeOfPropertyLoss", "14", PropertySegment.class, NIBRSErrorCode._304, TypeOfPropertyLossCode.codeSet(), true);
 	}
 	
 	Rule<PropertySegment> getRule304ForListBoundElement(String propertyName, String dataElementIdentifier, Set<String> allowedCodeSet) {

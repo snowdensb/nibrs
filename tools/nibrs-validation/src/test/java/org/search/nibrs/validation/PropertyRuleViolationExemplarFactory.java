@@ -216,11 +216,6 @@ final class PropertyRuleViolationExemplarFactory {
 			copy.getProperties().get(0).setTypeOfPropertyLoss("9");
 			incidents.add(copy);
 			
-			//Null TypeOfPropertyLoss
-			copy = new GroupAIncidentReport(mvTheftIncident);
-			copy.getProperties().get(0).setTypeOfPropertyLoss(null);
-			incidents.add(copy);
-			
 			//Invalid PropertyDescription
 			copy = new GroupAIncidentReport(mvTheftIncident);
 			copy.getProperties().get(0).setPropertyDescription(0, "00");
