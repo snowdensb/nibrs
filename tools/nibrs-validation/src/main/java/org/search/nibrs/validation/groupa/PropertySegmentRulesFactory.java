@@ -172,6 +172,7 @@ public class PropertySegmentRulesFactory {
 		rulesList.add(getRule368());
 		rulesList.add(getRule372());
 		rulesList.add(getRule375());
+		rulesList.add(getRule383());
 		rulesList.add(getRule384());
 		rulesList.add(getRule387());
 		rulesList.add(getRule388());
@@ -640,6 +641,33 @@ public class PropertySegmentRulesFactory {
 					ret.setDataElementIdentifier("14");
 				}
 				return ret;
+			}
+		};
+	}
+	
+	Rule<PropertySegment> getRule383() {
+		return new Rule<PropertySegment>() {
+			@Override
+			public NIBRSError apply(PropertySegment subject) {
+				NIBRSError ret = null;
+				boolean drugOffense35AInvolved = ((GroupAIncidentReport) subject.getParentReport()).isOffenseInvolved(OffenseCode._35A);
+				int offenseCount = ((GroupAIncidentReport) subject.getParentReport()).getOffenseCount();
+
+				if (drugOffense35AInvolved && offenseCount == 1) {
+					for (int i=0; i < PropertySegment.PROPERTY_DESCRIPTION_COUNT;  i++) {
+						if (PropertyDescriptionCode._10.code.equals(subject.getPropertyDescription(i))
+								&& subject.getValueOfProperty(i) != null 
+								&& subject.getValueOfProperty(i).getValue() != null){
+							ret = subject.getErrorTemplate();
+							ret.setValue(subject.getValueOfProperty(i).getValue());
+							ret.setNIBRSErrorCode(NIBRSErrorCode._383);
+							ret.setDataElementIdentifier("16");
+							break; 
+						}
+					}
+				}
+				return ret; 
+				
 			}
 		};
 	}

@@ -545,6 +545,40 @@ public class PropertySegmentRulesFactoryTest {
 	}
 
 	@Test
+	public void testRule383() {
+		
+		PropertySegment p = buildBaseSegment();
+		GroupAIncidentReport incident = (GroupAIncidentReport) p.getParentReport();
+		OffenseSegment o = new OffenseSegment();
+		incident.addOffense(o);
+		o.setUcrOffenseCode(OffenseCode._35A.code);
+		p.setTypeOfPropertyLoss(TypeOfPropertyLossCode._8.code);
+		
+		setAllNull(p.getPropertyDescription());
+		setAllNull(p.getValueOfProperty());
+		
+		p.setPropertyDescription(0, PropertyDescriptionCode._10.code);
+		
+		Rule<PropertySegment> rule = rulesFactory.getRule383();
+		NIBRSError e = rule.apply(p);
+		assertNull(e);
+		
+		p.setValueOfProperty(0, new ParsedObject<>(33));
+		e = rule.apply(p);
+		assertNotNull(e);
+		assertThat(e.getDataElementIdentifier(), is("16"));
+		assertThat(e.getValue(), is(p.getValueOfProperty(0).getValue()));
+		assertThat(e.getNIBRSErrorCode(), is(NIBRSErrorCode._383));
+
+		OffenseSegment offense2 = new OffenseSegment();
+		offense2.setUcrOffenseCode(OffenseCode._35B.code);
+		incident.addOffense(offense2);
+		e = rule.apply(p);
+		assertNull(e);
+		
+	}
+	
+	@Test
 	public void testRule372() {
 		
 		PropertySegment p = buildBaseSegment();
