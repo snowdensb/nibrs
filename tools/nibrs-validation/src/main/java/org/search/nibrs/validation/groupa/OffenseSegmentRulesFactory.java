@@ -156,6 +156,7 @@ public class OffenseSegmentRulesFactory {
 		rulesList.add(getRule201ForStringArrayProperty("biasMotivation", "8A"));
 		
 		rulesList.add(getRule204ForValueList("biasMotivation", "8A", BiasMotivationCode.codeSet()));
+		rulesList.add(getRule204ForValueList("offendersSuspectedOfUsing", "8", OffenderSuspectedOfUsingCode.codeSet()));
 		rulesList.add(getRule204ForValueList("locationType", "9", LocationTypeCode.codeSet()));
 		rulesList.add(getRule204ForValueList("methodOfEntry", "11", MethodOfEntryCode.codeSet()));
 		rulesList.add(getRule204ForValueList("typeOfCriminalActivity", "12", TypeOfCriminalActivityCode.codeSet()));

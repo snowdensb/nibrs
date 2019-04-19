@@ -591,6 +591,26 @@ public class OffenseSegmentRulesFactoryTest {
 	}
 		
 	@Test
+	public void testRule204_offendersSuspectedOfUsing() {
+		
+		Rule<OffenseSegment> rule = rulesFactory.getRule204ForValueList("offendersSuspectedOfUsing", "8", OffenderSuspectedOfUsingCode.codeSet());
+		OffenseSegment o = buildBaseSegment();
+		o.setOffendersSuspectedOfUsing(0, null);
+		NIBRSError e = rule.apply(o);
+		assertNull(e);
+		o.setOffendersSuspectedOfUsing(0, OffenderSuspectedOfUsingCode.A.code);
+		e = rule.apply(o);
+		assertNull(e);
+		o.setOffendersSuspectedOfUsing(0, "X");
+		e = rule.apply(o);
+		assertNotNull(e);
+		assertEquals(NIBRSErrorCode._204, e.getNIBRSErrorCode());
+		assertEquals('2', e.getSegmentType());
+		assertEquals("8", e.getDataElementIdentifier());
+		
+	}
+	
+	@Test
 	public void testRule204_methodOfEntry() {
 			
 		Rule<OffenseSegment> rule = rulesFactory.getRule204ForValueList("methodOfEntry", "11", MethodOfEntryCode.codeSet());
