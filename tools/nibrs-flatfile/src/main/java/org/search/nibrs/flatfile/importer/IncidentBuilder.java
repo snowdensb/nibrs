@@ -635,7 +635,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 					e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 					e.setSegmentType(s.getSegmentType());
 					e.setValue(sequenceNumberString);
-					e.setNIBRSErrorCode(NIBRSErrorCode._301);
+					e.setNIBRSErrorCode(NIBRSErrorCode._501);
 					e.setDataElementIdentifier("36");
 					errorList.add(e);
 					sequenceNumber.setInvalid(true);
@@ -657,7 +657,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 			e.setSegmentType(s.getSegmentType());
 			e.setValue(length);
-			e.setNIBRSErrorCode(NIBRSErrorCode._301);
+			e.setNIBRSErrorCode(NIBRSErrorCode._584);
 			errorList.add(e);
 		}
 		return newOffender;
@@ -670,8 +670,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 		String segmentData = s.getData();
 		int length = s.getSegmentLength();
 
-// comment out temporarily for Hawaii file validation. TODO  -hw		
-//		if (length == 129 || length >= 141) {
+		if (length == 129 || length >= 141) {
 
 			Integer sequenceNumberI = null;
 			ParsedObject<Integer> sequenceNumber = newVictim.getVictimSequenceNumber();
@@ -760,15 +759,13 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			}
 			
 			parentIncident.setIncludesLeoka(leoka);
-//TODO temporary change for Hawaii file validation. 
-//		} else {
-		if (!(length == 129 || length >= 141)){
-				NIBRSError e = new NIBRSError();
+		} else {
+			NIBRSError e = new NIBRSError();
 			e.setContext(s.getReportSource());
 			e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 			e.setSegmentType(s.getSegmentType());
 			e.setValue(length);
-			e.setNIBRSErrorCode(NIBRSErrorCode._401);
+			e.setNIBRSErrorCode(NIBRSErrorCode._484);
 			errorList.add(e);
 		}
 
@@ -1005,7 +1002,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 			e.setSegmentType(s.getSegmentType());
 			e.setValue(length);
-			e.setNIBRSErrorCode(NIBRSErrorCode._201);
+			e.setNIBRSErrorCode(NIBRSErrorCode._284);
 			errorList.add(e);
 		}
 

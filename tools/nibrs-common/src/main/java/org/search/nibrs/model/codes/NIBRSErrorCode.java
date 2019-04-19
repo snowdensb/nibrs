@@ -168,9 +168,6 @@ public enum NIBRSErrorCode {
 	_268("268","Offense Segment","A LARCENY OFFENSE CANNOT HAVE A MOTOR VEHICLE PROPERTY DESCRIPTION ENTERED","Cannot be submitted with a data value for a motor vehicle in Data Element 15 (Property Description) when Data Element 6 (UCR Offense Code) contains an offense of (23A–23H)=Larceny/Theft Offenses; stolen vehicles cannot be reported for a larceny"),
 	_269("269","Offense Segment","POSSIBLE CLASSIFICATION ERROR OF AGGRAVATED ASSAULT 13A CODED AS SIMPLE 13B","If Data Element 6 (UCR Offense Code) is 13B=Simple Assault and the weapon involved is 11=Firearm, 12=Handgun, 13=Rifle, 14=Shotgun, or 15=Other Firearm, then the offense should instead be classified as 13A=Aggravated Assault."),
 	_270("270","Offense Segment","JUSTIFIABLE HOMICIDE MUST BE CODED AS NON-BIAS MOTIVATED","Must be 88=None when Data Element 6 (UCR Offense Code) is 09C=Justifiable Homicide."),
-/**
- * 284 not implemented	
- */
 	_284("284","Offense Segment","THIS OFFENSE SEGMENT HAS A CONFLICTING LENGTH","Segment Length for the Offense Segment (Level 2) must be 63 characters (reporting only Bias Motivation #1) or 71 characters (reporting Bias Motivations #2–#5). All Offense Segments in a submission must be formatted in only one of these two lengths."),
 	_301("301","Property Segment","MUST BE PRESENT— MANDATORY FIELD","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
 /**
@@ -305,9 +302,6 @@ public enum NIBRSErrorCode {
 	_481("481","Victim Segment","VICTIM'S AGE MUST BE LESS THAN 18 FOR STATUTORY RAPE (36B)","Data Element 26 (Age of Victim) should be under 18 when Data Element 24 (Victim Connected to UCR Offense Code) is 36B=Statutory Rape."),
 	_482("482","Victim Segment","LEOKA VICTIM MUST BE CONNECTED TO MURDER OR ASSAULT OFFENSE","Data Element 25 (Type of Victim) cannot be L=Law Enforcement Officer unless Data Element 24 (Victim Connected to UCR Offense Code) is one of the following: 09A=Murder & Non-negligent Manslaughter 13A=Aggravated Assault 13B=Simple Assault 13C=Intimidation"),
 	_483("483","Victim Segment","VICTIM MUST BE LAW ENFORCEMENT OFFICER TO ENTER LEOKA DATA","Data Element 25A (Type of Officer Activity/Circumstance), Data Element 25B (Officer Assignment Type), Data Element 25C (Officer–ORI Other Jurisdiction), Data Element 26 (Age of Victim), Data Element 27 (Sex of Victim), Data Element 28 (Race of Victim), Data Element 29 (Ethnicity of Victim), Data Element 30 (Resident Status of Victim), and Data Element 34 (Offender Number to be Related) can only be entered when Data Element 25 (Type of Victim) is I=Individual or L=Law Enforcement Officer."),
-/**
- * 484 not implemented	
- */
 	_484("484","Victim Segment","THIS VICTIM SEGMENT HAS A CONFLICTING LENGTH","Segment Length for the Victim Segment (Level 4) must be 129 characters (not reporting LEOKA) or 141 characters (reporting LEOKA). All Victim Segments in a submission must be formatted in only one of these two lengths."),
 /**
  * 490 not implemented	
@@ -361,9 +355,6 @@ public enum NIBRSErrorCode {
  * 572 not in 3.1	
  */
 	_572("572","Offender Segment","RELATIONSHIP UNKNOWN IF OFFENDER INFO MISSING","Data Element 37 (Age of Offender) If Data Element 37 (Age of Offender) is 00=Unknown, Data Element 38 (Sex of Offender) is U=Unknown, and Data Element 39 (Race of Offender) is U=Unknown then Data Element 35 (Relationship of Victim to Offender) must be RU=Relationship Unknown."),
-/**
- * 584 not implemented	
- */
 	_584("584","Offender Segment","THIS OFFENDER SEGMENT HAS A CONFLICTING LENGTH","Segment Length for the Offender Segment (Level 5) must be 45 characters (not reporting Offender Ethnicity) or 46 characters (reporting Offender Ethnicity). All Offender Segments in a submission must be formatted in only one of these two lengths."),
 	_601("601","Arrestee Segment","MUST BE PRESENT— MANDATORY FIELD","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
 /**
