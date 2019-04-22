@@ -15,6 +15,8 @@
  */
 package org.search.nibrs.validation.groupa;
 
+import static org.search.nibrs.util.ArrayUtils.allNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import static org.search.nibrs.util.ArrayUtils.allNull;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +52,7 @@ import org.search.nibrs.validation.ValidationConstants;
 import org.search.nibrs.validation.ValidatorProperties;
 import org.search.nibrs.validation.rules.AbstractBeanPropertyRule;
 import org.search.nibrs.validation.rules.DuplicateCodedValueRule;
+import org.search.nibrs.validation.rules.NotBlankRule;
 import org.search.nibrs.validation.rules.NullObjectRule;
 import org.search.nibrs.validation.rules.Rule;
 import org.search.nibrs.validation.rules.ValidValueListRule;
@@ -122,6 +124,7 @@ public class VictimSegmentRulesFactory {
 		rulesList__2_1.add(getRule401ForSequenceNumber());
 		rulesList__2_1.add(getRule401ForVictimConnectedToUcrOffenseCode());
 		rulesList__2_1.add(getRule401ForTypeOfVictim());
+		rulesList__2_1.add(getRule404ForTypeOfVictim());
 		rulesList__2_1.add(getRule401ForTypeOfInjury());
 		rulesList__2_1.add(getRule401OffenderNumberToBeRelated());
 		rulesList__2_1.add(getRule404ForTypeOfOfficerActivityCircumstance());
@@ -409,9 +412,13 @@ public class VictimSegmentRulesFactory {
 	}
 	
 	Rule<VictimSegment> getRule401ForTypeOfVictim() {
-		return new ValidValueListRule<VictimSegment>("typeOfVictim", "25", VictimSegment.class, NIBRSErrorCode._401, TypeOfVictimCode.codeSet(), false);
+		return new NotBlankRule<VictimSegment>("typeOfVictim", "25", VictimSegment.class, NIBRSErrorCode._401) ;
 	}
 
+	Rule<VictimSegment> getRule404ForTypeOfVictim() {
+		return new ValidValueListRule<VictimSegment>("typeOfVictim", "25", VictimSegment.class, NIBRSErrorCode._404, TypeOfVictimCode.codeSet(), false);
+	}
+	
 	Rule<VictimSegment> getRule404ForOfficerOriOtherJurisdiction() {
 		// note:  we cannot check if an ORI is in the FBI's database.  And the field is always optional, so nothing to test here
 		return new NullObjectRule<>();
