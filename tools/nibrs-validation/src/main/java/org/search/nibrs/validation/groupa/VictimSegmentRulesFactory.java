@@ -34,6 +34,7 @@ import org.search.nibrs.common.ParsedObject;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.NIBRSAge;
 import org.search.nibrs.model.OffenderSegment;
+import org.search.nibrs.model.OffenseSegment;
 import org.search.nibrs.model.VictimSegment;
 import org.search.nibrs.model.codes.AggravatedAssaultHomicideCircumstancesCode;
 import org.search.nibrs.model.codes.NIBRSErrorCode;
@@ -52,6 +53,7 @@ import org.search.nibrs.validation.ValidationConstants;
 import org.search.nibrs.validation.ValidatorProperties;
 import org.search.nibrs.validation.rules.AbstractBeanPropertyRule;
 import org.search.nibrs.validation.rules.DuplicateCodedValueRule;
+import org.search.nibrs.validation.rules.NotAllBlankRule;
 import org.search.nibrs.validation.rules.NotBlankRule;
 import org.search.nibrs.validation.rules.NullObjectRule;
 import org.search.nibrs.validation.rules.Rule;
@@ -121,10 +123,10 @@ public class VictimSegmentRulesFactory {
 	private void initRules(){
 		
 		rulesList__2_1 = new ArrayList<Rule<VictimSegment>>();
+		rulesList__2_1.add(getRule401ForAggravatedAssaultHomicideCircumstances());
 		rulesList__2_1.add(getRule401ForSequenceNumber());
 		rulesList__2_1.add(getRule401ForVictimConnectedToUcrOffenseCode());
 		rulesList__2_1.add(getRule401ForTypeOfVictim());
-		rulesList__2_1.add(getRule404ForTypeOfVictim());
 		rulesList__2_1.add(getRule401ForTypeOfInjury());
 		rulesList__2_1.add(getRule401OffenderNumberToBeRelated());
 		rulesList__2_1.add(getRule404ForTypeOfOfficerActivityCircumstance());
@@ -136,6 +138,7 @@ public class VictimSegmentRulesFactory {
 		rulesList__2_1.add(getRule404ForRaceOfVictim());		
 		rulesList__2_1.add(getRule404ForEthnicityOfVictim());		
 		rulesList__2_1.add(getRule404ForResidentStatusOfVictim());		
+		rulesList__2_1.add(getRule404ForTypeOfVictim());
 		rulesList__2_1.add(getRule404ForAggravatedAssaultHomicideCircumstances());
 		rulesList__2_1.add(getRule404OffenderNumberToBeRelated());
 		rulesList__2_1.add(getRule404ForTypeOfInjury());
@@ -432,6 +435,7 @@ public class VictimSegmentRulesFactory {
 		return new ValidValueListRule<VictimSegment>("typeOfOfficerActivityCircumstance", "25A", VictimSegment.class, NIBRSErrorCode._404, TypeOfOfficerActivityCircumstance.codeSet(), true);
 	}
 
+	//TODO adjust to the 2019 spec description.  conditionally mandatory 
 	Rule<VictimSegment> getRule401ForTypeOfInjury(){
 		return new Rule<VictimSegment>() {
 			@Override
@@ -459,6 +463,7 @@ public class VictimSegmentRulesFactory {
 		};
 	}
 
+	//TODO adjust to the 2019 spec description.  conditionally mandatory 
 	Rule<VictimSegment> getRule404ForTypeOfInjury(){
 		return new Rule<VictimSegment>() {
 			@Override
@@ -483,7 +488,6 @@ public class VictimSegmentRulesFactory {
 	}
 
 	Rule<VictimSegment> getRule404ForSexOfVictim(){
-		//TODO blank is permissable on non-mandatory fileds.it is mandatory only when the type of victim is I or L
 		return personSegmentRulesFactory.getSexValidNonBlankRule("27", NIBRSErrorCode._404);
 	}
 	
@@ -496,15 +500,42 @@ public class VictimSegmentRulesFactory {
 	}
 	
 	Rule<VictimSegment> getRule404ForRaceOfVictim(){
-		//TODO blank is permissable on non-mandatory fileds.it is mandatory only when the type of victim is I or L
 		return personSegmentRulesFactory.getRaceValidNonBlankRule("28", NIBRSErrorCode._404);
 	}
 	
 	Rule<VictimSegment> getRule404ForAgeOfVictim() {
-		//TODO blank is permissable on non-mandatory fileds.it is mandatory only when the type of victim is I or L
 		return personSegmentRulesFactory.getAgeValidRule("26", NIBRSErrorCode._404, false);
 	}
 
+	Rule<VictimSegment> getRule401ForAggravatedAssaultHomicideCircumstances() {
+		return new NotAllBlankRule<VictimSegment>("aggravatedAssaultHomicideCircumstances", "31", VictimSegment.class, NIBRSErrorCode._401) {
+			@Override
+			public boolean ignore(VictimSegment o) {
+				return !o.isAggravatedAssaultHomicideCircumstancesMandatory();
+			}
+		};
+
+	}
+	//TODO  need to check the logic of this.
+	// validity
+//	For: 13A = Aggravated Assault
+//		09A = Murder and Non-negligent Manslaughter (enter up to two)
+//			01 = Argument
+//			02 = Assault on Law Enforcement Officer
+//			03 = Drug Dealing
+//			04 = Gangland (Organized Crime Involvement)
+//			05 = Juvenile Gang
+//			06 = Domestic Violence
+//			07 = Mercy Killing (Not applicable to Aggravated Assault) 08 = Other Felony Involved
+//			09 = Other Circumstances
+//			10 = Unknown Circumstances
+//	For: 09B = Negligent Manslaughter (enter only one)
+//			30 = Child Playing With Weapon
+//			31 = Gun-Cleaning Accident
+//			32 = Hunting Accident
+//			33 = Other Negligent Weapon Handling 34 = Other Negligent Killing
+//	For: 09C = Justifiable Homicide (enter only one)
+//			20 = Criminal Killed by Private Citizen 21 = Criminal Killed by Police Officer 
 	Rule<VictimSegment> getRule404ForAggravatedAssaultHomicideCircumstances() {
 		return new Rule<VictimSegment>() {
 			@Override
@@ -515,11 +546,7 @@ public class VictimSegmentRulesFactory {
 				List<String> aahcList = new ArrayList<>();
 				aahcList.addAll(victimSegment.getAggravatedAssaultHomicideCircumstancesList());
 				aahcList.removeIf(item -> item == null);
-				List<String> mandatoryOffenseCodeList = Arrays.asList(OffenseCode._09A.code, 
-						OffenseCode._09B.code, OffenseCode._09C.code, OffenseCode._13A.code); 
-				boolean isMandatory = victimSegment.getUcrOffenseCodeList()
-						.stream()
-						.anyMatch(mandatoryOffenseCodeList::contains);
+				boolean isMandatory = victimSegment.isAggravatedAssaultHomicideCircumstancesMandatory();
 				if (isMandatory && aahcList.isEmpty()) {
 					e = victimSegment.getErrorTemplate();
 					e.setNIBRSErrorCode(NIBRSErrorCode._404);
