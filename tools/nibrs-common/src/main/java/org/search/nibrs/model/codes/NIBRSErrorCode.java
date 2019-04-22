@@ -223,9 +223,6 @@ public enum NIBRSErrorCode {
 	_391("391","Property Segment","PROPERTY VALUE MUST BE ZERO FOR DESCRIPTION SUBMITTED","Data Element 15 (Property Description) has a code that requires a zero value in Data Element 16 (Value of Property). Either the wrong property description code was entered or the property value was not entered. (This error was formerly error number 340, a warning message.) Data Element 16 (Value of Property) must be zero when Data Element 15 (Property Description) is: 09=Credit/Debit Cards 22=Nonnegotiable Instruments 48=Documents–Personal or Business 65=Identity Documents 66=Identity–Intangible"),
 	_392("392","Property Segment","35A OFFENSE ENTERED AND 1=NONE ENTERED; MISSING SUSPECTED DRUG TYPE (20)","An offense of 35A Drug/Narcotic Violations and Data Element 14 (Type Property Loss/Etc.) with1=None were entered but Data Element 20 (Suspected Drug Type) was not submitted. Since a drug"),
 	_401("401","Victim Segment","MUST BE PRESENT -- MANDATORY FIELD","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
-/**
- * 402 not implemented
- */
 	_402("402","Victim Segment","CONTAINS NONNUMERIC DIGITS","Must contain numeric entry with zero left-fill."),
 	_404("404","Victim Segment","INVALID DATA VALUE","The referenced data element must contain a valid data value when it is entered; blank is permissible on non-mandatory fields."),
 	_406("406","Victim Segment","NCA07: DUPLICATE VALUE=[value]","The referenced data element in error is one that contains multiple data values. When more than one code is entered, none can be duplicate codes."),

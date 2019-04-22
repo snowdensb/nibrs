@@ -680,6 +680,13 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			if (sequenceNumberString == null) {
 				sequenceNumber.setMissing(true);
 				sequenceNumber.setValue(null);
+				NIBRSError e = new NIBRSError();
+				e.setContext(s.getReportSource());
+				e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
+				e.setSegmentType(s.getSegmentType());
+				e.setNIBRSErrorCode(NIBRSErrorCode._401);
+				e.setDataElementIdentifier("23");
+				errorList.add(e);
 			} else {
 				try {
 					sequenceNumberI = Integer.parseInt(sequenceNumberString);
@@ -690,7 +697,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 					e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 					e.setSegmentType(s.getSegmentType());
 					e.setValue(sequenceNumberString);
-					e.setNIBRSErrorCode(NIBRSErrorCode._401);
+					e.setNIBRSErrorCode(NIBRSErrorCode._402);
 					e.setDataElementIdentifier("23");
 					errorList.add(e);
 					sequenceNumber.setInvalid(true);
