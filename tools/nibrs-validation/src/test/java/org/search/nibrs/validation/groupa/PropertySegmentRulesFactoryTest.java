@@ -322,8 +322,65 @@ public class PropertySegmentRulesFactoryTest {
 		assertNotNull(e);
 		assertEquals(NIBRSErrorCode._361, e.getNIBRSErrorCode());
 		assertEquals("19", e.getDataElementIdentifier());
-		assertEquals("03", e.getValue().toString());
+		assertNull(e.getValue());
+		p.setNumberOfRecoveredMotorVehicles(new ParsedObject<>(0));
+		e = rule.apply(p);
+		assertNull(e);
 		
+	}
+	
+	@Test
+	public void testRule389() {
+		Rule<PropertySegment> rule = rulesFactory.getRule389();
+		PropertySegment p = buildBaseSegment();
+		GroupAIncidentReport incident = (GroupAIncidentReport) p.getParentReport();
+		OffenseSegment o = new OffenseSegment();
+		incident.addOffense(o);
+		o.setUcrOffenseCode(null);
+		o.setOffenseAttemptedCompleted(null);
+		p.setTypeOfPropertyLoss(null);
+		NIBRSError e = rule.apply(p);
+		assertNull(e);
+		p.setTypeOfPropertyLoss(TypeOfPropertyLossCode._1.code);
+		o.setUcrOffenseCode(OffenseCode._240.code);
+		o.setOffenseAttemptedCompleted(OffenseAttemptedCompletedCode.C.code);
+		e = rule.apply(p);
+		assertNull(e);
+		p.setTypeOfPropertyLoss(TypeOfPropertyLossCode._5.code);
+		o.setUcrOffenseCode(OffenseCode._09A.code);
+		e = rule.apply(p);
+		assertNull(e);
+		o.setUcrOffenseCode(OffenseCode._240.code);
+		p.setNumberOfRecoveredMotorVehicles(new ParsedObject<>(1));
+		e = rule.apply(p);
+		assertNull(e);
+		
+		p.setNumberOfRecoveredMotorVehicles(new ParsedObject<Integer>());
+		e = rule.apply(p);
+		assertNull(e);
+		
+		p.setPropertyDescription(0, PropertyDescriptionCode._03.code);
+		e = rule.apply(p);
+		assertNull(e); 
+		
+		p.setPropertyDescription(1, PropertyDescriptionCode._05.code);
+		e = rule.apply(p);
+		assertNull(e);
+		
+		p.setNumberOfRecoveredMotorVehicles(new ParsedObject<Integer>(0));
+		e = rule.apply(p);
+		assertNull(e);
+		
+		p.setNumberOfRecoveredMotorVehicles(new ParsedObject<Integer>(1));
+		e = rule.apply(p);
+		assertNotNull(e);
+		assertEquals(NIBRSErrorCode._389, e.getNIBRSErrorCode());
+		assertEquals("19", e.getDataElementIdentifier());
+		assertEquals("1", e.getValue().toString());
+		
+		p.setNumberOfRecoveredMotorVehicles(new ParsedObject<Integer>(2));
+		e = rule.apply(p);
+		assertNull(e);
 	}
 	
 	@Test

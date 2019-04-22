@@ -176,6 +176,7 @@ public class PropertySegmentRulesFactory {
 		rulesList.add(getRule384());
 		rulesList.add(getRule387());
 		rulesList.add(getRule388());
+		rulesList.add(getRule389());
 		rulesList.add(getRule390());
 		rulesList.add(getRule391());
 		rulesList.add(getRule392());
@@ -396,6 +397,37 @@ public class PropertySegmentRulesFactory {
 		};
 	}
 	
+	Rule<PropertySegment> getRule389() {
+		return new Rule<PropertySegment>() {
+			@Override
+			public NIBRSError apply(PropertySegment subject) {
+				NIBRSError ret = null;
+				String typeOfPropertyLoss = subject.getTypeOfPropertyLoss();
+				Integer numberOfRecoveredVehicleEntered = subject.getNumberOfRecoveredMotorVehicles().getValue(); 
+				boolean completedMovingVehicleOffenseInvolved = ((GroupAIncidentReport) subject.getParentReport()).isCompleteOffenseInvolved(OffenseCode._240);
+				long vehiclePropertyCount = subject.getPropertyDescriptionList().stream()
+						.filter(PropertyDescriptionCode::isMotorVehicleCode)
+						.count(); 
+				
+				if ((TypeOfPropertyLossCode._5.code.equals(typeOfPropertyLoss)
+							&& completedMovingVehicleOffenseInvolved
+							&& vehiclePropertyCount > 0
+							&& numberOfRecoveredVehicleEntered != null 
+							&& numberOfRecoveredVehicleEntered > 0)) {
+					
+					if (vehiclePropertyCount > numberOfRecoveredVehicleEntered) {
+						ret = subject.getErrorTemplate();
+						ret.setValue(numberOfRecoveredVehicleEntered.toString());
+						ret.setNIBRSErrorCode(NIBRSErrorCode._389);
+						ret.setDataElementIdentifier("19");
+					}
+				}
+				return ret;
+			}
+		};
+	}
+	
+
 	Rule<PropertySegment> getRule390() {
 		return new Rule<PropertySegment>() {
 			@Override
@@ -466,12 +498,11 @@ public class PropertySegmentRulesFactory {
 								&& OffenseAttemptedCompletedCode.C.code.equals(offense.getOffenseAttemptedCompleted()));
 						
 				NIBRSError ret = null;
-				if ((nmvNull || subject.getNumberOfRecoveredMotorVehicles().getValue() == 0)  && ((typeOfPropertyLoss != null 
-						&& TypeOfPropertyLossCode._5.code.equals(typeOfPropertyLoss)) 
+				if (nmvNull  
+						&& TypeOfPropertyLossCode._5.code.equals(typeOfPropertyLoss) 
 						&& completeMvOffenseInvolved
-						&& subject.containsVehiclePropertyCodes())) {
+						&& subject.containsVehiclePropertyCodes()) {
 					ret = subject.getErrorTemplate();
-					ret.setValue(subject.getFirstVehiclePropertyCode().orElse(""));
 					ret.setNIBRSErrorCode(NIBRSErrorCode._361);
 					ret.setDataElementIdentifier("19");
 				}
