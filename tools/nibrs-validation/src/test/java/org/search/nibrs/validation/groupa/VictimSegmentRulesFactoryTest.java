@@ -18,6 +18,9 @@ package org.search.nibrs.validation.groupa;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -394,6 +397,7 @@ public class VictimSegmentRulesFactoryTest {
 		assertNull(nibrsError);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testRule404ForAggravatedAssaultHomicideCircumstances() {
 
@@ -410,6 +414,17 @@ public class VictimSegmentRulesFactoryTest {
 		assertNotNull(nibrsError);
 		assertEquals(NIBRSErrorCode._404, nibrsError.getNIBRSErrorCode());
 		assertEquals("31", nibrsError.getDataElementIdentifier());
+		
+		victimSegment.setAggravatedAssaultHomicideCircumstances(0, "30");
+		nibrsError = rule.apply(victimSegment);
+		assertNotNull(nibrsError);
+		assertEquals(NIBRSErrorCode._404, nibrsError.getNIBRSErrorCode());
+		assertEquals("31", nibrsError.getDataElementIdentifier());
+		assertThat((List<String>)nibrsError.getValue(), equalTo(Arrays.asList("30")));
+		
+		victimSegment.setAggravatedAssaultHomicideCircumstances(0, "20");
+		nibrsError = rule.apply(victimSegment);
+		assertNull(nibrsError);
 
 	}
 

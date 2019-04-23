@@ -515,26 +515,7 @@ public class VictimSegmentRulesFactory {
 		};
 
 	}
-	//TODO  need to check the logic of this.
-	// validity
-//	For: 13A = Aggravated Assault
-//		09A = Murder and Non-negligent Manslaughter (enter up to two)
-//			01 = Argument
-//			02 = Assault on Law Enforcement Officer
-//			03 = Drug Dealing
-//			04 = Gangland (Organized Crime Involvement)
-//			05 = Juvenile Gang
-//			06 = Domestic Violence
-//			07 = Mercy Killing (Not applicable to Aggravated Assault) 08 = Other Felony Involved
-//			09 = Other Circumstances
-//			10 = Unknown Circumstances
-//	For: 09B = Negligent Manslaughter (enter only one)
-//			30 = Child Playing With Weapon
-//			31 = Gun-Cleaning Accident
-//			32 = Hunting Accident
-//			33 = Other Negligent Weapon Handling 34 = Other Negligent Killing
-//	For: 09C = Justifiable Homicide (enter only one)
-//			20 = Criminal Killed by Private Citizen 21 = Criminal Killed by Police Officer 
+
 	Rule<VictimSegment> getRule404ForAggravatedAssaultHomicideCircumstances() {
 		return new Rule<VictimSegment>() {
 			@Override
@@ -545,12 +526,52 @@ public class VictimSegmentRulesFactory {
 				List<String> aahcList = new ArrayList<>();
 				aahcList.addAll(victimSegment.getAggravatedAssaultHomicideCircumstancesList());
 				aahcList.removeIf(item -> item == null);
+				List<String> applicableOffenses = victimSegment.getUcrOffenseCodeList().stream()
+						.filter(Objects::nonNull)
+						.filter(OffenseCode::isAggravatedAssaultHomicideCircumstancesOffense)
+						.collect(Collectors.toList());
 				boolean isMandatory = victimSegment.isAggravatedAssaultHomicideCircumstancesMandatory();
-				if (isMandatory && aahcList.isEmpty()) {
-					e = victimSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(NIBRSErrorCode._404);
-					e.setDataElementIdentifier("31");
-					e.setValue(null);
+				if (isMandatory) {
+					Set<String> validAggravatedAssaultHomicideCodes = new HashSet<>();
+					
+					for (String offense : applicableOffenses) {
+						switch (offense) {
+						case "13A":
+						case "09A": 
+							validAggravatedAssaultHomicideCodes.add("01"); 
+							validAggravatedAssaultHomicideCodes.add("02"); 
+							validAggravatedAssaultHomicideCodes.add("03"); 
+							validAggravatedAssaultHomicideCodes.add("04"); 
+							validAggravatedAssaultHomicideCodes.add("05"); 
+							validAggravatedAssaultHomicideCodes.add("06"); 
+							validAggravatedAssaultHomicideCodes.add("07"); 
+							validAggravatedAssaultHomicideCodes.add("08"); 
+							validAggravatedAssaultHomicideCodes.add("09"); 
+							validAggravatedAssaultHomicideCodes.add("10");
+							break; 
+						case "09B":
+							validAggravatedAssaultHomicideCodes.add("30");
+							validAggravatedAssaultHomicideCodes.add("31");
+							validAggravatedAssaultHomicideCodes.add("32");
+							validAggravatedAssaultHomicideCodes.add("33");
+							validAggravatedAssaultHomicideCodes.add("34");
+							break;
+						case "09C": 
+							validAggravatedAssaultHomicideCodes.add("20");
+							validAggravatedAssaultHomicideCodes.add("21");
+							break; 
+						}
+					}
+					
+					if (aahcList.isEmpty() || !validAggravatedAssaultHomicideCodes.containsAll(aahcList)) {
+						e = victimSegment.getErrorTemplate();
+						e.setNIBRSErrorCode(NIBRSErrorCode._404);
+						e.setDataElementIdentifier("31");
+						List<String> invalidValues = aahcList.stream()
+								.filter(item-> !validAggravatedAssaultHomicideCodes.contains(item))
+								.collect(Collectors.toList());
+						e.setValue(invalidValues);
+					}
 				}
 
 				return e;
