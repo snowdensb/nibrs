@@ -25,6 +25,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.search.nibrs.common.NIBRSError;
@@ -80,36 +81,65 @@ public class VictimSegmentRulesFactoryTest {
 		
 		Rule<VictimSegment> rule = victimRulesFactory.getRule085();
 		VictimSegment victimSegment = getBasicVictimSegment();
-		OffenderSegment offenderSegment2 = new OffenderSegment();
 		GroupAIncidentReport parent = (GroupAIncidentReport) victimSegment.getParentReport();
-		parent.addOffender(offenderSegment2);
 		parent.getOffenders().get(0).setOffenderSequenceNumber(new ParsedObject<>(1));
-		offenderSegment2.setOffenderSequenceNumber(new ParsedObject<>(2));
-		victimSegment.setOffenderNumberRelated(0, new ParsedObject<>(2));
+		victimSegment.setOffenderNumberRelated(0, new ParsedObject<>(1));
 		NIBRSError e = rule.apply(victimSegment);
 		assertNull(e);
+		
+		OffenderSegment offenderSegment2 = new OffenderSegment();
+		parent.addOffender(offenderSegment2);
+		offenderSegment2.setOffenderSequenceNumber(new ParsedObject<>(2));
 		
 		victimSegment.setTypeOfVictim("I");
 		e = rule.apply(victimSegment);
 		assertNull(e);
 		
-		victimSegment.setUcrOffenseCodeConnection(0, "120");;
-		assertEquals(2, parent.getOffenderCount());
-		e = rule.apply(victimSegment);
-		assertNull(e);
+		List<String> applicableOffenses = OffenseCode.codeSet()
+				.stream()
+				.filter(code->OffenseCode.isCrimeAgainstPersonCode(code) || OffenseCode.isCrimeAgainstPropertyCode(code))
+				.collect(Collectors.toList()); 
 		
-		OffenderSegment offenderSegment3 = new OffenderSegment();
-		offenderSegment3.setOffenderSequenceNumber(new ParsedObject<Integer>(3));
-		parent.addOffender(offenderSegment2);
-		e = rule.apply(victimSegment);
-		assertNotNull(e);
-		assertEquals(NIBRSErrorCode._085, e.getNIBRSErrorCode());
-		assertEquals("34", e.getDataElementIdentifier());
-		assertNull(e.getValue());
-
-		victimSegment.setTypeOfVictim(TypeOfVictimCode.F.code);
-		e = rule.apply(victimSegment);
-		assertNull(e);
+		applicableOffenses.forEach(code->{
+			victimSegment.setTypeOfVictim("I");
+			victimSegment.setUcrOffenseCodeConnection(0, code);;
+			assertEquals(2, parent.getOffenderCount());
+			NIBRSError error = rule.apply(victimSegment);
+			assertNotNull(error);
+			assertEquals(NIBRSErrorCode._085, error.getNIBRSErrorCode());
+			assertEquals("34", error.getDataElementIdentifier());
+			assertNull(error.getValue());
+			
+			victimSegment.setTypeOfVictim("L");
+			error = rule.apply(victimSegment);
+			assertNotNull(error);
+			assertEquals(NIBRSErrorCode._085, error.getNIBRSErrorCode());
+			assertEquals("34", error.getDataElementIdentifier());
+			assertNull(error.getValue());
+			
+			victimSegment.setTypeOfVictim(TypeOfVictimCode.B.code);
+			error = rule.apply(victimSegment);
+			assertNull(error);
+		});
+		
+		OffenseCode.codeSet()
+			.stream()
+			.filter(code -> !OffenseCode.isCrimeAgainstPersonCode(code) && !OffenseCode.isCrimeAgainstPropertyCode(code))
+			.forEach(code->{
+				victimSegment.setTypeOfVictim("I");
+				victimSegment.setUcrOffenseCodeConnection(0, code);;
+				assertEquals(2, parent.getOffenderCount());
+				NIBRSError error = rule.apply(victimSegment);
+				assertNull(error);
+				
+				victimSegment.setTypeOfVictim("L");
+				error = rule.apply(victimSegment);
+				assertNull(error);
+				
+				victimSegment.setTypeOfVictim(TypeOfVictimCode.B.code);
+				error = rule.apply(victimSegment);
+				assertNull(error);
+			});
 	}
 	
 	@Test

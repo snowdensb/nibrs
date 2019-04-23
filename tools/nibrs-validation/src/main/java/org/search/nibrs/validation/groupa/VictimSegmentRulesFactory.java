@@ -251,9 +251,9 @@ public class VictimSegmentRulesFactory {
 				NIBRSError e = null;
 				GroupAIncidentReport parent = (GroupAIncidentReport) subject.getParentReport();
 				
-				if (parent.getOffenderCount() >= 3 
+				if (parent.getOffenderCount() >= 2 
 						&& subject.isPerson()
-						&& (subject.getUcrOffenseCodeList().contains(OffenseCode._120.code) ||
+						&& (OffenseCode.containsCrimeAgainstPropertyCode(subject.getUcrOffenseCodeList())||
 							OffenseCode.containsCrimeAgainstPersonCode(subject.getUcrOffenseCodeList()))
 						){
 					long relatedOffenderCount = subject.getOffenderNumberRelatedList().stream()
