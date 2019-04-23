@@ -945,7 +945,8 @@ public class VictimSegmentRulesFactory {
 				offenseCodeList.addAll(victimSegment.getUcrOffenseCodeList());
 				offenseCodeList.removeIf(item -> item == null);
 
-				if (!offenderNumberList.isEmpty() && !(OffenseCode.containsCrimeAgainstPersonCode(offenseCodeList) || offenseCodeList.contains(OffenseCode._120.code))) {
+				if (!offenderNumberList.isEmpty() && !(OffenseCode.containsCrimeAgainstPersonCode(offenseCodeList) 
+						|| OffenseCode.containsCrimeAgainstPropertyCode(offenseCodeList))) {
 					e = victimSegment.getErrorTemplate();
 					e.setDataElementIdentifier("34");
 					e.setNIBRSErrorCode(NIBRSErrorCode._459);

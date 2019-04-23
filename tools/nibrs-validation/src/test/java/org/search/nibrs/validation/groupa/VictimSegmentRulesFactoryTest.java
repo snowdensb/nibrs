@@ -994,19 +994,33 @@ public class VictimSegmentRulesFactoryTest {
 		Rule<VictimSegment> rule = victimRulesFactory.getRule459ForOffenderNumberToBeRelated();
 		VictimSegment victimSegment = getBasicVictimSegment();
 		victimSegment.setOffenderNumberRelated(0, new ParsedObject<>(1));
-		victimSegment.setUcrOffenseCodeConnection(0, OffenseCode._200.code);
-		NIBRSError nibrsError = rule.apply(victimSegment);
-		assertNotNull(nibrsError);
-		assertEquals(NIBRSErrorCode._459, nibrsError.getNIBRSErrorCode());
-		assertEquals("34", nibrsError.getDataElementIdentifier());
-		assertEquals(Arrays.asList(new Integer[] {1}), nibrsError.getValue());
-		victimSegment.setUcrOffenseCodeConnection(0, OffenseCode._120.code);
-		nibrsError = rule.apply(victimSegment);
-		assertNull(nibrsError);
-		victimSegment.setUcrOffenseCodeConnection(0, OffenseCode._200.code);
-		victimSegment.setOffenderNumberRelated(0, ParsedObject.getMissingParsedObject());
-		nibrsError = rule.apply(victimSegment);
-		assertNull(nibrsError);
+		
+		OffenseCode.codeSet()
+			.stream()
+			.filter(code->OffenseCode.isCrimeAgainstPersonCode(code) || OffenseCode.isCrimeAgainstPropertyCode(code))
+			.forEach(code -> {
+				victimSegment.setUcrOffenseCodeConnection(0, code);
+				NIBRSError nibrsError = rule.apply(victimSegment);
+				assertNull(nibrsError);
+			});
+		
+		
+		OffenseCode.codeSet()
+		.stream()
+		.filter(code->!OffenseCode.isCrimeAgainstPersonCode(code) && !OffenseCode.isCrimeAgainstPropertyCode(code))
+		.forEach(code -> {
+			victimSegment.setUcrOffenseCodeConnection(0, code);
+			victimSegment.setOffenderNumberRelated(0, new ParsedObject<Integer>());
+			NIBRSError nibrsError = rule.apply(victimSegment);
+			assertNull(nibrsError);
+			
+			victimSegment.setOffenderNumberRelated(0, new ParsedObject<>(1));
+			nibrsError = rule.apply(victimSegment);
+			assertNotNull(nibrsError);
+			assertEquals(NIBRSErrorCode._459, nibrsError.getNIBRSErrorCode());
+			assertEquals("34", nibrsError.getDataElementIdentifier());
+			assertEquals(Arrays.asList(new Integer[] {1}), nibrsError.getValue());
+		});
 	}
 
 	@Test

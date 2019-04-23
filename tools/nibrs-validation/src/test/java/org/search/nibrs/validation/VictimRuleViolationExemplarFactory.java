@@ -527,8 +527,8 @@ final class VictimRuleViolationExemplarFactory {
 			//UCR Offense Code) contains a Crime Against Person.
 			List<GroupAIncidentReport> incidents = new ArrayList<GroupAIncidentReport>();
 			GroupAIncidentReport copy = new GroupAIncidentReport(incident);
-			copy.getOffenses().get(0).setUcrOffenseCode("220");
-			copy.getVictims().get(0).setUcrOffenseCodeConnection(0, "220");
+			copy.getOffenses().get(0).setUcrOffenseCode("39A");
+			copy.getVictims().get(0).setUcrOffenseCodeConnection(0, "39A");
 			incidents.add(copy);
 			
 			return incidents;
