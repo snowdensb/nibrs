@@ -31,7 +31,7 @@ public enum TypeOfWeaponForceCode {
 	_15("15", "Other Firearm"),
 	_20("20", "Knife/Cutting Instrument"),
 	_30("30", "Blunt Object"),
-	_35("35", "Motor Vehicle"),
+	_35("35", "Motor Vehicle/Vessel"),
 	_40("40", "Personal Weapons"),
 	_50("50", "Poison"),
 	_60("60", "Explosives"),
