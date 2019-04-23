@@ -368,7 +368,9 @@ public enum PropertyDescriptionCode {
 					PropertyDescriptionCode._34.code, 
 					PropertyDescriptionCode._35.code, 
 					PropertyDescriptionCode._37.code, 
-					PropertyDescriptionCode._39.code 
+					PropertyDescriptionCode._39.code, 
+					PropertyDescriptionCode._66.code,
+					PropertyDescriptionCode._78.code 
 					);
 		case "23C": 
 			return Arrays.asList(
