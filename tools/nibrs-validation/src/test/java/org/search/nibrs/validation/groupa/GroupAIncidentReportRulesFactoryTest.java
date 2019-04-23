@@ -15,7 +15,7 @@
  */
 package org.search.nibrs.validation.groupa;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
@@ -822,7 +822,7 @@ public class GroupAIncidentReportRulesFactoryTest {
 		e = rule.apply(report);
 		assertNotNull(e);
 		assertEquals(NIBRSErrorCode._077, e.getNIBRSErrorCode());
-		assertThat(e.getValue(), is("100"));
+		assertThat(e.getValue(), equalTo("100"));
 		assertEquals("14", e.getDataElementIdentifier());
 	}
 	
@@ -843,7 +843,7 @@ public class GroupAIncidentReportRulesFactoryTest {
 		e = rule.apply(report);
 		assertNotNull(e);
 		assertEquals(NIBRSErrorCode._078, e.getNIBRSErrorCode());
-		assertThat(e.getValue(), is("290"));
+		assertThat(e.getValue(), equalTo("290"));
 		assertEquals("14", e.getDataElementIdentifier());
 	}
 	
@@ -852,64 +852,64 @@ public class GroupAIncidentReportRulesFactoryTest {
 		for (OffenseCode offense: OffenseCode.values()){
 			switch (offense){
 			case _280: 
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(true));
 				break; 
 			case _100: case _220: case _510:
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(false));
 				break; 
 			case _35A: case _35B:
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(true));
 				break;
 			case _200:
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(true));
 				break;
 			case _250:
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(true));
 				break;
 			case _290:
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(true));
 				break;
 			case _120: case _210: case _240:
 			case _270: case _26A: case _26B: 
@@ -918,48 +918,48 @@ public class GroupAIncidentReportRulesFactoryTest {
 			case _26G: case _23A: case _23B:
 			case _23C: case _23D: case _23E:
 			case _23F: case _23G: case _23H:
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(true));
 				break;
 			case _39A: 
 			case _39B: 
 			case _39C: 
 			case _39D: 
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(true));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(true));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(true));
 				break;
 			default:
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), is(false));
-				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._1), equalTo(false));
+				assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(false));
 				if (OffenseCode.isCrimeAgainstPropertyCode(offense.code) 
 						|| OffenseCode.isGamblingOffenseCode(offense.code)){
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(false));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(false));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(false));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(false));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(false));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(false));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), is(false));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(false));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(false));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(false));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(false));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(false));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(false));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._8), equalTo(false));
 				}
 				else{
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), is(true));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), is(true));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), is(true));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), is(true));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), is(true));
-					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), is(true));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._2), equalTo(true));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._3), equalTo(true));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._4), equalTo(true));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._5), equalTo(true));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._6), equalTo(true));
+					assertThat(reject081(offense, "C",  TypeOfPropertyLossCode._7), equalTo(true));
 				}
 				break;
 			}
@@ -978,24 +978,24 @@ public class GroupAIncidentReportRulesFactoryTest {
 			case _240: case _120: case _280:
 			case _39A: case _39B: case _39C:
 			case _39D:
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._1), is(false));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._2), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._3), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._4), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._5), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._6), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._7), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._8), is(false));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._1), equalTo(false));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._2), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._3), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._4), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._5), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._6), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._7), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._8), equalTo(false));
 				break;
 			default:	
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._1), is(false));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._2), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._3), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._4), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._5), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._6), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._7), is(true));
-				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._8), is(false));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._1), equalTo(false));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._2), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._3), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._4), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._5), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._6), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._7), equalTo(true));
+				assertThat(reject081(offense, "A",  TypeOfPropertyLossCode._8), equalTo(false));
 			}
 		}
 		
@@ -1053,7 +1053,7 @@ public class GroupAIncidentReportRulesFactoryTest {
 			e = rule.apply(report);
 			assertNotNull(e);
 			assertEquals(NIBRSErrorCode._074, e.getNIBRSErrorCode());
-			assertThat(e.getValue(), is(offenseCode));
+			assertThat(e.getValue(), equalTo(offenseCode));
 			assertEquals("L 3", e.getDataElementIdentifier());
 		}
 	}
@@ -1333,6 +1333,7 @@ public class GroupAIncidentReportRulesFactoryTest {
 		assertEquals(NIBRSErrorCode._119, e.getNIBRSErrorCode());
 		assertEquals(GroupAIncidentReport.ADMIN_SEGMENT_TYPE_IDENTIFIER, e.getSegmentType());
 		assertEquals(report.getCargoTheftIndicator(), "Y");
+		assertThat(e.getValue(), equalTo("Y"));
 		assertEquals(report.getSource(), e.getContext());
 		o = new OffenseSegment();
 		report.addOffense(o);

@@ -1278,7 +1278,7 @@ public class GroupAIncidentReportRulesFactory {
 				if (StringUtils.isNotBlank(subject.getCargoTheftIndicator())
 						&& !cargoTheftIncident ) {
 					ret = subject.getErrorTemplate();
-					ret.setValue(null);
+					ret.setValue(subject.getCargoTheftIndicator());
 					ret.setDataElementIdentifier("2A");
 					ret.setNIBRSErrorCode(NIBRSErrorCode._119);
 				}
