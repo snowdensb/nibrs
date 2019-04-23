@@ -71,7 +71,7 @@ public class VictimSegmentRulesFactory {
 		return new VictimSegmentRulesFactory(validatorProperties);
 	}
 	
-	private static final List<String> INJURY_OFFENSE_LIST = Arrays.asList(
+	static final List<String> INJURY_OFFENSE_LIST = Arrays.asList(
 			OffenseCode._100.code,
 			OffenseCode._11A.code,
 			OffenseCode._11B.code,
@@ -434,54 +434,35 @@ public class VictimSegmentRulesFactory {
 		return new ValidValueListRule<VictimSegment>("typeOfOfficerActivityCircumstance", "25A", VictimSegment.class, NIBRSErrorCode._404, TypeOfOfficerActivityCircumstance.codeSet(), true);
 	}
 
-	//TODO adjust to the 2019 spec description.  conditionally mandatory 
 	Rule<VictimSegment> getRule401ForTypeOfInjury(){
-		return new Rule<VictimSegment>() {
+		return new NotAllBlankRule<VictimSegment>("typeOfInjury", "33", VictimSegment.class, NIBRSErrorCode._401) {
 			@Override
-			public NIBRSError apply(VictimSegment victimSegment) {
+			public boolean ignore(VictimSegment o) {
+				List<String> offenseCodeList = o.getUcrOffenseCodeList()
+					.stream()
+					.filter(INJURY_OFFENSE_LIST::contains)
+					.distinct()
+					.collect(Collectors.toList());
 				
-				NIBRSError e = null;
-
-				List<String> injuryTypeList = new ArrayList<>();
-				injuryTypeList.addAll(victimSegment.getTypeOfInjuryList());
-				injuryTypeList.removeIf(item -> item == null);
-				List<String> offenseCodeList = victimSegment.getUcrOffenseCodeList();
-				
-				if ( CollectionUtils.containsAny(offenseCodeList, INJURY_OFFENSE_LIST) 
-					&& injuryTypeList.isEmpty()
-					&& victimSegment.isPerson()) {
-					e = victimSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(NIBRSErrorCode._401);
-					e.setDataElementIdentifier("33");
-					e.setValue(null);
-				}
-
-				return e;
-				
+				return !(((offenseCodeList.size() == 1 && offenseCodeList.contains("120") && "I".equals(o.getTypeOfVictim())))
+						||( (offenseCodeList.size() > 1 || ( offenseCodeList.size() == 1 && !offenseCodeList.contains("120")) )&& o.isPerson())); 
 			}
 		};
 	}
 
-	//TODO adjust to the 2019 spec description.  conditionally mandatory 
 	Rule<VictimSegment> getRule404ForTypeOfInjury(){
-		return new Rule<VictimSegment>() {
+		return new ValidValueListRule<VictimSegment>("typeOfInjury", "33", VictimSegment.class, NIBRSErrorCode._404, TypeInjuryCode.codeSet(), false) {
 			@Override
-			public NIBRSError apply(VictimSegment victimSegment) {
+			public boolean ignore(VictimSegment o) {
+				List<String> offenseCodeList = o.getUcrOffenseCodeList()
+					.stream()
+					.filter(INJURY_OFFENSE_LIST::contains)
+					.distinct()
+					.collect(Collectors.toList());
 				
-				NIBRSError e = null;
-
-				List<String> injuryTypeList = new ArrayList<>();
-				injuryTypeList.addAll(victimSegment.getTypeOfInjuryList());
-				injuryTypeList.removeIf(item -> item == null);
-				if ((!injuryTypeList.isEmpty() && !CollectionUtils.containsAll(TypeInjuryCode.codeSet(), injuryTypeList))) {
-					e = victimSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(NIBRSErrorCode._404);
-					e.setDataElementIdentifier("33");
-					e.setValue(null);
-				}
-
-				return e;
-				
+				return ArrayUtils.allNull(o.getTypeOfInjury()) && 
+						!(((offenseCodeList.size() == 1 && offenseCodeList.contains("120") && "I".equals(o.getTypeOfVictim())))
+						||( (offenseCodeList.size() > 1 || ( offenseCodeList.size() == 1 && !offenseCodeList.contains("120")) )&& o.isPerson())); 
 			}
 		};
 	}

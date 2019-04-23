@@ -1208,19 +1208,38 @@ public class VictimSegmentRulesFactoryTest {
 		NIBRSError nibrsError = rule.apply(victimSegment);
 		assertNull(nibrsError);
 
-		victimSegment.setUcrOffenseCodeConnection(0, OffenseCode._100.code);
-		nibrsError = rule.apply(victimSegment);
-		assertNull(nibrsError);
-		
-		victimSegment.setTypeOfVictim(TypeOfVictimCode.I.code);
-		nibrsError = rule.apply(victimSegment);
-		assertNotNull(nibrsError);
-		assertEquals(NIBRSErrorCode._401, nibrsError.getNIBRSErrorCode());
-		assertEquals("33", nibrsError.getDataElementIdentifier());
-		
-		victimSegment.setTypeOfInjury(0, TypeInjuryCode.I.code);
-		nibrsError = rule.apply(victimSegment);
-		assertNull(nibrsError);
+		VictimSegmentRulesFactory.INJURY_OFFENSE_LIST.forEach(code->{
+			victimSegment.setTypeOfVictim(null);
+			victimSegment.setTypeOfInjury(0, null);
+			victimSegment.setUcrOffenseCodeConnection(0, code);
+			NIBRSError error = rule.apply(victimSegment);
+			assertNull(error);
+			
+			victimSegment.setTypeOfVictim(TypeOfVictimCode.L.code);
+			error = rule.apply(victimSegment);
+			if ("120".equals(code)) {
+				assertNull(error);
+			}
+			else {
+				assertNotNull(error);
+				assertEquals(NIBRSErrorCode._401, error.getNIBRSErrorCode());
+				assertEquals("33", error.getDataElementIdentifier());
+			}
+			
+			victimSegment.setTypeOfVictim(TypeOfVictimCode.I.code);
+			error = rule.apply(victimSegment);
+			assertNotNull(error);
+			assertEquals(NIBRSErrorCode._401, error.getNIBRSErrorCode());
+			assertEquals("33", error.getDataElementIdentifier());
+			
+			victimSegment.setTypeOfInjury(0, TypeInjuryCode.I.code);
+			error = rule.apply(victimSegment);
+			assertNull(nibrsError);
+			
+			victimSegment.setTypeOfInjury(0, "invalid");
+			error = rule.apply(victimSegment);
+			assertNull(nibrsError);
+		}); 
 
 	}
 
@@ -1289,7 +1308,36 @@ public class VictimSegmentRulesFactoryTest {
 		assertEquals(NIBRSErrorCode._404, nibrsError.getNIBRSErrorCode());
 		assertEquals("33", nibrsError.getDataElementIdentifier());
 		
-	}
+		victimSegment.setTypeOfInjury(0,"N");
+		nibrsError = rule.apply(victimSegment);
+		assertNull(nibrsError);
+		
+		victimSegment.setTypeOfVictim("I");
+		nibrsError = rule.apply(victimSegment);
+		assertNull(nibrsError);
+		
+		victimSegment.setTypeOfInjury(0, null);
+		nibrsError = rule.apply(victimSegment);
+		assertNotNull(nibrsError);
+		assertEquals(NIBRSErrorCode._404, nibrsError.getNIBRSErrorCode());
+		assertEquals("33", nibrsError.getDataElementIdentifier());
+
+		victimSegment.setUcrOffenseCodeConnection(0, OffenseCode._100.code);
+		nibrsError = rule.apply(victimSegment);
+		assertNotNull(nibrsError);
+		assertEquals(NIBRSErrorCode._404, nibrsError.getNIBRSErrorCode());
+		assertEquals("33", nibrsError.getDataElementIdentifier());
+		
+		victimSegment.setTypeOfVictim("L");
+		nibrsError = rule.apply(victimSegment);
+		assertNotNull(nibrsError);
+		assertEquals(NIBRSErrorCode._404, nibrsError.getNIBRSErrorCode());
+		assertEquals("33", nibrsError.getDataElementIdentifier());
+		
+		victimSegment.setUcrOffenseCodeConnection(0, OffenseCode._120.code);
+		nibrsError = rule.apply(victimSegment);
+		assertNull(nibrsError);
+}
 
 	@SuppressWarnings("unchecked")
 	@Test
