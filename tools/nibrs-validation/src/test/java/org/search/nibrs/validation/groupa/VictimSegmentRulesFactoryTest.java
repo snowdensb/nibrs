@@ -1400,23 +1400,113 @@ public class VictimSegmentRulesFactoryTest {
 		
 		victimSegment.setVictimOffenderRelationship(0, RelationshipOfVictimToOffenderCode.AQ.code);
 		nibrsError = rule.apply(victimSegment);
-		assertNotNull(nibrsError);
-		assertEquals(NIBRSErrorCode._404, nibrsError.getNIBRSErrorCode());
-		assertEquals(Arrays.asList(RelationshipOfVictimToOffenderCode.AQ.code) , ((List<String>) nibrsError.getValue()));
-		assertEquals("35", nibrsError.getDataElementIdentifier());
-		
-		victimSegment.setOffenderNumberRelated(0, new ParsedObject<>(1));
-		victimSegment.setVictimOffenderRelationship(0, RelationshipOfVictimToOffenderCode.AQ.code);
-		nibrsError = rule.apply(victimSegment);
 		assertNull(nibrsError);
 		
-		victimSegment.setOffenderNumberRelated(1, new ParsedObject<>(2));
-		victimSegment.setVictimOffenderRelationship(1, "invalid");
+		victimSegment.setVictimOffenderRelationship(0, "invalid");
 		nibrsError = rule.apply(victimSegment);
 		assertNotNull(nibrsError);
 		assertEquals(NIBRSErrorCode._404, nibrsError.getNIBRSErrorCode());
-		assertEquals(Arrays.asList("invalid"), (List<String>) nibrsError.getValue());
+		assertEquals(Arrays.asList("invalid") , ((List<String>) nibrsError.getValue()));
 		assertEquals("35", nibrsError.getDataElementIdentifier());
+		
+		OffenseCode.codeSet().stream()
+			.filter(code->OffenseCode.isCrimeAgainstPersonCode(code) || OffenseCode.isCrimeAgainstPropertyCode(code))
+			.forEach(code->{
+				/*
+				 * Not mandatory
+				 */
+				victimSegment.setUcrOffenseCodeConnection(0, null);
+				victimSegment.setVictimOffenderRelationship(0, RelationshipOfVictimToOffenderCode.AQ.code);
+				NIBRSError error = rule.apply(victimSegment);
+				assertNull(error);
+				
+				victimSegment.setOffenderNumberRelated(0, new ParsedObject<>(0));
+				error = rule.apply(victimSegment);
+				assertNull(error);
+				
+				victimSegment.setVictimOffenderRelationship(0, "invalid");
+				error = rule.apply(victimSegment);
+				assertNotNull(error);
+				assertEquals(NIBRSErrorCode._404, error.getNIBRSErrorCode());
+				assertEquals(Arrays.asList("invalid") , ((List<String>) error.getValue()));
+				assertEquals("35", error.getDataElementIdentifier());
+				
+				victimSegment.setOffenderNumberRelated(0, new ParsedObject<>(1));
+				error = rule.apply(victimSegment);
+				assertNotNull(error);
+				assertEquals(NIBRSErrorCode._404, error.getNIBRSErrorCode());
+				assertEquals(Arrays.asList("invalid") , ((List<String>) error.getValue()));
+				assertEquals("35", error.getDataElementIdentifier());
+				
+				victimSegment.setVictimOffenderRelationship(0, null);
+				error = rule.apply(victimSegment);
+				assertNull(error);
+				
+				/*
+				 * mandatory
+				 */
+				victimSegment.setUcrOffenseCodeConnection(0, code);
+				error = rule.apply(victimSegment);
+				assertNotNull(error);
+				assertEquals(NIBRSErrorCode._404, error.getNIBRSErrorCode());
+				assertEquals(Arrays.asList("") , ((List<String>) error.getValue()));
+				assertEquals("35", error.getDataElementIdentifier());
+				
+				victimSegment.setVictimOffenderRelationship(0, "invalid");
+				error = rule.apply(victimSegment);
+				assertNotNull(error);
+				assertEquals(NIBRSErrorCode._404, error.getNIBRSErrorCode());
+				assertEquals(Arrays.asList("invalid") , ((List<String>) error.getValue()));
+				assertEquals("35", error.getDataElementIdentifier());
+				
+				RelationshipOfVictimToOffenderCode.codeSet().forEach(relationShip -> {
+					victimSegment.setVictimOffenderRelationship(0, relationShip);
+					NIBRSError error1 = rule.apply(victimSegment);
+					assertNull(error1);
+				});
+
+			});
+		
+		OffenseCode.codeSet().stream()
+		.filter(code->!OffenseCode.isCrimeAgainstPersonCode(code) && !OffenseCode.isCrimeAgainstPropertyCode(code))
+		.forEach(code->{
+			/*
+			 * Not mandatory
+			 */
+			victimSegment.setUcrOffenseCodeConnection(0, code);
+			victimSegment.setUcrOffenseCodeConnection(0, null);
+			
+			RelationshipOfVictimToOffenderCode.codeSet().forEach(relationShip -> {
+				victimSegment.setVictimOffenderRelationship(0, relationShip);
+				NIBRSError error1 = rule.apply(victimSegment);
+				assertNull(error1);
+			});
+
+
+			victimSegment.setOffenderNumberRelated(0, new ParsedObject<>(0));
+			NIBRSError error = rule.apply(victimSegment);
+			assertNull(error);
+			
+			victimSegment.setVictimOffenderRelationship(0, "invalid");
+			error = rule.apply(victimSegment);
+			assertNotNull(error);
+			assertEquals(NIBRSErrorCode._404, error.getNIBRSErrorCode());
+			assertEquals(Arrays.asList("invalid") , ((List<String>) error.getValue()));
+			assertEquals("35", error.getDataElementIdentifier());
+			
+			victimSegment.setOffenderNumberRelated(0, new ParsedObject<>(1));
+			error = rule.apply(victimSegment);
+			assertNotNull(error);
+			assertEquals(NIBRSErrorCode._404, error.getNIBRSErrorCode());
+			assertEquals(Arrays.asList("invalid") , ((List<String>) error.getValue()));
+			assertEquals("35", error.getDataElementIdentifier());
+			
+			victimSegment.setVictimOffenderRelationship(0, null);
+			error = rule.apply(victimSegment);
+			assertNull(error);
+			
+		});
+		
 		
 	}
 	

@@ -575,10 +575,13 @@ public class VictimSegmentRulesFactory {
 				for (int i= 0; i<relatedOffenderNumbers.size(); i++){
 					ParsedObject<Integer> offenderNumber = relatedOffenderNumbers.get(i);
 					String relationship = relationships.get(i);
-					if ((isEmpty(offenderNumber) && relationship != null) 
-						||(!isEmpty(offenderNumber) && relationship != null
-							&& !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship))) {
-						invalidRelationships.add(relationship);
+					boolean isMandatory = !isEmpty(offenderNumber) &&
+							(OffenseCode.containsCrimeAgainstPersonCode(victimSegment.getUcrOffenseCodeList())
+									|| OffenseCode.containsCrimeAgainstPropertyCode(victimSegment.getUcrOffenseCodeList())); 
+							
+					if ((isMandatory && (StringUtils.isBlank(relationship) || !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship)))
+						||(!isMandatory && (StringUtils.isNotBlank(relationship)) && !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship))) {
+						invalidRelationships.add(StringUtils.trimToEmpty(relationship));
 					}
 				}
 				
