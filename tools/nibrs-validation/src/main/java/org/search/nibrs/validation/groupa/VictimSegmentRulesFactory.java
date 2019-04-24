@@ -966,13 +966,13 @@ public class VictimSegmentRulesFactory {
 
 				NIBRSError e = null;
 				List<String> victimOffenderRelationshipList = victimSegment.getVictimOffenderRelationshipList();
-				List<Integer> offenderNumRelatedList = victimSegment.getDistinctValidRelatedOffenderNumberList();
+				List<ParsedObject<Integer>> offenderNumRelatedList = victimSegment.getOffenderNumberRelatedList();
 				
 				for (int i=0;i < offenderNumRelatedList.size() && e == null;i++) {
-					Integer offenderNumber = offenderNumRelatedList.get(i);
-					if (offenderNumber > 0) {
+					ParsedObject<Integer> offenderNumber = offenderNumRelatedList.get(i);
+					if (!offenderNumber.isInvalid() && offenderNumber.getValue() != null && offenderNumber.getValue() > 0) {
 						String rel = victimOffenderRelationshipList.get(i);
-						if (rel == null || !RelationshipOfVictimToOffenderCode.codeSet().contains(rel)) {
+						if (rel == null ) {
 							e = victimSegment.getErrorTemplate();
 							e.setDataElementIdentifier("35");
 							e.setNIBRSErrorCode(NIBRSErrorCode._460);
