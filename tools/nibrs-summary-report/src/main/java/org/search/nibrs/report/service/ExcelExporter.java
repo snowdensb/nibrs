@@ -26,10 +26,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -39,6 +41,8 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.search.nibrs.model.reports.PropertyTypeValue;
+import org.search.nibrs.model.reports.PropertyTypeValueRowName;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.ReturnAFormRow;
 import org.search.nibrs.model.reports.ReturnARowName;
@@ -54,7 +58,276 @@ public class ExcelExporter {
 	@Autowired
 	private AppProperties appProperties;
 
-    public void exportReturnAForm(ReturnAForm returnAForm){
+    public void exportReturnASupplement(ReturnAForm returnAForm){
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet sheet = workbook.createSheet("Return A Supplement");
+    	
+        int rowNum = 0;
+        log.info("Write to the excel file");
+        CellStyle wrappedStyle = workbook.createCellStyle();
+        wrappedStyle.setWrapText(true);
+        wrappedStyle.setBorderBottom(BorderStyle.THIN);
+        wrappedStyle.setBorderTop(BorderStyle.THIN);
+        wrappedStyle.setBorderRight(BorderStyle.THIN);
+        wrappedStyle.setBorderLeft(BorderStyle.THIN);
+        Font boldFont = workbook.createFont();
+        boldFont.setBold(true);
+        XSSFFont normalWeightFont = workbook.createFont();
+        normalWeightFont.setBold(false);
+        
+        Font underlineFont = workbook.createFont();
+        underlineFont.setUnderline(Font.U_SINGLE);
+        
+    	createReturnASupplementTextSheet(sheet, rowNum, boldFont, normalWeightFont);
+    	
+        XSSFSheet propertyByTypeAndValueSheet = workbook.createSheet("Property By Type and Value");
+        rowNum = createPropertyByTypeAndValueTitleRow(propertyByTypeAndValueSheet, rowNum, wrappedStyle, boldFont, normalWeightFont);
+		rowNum = createPropertyByTypeAndValueHeaderRow(propertyByTypeAndValueSheet, rowNum, boldFont, normalWeightFont);
+		
+        for (PropertyTypeValueRowName rowName: PropertyTypeValueRowName.values()){
+        	writePropertyTypeValueRow(propertyByTypeAndValueSheet, rowName, returnAForm.getPropertyTypeValues()[rowName.ordinal()], rowNum++, boldFont);
+        }
+
+
+        propertyByTypeAndValueSheet.autoSizeColumn(0);
+        propertyByTypeAndValueSheet.autoSizeColumn(1);
+        propertyByTypeAndValueSheet.setColumnWidth(2, 600*propertyByTypeAndValueSheet.getDefaultColumnWidth());
+        propertyByTypeAndValueSheet.setColumnWidth(3, 600*propertyByTypeAndValueSheet.getDefaultColumnWidth());
+
+        try {
+        	String fileName = appProperties.getReturnAFormOutputPath() + "/ReturnASupplement-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
+            FileOutputStream outputStream = new FileOutputStream(fileName);
+            workbook.write(outputStream);
+            workbook.close();
+            System.out.println("The return A form is writen to fileName: " + fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+    private void writePropertyTypeValueRow(XSSFSheet sheet, PropertyTypeValueRowName rowName,
+			PropertyTypeValue propertyTypeValue, int rowNum, Font boldFont) {
+    	Row row = sheet.createRow(rowNum);
+    	int colNum = 0;
+    	Cell cell = row.createCell(colNum++);
+        
+    	CellStyle defaultStyle = sheet.getWorkbook().createCellStyle();
+    	defaultStyle.setBorderBottom(BorderStyle.THIN);
+    	defaultStyle.setBorderTop(BorderStyle.THIN);
+    	defaultStyle.setBorderRight(BorderStyle.THIN);
+    	defaultStyle.setBorderLeft(BorderStyle.THIN);
+    	
+        CellStyle centeredStyle = sheet.getWorkbook().createCellStyle(); 
+        centeredStyle.setAlignment(HorizontalAlignment.CENTER);
+        centeredStyle.setBorderBottom(BorderStyle.THIN);
+        centeredStyle.setBorderTop(BorderStyle.THIN);
+        centeredStyle.setBorderRight(BorderStyle.THIN);
+        centeredStyle.setBorderLeft(BorderStyle.THIN);
+
+        CellStyle greyForeGround = sheet.getWorkbook().createCellStyle();
+        greyForeGround.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        greyForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        greyForeGround.setBorderBottom(BorderStyle.THIN);
+        greyForeGround.setBorderTop(BorderStyle.THIN);
+        greyForeGround.setBorderRight(BorderStyle.THIN);
+        greyForeGround.setBorderLeft(BorderStyle.THIN);
+        
+        switch(rowName){
+    	case TOTAL: 
+        	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+            XSSFRichTextString allBoldString = new XSSFRichTextString(rowName.getLabel());
+            allBoldString.applyFont(boldFont);
+            cell.setCellValue(allBoldString);
+            cell.setCellStyle(centeredStyle);
+            
+    		cell = row.createCell(colNum++);
+    		cell.setCellValue(rowName.getDataEntry());
+    		cell.setCellStyle(greyForeGround);
+    		cell.setCellType(CellType.STRING);
+    		cell = row.createCell(colNum++);
+    		cell.setCellType(CellType.STRING);
+    		cell.setCellValue("$" + propertyTypeValue.getStolen());
+    		cell.setCellStyle(centeredStyle);
+    		cell = row.createCell(colNum++);
+    		cell.setCellType(CellType.STRING);
+    		cell.setCellValue("$" + propertyTypeValue.getRecovered());
+    		cell.setCellStyle(centeredStyle);
+    		break; 
+    	default: 
+    		cell.setCellValue(rowName.getLabel());
+    		cell.setCellStyle(defaultStyle);
+            CellStyle yellowForeGround = sheet.getWorkbook().createCellStyle();
+            yellowForeGround.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+            yellowForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            yellowForeGround.setBorderBottom(BorderStyle.THIN);
+            yellowForeGround.setBorderTop(BorderStyle.THIN);
+            yellowForeGround.setBorderRight(BorderStyle.THIN);
+            yellowForeGround.setBorderLeft(BorderStyle.THIN);
+            
+    		cell = row.createCell(colNum++);
+    		cell.setCellType(CellType.STRING);
+    		cell.setCellStyle(greyForeGround);
+    		cell.setCellValue(rowName.getDataEntry());
+    		cell = row.createCell(colNum++);
+    		cell.setCellStyle(yellowForeGround);
+    		cell.setCellType(CellType.NUMERIC);
+    		cell.setCellValue(propertyTypeValue.getStolen());
+    		cell = row.createCell(colNum++);
+    		cell.setCellStyle(yellowForeGround);
+    		cell.setCellType(CellType.NUMERIC);
+    		cell.setCellValue(propertyTypeValue.getRecovered());
+    	}
+	}
+	private int createPropertyByTypeAndValueHeaderRow(XSSFSheet sheet, int rowNum, Font boldFont,
+			XSSFFont normalWeightFont) {
+		sheet.addMergedRegion(new CellRangeAddress(1, 4, 0, 0));
+		sheet.addMergedRegion(new CellRangeAddress(1, 4, 1, 1));
+		Row row = sheet.createRow(rowNum++);
+		Cell cell = row.createCell(0);
+		
+        CellStyle column0Style = sheet.getWorkbook().createCellStyle();
+        column0Style.setWrapText(true);
+        column0Style.setAlignment(HorizontalAlignment.CENTER);
+        column0Style.setVerticalAlignment(VerticalAlignment.CENTER);
+        column0Style.setBorderBottom(BorderStyle.THIN);
+        column0Style.setBorderTop(BorderStyle.THIN);
+        column0Style.setBorderRight(BorderStyle.THIN);
+        column0Style.setBorderLeft(BorderStyle.THIN);
+        
+
+		cell.setCellStyle(column0Style);
+		cell.setCellValue("Type of Property\n (1)");
+
+		
+		Cell cell1 = row.createCell(1);
+		XSSFCellStyle column1Style = sheet.getWorkbook().createCellStyle(); 
+		column1Style.setRotation((short)90);
+		column1Style.setVerticalAlignment(VerticalAlignment.CENTER);
+		column1Style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		column1Style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		column1Style.setBorderBottom(BorderStyle.THIN);
+		column1Style.setBorderTop(BorderStyle.THIN);
+		column1Style.setBorderRight(BorderStyle.THIN);
+		column1Style.setBorderLeft(BorderStyle.THIN);
+		cell1.setCellValue("Data Entry");
+		cell1.setCellStyle(column1Style);
+		
+		sheet.addMergedRegion(new CellRangeAddress(1,1,2,3));
+		Cell cell2 = row.createCell(2);
+		cell2.setCellStyle(column0Style);
+		cell2.setCellValue("Monetary Value of Property Stolen in Your Jurisdiction");
+		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1,1,2,3), sheet);
+		
+		row = sheet.createRow(rowNum++);
+		cell2 = row.createCell(2);
+		cell2.setCellStyle(column0Style);
+		XSSFRichTextString s1 = new XSSFRichTextString("Stolen \n (2)");
+		cell2.setCellValue(s1);
+		sheet.addMergedRegion(new CellRangeAddress(2,4,2,2));
+		sheet.addMergedRegion(new CellRangeAddress(2,4,3,3));
+		
+		Cell cell3 = row.createCell(3);
+		cell3.setCellStyle(column0Style);
+		s1 = new XSSFRichTextString("Recovered \n (3)");
+		cell3.setCellValue(s1);
+		
+		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 4, 0, 0), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 4, 0, 0), sheet);
+				
+		return rowNum;
+	}
+    
+	private int createPropertyByTypeAndValueTitleRow(XSSFSheet sheet, int rowNum, CellStyle cs, Font boldFont, XSSFFont normalWeightFont) {
+		Row row = sheet.createRow(rowNum++);
+    	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+    	sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 3));
+		Cell cell = row.createCell(0);
+		
+        CellStyle centered = sheet.getWorkbook().createCellStyle();
+        centered.setAlignment(HorizontalAlignment.CENTER);
+        centered.setVerticalAlignment(VerticalAlignment.CENTER);
+        cell.setCellStyle(centered);
+		 
+		XSSFRichTextString s1 = new XSSFRichTextString("PROPERTY BY TYPE AND VALUE");
+		s1.applyFont(boldFont);
+		cell.setCellValue(s1);
+		
+		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 3), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 3), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 3), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 3), sheet);
+
+		return rowNum;
+	}
+    
+
+	private void createReturnASupplementTextSheet(XSSFSheet sheet, int rowNum, Font boldFont,
+			XSSFFont normalWeightFont) {
+		
+        CellStyle centered = sheet.getWorkbook().createCellStyle();
+        centered.setAlignment(HorizontalAlignment.CENTER);
+        centered.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        CellStyle wrapped = sheet.getWorkbook().createCellStyle();
+        wrapped.setWrapText(true);;
+        
+		Row row = sheet.createRow(rowNum++);
+    	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+		Cell cell = row.createCell(0);
+		cell.setCellStyle(centered);
+		 
+        XSSFFont normalWeightItalicFont = sheet.getWorkbook().createFont();
+        normalWeightItalicFont.setBold(false);
+        normalWeightItalicFont.setItalic(true);
+        
+		XSSFRichTextString s1 = new XSSFRichTextString("SUPPLEMENT TO RETURN A");
+		s1.applyFont(boldFont);
+		cell.setCellValue(s1);
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 8));
+		
+		row = sheet.createRow(rowNum++);
+    	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+		cell = row.createCell(0);
+		 
+		s1 = new XSSFRichTextString("MONTHLY RETURN OF OFFENSES KNOWN TO THE POLICE");
+		s1.applyFont(boldFont);
+		cell.setCellValue(s1);
+		sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 8));
+		cell.setCellStyle(centered);
+		
+		row = sheet.createRow(rowNum++);
+		cell = row.createCell(0);
+		cell.setCellStyle(wrapped);
+		
+		XSSFRichTextString s2 = new XSSFRichTextString();
+		s2.append("This report is authorized by law Title 28, Section 534, U.S. Code. Your cooperation in completing this form with the ", normalWeightFont); 
+		s2.append("Return A ", normalWeightItalicFont);
+		s2.append("will assist the FBI in compiling timely, comprehensive, and accurate data. Please submit this form monthly,"
+				+ "by the seventh day after the close of the month, and any questions to the FBI, Criminal Justice Information Services Division, "
+				+ "Attention: Uniform Crime Reports/Module E-3, 1000 Custer Hollow Road, Clarksburg, West Virginia 26306; telephone "
+				+ "304-625-4830, facsimile 304-625-3566. Under the Paperwork Reduction Act, you are not required to complete the form unless"
+				+ "it contains a valid OMB control number. The form takes approximately 11 minutes to complete. \n\n"
+				+ "This form deals with the nature of crime and the monetary value of property stolen and recovered. The total offenses recorded"
+				+ "on this form, page 2, should be the same as the number of actual offenses listed in Column 4 of the ", normalWeightFont);
+		s2.append("Return A ", normalWeightItalicFont);
+		s2.append("for each crime class\n"
+				+ "Include attempted crimes on this form, but do not include unfounded offenses. If you cannot complete the report in all areas,"
+				+ "please record as much information as is available. Tally sheets will be sent upon request. ", normalWeightFont); 
+		
+		cell.setCellValue(s2);
+		sheet.addMergedRegion(new CellRangeAddress(2, 12, 0, 8));
+		
+		sheet.setFitToPage(true);
+		PrintSetup ps = sheet.getPrintSetup();
+		ps.setFitWidth( (short) 1);
+		ps.setFitHeight( (short) 0);
+	}
+	
+	public void exportReturnAForm(ReturnAForm returnAForm){
         XSSFWorkbook workbook = new XSSFWorkbook();
         
         XSSFSheet sheet = workbook.createSheet("Return A Form");
@@ -71,11 +344,11 @@ public class ExcelExporter {
         Font underlineFont = workbook.createFont();
         underlineFont.setUnderline(Font.U_SINGLE);
         
-    	rowNum = createTheTitleRow(sheet, rowNum, wrappedStyle, boldFont, normalWeightFont);
-		rowNum = createTheTableHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
+    	rowNum = createReturnATitleRow(sheet, rowNum, wrappedStyle, boldFont, normalWeightFont);
+		rowNum = createReturnATableHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
 
         for (ReturnARowName rowName: ReturnARowName.values()){
-        	writeRow(sheet, rowName, returnAForm.getRows()[rowName.ordinal()], rowNum++, boldFont);
+        	writeReturnARow(sheet, rowName, returnAForm.getRows()[rowName.ordinal()], rowNum++, boldFont);
         }
 
 		sheet.autoSizeColumn(0);
@@ -288,7 +561,7 @@ public class ExcelExporter {
 		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(31, 42, 5, 5), sheet);
 		
         try {
-        	String fileName = appProperties.getReturnAFormOutputPath() + "/AsrAdult" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
+        	String fileName = appProperties.getReturnAFormOutputPath() + "/ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();
@@ -329,7 +602,7 @@ public class ExcelExporter {
 		cell.setCellValue(s1);
 	}
 
-	private int createTheTitleRow(XSSFSheet sheet, int rowNum, CellStyle cs, Font boldFont, XSSFFont normalWeightFont) {
+	private int createReturnATitleRow(XSSFSheet sheet, int rowNum, CellStyle cs, Font boldFont, XSSFFont normalWeightFont) {
 		Row row = sheet.createRow(rowNum++);
     	row.setHeightInPoints((4*sheet.getDefaultRowHeightInPoints()));
 		Cell cell = row.createCell(0);
@@ -346,7 +619,7 @@ public class ExcelExporter {
 		return rowNum;
 	}
     
-	private int createTheTableHeaderRow(XSSFSheet sheet, int rowNum, Font boldFont, XSSFFont normalWeightFont) {
+	private int createReturnATableHeaderRow(XSSFSheet sheet, int rowNum, Font boldFont, XSSFFont normalWeightFont) {
         
 		Row row = sheet.createRow(rowNum++);
     	row.setHeightInPoints((5*sheet.getDefaultRowHeightInPoints()));
@@ -416,7 +689,7 @@ public class ExcelExporter {
 		return s1;
 	}
 	
-    private void writeRow(XSSFSheet sheet, ReturnARowName rowName, ReturnAFormRow returnAFormRow, int rowNum, Font boldFont) {
+    private void writeReturnARow(XSSFSheet sheet, ReturnARowName rowName, ReturnAFormRow returnAFormRow, int rowNum, Font boldFont) {
     	Row row = sheet.createRow(rowNum);
     	int colNum = 0;
     	Cell cell = row.createCell(colNum++);
