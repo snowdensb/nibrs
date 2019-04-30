@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -41,6 +42,8 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.search.nibrs.model.reports.PropertyStolenByClassification;
+import org.search.nibrs.model.reports.PropertyStolenByClassificationRowName;
 import org.search.nibrs.model.reports.PropertyTypeValue;
 import org.search.nibrs.model.reports.PropertyTypeValueRowName;
 import org.search.nibrs.model.reports.ReturnAForm;
@@ -75,6 +78,7 @@ public class ExcelExporter {
         centeredStyle.setAlignment(HorizontalAlignment.CENTER);;
         Font boldFont = workbook.createFont();
         boldFont.setBold(true);
+        
         XSSFFont normalWeightFont = workbook.createFont();
         normalWeightFont.setBold(false);
         
@@ -82,7 +86,8 @@ public class ExcelExporter {
         underlineFont.setUnderline(Font.U_SINGLE);
         
     	createReturnASupplementTextSheet(sheet, rowNum, boldFont, normalWeightFont);
-        createPropertyByTypeAndValueSheet(returnAForm, workbook, rowNum, wrappedStyle, centeredStyle, boldFont, normalWeightFont);
+        createPropertyByTypeAndValueSheet(returnAForm, workbook, wrappedStyle, centeredStyle, boldFont, normalWeightFont);
+        createPropertyStolenByClassificationSheet(returnAForm, workbook, wrappedStyle, centeredStyle, boldFont, normalWeightFont);
 		
         try {
         	String fileName = appProperties.getReturnAFormOutputPath() + "/ReturnASupplement-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
@@ -98,8 +103,175 @@ public class ExcelExporter {
 
 
     }
-	private void createPropertyByTypeAndValueSheet(ReturnAForm returnAForm, XSSFWorkbook workbook, int rowNum, CellStyle wrappedStyle,
+	private void createPropertyStolenByClassificationSheet(ReturnAForm returnAForm, XSSFWorkbook workbook,
+			CellStyle wrappedStyle, CellStyle centeredStyle, Font boldFont, XSSFFont normalWeightFont) {
+		int rowNum = 0;
+		
+		XSSFSheet propertyStolenSheet = workbook.createSheet("PROPERTY STOLEN BY CLASSIFICATION");
+        rowNum = createPropertyStolenTitleRow(propertyStolenSheet, rowNum, boldFont, normalWeightFont);
+		rowNum = createPropertyStolenHeaderRow(propertyStolenSheet, rowNum, boldFont, normalWeightFont);
+		
+        for (PropertyStolenByClassificationRowName rowName: PropertyStolenByClassificationRowName.values()){
+        	writePropertyStolenRow(propertyStolenSheet, rowName, returnAForm.getPropertyStolenByClassifications()[rowName.ordinal()], rowNum++, boldFont);
+        }
+
+		propertyStolenSheet.autoSizeColumn(0);
+		propertyStolenSheet.autoSizeColumn(1);
+		propertyStolenSheet.setColumnWidth(2, 600 * propertyStolenSheet.getDefaultColumnWidth());
+		propertyStolenSheet.setColumnWidth(3, 900 * propertyStolenSheet.getDefaultColumnWidth());
+
+		
+	}
+	private void writePropertyStolenRow(XSSFSheet propertyStolenSheet, PropertyStolenByClassificationRowName rowName,
+			PropertyStolenByClassification propertyStolenByClassification, int rowNum, Font boldFont) {
+    	Row row = propertyStolenSheet.createRow(rowNum);
+    	int colNum = 0;
+    	Cell cell = row.createCell(colNum++);
+    	CellStyle wrapStyle = propertyStolenSheet.getWorkbook().createCellStyle();
+    	wrapStyle.setBorderBottom(BorderStyle.THIN);
+    	wrapStyle.setBorderTop(BorderStyle.THIN);
+    	wrapStyle.setBorderLeft(BorderStyle.THIN);
+    	wrapStyle.setBorderRight(BorderStyle.THIN);
+    	wrapStyle.setWrapText(true);
+        
+    	CellStyle centeredStyle = propertyStolenSheet.getWorkbook().createCellStyle();
+    	centeredStyle.cloneStyleFrom(wrapStyle);
+    	centeredStyle.setAlignment(HorizontalAlignment.CENTER);
+    	
+        CellStyle greyForeGround = propertyStolenSheet.getWorkbook().createCellStyle();
+        greyForeGround.cloneStyleFrom(wrapStyle);
+        greyForeGround.setAlignment(HorizontalAlignment.RIGHT);
+        greyForeGround.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        greyForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        
+        CellStyle yellowForeGround = propertyStolenSheet.getWorkbook().createCellStyle();
+        yellowForeGround.cloneStyleFrom(greyForeGround);
+        yellowForeGround.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+        
+        
+        Font smallerUnderlineFont = propertyStolenSheet.getWorkbook().createFont();
+        smallerUnderlineFont.setUnderline(Font.U_SINGLE);
+        smallerUnderlineFont.setFontHeightInPoints(Short.parseShort("7"));
+        
+        switch(rowName){
+    	case ROBBERY_TOTAL: 
+    	case BURGLARY_TOTAL:
+    	case LARCENY_TOTAL:
+    	case LARCENIES_TOTAL_BY_NATURE:
+    	case GRAND_TOTAL:
+            XSSFRichTextString allBoldString = new XSSFRichTextString(rowName.getLabel());
+            allBoldString.applyFont(boldFont);
+            cell.setCellValue(allBoldString);
+            cell = row.createCell(colNum++);
+            cell.setCellValue(rowName.getDataEntry());
+            cell.setCellStyle(greyForeGround);
+            cell = row.createCell(colNum++);
+            cell.setCellStyle(centeredStyle);
+            cell.setCellValue( propertyStolenByClassification.getNumberOfOffenses());
+            cell = row.createCell(colNum++);
+            cell.setCellType(CellType.STRING);
+            cell.setCellStyle(centeredStyle);
+            cell.setCellValue("$" +  propertyStolenByClassification.getMonetaryValue());
+    		break; 
+    		
+    	default: 
+    		switch (rowName) {
+        	case MURDER_AND_NONNEGLIGENT_MANSLAUGHTER:
+        	case RAPE:
+        	case MOTOR_VEHICLE_THEFT:
+                allBoldString = new XSSFRichTextString(rowName.getLabel());
+                allBoldString.applyFont(boldFont);
+                cell.setCellValue(allBoldString);
+        		break;
+        	case ROBBERY_HIGHWAY: 
+        	case BURGLARY_RESIDENCE_NIGHT: 
+        	case LARCENY_200_PLUS: 
+        	case MOTOR_VEHICLES_STOLEN_AND_RECOVERED_LOCALLY: 
+                XSSFRichTextString s1 = new XSSFRichTextString(rowName.getLabel());
+                s1.applyFont(0, rowName.getLabel().indexOf('\n'), boldFont);
+                cell.setCellValue(s1);
+                break;
+        	case LARCENY_POCKET_PICKING: 
+                s1 = new XSSFRichTextString(rowName.getLabel());
+                s1.applyFont(0, rowName.getLabel().indexOf('\n'), smallerUnderlineFont);
+                s1.applyFont(rowName.getLabel().indexOf("6x"), rowName.getLabel().lastIndexOf('\n'), boldFont);
+                cell.setCellValue(s1);
+                break;
+    		default: 
+    			cell.setCellValue(rowName.getLabel());
+    		}
+    		cell.setCellStyle(wrapStyle);
+    		cell = row.createCell(colNum++);
+    		cell.setCellValue(rowName.getDataEntry());
+    		cell.setCellStyle(greyForeGround);
+    		cell = row.createCell(colNum++);
+    		cell.setCellValue((Integer) propertyStolenByClassification.getNumberOfOffenses());
+    		cell.setCellStyle(yellowForeGround);
+    		
+    		List<PropertyStolenByClassificationRowName> lastFourRows = 
+    				Arrays.asList(PropertyStolenByClassificationRowName.MOTOR_VEHICLES_STOLEN_AND_RECOVERED_LOCALLY, 
+    						PropertyStolenByClassificationRowName.MOTOR_VEHICLES_STOLEN_LOCALLY_AND_RECOVERED_BY_OTHER_JURISDICTIONS, 
+    						PropertyStolenByClassificationRowName.MOTOR_VEHICLES_TOTAL_LOCALLY_STOLEN_MOTOR_VEHICLES_RECOVERED, 
+    						PropertyStolenByClassificationRowName.MOTOR_VEHICLES_STOLEN_IN_OTHER_JURISDICTIONS_AND_RECOVERED_LOCALLY);
+    		if (!lastFourRows.contains(rowName)) {
+    			cell = row.createCell(colNum++);
+    			cell.setCellValue(propertyStolenByClassification.getMonetaryValue());
+    			cell.setCellStyle(yellowForeGround);
+    		}
+    	}
+		
+	}
+	private int  createPropertyStolenHeaderRow(XSSFSheet sheet, int rowNum, Font boldFont,
+			XSSFFont normalWeightFont) {
+        XSSFFont underlineFont = sheet.getWorkbook().createFont();
+		underlineFont.setUnderline(Font.U_SINGLE);
+		
+		Row row = sheet.createRow(rowNum++);
+    	row.setHeightInPoints((4*sheet.getDefaultRowHeightInPoints()));
+		Cell cell = row.createCell(0);
+		
+        CellStyle column0Style = sheet.getWorkbook().createCellStyle();
+        column0Style.setWrapText(true);
+        column0Style.setAlignment(HorizontalAlignment.CENTER);
+        column0Style.setVerticalAlignment(VerticalAlignment.CENTER);
+        column0Style.setBorderTop(BorderStyle.THIN);
+        column0Style.setBorderLeft(BorderStyle.THIN);
+        column0Style.setBorderRight(BorderStyle.THIN);
+
+		cell.setCellStyle(column0Style);
+		XSSFRichTextString s1 = new XSSFRichTextString(); 
+		s1.append("CLASSIFICATION", underlineFont);
+		cell.setCellValue(s1);
+		
+		Cell cell1 = row.createCell(1);
+		XSSFCellStyle column1Style = sheet.getWorkbook().createCellStyle(); 
+		column1Style.setRotation((short)90);
+		column1Style.setVerticalAlignment(VerticalAlignment.CENTER);
+		column1Style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		column1Style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		column1Style.setBorderTop(BorderStyle.THIN);
+		column1Style.setBorderLeft(BorderStyle.THIN);
+		column1Style.setBorderRight(BorderStyle.THIN);
+		cell1.setCellValue("Data Entry");
+		cell1.setCellStyle(column1Style);
+		
+
+		Cell cell2 = row.createCell(2);
+		cell2.setCellStyle(column0Style);
+		s1 = new XSSFRichTextString("Number of Actual \n Offenses (Column 4\n Return A)");
+		cell2.setCellValue(s1);
+		
+		Cell cell3 = row.createCell(3);
+		cell3.setCellStyle(column0Style);
+		s1 = new XSSFRichTextString("Monetary \n Value of Property Stolen");
+		cell3.setCellValue(s1);
+		
+		return rowNum;
+	}
+	private void createPropertyByTypeAndValueSheet(ReturnAForm returnAForm, XSSFWorkbook workbook, CellStyle wrappedStyle,
 			CellStyle centeredStyle, Font boldFont, XSSFFont normalWeightFont) {
+		
+		int rowNum = 0;
 		XSSFSheet propertyByTypeAndValueSheet = workbook.createSheet("Property By Type and Value");
         rowNum = createPropertyByTypeAndValueTitleRow(propertyByTypeAndValueSheet, rowNum, wrappedStyle, boldFont, normalWeightFont);
 		createPropertyByTypeAndValueHeaderRow(propertyByTypeAndValueSheet, rowNum, boldFont, normalWeightFont);
@@ -443,6 +615,25 @@ public class ExcelExporter {
 	}
     
 
+	private int createPropertyStolenTitleRow(XSSFSheet sheet, int rowNum, Font boldFont, XSSFFont normalWeightFont) {
+		Row row = sheet.createRow(rowNum++);
+		row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 3));
+		Cell cell = row.createCell(0);
+		
+		CellStyle centered = sheet.getWorkbook().createCellStyle();
+		centered.setAlignment(HorizontalAlignment.CENTER);
+		centered.setVerticalAlignment(VerticalAlignment.BOTTOM);
+		cell.setCellStyle(centered);
+		
+		XSSFRichTextString s1 = new XSSFRichTextString("PROPERTY STOLEN BY CLASSIFICATION");
+		s1.applyFont(boldFont);
+		cell.setCellValue(s1);
+		
+		return rowNum;
+	}
+	
+	
 	private void createReturnASupplementTextSheet(XSSFSheet sheet, int rowNum, Font boldFont,
 			XSSFFont normalWeightFont) {
 		
