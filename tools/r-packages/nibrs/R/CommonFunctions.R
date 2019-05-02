@@ -78,21 +78,6 @@ writeDataFrameToDatabase <- function(conn, x, tableName, append = TRUE, viaBulk 
     ret
   }
 
-  getCharFieldTypes <- function(adf) {
-    fieldTypes <- NULL
-    charCols <- adf %>% select_if(is.character)
-    if (ncol(charCols)) {
-      fieldTypes <- colnames(charCols) %>% map_chr(function(colName, charCols) {
-        maxLength <- 1
-        if (any(!is.na(charCols[[colName]]))) {
-          maxLength <- max(str_length(na.omit(charCols[[colName]])))
-        }
-        paste0('varchar(', maxLength, ')')
-      }, charCols) %>% set_names(colnames(charCols))
-    }
-    fieldTypes
-  }
-
   if (!is.null(x)) {
 
     if (!dbExistsTable(conn, tableName)) {
@@ -191,4 +176,19 @@ writeDataFrameToDatabase <- function(conn, x, tableName, append = TRUE, viaBulk 
 
   invisible()
 
+}
+
+getCharFieldTypes <- function(adf) {
+  fieldTypes <- NULL
+  charCols <- adf %>% select_if(is.character)
+  if (ncol(charCols)) {
+    fieldTypes <- colnames(charCols) %>% map_chr(function(colName, charCols) {
+      maxLength <- 1
+      if (any(!is.na(charCols[[colName]]))) {
+        maxLength <- max(str_length(na.omit(charCols[[colName]])))
+      }
+      paste0('varchar(', maxLength, ')')
+    }, charCols) %>% set_names(colnames(charCols))
+  }
+  fieldTypes
 }

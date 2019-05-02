@@ -9,7 +9,7 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
                                                        sharedCsvDir='/opt/data/nibrs/cde/csv',
                                                        drillHost='localhost',
                                                        drillPort=8047L,
-                                                       writeProgressDetail=TRUE) {
+                                                       writeProgressDetail=TRUE, cleanUpCsv=TRUE, reusePriorCsv=FALSE, accumListStorageDir='.') {
 
   if (is.null(codeTableList)) {
     writeLines('Loading code tables')
@@ -32,6 +32,10 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
   files <- list.files(zipDirectory, pattern=pattern, full.names=TRUE)
 
   files <- sample(files, zipFileSampleFraction*length(files))
+
+  files <- sort(files)
+
+  accumListFilePath <- file.path(accumListStorageDir, 'accumList.rds')
 
   mapf <- map
 
@@ -56,55 +60,144 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
     gsub(x=basename(file), pattern='^(.{2})-.+', replacement='\\1')
   }
 
-  writeLines(paste0('Processing ', length(files), ' input CDE files'))
+  if (!reusePriorCsv) {
 
-  accumDfs <- files %>% mapf(function(file) {
+    writeLines(paste0('Processing ', length(files), ' input CDE files'))
 
-    state <- getStateCodeFromFile(file)
-    yr <- gsub(x=basename(file), pattern='.+\\-([0-9]{4})\\.zip$', replacement='\\1')
+    accumList <- files %>% mapf(function(file) {
 
-    if (writeProgressDetail) writeLines(paste0('Processing NIBRS CDE file ', file, ', (state=', state, ', yr=', yr, ')'))
+      state <- getStateCodeFromFile(file)
+      yr <- as.integer(gsub(x=basename(file), pattern='.+\\-([0-9]{4})\\.zip$', replacement='\\1'))
 
-    directory <- tempfile(pattern='dir')
-    unzip(file, exdir=directory, junkpaths=TRUE)
-    sdfs <- loadCDEDataToStaging(directory, codeTableList, state, writeProgressDetail=writeProgressDetail)
-    unlink(directory, TRUE)
+      if (writeProgressDetail) writeLines(paste0('Processing NIBRS CDE file ', file, ', (state=', state, ', yr=', yr, ')'))
 
-    accumDfList <- NULL
+      directory <- tempfile(pattern='dir')
+      unzip(file, exdir=directory, junkpaths=TRUE)
+      sdfs <- loadCDEDataToStaging(directory, codeTableList, state, writeProgressDetail=writeProgressDetail)
+      unlink(directory, TRUE)
 
-    if (!is.null(sdfs)) {
+      accumDfList <- NULL
 
-      ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs), writeProgressDetail=writeProgressDetail)
+      if (!is.null(sdfs)) {
 
-      accumDfList <- list()
-      accumDfList$DateType <- ddfs$DateType
-      accumDfList$Agency <- ddfs$Agency %>% select(-Population)
+        ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs), writeProgressDetail=writeProgressDetail)
 
-      if (writeProgressDetail) writeLines(paste0('Writing out csvs for ', state, ' + ', yr, '...'))
+        accumDfList <- list()
+        accumDfList$DateType <- ddfs$DateType
+        accumDfList$Agency <- ddfs$Agency %>% select(-Population)
+        accumDfList$state <- state
+        accumDfList$yr <- yr
 
-      viewDir <- file.path(sharedCsvDir, state, yr)
-      unlink(viewDir, recursive=TRUE)
-      dir.create(viewDir, recursive=TRUE)
+        if (writeProgressDetail) writeLines(paste0('Writing out csvs for ', state, ' + ', yr, '...'))
 
-      keepFactTables(ddfs) %>%
-        iwalk(function(ftdf, tableName) {
-          if (writeProgressDetail) writeLines(paste0('  writing fact table: ', tableName))
-          write_csv(ftdf %>% mutate(CDEYear=yr), file.path(viewDir, paste0(tableName, '.csvh')), na='')
-          if (writeProgressDetail) writeLines('  done')
-        })
+        viewDir <- file.path(sharedCsvDir, state, yr)
+        unlink(viewDir, recursive=TRUE)
+        dir.create(viewDir, recursive=TRUE)
 
-    } else {
-      if (writeProgressDetail) writeLines(paste0('Cannot create parquet/drill data for ', file, ' because input data frame list is null'))
-    }
+        factTables <- keepFactTables(ddfs)
 
-    accumDfList
+        accumDfList$factTableNames <- names(factTables)
 
-  })
+        accumDfList$CharFieldLengthTallyList <- factTables %>%
+          imap(function(ftdf, tableName) {
+            ret <- NULL
+            if (nrow(ftdf)) {
+              if (writeProgressDetail) writeLines(paste0('  writing fact table: ', tableName))
+              write_csv(ftdf %>% mutate(CDEYear=yr), file.path(viewDir, paste0(tableName, '.csvh')), na='')
+              if (writeProgressDetail) writeLines('  done')
+              ret <- getCharFieldTypes(ftdf)
+            } else {
+              if (writeProgressDetail) writeLines(paste0('  skipping fact table ', tableName, ' for ', state, ' + ', yr, ' since table is empty'))
+            }
+            ret
+          }) %>% set_names(names(factTables))
+
+      } else {
+        if (writeProgressDetail) writeLines(paste0('Cannot create parquet/drill data for ', file, ' because input data frame list is null'))
+      }
+
+      accumDfList
+
+    })
+
+    if (!cleanUpCsv) saveRDS(accumList, accumListFilePath)
+
+  } else if (file.exists('accumList.rds')) {
+    writeLines('Reusing CSV files written in a prior run')
+    accumList <- readRDS(accumListFilePath)
+  } else {
+    stop('Cannot reuse prior csv if accumList object is not saved from the prior run')
+  }
+
+  writeLines(paste0('Removing empty accumulated (cross state/yr) objects'))
+  pre <- length(accumList)
+  accumList <- compact(accumList)
+  writeLines(paste0('Removed ', (pre - length(accumList)), ' empty objects'))
+
+  accumFactTableNames <- accumList %>%
+    keep(function(member) { !is.null(member$factTableNames) }) %>%
+    reduce(function(accum, value) {
+      list(factTableNames=sort(unique(c(accum$factTableNames, value$factTableNames))))
+    }) %>% unlist()
+
+  writeLines(paste0('Accumulated fact table names: ', paste0(accumFactTableNames, collapse=', ')))
+
+  factTableCharFieldTypes <- accumList %>%
+    keep(function(member) { !is.null(member$CharFieldLengthTallyList) }) %>%
+    reduce(function(accum, value) {
+      state <- value$state
+      yr <- value$yr
+      writeLines(paste0('Accumulating char field types for state=', state, ', yr=', yr))
+      value <- value$CharFieldLengthTallyList
+      tableColList <- accumFactTableNames %>% map(function(tableName) {
+        valueTable <- value[[tableName]]
+        accumTable <- accum[[tableName]]
+        ret <- NULL
+        if (is.null(valueTable) && !is.null(accumTable)) {
+          writeLines(paste0('No fact table for ', tableName, ' found for ', state, '+', yr))
+          ret <- accumTable
+        } else if (is.null(accumTable) && !is.null(valueTable)) {
+          writeLines(paste0('Accumulated fact table is missing for ', tableName, ' while processing ', state, '+', yr))
+          ret <- valueTable
+        } else if (!is.null(accumTable) && !is.null(valueTable)) {
+          ret <- map2_chr(valueTable, accumTable, function(valueCol, accumCol) {
+            pp <- 'varchar\\(([0-9]+)\\)'
+            valueValue <- as.integer(gsub(x=valueCol, pattern=pp, replacement='\\1'))
+            accumValue <- as.integer(gsub(x=accumCol, pattern=pp, replacement='\\1'))
+            ret <- case_when(valueValue > accumValue ~ valueCol, TRUE ~ accumCol)
+            case_when(ret=='varchar(0)' ~ 'varchar(1)', TRUE ~ ret)
+          }) %>% set_names(names(valueTable))
+        } else {
+          writeLines(paste0('Somehow both the accumulated fact table ', tableName, ' and the instance for ', state, '+', yr, ' are missing.'))
+        }
+        ret
+      })
+      tableColList %>% set_names(accumFactTableNames)
+    }, .init=accumList[[1]]$CharFieldLengthTallyList)
 
   writeLines('Harvesting code tables from first non-null CDE file')
 
   enhancedCodeTableList <- NULL
-  factTableList <- NULL
+  factTableNameList <- NULL
+  typeSensitiveSelectColList <- NULL
+
+  getTypeSensitiveSelectColList <- function(tableDf, tableName) {
+    cns <- colnames(tableDf)
+    charFieldTypes <- factTableCharFieldTypes[[tableName]]
+    if (is.null(charFieldTypes)) {
+      charFieldTypes <- getCharFieldTypes(tableDf)
+    }
+    otherFieldTypes <- character(0)
+    otherFields <- setdiff(cns, names(charFieldTypes))
+    if (length(otherFields) > 0) {
+      otherFieldTypes <- tableDf %>%
+      select(otherFields) %>%
+      db_data_type(ANSI(), fields=.)
+    }
+    cns %>% map_chr(function(cn, types) {
+      paste0("case when ", cn, "='' then cast(NULL as ", types[cn], ") else cast(", cn, " as ", types[cn], ") end as ", cn)
+    }, c(charFieldTypes, otherFieldTypes)) %>% paste0(collapse=', ')
+  }
 
   while (is.null(enhancedCodeTableList)) {
     for (file in files) {
@@ -115,31 +208,45 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
       if (!is.null(sdfs)) {
         ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs), writeProgressDetail=writeProgressDetail)
         enhancedCodeTableList <- keepCodeTables(ddfs)
-        factTableList <- names(keepFactTables(ddfs))
+        factTableList <- keepFactTables(ddfs)
+        factTableList <- factTableList %>%
+          map(function(factTable) {
+            factTable %>% mutate(CDEYear=1L) # doesn't matter what this value is as long as it's an integer...we are just determining column types here
+          }) %>% set_names(names(factTableList))
+        factTableNameList <- names(factTableList)
+        typeSensitiveSelectColList <- c(
+          imap_chr(enhancedCodeTableList, getTypeSensitiveSelectColList) %>% set_names(names(enhancedCodeTableList)),
+          imap_chr(factTableList, getTypeSensitiveSelectColList) %>% set_names(names(factTableList))
+        )
         break
       }
     }
   }
 
-  writeLines(paste0('Removing date/agency tables for empty inputs'))
-  pre <- length(accumDfs)
-  accumDfs <- keep(accumDfs, function(member) !is.null(member))
-  writeLines(paste0('Removed ', (pre - length(accumDfs)), ' empty date/agency lists'))
+  enhancedCodeTableList <- enhancedCodeTableList[setdiff(names(enhancedCodeTableList), c('Agency', 'DateType'))]
 
-  writeLines(paste0('Concatenating date/agency tables'))
-  accumDfs <- reduce(accumDfs, function(accumDfList, eachDfList) {
+  writeLines(paste0('Concatenating date/agency tables and removing char field length tally object'))
+  accumList <- reduce(accumList, function(accumDfList, eachDfList) {
     accumDfList$DateType <- bind_rows(accumDfList$DateType, eachDfList$DateType) %>% distinct()
     accumDfList$Agency <- bind_rows(accumDfList$Agency, eachDfList$Agency) %>% distinct()
+    accumDfList$CharFieldLengthTallyList <- NULL
+    accumDfList$state <- NULL
+    accumDfList$yr <- NULL
+    accumDfList$factTableNames <- NULL
     accumDfList
   })
 
-  accumDfs$Agency <- accumDfs$Agency %>%
+  accumList$Agency <- accumList$Agency %>%
     group_by(AgencyORI) %>%
     filter(!((AgencyName=='' | is.na(AgencyName)) & n() > 1)) %>%
     arrange(AgencyName, .by_group=TRUE) %>%
     filter(row_number()==1) %>%
-    mutate(AgencyName=toupper(AgencyName)) %>%
+    mutate(AgencyName=case_when(is.na(AgencyName) ~ 'NAME UNKNOWN', TRUE ~ AgencyName)) %>%
+    mutate(AgencyName=paste0(toupper(AgencyName), ' (', AgencyORI, ')')) %>%
     ungroup()
+
+  typeSensitiveSelectColList['Agency'] <- getTypeSensitiveSelectColList(accumList$Agency)
+  typeSensitiveSelectColList['DateType'] <- getTypeSensitiveSelectColList(accumList$DateType)
 
   # make sure the the sharedCsvDir is mounted into the nibrs-drill container at /nibrs/csv
 
@@ -149,52 +256,54 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
     if (nrow(resultDf) && ncol(resultDf)) writeLines(paste0('Wrote ', resultDf[[1,1]], ' ', tableName, ' records'))
   }
 
-  getColList <- function(tablePath) {
-    dbGetQuery(db$con, paste0('SELECT * FROM ', tablePath, ' limit 1')) %>%
-      select(-matches('^dir[0-9]+$')) %>%
-      colnames() %>%
-      paste0(collapse=',')
-  }
+  createTableAndView <- function(tableName, partitionBy='', csvDirsPath='/', writeCTASSQL=FALSE) {
 
-  walk(factTableList, function(factTable) {
+    getColList <- function(tablePath) {
+      dbGetQuery(db$con, paste0('SELECT * FROM ', tablePath, ' limit 1')) %>%
+        select(-matches('^dir[0-9]+$')) %>%
+        colnames() %>%
+        paste0(collapse=',')
+    }
 
-    writeLines(paste0('Creating aggregate parquet dataset for ', factTable))
-    parquetFile <- paste0('dfs.nibrs.`/parquet/', factTable, '.parquet`')
+    writeLines(paste0('Creating aggregate parquet dataset for ', tableName))
+    parquetFile <- paste0('dfs.nibrs.`/parquet/', tableName, '.parquet`')
 
     result <- dbGetQuery(db$con, paste0('DROP TABLE IF EXISTS ', parquetFile))
-    result <- dbGetQuery(db$con, paste0('CREATE TABLE ', parquetFile, ' PARTITION BY (StateID, CDEYear) AS SELECT * FROM dfs.nibrs.`/csv/*/*/', factTable, '.csvh`'))
-    reportResult(result, factTable)
+    result <- dbGetQuery(db$con, paste0('DROP VIEW IF EXISTS dfs.nibrs.', tableName))
+    ctasSql <- paste0('CREATE TABLE ', parquetFile, ' ', partitionBy, ' AS SELECT ', typeSensitiveSelectColList[tableName], ' FROM dfs.nibrs.`/csv', csvDirsPath, tableName, '.csvh`')
+    if (writeCTASSQL) writeLines(paste0('CTAS SQL: ', ctasSql))
+    result <- dbGetQuery(db$con, ctasSql)
+    reportResult(result, tableName)
+    result <- dbGetQuery(db$con, paste0('CREATE VIEW dfs.nibrs.', tableName, ' as SELECT ', getColList(parquetFile), ' FROM ', parquetFile))
 
-    result <- dbGetQuery(db$con, paste0('DROP VIEW IF EXISTS dfs.nibrs.', factTable))
-    result <- dbGetQuery(db$con, paste0('CREATE VIEW dfs.nibrs.', factTable, ' as SELECT ', getColList(parquetFile), ' FROM ', parquetFile))
+    invisible()
 
-  })
+  }
+
+  writeLines('Creating parquet datasets for fact tables')
+  walk(factTableNameList, createTableAndView, partitionBy='PARTITION BY (StateID, CDEYear)', csvDirsPath='/*/*/')
 
   writeLines('Creating parquet datasets for static code tables')
   enhancedCodeTableList %>% iwalk(function(tdf, tableName) {
     write_csv(tdf, file.path(sharedCsvDir, paste0(tableName, '.csvh')), na='')
-    parquetFile <- paste0('dfs.nibrs.`/parquet/', tableName, '.parquet`')
-    result <- dbGetQuery(db$con, paste0('DROP TABLE IF EXISTS ', parquetFile))
-    sql <- paste0("CREATE TABLE ", parquetFile, " AS SELECT * FROM dfs.nibrs.`/csv/", tableName, ".csvh", "`")
-    result <- dbGetQuery(db$con, sql)
-    reportResult(result, tableName)
-    result <- dbGetQuery(db$con, paste0('DROP VIEW IF EXISTS dfs.nibrs.', tableName))
-    result <- dbGetQuery(db$con, paste0('CREATE VIEW dfs.nibrs.', tableName, ' as SELECT ', getColList(parquetFile), ' FROM ', parquetFile))
+    createTableAndView(tableName)
   })
 
   writeLines('Creating parquet datasets for agency and date code tables')
-  accumDfs %>% iwalk(function(tdf, tableName) {
-    write_csv(tdf, file.path(sharedCsvDir, paste0(tableName, '.csvh')), na='')
-    parquetFile <- paste0('dfs.nibrs.`/parquet/', tableName, '.parquet`')
-    result <- dbGetQuery(db$con, paste0('DROP TABLE IF EXISTS ', parquetFile))
-    sql <- paste0("CREATE TABLE ", parquetFile, " AS SELECT * FROM dfs.nibrs.`/csv/", tableName, ".csvh", "`")
-    result <- dbGetQuery(db$con, sql)
-    reportResult(result, tableName)
-    result <- dbGetQuery(db$con, paste0('DROP VIEW IF EXISTS dfs.nibrs.', tableName))
-    result <- dbGetQuery(db$con, paste0('CREATE VIEW dfs.nibrs.', tableName, ' as SELECT ', getColList(parquetFile), ' FROM ', parquetFile))
+  accumList %>% iwalk(function(tdf, tableName) {
+    if (tableName != 'CharFieldLengthTallyList') {
+      write_csv(tdf, file.path(sharedCsvDir, paste0(tableName, '.csvh')), na='')
+      createTableAndView(tableName)
+    }
   })
 
-  invisible()
+  if (cleanUpCsv) {
+    writeLines('Cleaning up csv temp files from Drill...')
+    list.files(sharedCsvDir, full.names=TRUE) %>% unlink(recursive=TRUE)
+    writeLines('...csv cleanup done.')
+  }
+
+  invisible(c(factTableList, enhancedCodeTableList, accumList))
 
 }
 
@@ -388,7 +497,7 @@ loadCDEDataToStaging <- function(singleStateYearDirectory, codeTableList=NULL, s
   ret <- c(ret, map(loadCDEPropertyData(ret, singleStateYearDirectory, fixFilename, writeProgressDetail), setFactTableAttribute))
 
   ret$AgencyType <- bind_rows(ret$AgencyType,
-                              tibble(AgencyTypeID=100, StateCode='100', StateDescription='Other') %>% mutate(NIBRSCode=StateCode, NIBRSDescription=StateDescription))
+                              tibble(AgencyTypeID=100L, StateCode='100', StateDescription='Other') %>% mutate(NIBRSCode=StateCode, NIBRSDescription=StateDescription))
   attr(ret$AgencyType, 'type') <- 'CT'
 
   ret$Agency <- agencyDf %>%
