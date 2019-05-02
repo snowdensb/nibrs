@@ -5,6 +5,9 @@ FROM ojbc/java8-server-base
 
 MAINTAINER Open Justice Broker Consortium "http://www.ojbc.org"
 
+WORKDIR /opt
+
+COPY files/application.properties /opt/application.properties
 COPY bin/nibrs-web.war /opt/nibrs-web.war
 
-CMD ["java", "-jar", "/opt/nibrs-web.war"]
+CMD ["java", "-jar", "nibrs-web.war"]
