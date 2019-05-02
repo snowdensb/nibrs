@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
@@ -13,24 +14,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
--->
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 
 -->
 <Schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="nibrs_analytics" metamodelVersion="4.0" xsi:noNamespaceSchemaLocation="mondrian4.xsd">
@@ -564,7 +547,7 @@ limitations under the License.
       <Dimension source="TypeOfWeaponForceInvolved"/>
       <Dimension visible="true" name="Victim Age" key="VictimAge">
         <Attributes>
-          <Attribute name="VictimAge" keyColumn="VictimAgeDim" hasHierarchy="false" table="FullIncidentView" orderByColumn="AgeOfVictimMin"/>
+          <Attribute name="VictimAge" keyColumn="VictimAgeDim" hasHierarchy="false" table="FullIncidentView" orderByColumn="VictimAgeDimSort"/>
           <Attribute name="VictimAgeGroup" keyColumn="VictimAgeGroup" hasHierarchy="false" table="FullIncidentView" orderByColumn="VictimAgeGroupSort"/>
           <Attribute name="VictimUcrAgeGroup" keyColumn="VictimAgeGroup" hasHierarchy="false" table="FullIncidentView" orderByColumn="VictimUcrAgeGroupSort"/>
         </Attributes>
@@ -715,7 +698,7 @@ limitations under the License.
       <Dimension source="TypeOfWeaponForceInvolved"/>
       <Dimension visible="true" name="Victim Age" key="VictimAge">
         <Attributes>
-          <Attribute name="VictimAge" keyColumn="VictimAgeDim" hasHierarchy="false" table="FullVictimOffenseView" orderByColumn="AgeOfVictimMin"/>
+          <Attribute name="VictimAge" keyColumn="VictimAgeDim" hasHierarchy="false" table="FullVictimOffenseView" orderByColumn="VictimAgeDimSort"/>
           <Attribute name="VictimAgeGroup" keyColumn="VictimAgeGroup" hasHierarchy="false" table="FullVictimOffenseView" orderByColumn="VictimAgeGroupSort"/>
           <Attribute name="VictimUcrAgeGroup" keyColumn="VictimUcrAgeGroup" hasHierarchy="false" table="FullVictimOffenseView" orderByColumn="VictimUcrAgeGroupSort"/>
         </Attributes>

@@ -157,6 +157,17 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     )
   }
 
+  createVictimAgeDimSort <- function(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin) {
+    case_when(
+      AgeNeonateIndicator == 1 ~ 1L,
+      AgeFirstWeekIndicator == 1 ~ 2L,
+      AgeFirstYearIndicator == 1 ~ 3L,
+      AgeOfVictimMin == 99 ~ 110L,
+      is.na(AgeOfVictimMin) ~ 111L,
+      TRUE ~ as.integer(AgeOfVictimMin+4)
+    )
+  }
+
   createClearedIndicator <- function(ArresteeSegmentID, ClearedExceptionallyTypeID) {
     case_when(
       !is.na(ArresteeSegmentID) ~ 1L,
@@ -348,6 +359,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       StolenMotorVehiclesDim=createMotorVehiclesDim(NumberOfStolenMotorVehicles),
       RecoveredMotorVehiclesDim=createMotorVehiclesDim(NumberOfRecoveredMotorVehicles),
       VictimAgeDim=createVictimAgeDim(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
+      VictimAgeDimSort=createVictimAgeDimSort(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
       VictimAgeGroup=createAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
       VictimAgeGroupSort=createAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
       VictimUcrAgeGroup=createUcrAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
@@ -449,6 +461,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       OffensesPerIncidentDim,
       NumberOfPremisesEnteredDim,
       VictimAgeDim,
+      VictimAgeDimSort,
       VictimAgeGroup,
       VictimAgeGroupSort,
       VictimUcrAgeGroup,
@@ -481,6 +494,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     mutate(
       NumberOfPremisesEnteredDim=case_when(is.na(NumberOfPremisesEntered) ~ 'N/A', TRUE ~ as.character(NumberOfPremisesEntered)),
       VictimAgeDim=createVictimAgeDim(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
+      VictimAgeDimSort=createVictimAgeDimSort(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
       VictimAgeGroup=createAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
       VictimAgeGroupSort=createAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
       VictimUcrAgeGroup=createUcrAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
@@ -527,6 +541,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       AgeFirstWeekIndicator,
       AgeFirstYearIndicator,
       VictimAgeDim,
+      VictimAgeDimSort,
       VictimAgeGroup,
       VictimAgeGroupSort,
       VictimUcrAgeGroup,
@@ -567,6 +582,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     mutate_at(vars(ends_with('ID')), as.integer) %>%
     mutate(
       VictimAgeDim=createVictimAgeDim(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
+      VictimAgeDimSort=createVictimAgeDimSort(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
       VictimAgeGroup=createAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
       VictimAgeGroupSort=createAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
       VictimUcrAgeGroup=createUcrAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
@@ -619,6 +635,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       AgeFirstWeekIndicator,
       AgeFirstYearIndicator,
       VictimAgeDim,
+      VictimAgeDimSort,
       VictimAgeGroup,
       VictimAgeGroupSort,
       VictimUcrAgeGroup,
