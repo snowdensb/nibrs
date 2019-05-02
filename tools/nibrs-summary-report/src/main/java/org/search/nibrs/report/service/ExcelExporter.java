@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -26,10 +27,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -39,6 +42,10 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.search.nibrs.model.reports.PropertyStolenByClassification;
+import org.search.nibrs.model.reports.PropertyStolenByClassificationRowName;
+import org.search.nibrs.model.reports.PropertyTypeValue;
+import org.search.nibrs.model.reports.PropertyTypeValueRowName;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.ReturnAFormRow;
 import org.search.nibrs.model.reports.ReturnARowName;
@@ -54,7 +61,642 @@ public class ExcelExporter {
 	@Autowired
 	private AppProperties appProperties;
 
-    public void exportReturnAForm(ReturnAForm returnAForm){
+    public void exportReturnASupplement(ReturnAForm returnAForm){
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet sheet = workbook.createSheet("Return A Supplement");
+    	
+        int rowNum = 0;
+        log.info("Write to the excel file");
+        CellStyle wrappedStyle = workbook.createCellStyle();
+        wrappedStyle.setWrapText(true);
+        wrappedStyle.setBorderBottom(BorderStyle.THIN);
+        wrappedStyle.setBorderTop(BorderStyle.THIN);
+        wrappedStyle.setBorderRight(BorderStyle.THIN);
+        wrappedStyle.setBorderLeft(BorderStyle.THIN);
+        CellStyle centeredStyle = workbook.createCellStyle();
+        centeredStyle.setAlignment(HorizontalAlignment.CENTER);;
+        Font boldFont = workbook.createFont();
+        boldFont.setBold(true);
+        
+        XSSFFont normalWeightFont = workbook.createFont();
+        normalWeightFont.setBold(false);
+        
+        Font underlineFont = workbook.createFont();
+        underlineFont.setUnderline(Font.U_SINGLE);
+        
+    	createReturnASupplementTextSheet(sheet, rowNum, boldFont, normalWeightFont);
+        createPropertyByTypeAndValueSheet(returnAForm, workbook, wrappedStyle, centeredStyle, boldFont, normalWeightFont);
+        createPropertyStolenByClassificationSheet(returnAForm, workbook, wrappedStyle, centeredStyle, boldFont, normalWeightFont);
+		
+        try {
+        	String fileName = appProperties.getReturnAFormOutputPath() + "/ReturnASupplement-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
+            FileOutputStream outputStream = new FileOutputStream(fileName);
+            workbook.write(outputStream);
+            workbook.close();
+            System.out.println("The return A form is writen to fileName: " + fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+	private void createPropertyStolenByClassificationSheet(ReturnAForm returnAForm, XSSFWorkbook workbook,
+			CellStyle wrappedStyle, CellStyle centeredStyle, Font boldFont, XSSFFont normalWeightFont) {
+		int rowNum = 0;
+		
+		XSSFSheet propertyStolenSheet = workbook.createSheet("PROPERTY STOLEN BY CLASSIFICATION");
+        rowNum = createPropertyStolenTitleRow(propertyStolenSheet, rowNum, boldFont, normalWeightFont);
+		rowNum = createPropertyStolenHeaderRow(propertyStolenSheet, rowNum, boldFont, normalWeightFont);
+		
+        for (PropertyStolenByClassificationRowName rowName: PropertyStolenByClassificationRowName.values()){
+        	writePropertyStolenRow(propertyStolenSheet, rowName, returnAForm.getPropertyStolenByClassifications()[rowName.ordinal()], rowNum++, boldFont);
+        }
+
+		propertyStolenSheet.autoSizeColumn(0);
+		propertyStolenSheet.autoSizeColumn(1);
+		propertyStolenSheet.setColumnWidth(2, 600 * propertyStolenSheet.getDefaultColumnWidth());
+		propertyStolenSheet.setColumnWidth(3, 900 * propertyStolenSheet.getDefaultColumnWidth());
+
+		
+	}
+	private void writePropertyStolenRow(XSSFSheet propertyStolenSheet, PropertyStolenByClassificationRowName rowName,
+			PropertyStolenByClassification propertyStolenByClassification, int rowNum, Font boldFont) {
+    	Row row = propertyStolenSheet.createRow(rowNum);
+    	int colNum = 0;
+    	Cell cell = row.createCell(colNum++);
+    	CellStyle wrapStyle = propertyStolenSheet.getWorkbook().createCellStyle();
+    	wrapStyle.setBorderBottom(BorderStyle.THIN);
+    	wrapStyle.setBorderTop(BorderStyle.THIN);
+    	wrapStyle.setBorderLeft(BorderStyle.THIN);
+    	wrapStyle.setBorderRight(BorderStyle.THIN);
+    	wrapStyle.setWrapText(true);
+        
+    	CellStyle centeredStyle = propertyStolenSheet.getWorkbook().createCellStyle();
+    	centeredStyle.cloneStyleFrom(wrapStyle);
+    	centeredStyle.setAlignment(HorizontalAlignment.CENTER);
+    	
+        CellStyle greyForeGround = propertyStolenSheet.getWorkbook().createCellStyle();
+        greyForeGround.cloneStyleFrom(wrapStyle);
+        greyForeGround.setAlignment(HorizontalAlignment.RIGHT);
+        greyForeGround.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        greyForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        
+        CellStyle yellowForeGround = propertyStolenSheet.getWorkbook().createCellStyle();
+        yellowForeGround.cloneStyleFrom(greyForeGround);
+        yellowForeGround.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+        
+        
+        Font smallerUnderlineFont = propertyStolenSheet.getWorkbook().createFont();
+        smallerUnderlineFont.setUnderline(Font.U_SINGLE);
+        smallerUnderlineFont.setFontHeightInPoints(Short.parseShort("7"));
+        
+        switch(rowName){
+    	case ROBBERY_TOTAL: 
+    	case BURGLARY_TOTAL:
+    	case LARCENY_TOTAL:
+    	case LARCENIES_TOTAL_BY_NATURE:
+    	case GRAND_TOTAL:
+            XSSFRichTextString allBoldString = new XSSFRichTextString(rowName.getLabel());
+            allBoldString.applyFont(boldFont);
+            cell.setCellValue(allBoldString);
+            cell = row.createCell(colNum++);
+            cell.setCellValue(rowName.getDataEntry());
+            cell.setCellStyle(greyForeGround);
+            cell = row.createCell(colNum++);
+            cell.setCellStyle(centeredStyle);
+            cell.setCellValue( propertyStolenByClassification.getNumberOfOffenses());
+            cell = row.createCell(colNum++);
+            cell.setCellType(CellType.STRING);
+            cell.setCellStyle(centeredStyle);
+            cell.setCellValue("$" +  propertyStolenByClassification.getMonetaryValue());
+    		break; 
+    		
+    	default: 
+    		switch (rowName) {
+        	case MURDER_AND_NONNEGLIGENT_MANSLAUGHTER:
+        	case RAPE:
+        	case MOTOR_VEHICLE_THEFT:
+                allBoldString = new XSSFRichTextString(rowName.getLabel());
+                allBoldString.applyFont(boldFont);
+                cell.setCellValue(allBoldString);
+        		break;
+        	case ROBBERY_HIGHWAY: 
+        	case BURGLARY_RESIDENCE_NIGHT: 
+        	case LARCENY_200_PLUS: 
+        	case MOTOR_VEHICLES_STOLEN_AND_RECOVERED_LOCALLY: 
+                XSSFRichTextString s1 = new XSSFRichTextString(rowName.getLabel());
+                s1.applyFont(0, rowName.getLabel().indexOf('\n'), boldFont);
+                cell.setCellValue(s1);
+                break;
+        	case LARCENY_POCKET_PICKING: 
+                s1 = new XSSFRichTextString(rowName.getLabel());
+                s1.applyFont(0, rowName.getLabel().indexOf('\n'), smallerUnderlineFont);
+                s1.applyFont(rowName.getLabel().indexOf("6x"), rowName.getLabel().lastIndexOf('\n'), boldFont);
+                cell.setCellValue(s1);
+                break;
+    		default: 
+    			cell.setCellValue(rowName.getLabel());
+    		}
+    		cell.setCellStyle(wrapStyle);
+    		cell = row.createCell(colNum++);
+    		cell.setCellValue(rowName.getDataEntry());
+    		cell.setCellStyle(greyForeGround);
+    		cell = row.createCell(colNum++);
+    		cell.setCellValue((Integer) propertyStolenByClassification.getNumberOfOffenses());
+    		cell.setCellStyle(yellowForeGround);
+    		
+    		List<PropertyStolenByClassificationRowName> lastFourRows = 
+    				Arrays.asList(PropertyStolenByClassificationRowName.MOTOR_VEHICLES_STOLEN_AND_RECOVERED_LOCALLY, 
+    						PropertyStolenByClassificationRowName.MOTOR_VEHICLES_STOLEN_LOCALLY_AND_RECOVERED_BY_OTHER_JURISDICTIONS, 
+    						PropertyStolenByClassificationRowName.MOTOR_VEHICLES_TOTAL_LOCALLY_STOLEN_MOTOR_VEHICLES_RECOVERED, 
+    						PropertyStolenByClassificationRowName.MOTOR_VEHICLES_STOLEN_IN_OTHER_JURISDICTIONS_AND_RECOVERED_LOCALLY);
+    		if (!lastFourRows.contains(rowName)) {
+    			cell = row.createCell(colNum++);
+    			cell.setCellValue(propertyStolenByClassification.getMonetaryValue());
+    			cell.setCellStyle(yellowForeGround);
+    		}
+    	}
+		
+	}
+	private int  createPropertyStolenHeaderRow(XSSFSheet sheet, int rowNum, Font boldFont,
+			XSSFFont normalWeightFont) {
+        XSSFFont underlineFont = sheet.getWorkbook().createFont();
+		underlineFont.setUnderline(Font.U_SINGLE);
+		
+		Row row = sheet.createRow(rowNum++);
+    	row.setHeightInPoints((4*sheet.getDefaultRowHeightInPoints()));
+		Cell cell = row.createCell(0);
+		
+        CellStyle column0Style = sheet.getWorkbook().createCellStyle();
+        column0Style.setWrapText(true);
+        column0Style.setAlignment(HorizontalAlignment.CENTER);
+        column0Style.setVerticalAlignment(VerticalAlignment.CENTER);
+        column0Style.setBorderTop(BorderStyle.THIN);
+        column0Style.setBorderLeft(BorderStyle.THIN);
+        column0Style.setBorderRight(BorderStyle.THIN);
+
+		cell.setCellStyle(column0Style);
+		XSSFRichTextString s1 = new XSSFRichTextString(); 
+		s1.append("CLASSIFICATION", underlineFont);
+		cell.setCellValue(s1);
+		
+		Cell cell1 = row.createCell(1);
+		XSSFCellStyle column1Style = sheet.getWorkbook().createCellStyle(); 
+		column1Style.setRotation((short)90);
+		column1Style.setVerticalAlignment(VerticalAlignment.CENTER);
+		column1Style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		column1Style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		column1Style.setBorderTop(BorderStyle.THIN);
+		column1Style.setBorderLeft(BorderStyle.THIN);
+		column1Style.setBorderRight(BorderStyle.THIN);
+		cell1.setCellValue("Data Entry");
+		cell1.setCellStyle(column1Style);
+		
+
+		Cell cell2 = row.createCell(2);
+		cell2.setCellStyle(column0Style);
+		s1 = new XSSFRichTextString("Number of Actual \n Offenses (Column 4\n Return A)");
+		cell2.setCellValue(s1);
+		
+		Cell cell3 = row.createCell(3);
+		cell3.setCellStyle(column0Style);
+		s1 = new XSSFRichTextString("Monetary \n Value of Property Stolen");
+		cell3.setCellValue(s1);
+		
+		return rowNum;
+	}
+	private void createPropertyByTypeAndValueSheet(ReturnAForm returnAForm, XSSFWorkbook workbook, CellStyle wrappedStyle,
+			CellStyle centeredStyle, Font boldFont, XSSFFont normalWeightFont) {
+		
+		int rowNum = 0;
+		XSSFSheet propertyByTypeAndValueSheet = workbook.createSheet("Property By Type and Value");
+        rowNum = createPropertyByTypeAndValueTitleRow(propertyByTypeAndValueSheet, rowNum, wrappedStyle, boldFont, normalWeightFont);
+		createPropertyByTypeAndValueHeaderRow(propertyByTypeAndValueSheet, rowNum, boldFont, normalWeightFont);
+		
+		rowNum = 5;
+        for (PropertyTypeValueRowName rowName: PropertyTypeValueRowName.values()){
+        	writePropertyTypeValueRow(propertyByTypeAndValueSheet, rowName, returnAForm.getPropertyTypeValues()[rowName.ordinal()], rowNum++, boldFont);
+        }
+
+
+        propertyByTypeAndValueSheet.autoSizeColumn(0);
+        propertyByTypeAndValueSheet.autoSizeColumn(1);
+        propertyByTypeAndValueSheet.setColumnWidth(2, 350*propertyByTypeAndValueSheet.getDefaultColumnWidth());
+        propertyByTypeAndValueSheet.setColumnWidth(3, 350*propertyByTypeAndValueSheet.getDefaultColumnWidth());
+        propertyByTypeAndValueSheet.setColumnWidth(4, 350*propertyByTypeAndValueSheet.getDefaultColumnWidth());
+        propertyByTypeAndValueSheet.setColumnWidth(5, 350*propertyByTypeAndValueSheet.getDefaultColumnWidth());
+        
+		rowNum = 20; 
+		Row row = propertyByTypeAndValueSheet.createRow(rowNum);
+		
+		CellStyle thinBorderBottom = workbook.createCellStyle();
+		thinBorderBottom.setBorderBottom(BorderStyle.THIN);
+		thinBorderBottom.setAlignment(HorizontalAlignment.CENTER);
+
+		Cell cell = row.createCell(0);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(1);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(2);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(3);
+		cell.setCellStyle(thinBorderBottom);
+		
+		row = propertyByTypeAndValueSheet.createRow(rowNum+1); 
+		cell = row.createCell(0); 
+		cell.setCellValue("Prepared by");
+		cell = row.createCell(2); 
+		propertyByTypeAndValueSheet.addMergedRegion(new CellRangeAddress(rowNum+1, rowNum+1, 1, 2));
+		cell.setCellValue("Title");
+		
+		rowNum = 23; 
+		row = propertyByTypeAndValueSheet.createRow(rowNum);
+		
+		cell = row.createCell(0);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(1);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(2);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(3);
+		cell.setCellStyle(thinBorderBottom);
+		
+		row = propertyByTypeAndValueSheet.createRow(rowNum+1); 
+		cell = row.createCell(0); 
+		cell.setCellValue("Telephone Number");
+		cell = row.createCell(2); 
+		propertyByTypeAndValueSheet.addMergedRegion(new CellRangeAddress(rowNum+1, rowNum+1, 1, 2));
+		cell.setCellValue("Date");
+
+		rowNum = 26; 
+		row = propertyByTypeAndValueSheet.createRow(rowNum);
+		
+		cell = row.createCell(0);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(1);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(2);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(3);
+		cell.setCellStyle(thinBorderBottom);
+
+		row = propertyByTypeAndValueSheet.createRow(rowNum+1); 
+		propertyByTypeAndValueSheet.addMergedRegion(new CellRangeAddress(rowNum+1, rowNum+1, 0, 3));
+		cell = row.createCell(0); 
+		cell.setCellValue("Chief, Sheriff, Superintendent, or Commanding Officer");
+		cell.setCellStyle(centeredStyle);
+		
+
+		rowNum = 29; 
+		row = propertyByTypeAndValueSheet.createRow(rowNum);
+		
+		cell = row.createCell(0);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(2);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(3);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(5);
+		cell.setCellStyle(thinBorderBottom);
+		
+		row = propertyByTypeAndValueSheet.createRow(rowNum+1);
+		propertyByTypeAndValueSheet.addMergedRegion(new CellRangeAddress(rowNum+1, rowNum+1, 2, 3));
+		cell = row.createCell(0); 
+		cell.setCellValue("Month and Year of Report");
+		cell.setCellStyle(centeredStyle);
+		cell = row.createCell(2); 
+		cell.setCellValue("Agency Identifier");
+		cell.setCellStyle(centeredStyle);
+		cell = row.createCell(5); 
+		cell.setCellValue("Population");
+		cell.setCellStyle(centeredStyle);
+		
+		rowNum = 32; 
+		row = propertyByTypeAndValueSheet.createRow(rowNum);
+		
+		cell = row.createCell(0);
+		cell.setCellStyle(thinBorderBottom);
+		cell = row.createCell(1);
+		cell.setCellStyle(thinBorderBottom);
+		
+		row = propertyByTypeAndValueSheet.createRow(rowNum+1); 
+		propertyByTypeAndValueSheet.addMergedRegion(new CellRangeAddress(rowNum+1, rowNum+1, 0, 1));
+		cell = row.createCell(0); 
+		cell.setCellValue("Agency and State");
+		cell.setCellStyle(centeredStyle);
+
+		CellStyle centeredBordered = workbook.createCellStyle();
+		centeredBordered.cloneStyleFrom(centeredStyle);
+		centeredBordered.setBorderBottom(BorderStyle.THIN);
+		centeredBordered.setBorderTop(BorderStyle.THIN);
+		centeredBordered.setBorderLeft(BorderStyle.THIN);
+		centeredBordered.setBorderRight(BorderStyle.THIN);
+		
+		cell=row.createCell(4); 
+		XSSFRichTextString s1 = new XSSFRichTextString("DO NOT USE THIS SPACE");
+		s1.applyFont(boldFont);
+		cell.setCellValue(s1);
+		cell.setCellStyle(centeredBordered);
+		cell=row.createCell(5); 
+		cell.setCellStyle(centeredBordered);
+		propertyByTypeAndValueSheet.addMergedRegionUnsafe(new CellRangeAddress(rowNum+1, rowNum+1, 4, 5));
+		
+		rowNum += 2; 
+		row = propertyByTypeAndValueSheet.createRow(rowNum++); 
+		cell=row.createCell(4); 
+		cell.setCellStyle(wrappedStyle);
+		cell=row.createCell(5); 
+		cell.setCellStyle(wrappedStyle);
+		cell.setCellValue("INITIALs");
+		row = propertyByTypeAndValueSheet.createRow(rowNum++); 
+		cell=row.createCell(4); 
+		cell.setCellStyle(wrappedStyle);
+		cell.setCellValue("RECORDED");
+		cell=row.createCell(5); 
+		cell.setCellStyle(wrappedStyle);
+		row = propertyByTypeAndValueSheet.createRow(rowNum++); 
+		cell=row.createCell(4); 
+		cell.setCellStyle(wrappedStyle);
+		cell.setCellValue("EDITED");
+		cell=row.createCell(5); 
+		cell.setCellStyle(wrappedStyle);
+		row = propertyByTypeAndValueSheet.createRow(rowNum++); 
+		cell=row.createCell(4); 
+		cell.setCellStyle(wrappedStyle);
+		cell.setCellValue("ENTERED");
+		cell=row.createCell(5); 
+		cell.setCellStyle(wrappedStyle);
+		row = propertyByTypeAndValueSheet.createRow(rowNum++); 
+		cell=row.createCell(4); 
+		cell.setCellStyle(wrappedStyle);
+		cell.setCellValue("ADJUSTED");
+		cell=row.createCell(5); 
+		cell.setCellStyle(wrappedStyle);
+		row = propertyByTypeAndValueSheet.createRow(rowNum++); 
+		cell=row.createCell(4); 
+		cell.setCellStyle(wrappedStyle);
+		cell.setCellValue("CORRES.");
+		cell=row.createCell(5); 
+		cell.setCellStyle(wrappedStyle);
+	}
+    private void writePropertyTypeValueRow(XSSFSheet sheet, PropertyTypeValueRowName rowName,
+			PropertyTypeValue propertyTypeValue, int rowNum, Font boldFont) {
+    	Row row = sheet.createRow(rowNum);
+    	int colNum = 0;
+    	Cell cell = row.createCell(colNum++);
+        
+    	CellStyle defaultStyle = sheet.getWorkbook().createCellStyle();
+    	defaultStyle.setBorderBottom(BorderStyle.THIN);
+    	defaultStyle.setBorderTop(BorderStyle.THIN);
+    	defaultStyle.setBorderRight(BorderStyle.THIN);
+    	defaultStyle.setBorderLeft(BorderStyle.THIN);
+    	
+        CellStyle centeredStyle = sheet.getWorkbook().createCellStyle(); 
+        centeredStyle.setAlignment(HorizontalAlignment.CENTER);
+        centeredStyle.setBorderBottom(BorderStyle.THIN);
+        centeredStyle.setBorderTop(BorderStyle.THIN);
+        centeredStyle.setBorderRight(BorderStyle.THIN);
+        centeredStyle.setBorderLeft(BorderStyle.THIN);
+
+        CellStyle greyForeGround = sheet.getWorkbook().createCellStyle();
+        greyForeGround.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        greyForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        greyForeGround.setBorderBottom(BorderStyle.THIN);
+        greyForeGround.setBorderTop(BorderStyle.THIN);
+        greyForeGround.setBorderRight(BorderStyle.THIN);
+        greyForeGround.setBorderLeft(BorderStyle.THIN);
+
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 3));
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 4, 5));
+        switch(rowName){
+    	case TOTAL: 
+        	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+            XSSFRichTextString allBoldString = new XSSFRichTextString(rowName.getLabel());
+            allBoldString.applyFont(boldFont);
+            cell.setCellValue(allBoldString);
+            cell.setCellStyle(centeredStyle);
+            
+    		cell = row.createCell(colNum++);
+    		cell.setCellValue(rowName.getDataEntry());
+    		cell.setCellStyle(greyForeGround);
+    		cell.setCellType(CellType.STRING);
+    		cell = row.createCell(colNum++);
+    		cell.setCellType(CellType.STRING);
+    		cell.setCellValue("$" + propertyTypeValue.getStolen());
+    		cell.setCellStyle(centeredStyle);
+    		cell = row.createCell(colNum++);
+    		cell.setCellStyle(centeredStyle);
+    		cell = row.createCell(colNum++);
+    		cell.setCellType(CellType.STRING);
+    		cell.setCellValue("$" + propertyTypeValue.getRecovered());
+    		cell.setCellStyle(centeredStyle);
+    		cell = row.createCell(colNum++);
+    		cell.setCellStyle(centeredStyle);
+    		break; 
+    	default: 
+    		cell.setCellValue(rowName.getLabel());
+    		cell.setCellStyle(defaultStyle);
+            CellStyle yellowForeGround = sheet.getWorkbook().createCellStyle();
+            yellowForeGround.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+            yellowForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            yellowForeGround.setBorderBottom(BorderStyle.THIN);
+            yellowForeGround.setBorderTop(BorderStyle.THIN);
+            yellowForeGround.setBorderRight(BorderStyle.THIN);
+            yellowForeGround.setBorderLeft(BorderStyle.THIN);
+            
+    		cell = row.createCell(colNum++);
+    		cell.setCellType(CellType.STRING);
+    		cell.setCellStyle(greyForeGround);
+    		cell.setCellValue(rowName.getDataEntry());
+    		cell = row.createCell(colNum++);
+    		cell.setCellStyle(yellowForeGround);
+    		cell.setCellType(CellType.NUMERIC);
+    		cell.setCellValue(propertyTypeValue.getStolen());
+    		cell = row.createCell(colNum++);
+    		cell.setCellStyle(yellowForeGround);
+    		cell = row.createCell(colNum++);
+    		cell.setCellStyle(yellowForeGround);
+    		cell.setCellType(CellType.NUMERIC);
+    		cell.setCellValue(propertyTypeValue.getRecovered());
+    		cell = row.createCell(colNum++);
+    		cell.setCellStyle(yellowForeGround);
+    	}
+	}
+	private int createPropertyByTypeAndValueHeaderRow(XSSFSheet sheet, int rowNum, Font boldFont,
+			XSSFFont normalWeightFont) {
+		sheet.addMergedRegion(new CellRangeAddress(1, 4, 0, 0));
+		sheet.addMergedRegion(new CellRangeAddress(1, 4, 1, 1));
+		Row row = sheet.createRow(rowNum++);
+		Cell cell = row.createCell(0);
+		
+        CellStyle column0Style = sheet.getWorkbook().createCellStyle();
+        column0Style.setWrapText(true);
+        column0Style.setAlignment(HorizontalAlignment.CENTER);
+        column0Style.setVerticalAlignment(VerticalAlignment.CENTER);
+        column0Style.setBorderBottom(BorderStyle.THIN);
+        column0Style.setBorderTop(BorderStyle.THIN);
+        column0Style.setBorderRight(BorderStyle.THIN);
+        column0Style.setBorderLeft(BorderStyle.THIN);
+        
+
+		cell.setCellStyle(column0Style);
+		cell.setCellValue("Type of Property\n (1)");
+
+		
+		Cell cell1 = row.createCell(1);
+		XSSFCellStyle column1Style = sheet.getWorkbook().createCellStyle(); 
+		column1Style.setRotation((short)90);
+		column1Style.setVerticalAlignment(VerticalAlignment.CENTER);
+		column1Style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		column1Style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		column1Style.setBorderBottom(BorderStyle.THIN);
+		column1Style.setBorderTop(BorderStyle.THIN);
+		column1Style.setBorderRight(BorderStyle.THIN);
+		column1Style.setBorderLeft(BorderStyle.THIN);
+		cell1.setCellValue("Data Entry");
+		cell1.setCellStyle(column1Style);
+		
+		sheet.addMergedRegion(new CellRangeAddress(1,1,2,5));
+		Cell cell2 = row.createCell(2);
+		cell2.setCellStyle(column0Style);
+		cell2.setCellValue("Monetary Value of Property Stolen in Your Jurisdiction");
+		
+		row = sheet.createRow(rowNum++);
+		sheet.addMergedRegion(new CellRangeAddress(2,4,2,3));
+		cell2 = row.createCell(2);
+		cell2.setCellStyle(column0Style);
+		XSSFRichTextString s1 = new XSSFRichTextString("Stolen \n (2)");
+		cell2.setCellValue(s1);
+		sheet.addMergedRegion(new CellRangeAddress(2,4,4,5));
+		
+		Cell cell4 = row.createCell(4);
+		cell4.setCellStyle(column0Style);
+		s1 = new XSSFRichTextString("Recovered \n (3)");
+		cell4.setCellValue(s1);
+		Cell cell5 = row.createCell(5);
+		cell5.setCellStyle(column0Style);
+		
+		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 4, 0, 0), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 4, 0, 0), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1,1,2,5), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(1,1,2,5), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(2,4,4,5), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(2,4,2,3), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(2,4,4,5), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(2,4,4,5), sheet);
+				
+		return rowNum;
+	}
+    
+	private int createPropertyByTypeAndValueTitleRow(XSSFSheet sheet, int rowNum, CellStyle cs, Font boldFont, XSSFFont normalWeightFont) {
+		Row row = sheet.createRow(rowNum++);
+    	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+    	sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
+		Cell cell = row.createCell(0);
+		
+        CellStyle centered = sheet.getWorkbook().createCellStyle();
+        centered.setAlignment(HorizontalAlignment.CENTER);
+        centered.setVerticalAlignment(VerticalAlignment.CENTER);
+        cell.setCellStyle(centered);
+		 
+		XSSFRichTextString s1 = new XSSFRichTextString("PROPERTY BY TYPE AND VALUE");
+		s1.applyFont(boldFont);
+		cell.setCellValue(s1);
+		
+		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 5), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 5), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 5), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 5), sheet);
+
+		return rowNum;
+	}
+    
+
+	private int createPropertyStolenTitleRow(XSSFSheet sheet, int rowNum, Font boldFont, XSSFFont normalWeightFont) {
+		Row row = sheet.createRow(rowNum++);
+		row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 3));
+		Cell cell = row.createCell(0);
+		
+		CellStyle centered = sheet.getWorkbook().createCellStyle();
+		centered.setAlignment(HorizontalAlignment.CENTER);
+		centered.setVerticalAlignment(VerticalAlignment.BOTTOM);
+		cell.setCellStyle(centered);
+		
+		XSSFRichTextString s1 = new XSSFRichTextString("PROPERTY STOLEN BY CLASSIFICATION");
+		s1.applyFont(boldFont);
+		cell.setCellValue(s1);
+		
+		return rowNum;
+	}
+	
+	
+	private void createReturnASupplementTextSheet(XSSFSheet sheet, int rowNum, Font boldFont,
+			XSSFFont normalWeightFont) {
+		
+        CellStyle centered = sheet.getWorkbook().createCellStyle();
+        centered.setAlignment(HorizontalAlignment.CENTER);
+        centered.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        CellStyle wrapped = sheet.getWorkbook().createCellStyle();
+        wrapped.setWrapText(true);;
+        
+		Row row = sheet.createRow(rowNum++);
+    	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+		Cell cell = row.createCell(0);
+		cell.setCellStyle(centered);
+		 
+        XSSFFont normalWeightItalicFont = sheet.getWorkbook().createFont();
+        normalWeightItalicFont.setBold(false);
+        normalWeightItalicFont.setItalic(true);
+        
+		XSSFRichTextString s1 = new XSSFRichTextString("SUPPLEMENT TO RETURN A");
+		s1.applyFont(boldFont);
+		cell.setCellValue(s1);
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 8));
+		
+		row = sheet.createRow(rowNum++);
+    	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+		cell = row.createCell(0);
+		 
+		s1 = new XSSFRichTextString("MONTHLY RETURN OF OFFENSES KNOWN TO THE POLICE");
+		s1.applyFont(boldFont);
+		cell.setCellValue(s1);
+		sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 8));
+		cell.setCellStyle(centered);
+		
+		row = sheet.createRow(rowNum++);
+		cell = row.createCell(0);
+		cell.setCellStyle(wrapped);
+		
+		XSSFRichTextString s2 = new XSSFRichTextString();
+		s2.append("This report is authorized by law Title 28, Section 534, U.S. Code. Your cooperation in completing this form with the ", normalWeightFont); 
+		s2.append("Return A ", normalWeightItalicFont);
+		s2.append("will assist the FBI in compiling timely, comprehensive, and accurate data. Please submit this form monthly,"
+				+ "by the seventh day after the close of the month, and any questions to the FBI, Criminal Justice Information Services Division, "
+				+ "Attention: Uniform Crime Reports/Module E-3, 1000 Custer Hollow Road, Clarksburg, West Virginia 26306; telephone "
+				+ "304-625-4830, facsimile 304-625-3566. Under the Paperwork Reduction Act, you are not required to complete the form unless"
+				+ "it contains a valid OMB control number. The form takes approximately 11 minutes to complete. \n\n"
+				+ "This form deals with the nature of crime and the monetary value of property stolen and recovered. The total offenses recorded"
+				+ "on this form, page 2, should be the same as the number of actual offenses listed in Column 4 of the ", normalWeightFont);
+		s2.append("Return A ", normalWeightItalicFont);
+		s2.append("for each crime class\n"
+				+ "Include attempted crimes on this form, but do not include unfounded offenses. If you cannot complete the report in all areas,"
+				+ "please record as much information as is available. Tally sheets will be sent upon request. ", normalWeightFont); 
+		
+		cell.setCellValue(s2);
+		sheet.addMergedRegion(new CellRangeAddress(2, 12, 0, 8));
+		
+		sheet.setFitToPage(true);
+		PrintSetup ps = sheet.getPrintSetup();
+		ps.setFitWidth( (short) 1);
+		ps.setFitHeight( (short) 0);
+	}
+	
+	public void exportReturnAForm(ReturnAForm returnAForm){
         XSSFWorkbook workbook = new XSSFWorkbook();
         
         XSSFSheet sheet = workbook.createSheet("Return A Form");
@@ -71,11 +713,11 @@ public class ExcelExporter {
         Font underlineFont = workbook.createFont();
         underlineFont.setUnderline(Font.U_SINGLE);
         
-    	rowNum = createTheTitleRow(sheet, rowNum, wrappedStyle, boldFont, normalWeightFont);
-		rowNum = createTheTableHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
+    	rowNum = createReturnATitleRow(sheet, rowNum, wrappedStyle, boldFont, normalWeightFont);
+		rowNum = createReturnATableHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
 
         for (ReturnARowName rowName: ReturnARowName.values()){
-        	writeRow(sheet, rowName, returnAForm.getRows()[rowName.ordinal()], rowNum++, boldFont);
+        	writeReturnARow(sheet, rowName, returnAForm.getRows()[rowName.ordinal()], rowNum++, boldFont);
         }
 
 		sheet.autoSizeColumn(0);
@@ -288,7 +930,7 @@ public class ExcelExporter {
 		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(31, 42, 5, 5), sheet);
 		
         try {
-        	String fileName = appProperties.getReturnAFormOutputPath() + "/AsrAdult" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
+        	String fileName = appProperties.getReturnAFormOutputPath() + "/ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();
@@ -329,7 +971,7 @@ public class ExcelExporter {
 		cell.setCellValue(s1);
 	}
 
-	private int createTheTitleRow(XSSFSheet sheet, int rowNum, CellStyle cs, Font boldFont, XSSFFont normalWeightFont) {
+	private int createReturnATitleRow(XSSFSheet sheet, int rowNum, CellStyle cs, Font boldFont, XSSFFont normalWeightFont) {
 		Row row = sheet.createRow(rowNum++);
     	row.setHeightInPoints((4*sheet.getDefaultRowHeightInPoints()));
 		Cell cell = row.createCell(0);
@@ -346,7 +988,7 @@ public class ExcelExporter {
 		return rowNum;
 	}
     
-	private int createTheTableHeaderRow(XSSFSheet sheet, int rowNum, Font boldFont, XSSFFont normalWeightFont) {
+	private int createReturnATableHeaderRow(XSSFSheet sheet, int rowNum, Font boldFont, XSSFFont normalWeightFont) {
         
 		Row row = sheet.createRow(rowNum++);
     	row.setHeightInPoints((5*sheet.getDefaultRowHeightInPoints()));
@@ -416,7 +1058,7 @@ public class ExcelExporter {
 		return s1;
 	}
 	
-    private void writeRow(XSSFSheet sheet, ReturnARowName rowName, ReturnAFormRow returnAFormRow, int rowNum, Font boldFont) {
+    private void writeReturnARow(XSSFSheet sheet, ReturnARowName rowName, ReturnAFormRow returnAFormRow, int rowNum, Font boldFont) {
     	Row row = sheet.createRow(rowNum);
     	int colNum = 0;
     	Cell cell = row.createCell(colNum++);

@@ -42,6 +42,10 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Resource
+	AppProperties appProperties;
+
 	@Resource
 	SamlService samlService;
 	
@@ -53,18 +57,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/images/**", "/js/**", "/testFiles/**", "/logoutSuccess/**", "/webjars/**");
+		if (appProperties.getSecurityEnabled()) {
+			web.ignoring().antMatchers("/css/**", "/images/**", "/js/**", "/testFiles/**", "/logoutSuccess/**", "/webjars/**");
+		}
+		else {
+			web.ignoring().antMatchers("/**");
+		}
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    	http
-		    .authorizeRequests()
-		    .anyRequest().authenticated()
-		    .and()
-		    	.logout().logoutUrl("/logout").deleteCookies("JSESSIONID").clearAuthentication(true).permitAll()
-		    .and()
-		    	.addFilterBefore(samlAuthenticationFilter(authenticationManager()), LogoutFilter.class);
+    	if (appProperties.getSecurityEnabled()) {
+	    	http
+			    .authorizeRequests()
+			    .anyRequest().authenticated()
+			    .and()
+			    	.logout().logoutUrl("/logout").deleteCookies("JSESSIONID").clearAuthentication(true).permitAll()
+			    .and()
+			    	.addFilterBefore(samlAuthenticationFilter(authenticationManager()), LogoutFilter.class);
+    	}
     }    
     
     @Override
