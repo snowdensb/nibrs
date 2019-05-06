@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -167,6 +168,24 @@ public class ArrestReportService {
 		arrestReportSegmentRepository.findAll().forEach(arrestReportSegments::add);
 		return arrestReportSegments;
 	}
+	
+	public List<ArrestReportSegment> findArrestReportSegmentByOriAndArrestDate(String ori, Integer arrestYear, Integer arrestMonth){
+		if ("StateWide".equalsIgnoreCase(ori)){
+			ori = null;
+		}
+		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriAndArrestDate(ori, arrestYear, arrestMonth);
+		
+		List<ArrestReportSegment> arrestReportSegments = 
+				arrestReportSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		log.debug("ids size" + ids.size());
+		log.debug("arrestReportSegments size" + arrestReportSegments.size());
+		
+		return arrestReportSegments; 
+		
+	}
+	
 	
 	public long deleteGroupBArrestReport(String identifier){
 		if ( StringUtils.isBlank(identifier) ){

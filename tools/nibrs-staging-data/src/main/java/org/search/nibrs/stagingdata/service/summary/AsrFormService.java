@@ -36,10 +36,12 @@ import org.search.nibrs.model.reports.asr.AsrAdultRow.Race;
 import org.search.nibrs.model.reports.asr.AsrAdultRowName;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
+import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.service.AdministrativeSegmentService;
+import org.search.nibrs.stagingdata.service.ArrestReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +57,8 @@ public class AsrFormService {
 	private final Log log = LogFactory.getLog(this.getClass());
 	@Autowired
 	AdministrativeSegmentService administrativeSegmentService;
+	@Autowired
+	ArrestReportService arrestReportService;
 	@Autowired
 	public AgencyRepository agencyRepository; 
 	@Autowired
@@ -148,7 +152,7 @@ public class AsrFormService {
 		}
 
 		processGroupAArrests(ori, arrestYear, arrestMonth, asrAdult);
-//		processGroupBArrests(ori, arrestYear, arrestMonth, asrAdult);
+		processGroupBArrests(ori, arrestYear, arrestMonth, asrAdult);
 		
 		log.info("asrAdult: " + asrAdult);
 		log.info("asrAdult rows drug grand total "  + asrAdult.getRows()[AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()]);
@@ -163,6 +167,27 @@ public class AsrFormService {
 		log.info("asrAdult rows DRUG_POSSESSION_SYNTHETIC_NARCOTICS "  + asrAdult.getRows()[AsrAdultRowName.DRUG_POSSESSION_SYNTHETIC_NARCOTICS.ordinal()]);
 		log.info("asrAdult rows DRUG_POSSESSION_OTHER "  + asrAdult.getRows()[AsrAdultRowName.DRUG_POSSESSION_OTHER.ordinal()]);
 		return asrAdult;
+	}
+
+	private void processGroupBArrests(String ori, Integer arrestYear, Integer arrestMonth, AsrAdult asrAdult) {
+		AsrAdultRow[] asrAdultRows = asrAdult.getRows(); 
+		List<ArrestReportSegment> arrestReportSegments = arrestReportService.findArrestReportSegmentByOriAndArrestDate(ori, arrestYear, arrestMonth);
+		
+		List<ArrestReportSegment> adultArrestReportSegments = arrestReportSegments.stream()
+				.filter(i-> i.getAverageAge() >= 18 || i.isAgeUnknown())
+				.collect(Collectors.toList());
+		
+		for (ArrestReportSegment arrestReportSegment: adultArrestReportSegments) {
+			String offenseCode = arrestReportSegment.getUcrOffenseCodeType().getNibrsCode(); 
+			AsrAdultRowName asrAdultRowName = offenseCodeRowNameMap.get(offenseCode);
+			
+			if (asrAdultRowName != null) {
+				countToAgeGroups(asrAdultRows, arrestReportSegment.getAverageAge(), arrestReportSegment.getSexOfPersonType().getNibrsCode(), asrAdultRowName);
+				countToRaceGroups(asrAdultRows, arrestReportSegment.getRaceOfPersonType().getNibrsCode(), asrAdultRowName);
+				countToEthnicityGroups(asrAdultRows, arrestReportSegment.getEthnicityOfPersonType().getNibrsCode(), asrAdultRowName);
+			}
+		}
+		
 	}
 
 	private void processGroupAArrests(String ori, Integer arrestYear, Integer arrestMonth, AsrAdult asrAdult) {
@@ -195,12 +220,9 @@ public class AsrFormService {
 			log.info("arrestee offenseCode: " + offenseCode);
 			log.info("asrAdultRowName: " + asrAdultRowName);
 			if (asrAdultRowName != null){
-				countToAgeGroups(asrAdultRows, arresteeSegment, asrAdultRowName);
-				
-				countToRaceGroups(asrAdultRows, arresteeSegment, asrAdultRowName);
-				countToEthnicityGroups(asrAdultRows, arresteeSegment, asrAdultRowName);
-				
-				
+				countToAgeGroups(asrAdultRows, arresteeSegment.getAverageAge(), arresteeSegment.getSexOfPersonType().getNibrsCode(), asrAdultRowName);
+				countToRaceGroups(asrAdultRows, arresteeSegment.getRaceOfPersonType().getNibrsCode(), asrAdultRowName);
+				countToEthnicityGroups(asrAdultRows, arresteeSegment.getEthnicityOfPersonType().getNibrsCode(), asrAdultRowName);
 			}
 			
 		}
@@ -263,11 +285,10 @@ public class AsrFormService {
 		return victimGender;
 	}
 
-	private void countToEthnicityGroups(AsrAdultRow[] asrAdultRows, ArresteeSegment arresteeSegment,
+	private void countToEthnicityGroups(AsrAdultRow[] asrAdultRows, String ethnicityCode,
 			AsrAdultRowName asrAdultRowName) {
-		String ethnicityString = arresteeSegment.getEthnicityOfPersonType().getNibrsCode();
-		if (StringUtils.isNotBlank(ethnicityString) && !"U".equals(ethnicityString)){
-			Ethnicity ethnicity = Ethnicity.valueOf(ethnicityString); 
+		if (StringUtils.isNotBlank(ethnicityCode) && !"U".equals(ethnicityCode)){
+			Ethnicity ethnicity = Ethnicity.valueOf(ethnicityCode); 
 			asrAdultRows[asrAdultRowName.ordinal()].getEthnicityGroups()[ethnicity.ordinal()]++;
 			asrAdultRows[AsrAdultRowName.TOTAL.ordinal()].getEthnicityGroups()[ethnicity.ordinal()]++;
 			
@@ -299,11 +320,10 @@ public class AsrFormService {
 		}
 	}
 
-	private void countToRaceGroups(AsrAdultRow[] asrAdultRows, ArresteeSegment arresteeSegment,
+	private void countToRaceGroups(AsrAdultRow[] asrAdultRows, String raceCode,
 			AsrAdultRowName asrAdultRowName) {
-		String raceString = arresteeSegment.getRaceOfPersonType().getNibrsCode();
-		if (StringUtils.isNotBlank(raceString) && !"U".equals(raceString)){
-			Race race = Race.valueOf(raceString); 
+		if (StringUtils.isNotBlank(raceCode) && !"U".equals(raceCode)){
+			Race race = Race.valueOf(raceCode); 
 			asrAdultRows[asrAdultRowName.ordinal()].getRaceGroups()[race.ordinal()]++;
 			asrAdultRows[AsrAdultRowName.TOTAL.ordinal()].getRaceGroups()[race.ordinal()]++;
 			
@@ -334,11 +354,11 @@ public class AsrFormService {
 		}
 	}
 	
-	private void countToAgeGroups(AsrAdultRow[] asrAdultRows, ArresteeSegment arresteeSegment,
+	private void countToAgeGroups(AsrAdultRow[] asrAdultRows, Integer averageAge, String sexCode,
 			AsrAdultRowName asrAdultRowName) {
-		AdultAgeGroup ageGroup = getAgeGroup(arresteeSegment);
+		AdultAgeGroup ageGroup = getAdultAgeGroup(averageAge);
 		if (ageGroup != null){
-			switch( arresteeSegment.getSexOfPersonType().getNibrsCode() ){
+			switch( sexCode ){
 			case "M":
 				asrAdultRows[asrAdultRowName.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
 				asrAdultRows[asrAdultRowName.ordinal()].getMaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
@@ -413,13 +433,12 @@ public class AsrFormService {
 		}
 	}
 
-	private AdultAgeGroup getAgeGroup(ArresteeSegment arresteeSegment) {
+	private AdultAgeGroup getAdultAgeGroup(Integer averageAge) {
 		
-		if (arresteeSegment.isAgeUnknown()) return null; 
+		if (averageAge == null) return null; 
 
 		AdultAgeGroup ageGroup = null; 
 		
-		Integer averageAge = arresteeSegment.getAverageAge();
 		if (averageAge < 25){
 			ageGroup = AdultAgeGroup.valueOf(StringUtils.join("_", averageAge.toString()));
 		}
