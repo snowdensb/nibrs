@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -104,20 +103,21 @@ public class AsrAdultExcelExporter {
 		
 		rowNum = 7;
         for (AsrAdultRowName rowName: AsrAdultRowName.values()){
-        	writeAsrAdultRow(sheet, rowName, asrAdult.getRows()[rowName.ordinal()], rowNum++, boldFont);
+        	writeAsrAdultRow(sheet, rowName, asrAdult.getRows()[rowName.ordinal()], rowNum, boldFont);
+        	rowNum += 2;
         }
         
 		sheet.setColumnWidth(0, 700 * sheet.getDefaultColumnWidth());
+		
+		for (int i = 19; i < 25; i++) {
+			RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 99, i, i), sheet);
+		}
+		
+		RegionUtil.setBorderRight(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 99, 25, 25), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 99, 0, 0), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(99, 99, 0, 25), sheet);
+		
 
-//
-//
-//        propertyByTypeAndValueSheet.autoSizeColumn(0);
-//        propertyByTypeAndValueSheet.autoSizeColumn(1);
-//        propertyByTypeAndValueSheet.setColumnWidth(2, 350*propertyByTypeAndValueSheet.getDefaultColumnWidth());
-//        propertyByTypeAndValueSheet.setColumnWidth(3, 350*propertyByTypeAndValueSheet.getDefaultColumnWidth());
-//        propertyByTypeAndValueSheet.setColumnWidth(4, 350*propertyByTypeAndValueSheet.getDefaultColumnWidth());
-//        propertyByTypeAndValueSheet.setColumnWidth(5, 350*propertyByTypeAndValueSheet.getDefaultColumnWidth());
-        
 	}
     private void writeAsrAdultRow(XSSFSheet sheet, AsrAdultRowName rowName,
     		AsrAdultRow asrAdultRow, int rowNum, Font boldFont) {
@@ -180,30 +180,63 @@ public class AsrAdultExcelExporter {
     	default: 
     		cell.setCellValue(rowName.getLabel());
     		cell.setCellStyle(defaultStyle);
-//            CellStyle yellowForeGround = sheet.getWorkbook().createCellStyle();
-//            yellowForeGround.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
-//            yellowForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-//            yellowForeGround.setBorderBottom(BorderStyle.THIN);
-//            yellowForeGround.setBorderTop(BorderStyle.THIN);
-//            yellowForeGround.setBorderRight(BorderStyle.THIN);
-//            yellowForeGround.setBorderLeft(BorderStyle.THIN);
-//            
-//    		cell = row.createCell(colNum++);
-//    		cell.setCellType(CellType.STRING);
-//    		cell.setCellStyle(greyForeGround);
-//    		cell.setCellValue(rowName.getDataEntry());
-//    		cell = row.createCell(colNum++);
-//    		cell.setCellStyle(yellowForeGround);
-//    		cell.setCellType(CellType.NUMERIC);
-//    		cell.setCellValue(propertyTypeValue.getStolen());
-//    		cell = row.createCell(colNum++);
-//    		cell.setCellStyle(yellowForeGround);
-//    		cell = row.createCell(colNum++);
-//    		cell.setCellStyle(yellowForeGround);
-//    		cell.setCellType(CellType.NUMERIC);
-//    		cell.setCellValue(propertyTypeValue.getRecovered());
-//    		cell = row.createCell(colNum++);
-//    		cell.setCellStyle(yellowForeGround);
+    		sheet.addMergedRegionUnsafe(new CellRangeAddress(rowNum,  rowNum+1, colNum-1, colNum-1 ));
+    		
+    		cell= row.createCell(colNum); 
+    		cell.setCellValue("Male");
+    		cell.setCellStyle(greyForeGround);
+    		
+        	Row rowFemale = sheet.createRow(++rowNum);
+        	cell=rowFemale.createCell(colNum++);
+        	cell.setCellValue("Female");
+        	cell.setCellStyle(defaultStyle);
+
+        	int ageGroupSize = asrAdultRow.getMaleAgeGroups().length; 
+    		for (int i = 0 ; i < ageGroupSize - 1; i++) {
+        		Cell maleCell = row.createCell(colNum);
+        		maleCell.setCellValue(asrAdultRow.getMaleAgeGroups()[i]);
+        		
+        		Cell femaleCell = rowFemale.createCell(colNum++);
+        		femaleCell.setCellValue(asrAdultRow.getFemaleAgeGroups()[i]);
+        		
+        		if (Arrays.asList(AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE, AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL, 
+        				AsrAdultRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL, AsrAdultRowName.DRUG_POSSESSION_SUBTOTAL, 
+        				AsrAdultRowName.GAMBLING_TOTAL).contains(rowName)){
+	        		maleCell.setCellStyle(defaultStyle);
+	        		femaleCell.setCellStyle(defaultStyle);
+        		}
+        		else {
+	        		maleCell.setCellStyle(yellowForeGround);
+	        		femaleCell.setCellStyle(lightYellowForeGround);
+        		}
+    		}
+    		
+    		Cell maleCell = row.createCell(colNum);
+    		maleCell.setCellValue(asrAdultRow.getMaleAgeGroups()[ageGroupSize -1 ]);
+    		maleCell.setCellStyle(greyForeGround);
+    		
+    		Cell femaleCell = rowFemale.createCell(colNum++);
+    		femaleCell.setCellValue(asrAdultRow.getFemaleAgeGroups()[ageGroupSize -1]);
+    		femaleCell.setCellStyle(defaultStyle);
+    		
+    		for (int i = 0;  i < asrAdultRow.getRaceGroups().length - 2; i++) {
+    			sheet.addMergedRegionUnsafe(new CellRangeAddress(rowNum-1, rowNum, colNum, colNum));
+        		cell = row.createCell(colNum++);
+        		cell.setCellStyle(lightYellowForeGround);
+        		cell.setCellValue(asrAdultRow.getRaceGroups()[i]);
+    		}
+    		for (int i = 3;  i < asrAdultRow.getRaceGroups().length; i++) {
+    			sheet.addMergedRegionUnsafe(new CellRangeAddress(rowNum-1, rowNum, colNum, colNum));
+    			cell = row.createCell(colNum++);
+    			cell.setCellStyle(defaultStyle);
+    			cell.setCellValue(asrAdultRow.getRaceGroups()[i]);
+    		}
+    		for (int i = 0;  i < asrAdultRow.getEthnicityGroups().length; i++) {
+    			sheet.addMergedRegionUnsafe(new CellRangeAddress(rowNum-1, rowNum, colNum, colNum));
+    			cell = row.createCell(colNum++);
+        		cell.setCellStyle(defaultStyle);
+    			cell.setCellValue(asrAdultRow.getEthnicityGroups()[i]);
+    		}
     	}
 	}
 	private int createAsrAdultHeaderRow(XSSFSheet sheet, int rowNum, Font boldFont,
@@ -280,10 +313,6 @@ public class AsrAdultExcelExporter {
 		for (int i = 2; i < 17; i++) {
 			RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 6, i, i), sheet);
 		}
-		for (int i = 19; i < 25; i++) {
-			RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 6, i, i), sheet);
-		}
-		
 		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 6, 18, 18), sheet);
 		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 6, 18, 18), sheet);
 		
