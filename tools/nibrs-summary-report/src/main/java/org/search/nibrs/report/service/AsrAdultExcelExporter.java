@@ -191,6 +191,16 @@ public class AsrAdultExcelExporter {
         	cell.setCellValue("Female");
         	cell.setCellStyle(defaultStyle);
 
+    		if (Arrays.asList(AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE, AsrAdultRowName.SEX_OFFENSES).contains(rowName)){
+    			row.setHeightInPoints((float) (1.5*sheet.getDefaultRowHeightInPoints()));
+    			rowFemale.setHeightInPoints((float) (1.5*sheet.getDefaultRowHeightInPoints()));
+    		}
+    		if (Arrays.asList(AsrAdultRowName.DRUG_SALE_MANUFACTURING_OPIUM_COCAINE_DERIVATIVES, AsrAdultRowName.DRUG_SALE_MANUFACTURING_SYNTHETIC_NARCOTICS, 
+    				AsrAdultRowName.DRUG_SALE_MANUFACTURING_OTHER, AsrAdultRowName.DRUG_POSSESSION_OPIUM_COCAINE_DERIVATIVES, 
+    				AsrAdultRowName.DRUG_POSSESSION_SYNTHETIC_NARCOTICS, AsrAdultRowName.DRUG_POSSESSION_OTHER).contains(rowName)){
+    			row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+    			rowFemale.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
+    		}
         	int ageGroupSize = asrAdultRow.getMaleAgeGroups().length; 
     		for (int i = 0 ; i < ageGroupSize - 1; i++) {
         		Cell maleCell = row.createCell(colNum);

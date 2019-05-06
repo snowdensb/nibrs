@@ -93,8 +93,9 @@ public class AsrFormService {
 		offenseCodeRowNameMap.put("280", AsrAdultRowName.STOLEN_PROPERTY_BUYING_RECEIVING_POSSESSING); 
 		offenseCodeRowNameMap.put("290", AsrAdultRowName.VANDALISM); 
 		offenseCodeRowNameMap.put("520", AsrAdultRowName.WEAPONS_CARRYING_POSSESSING_ETC); 
-		offenseCodeRowNameMap.put("40A", AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE); 
-		offenseCodeRowNameMap.put("40B", AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE); 
+		offenseCodeRowNameMap.put("40A", AsrAdultRowName.PROSTITUTION); 
+		offenseCodeRowNameMap.put("40B", AsrAdultRowName.ASSISTING_PROMOTING_PROSTITUTION); 
+		offenseCodeRowNameMap.put("40C", AsrAdultRowName.PURCHASING_PROSTITUTION); 
 		offenseCodeRowNameMap.put("11AM", AsrAdultRowName.SEX_OFFENSES); 
 		offenseCodeRowNameMap.put("11B", AsrAdultRowName.SEX_OFFENSES); 
 		offenseCodeRowNameMap.put("11C", AsrAdultRowName.SEX_OFFENSES); 
@@ -286,6 +287,11 @@ public class AsrFormService {
 				asrAdultRows[AsrAdultRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getEthnicityGroups()[ethnicity.ordinal()] ++;
 				asrAdultRows[AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getEthnicityGroups()[ethnicity.ordinal()] ++;;
 				break;
+				
+			case PROSTITUTION:
+			case ASSISTING_PROMOTING_PROSTITUTION: 
+				asrAdultRows[AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getEthnicityGroups()[ethnicity.ordinal()] ++;
+				break;
 			default:
 				break;
 			}
@@ -316,6 +322,10 @@ public class AsrFormService {
 			case DRUG_POSSESSION_OTHER:
 				asrAdultRows[AsrAdultRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getRaceGroups()[race.ordinal()]++;
 				asrAdultRows[AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getRaceGroups()[race.ordinal()]++;
+				break;
+			case PROSTITUTION:
+			case ASSISTING_PROMOTING_PROSTITUTION: 
+				asrAdultRows[AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getRaceGroups()[race.ordinal()]++;
 				break;
 			default:
 				break;
@@ -356,6 +366,10 @@ public class AsrFormService {
 					asrAdultRows[AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
 					asrAdultRows[AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
 					break;
+				case PROSTITUTION:
+				case ASSISTING_PROMOTING_PROSTITUTION: 
+					asrAdultRows[AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+					break;
 				default:
 					break;
 				}
@@ -386,6 +400,10 @@ public class AsrFormService {
 					asrAdultRows[AsrAdultRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getFemaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
 					asrAdultRows[AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
 					asrAdultRows[AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
+					break;
+				case PROSTITUTION:
+				case ASSISTING_PROMOTING_PROSTITUTION: 
+					asrAdultRows[AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
 					break;
 				default:
 					break;
