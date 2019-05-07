@@ -21,9 +21,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang3.StringUtils;
 
-public class AsrAdult implements Serializable{
+public class AsrReports implements Serializable{
 	private static final long serialVersionUID = -2340194364781985383L;
-	private AsrAdultRow[] rows = new AsrAdultRow[AsrAdultRowName.values().length]; 
+	private AsrAdultRow[] adultRows = new AsrAdultRow[AsrAdultRowName.values().length]; 
+	private AsrJuvenileRow[] juvenileRows = new AsrJuvenileRow[AsrJuvenileRowName.values().length]; 
 	private String ori; 
 	private String agencyName; 
 	private String stateName;
@@ -32,28 +33,24 @@ public class AsrAdult implements Serializable{
 	private int month; 
 	private int year; 
 	
-	public AsrAdult() {
+	public AsrReports() {
 		super();
-		for (int i = 0; i < getRows().length; i++){
-			getRows()[i] = new AsrAdultRow(); 
+		for (int i = 0; i < adultRows.length; i++){
+			adultRows[i] = new AsrAdultRow(); 
+		}
+		for (int i = 0; i < juvenileRows.length; i++){
+			juvenileRows[i] = new AsrJuvenileRow(); 
 		}
 		
 	}
 	
-	public AsrAdult(String ori, int year, int month) {
+	public AsrReports(String ori, int year, int month) {
 		this();
 		this.ori = ori; 
 		this.year = year; 
 		this.month = month; 
 	}
 	
-	public AsrAdultRow[] getRows() {
-		return rows;
-	}
-
-	public void setRows(AsrAdultRow[] asrAdultRows) {
-		this.rows = asrAdultRows;
-	}
 
 	public String getOri() {
 		return ori;
@@ -121,6 +118,22 @@ public class AsrAdult implements Serializable{
 	
 	public void setPopulation(Integer population) {
 		this.population = population;
+	}
+
+	public AsrAdultRow[] getAdultRows() {
+		return adultRows;
+	}
+
+	public void setAdultRows(AsrAdultRow[] adultRows) {
+		this.adultRows = adultRows;
+	}
+
+	public AsrJuvenileRow[] getJuvenileRows() {
+		return juvenileRows;
+	}
+
+	public void setJuvenileRows(AsrJuvenileRow[] juvenileRows) {
+		this.juvenileRows = juvenileRows;
 	}
 
 }

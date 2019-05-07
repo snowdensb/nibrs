@@ -39,7 +39,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.search.nibrs.model.reports.asr.AsrAdult;
+import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.model.reports.asr.AsrAdultRow;
 import org.search.nibrs.model.reports.asr.AsrAdultRowName;
 import org.search.nibrs.report.AppProperties;
@@ -53,7 +53,7 @@ public class AsrAdultExcelExporter {
 	@Autowired
 	private AppProperties appProperties;
 
-    public void exportAsrAdultForm(AsrAdult asrAdult){
+    public void exportAsrAdultForm(AsrReports asrAdult){
         XSSFWorkbook workbook = new XSSFWorkbook();
         
         createSheet(asrAdult, workbook);
@@ -72,7 +72,7 @@ public class AsrAdultExcelExporter {
 
 
     }
-	private void createSheet(AsrAdult asrAdult, XSSFWorkbook workbook ) {
+	private void createSheet(AsrReports asrReports, XSSFWorkbook workbook ) {
         int rowNum = 0;
         log.info("Write to the excel file");
         CellStyle wrappedStyle = workbook.createCellStyle();
@@ -103,7 +103,7 @@ public class AsrAdultExcelExporter {
 		
 		rowNum = 7;
         for (AsrAdultRowName rowName: AsrAdultRowName.values()){
-        	writeAsrAdultRow(sheet, rowName, asrAdult.getRows()[rowName.ordinal()], rowNum, boldFont);
+        	writeAsrAdultRow(sheet, rowName, asrReports.getAdultRows()[rowName.ordinal()], rowNum, boldFont);
         	rowNum += 2;
         }
         
@@ -116,6 +116,15 @@ public class AsrAdultExcelExporter {
 		RegionUtil.setBorderRight(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 99, 25, 25), sheet);
 		RegionUtil.setBorderLeft(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 99, 0, 0), sheet);
 		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(99, 99, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(38, 38, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(40, 40, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(48, 48, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(50, 50, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(52, 52, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(60, 60, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(62, 62, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(70, 70, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(72, 72, 0, 25), sheet);
 		
 
 	}

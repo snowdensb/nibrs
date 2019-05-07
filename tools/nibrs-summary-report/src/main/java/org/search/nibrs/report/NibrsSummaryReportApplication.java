@@ -17,7 +17,7 @@ package org.search.nibrs.report;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.search.nibrs.model.reports.asr.AsrAdult;
+import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.report.service.AsrAdultExcelExporter;
 import org.search.nibrs.report.service.ExcelExporter;
 import org.search.nibrs.report.service.StagingDataRestClient;
@@ -58,7 +58,7 @@ public class NibrsSummaryReportApplication implements CommandLineRunner{
         	System.out.println("arg: " + arg);
         }
         
-        AsrAdult asrAdult = restClient.getAsrAdult(args[0], args[1], args[2]);
+        AsrReports asrAdult = restClient.getAsrAdult(args[0], args[1], args[2]);
         System.out.println("asrAdult: \n" + asrAdult);
         asrAdultExcelExporter.exportAsrAdultForm(asrAdult);
 //        ReturnAForm returnAForm = restClient.getReturnAForm(args[0], args[1], args[2]);

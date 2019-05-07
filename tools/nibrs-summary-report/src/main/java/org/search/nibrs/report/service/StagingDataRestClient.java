@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.search.nibrs.model.reports.ReturnAForm;
-import org.search.nibrs.model.reports.asr.AsrAdult;
+import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.report.AppProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -57,13 +57,13 @@ public class StagingDataRestClient {
 		return returnAForm;
 	}
 
-	public AsrAdult getAsrAdult(String ori, String year, String month) {
+	public AsrReports getAsrAdult(String ori, String year, String month) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"asrAdult", ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the ReturnAForm object from the url " + url);
 		
-		AsrAdult asrAdult = restTemplate.getForObject( url, AsrAdult.class);
+		AsrReports asrAdult = restTemplate.getForObject( url, AsrReports.class);
 		log.info("asrAdult: " + asrAdult);
 		return asrAdult;
 	}

@@ -16,7 +16,7 @@
 package org.search.nibrs.stagingdata.controller;
 
 import org.search.nibrs.model.reports.ReturnAForm;
-import org.search.nibrs.model.reports.asr.AsrAdult;
+import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.stagingdata.service.summary.AsrFormService;
 import org.search.nibrs.stagingdata.service.summary.ReturnAFormService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class SummaryFormController {
 	}
 	
 	@RequestMapping("/asrAdult/{ori}/{arrestYear}/{arrestMonth}")
-	public AsrAdult getAsrAdultForm(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
+	public AsrReports getAsrAdultForm(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
 		return asrFormService.createAsrAdultSummaryReport(ori, arrestYear, arrestMonth);
 	}
 	
