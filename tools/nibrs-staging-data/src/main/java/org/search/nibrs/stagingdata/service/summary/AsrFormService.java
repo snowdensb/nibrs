@@ -196,7 +196,7 @@ public class AsrFormService {
 		
 	}
 	
-	public AsrReports createAsrAdultSummaryReport(String ori, Integer arrestYear,  Integer arrestMonth ) {
+	public AsrReports createAsrSummaryReports(String ori, Integer arrestYear,  Integer arrestMonth ) {
 		
 		AsrReports asrReports = new AsrReports(ori, arrestYear, arrestMonth); 
 		
@@ -417,7 +417,7 @@ public class AsrFormService {
 			Ethnicity ethnicity = Ethnicity.valueOf(ethnicityCode); 
 			
 			asrRows[Enum.valueOf( asrRowEnum, asrRowName).ordinal()].getEthnicityGroups()[ethnicity.ordinal()]++;
-			asrRows[AsrAdultRowName.TOTAL.ordinal()].getEthnicityGroups()[ethnicity.ordinal()]++;
+			asrRows[Enum.valueOf(asrRowEnum, "TOTAL").ordinal()].getEthnicityGroups()[ethnicity.ordinal()]++;
 			
 			switch (asrRowName) {
 			case "DRUG_SALE_MANUFACTURING_OPIUM_COCAINE_DERIVATIVES":
