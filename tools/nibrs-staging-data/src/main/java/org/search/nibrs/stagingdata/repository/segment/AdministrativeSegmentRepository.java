@@ -77,7 +77,7 @@ public interface AdministrativeSegmentRepository
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "LEFT JOIN a.arresteeSegments aa "
 			+ "WHERE (?1 = null OR a.ori = ?1 ) AND "
-			+ "		( year(aa.arrestDate) = ?2 AND ( ?3=0 OR month(aa.arrestDate) = ?3) )"
+			+ "		( year(aa.arrestDate) = ?2 AND ( ?3=0 OR month(aa.arrestDate) = ?3) ) "
 			+ "GROUP BY a.incidentNumber ")
 	List<Integer> findIdsByOriAndArrestDate(String ori, Integer year, Integer month);
 	
@@ -95,4 +95,13 @@ public interface AdministrativeSegmentRepository
 			+ "		(year(a.incidentDate) = ?2 AND ( ?3 = 0 OR month(a.incidentDate) = ?3)) "
 			+ "GROUP BY a.incidentNumber ")
 	List<Integer> findIdsByOriAndIncidentDate(String ori, Integer year, Integer month);
+	
+	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+			+ "LEFT JOIN a.offenseSegments ao "
+			+ "WHERE ao.ucrOffenseCodeType.nibrsCode = '200' AND"
+			+ "		(?1 = null OR a.ori = ?1) AND "
+			+ "		(year(a.incidentDate) = ?2 AND "
+			+ "		( ?3 = 0 OR month(a.incidentDate) = ?3)) "
+			+ "GROUP BY a.incidentNumber ")
+	List<Integer> findArsonIdsByOriAndIncidentDate(String ori, Integer year, Integer month);
 }
