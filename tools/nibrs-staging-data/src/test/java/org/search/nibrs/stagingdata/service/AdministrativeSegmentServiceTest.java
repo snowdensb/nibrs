@@ -90,18 +90,28 @@ public class AdministrativeSegmentServiceTest {
 		groupAIncidentReport.setExceptionalClearanceDate(new ParsedObject<>(LocalDate.of(2016, 6, 12)));
 		ArresteeSegment arrestee = new ArresteeSegment(groupAIncidentReport.getArrestees().get(0));
 		arrestee.setArrestDate(new ParsedObject<>(LocalDate.of(2016, 5, 12)));
+		
+		
 		groupAIncidentReport.addArrestee(arrestee);
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService
 				.findByOriAndClearanceDate("WA1234567", 2016, 5);
-		assertThat(administrativeSegments.size(), equalTo(3));
+		assertThat(administrativeSegments.size(), equalTo(2));
 		
 		List<String> incidentNumbers = administrativeSegments.stream()
 				.map(AdministrativeSegment::getIncidentNumber)
 				.collect(Collectors.toList()); 
-		assertTrue(incidentNumbers.containsAll(Arrays.asList("12345678", "54236732", "12345679")));
+		assertTrue(incidentNumbers.containsAll(Arrays.asList("12345678", "54236732")));
 		
+		administrativeSegments = administrativeSegmentService
+				.findByOriAndClearanceDate("WA1234567", 2015, 5);
+		assertThat(administrativeSegments.size(), equalTo(3));
+		
+		incidentNumbers = administrativeSegments.stream()
+				.map(AdministrativeSegment::getIncidentNumber)
+				.collect(Collectors.toList()); 
+		assertTrue(incidentNumbers.containsAll(Arrays.asList("12345678", "54236732", "12345679")));
 		
 		administrativeSegments = administrativeSegmentService
 				.findByOriAndIncidentDate("WA1234567", 2017, 5);

@@ -63,7 +63,7 @@ public class AdministrativeSegmentRepositoryTest {
 		groupAIncidentReport.setExceptionalClearanceDate(new ParsedObject<>(LocalDate.of(2016, 6, 12)));
 		ArresteeSegment arrestee = new ArresteeSegment(groupAIncidentReport.getArrestees().get(0));
 		arrestee.setArrestDate(new ParsedObject<>(LocalDate.of(2016, 5, 12)));
-		groupAIncidentReport.addArrestee(arrestee);
+		groupAIncidentReport.setArrestees(Arrays.asList(arrestee));
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
 	}
