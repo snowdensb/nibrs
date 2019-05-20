@@ -94,7 +94,7 @@ public class AdministrativeSegmentServiceTest {
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService
-				.findIdsByOriAndClearanceDate("WA1234567", 2016, 5);
+				.findByOriAndClearanceDate("WA1234567", 2016, 5);
 		assertThat(administrativeSegments.size(), equalTo(3));
 		
 		List<String> incidentNumbers = administrativeSegments.stream()

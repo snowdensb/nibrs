@@ -213,8 +213,67 @@ public class ArsonFormService {
 			arsonReport.setPopulation(null);
 		}
 		processReportedOffenses(ori, year, month, arsonReport);
+		processClearedOffenses(ori, year, month, arsonReport);
 		log.debug("arsonReport: " + arsonReport);
 		return arsonReport;
+	}
+
+	private void processClearedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport) {
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findArsonIncidentByOriAndAClearanceDate(ori, year, month);
+
+		ArsonRow[] arsonRows = arsonReport.getArsonRows();
+		for (AdministrativeSegment administrativeSegment: administrativeSegments){
+			String offenseAttemptedIndicator = administrativeSegment.getOffenseSegments()
+					.stream()
+					.filter(offense->"200".equals(offense.getUcrOffenseCodeType().getNibrsCode()))
+					.map(offense->offense.getOffenseAttemptedCompleted())
+					.findFirst().orElse("");  
+			PropertySegment burnedProperty = administrativeSegment.getPropertySegments()
+					.stream()
+					.filter(property -> TypeOfPropertyLossCode._2.code.equals(property.getTypePropertyLossEtcType().getNibrsCode()))
+					.findFirst().orElse(null);
+			if (Arrays.asList("A", "C").contains(offenseAttemptedIndicator) && burnedProperty != null) {
+				if (administrativeSegment.isClearanceInvolvingOnlyJuvenile()) {
+					arsonRows[ArsonRowName.GRAND_TOTAL.ordinal()].increaseClearanceInvolvingOnlyJuvenile(1);
+				}
+				else {
+					arsonRows[ArsonRowName.GRAND_TOTAL.ordinal()].increaseActualOffenses(1);
+				}
+				
+				if ("C".equalsIgnoreCase(offenseAttemptedIndicator)) {
+					ArsonRowName arsonRowName = getArsonRowName(burnedProperty);
+					if (arsonRowName != null) {
+						arsonRows[arsonRowName.ordinal()].increaseClearedOffenses(1);;
+						if (administrativeSegment.isClearanceInvolvingOnlyJuvenile()) {
+							arsonRows[arsonRowName.ordinal()].increaseClearanceInvolvingOnlyJuvenile(1);
+						}
+							
+						switch (arsonRowName) {
+						case SINGLE_OCCUPANCY_RESIDENTIAL: 
+						case OTHER_RESIDENTIAL:
+						case STORAGE:
+						case INDUSTRIAL_MANUFACTURING: 
+						case OTHER_COMMERCIAL: 
+						case COMMUNITY_PUBLIC: 
+						case ALL_OTHER_STRUCTURE:
+							arsonRows[ArsonRowName.TOTAL_STRUCTURE.ordinal()].increaseClearedOffenses(1);;
+							if (administrativeSegment.isClearanceInvolvingOnlyJuvenile()) {
+								arsonRows[ArsonRowName.TOTAL_STRUCTURE.ordinal()].increaseClearanceInvolvingOnlyJuvenile(1);
+							}
+							break;
+						case MOTOR_VEHICLES: 
+						case OTHER_MOBILE_PROPERTY:
+							arsonRows[ArsonRowName.TOTAL_MOBILE.ordinal()].increaseClearedOffenses(1);
+							if (administrativeSegment.isClearanceInvolvingOnlyJuvenile()) {
+								arsonRows[ArsonRowName.TOTAL_MOBILE.ordinal()].increaseClearanceInvolvingOnlyJuvenile(1);
+							}
+							break;
+						default: 
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void processReportedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport) {

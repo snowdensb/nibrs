@@ -31,6 +31,7 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 
+import org.search.nibrs.model.codes.ClearedExceptionallyCode;
 import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.CargoTheftIndicatorType;
 import org.search.nibrs.stagingdata.model.ClearedExceptionallyType;
@@ -38,6 +39,7 @@ import org.search.nibrs.stagingdata.model.DateType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -431,4 +433,19 @@ public class AdministrativeSegment {
 	public void setStateCode(String stateCode) {
 		this.stateCode = stateCode;
 	}
+	
+	@JsonIgnore
+	public boolean isClearanceInvolvingOnlyJuvenile() {
+		boolean isClearanceInvolvingOnlyJuvenile = false; 
+		if (ClearedExceptionallyCode.applicableCodeSet().contains(this.getClearedExceptionallyType().getNibrsCode())){
+			Set<OffenderSegment> offenders = this.getOffenderSegments();
+			isClearanceInvolvingOnlyJuvenile = offenders.stream().allMatch(offender -> offender.isJuvenile()); 
+		}
+		else {
+			Set<ArresteeSegment> arrestees = this.getArresteeSegments();
+			isClearanceInvolvingOnlyJuvenile = arrestees.stream().allMatch(arrestee -> arrestee.isJuvenile()); 
+		}
+		return isClearanceInvolvingOnlyJuvenile;
+	}
+
 }
