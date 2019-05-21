@@ -48,8 +48,8 @@ public class SummaryFormController {
 		return arsonFormService.createArsonSummaryReports(ori, year, month);
 	}
 	
-	@RequestMapping("/asrAdult/{ori}/{arrestYear}/{arrestMonth}")
-	public AsrReports getAsrAdultForm(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
+	@RequestMapping("/asrReports/{ori}/{arrestYear}/{arrestMonth}")
+	public AsrReports getAsrReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
 		return asrFormService.createAsrSummaryReports(ori, arrestYear, arrestMonth);
 	}
 	
