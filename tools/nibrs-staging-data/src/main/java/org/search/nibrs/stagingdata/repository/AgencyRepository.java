@@ -16,9 +16,8 @@
 package org.search.nibrs.stagingdata.repository;
 
 import org.search.nibrs.stagingdata.model.Agency;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AgencyRepository extends CrudRepository<Agency, Integer>{
+public interface AgencyRepository extends JpaRepository<Agency, Integer>{
 	public Agency findFirstByAgencyOri(String agencyOri);
-	public Iterable<Agency> findByOrderByAgencyName();
 }

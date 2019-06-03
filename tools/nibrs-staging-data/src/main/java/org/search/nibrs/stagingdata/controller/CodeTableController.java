@@ -27,6 +27,7 @@ import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +44,7 @@ public class CodeTableController {
 
 	@GetMapping("/agencies")
 	public Map<Integer, String> agencies(){
-		Map<Integer, String> agencyMap = StreamSupport.stream(agencyRepository.findByOrderByAgencyName().spliterator(), false)
+		Map<Integer, String> agencyMap = StreamSupport.stream(agencyRepository.findAll(new Sort(Sort.Direction.ASC, "agencyName")).spliterator(), false)
 				.collect(Collectors.toMap(Agency::getAgencyId, Agency::getAgencyName, (u, v) -> u,
 					      LinkedHashMap::new));
 		return agencyMap;
@@ -51,7 +52,7 @@ public class CodeTableController {
 	
 	@GetMapping("/offenseCodes")
 	public Map<Integer, String> offenseCodes(){
-		Map<Integer, String> agencyMap = StreamSupport.stream(ucrOffenseCodeTypeRepository.findByOrderByStateDescription().spliterator(), false)
+		Map<Integer, String> agencyMap = StreamSupport.stream(ucrOffenseCodeTypeRepository.findAll(new Sort(Sort.Direction.ASC,"stateDescription")).spliterator(), false)
 				.collect(Collectors.toMap(UcrOffenseCodeType::getUcrOffenseCodeTypeId, UcrOffenseCodeType::getStateDescription, (u, v) -> u,
 					      LinkedHashMap::new));
 		return agencyMap;

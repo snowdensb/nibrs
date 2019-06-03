@@ -30,6 +30,9 @@ public class AppProperties {
 	private Integer ajpPort = 9090; 
 	private Boolean ajpEnabled = true; 
 	
+	private Boolean inactivityTimeout=true;
+	private Integer inactivityTimeoutInSeconds = 1800; 
+	
 	public AppProperties() {
 		super();
 	}
@@ -88,6 +91,22 @@ public class AppProperties {
 
 	public void setSecurityEnabled(Boolean securityEnabled) {
 		this.securityEnabled = securityEnabled;
+	}
+
+	public Boolean getInactivityTimeout() {
+		return inactivityTimeout;
+	}
+
+	public void setInactivityTimeout(Boolean inactivityTimeout) {
+		this.inactivityTimeout = inactivityTimeout;
+	}
+
+	public Integer getInactivityTimeoutInSeconds() {
+		return inactivityTimeoutInSeconds;
+	}
+
+	public void setInactivityTimeoutInSeconds(Integer inactivityTimeoutInSeconds) {
+		this.inactivityTimeoutInSeconds = inactivityTimeoutInSeconds;
 	}
 
 }
