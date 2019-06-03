@@ -20,4 +20,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface AgencyRepository extends CrudRepository<Agency, Integer>{
 	public Agency findFirstByAgencyOri(String agencyOri);
+	public Iterable<Agency> findByOrderByAgencyName();
 }

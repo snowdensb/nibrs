@@ -20,4 +20,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface UcrOffenseCodeTypeRepository extends CrudRepository<UcrOffenseCodeType, Integer>{
 	public UcrOffenseCodeType findFirstByStateCode( String stateCode );
+	public Iterable<UcrOffenseCodeType> findByOrderByStateDescription();
 }
