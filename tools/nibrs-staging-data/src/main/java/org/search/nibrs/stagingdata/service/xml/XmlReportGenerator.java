@@ -26,6 +26,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -282,7 +283,7 @@ public class XmlReportGenerator {
 		
 		appendIdentificationIdElement(incidentElement, NC, "ActivityIdentification", administrativeSegment.getIncidentNumber());
 		
-		Date incidentDate = administrativeSegment.getIncidentDate();
+		LocalDate incidentDate = administrativeSegment.getIncidentDate();
 		String incidentHour = administrativeSegment.getIncidentHour(); 
 		if (incidentDate != null) {
 			Element activityDate = XmlUtils.appendChildElement(incidentElement, Namespace.NC, "ActivityDate");
@@ -294,7 +295,7 @@ public class XmlReportGenerator {
 			}
 			else {
 				Element e = XmlUtils.appendChildElement(activityDate, Namespace.NC, "Date");
-				e.setTextContent(DATE_FORMAT.format(incidentDate));
+				e.setTextContent(incidentDate.toString());
 			}
 		}
 		

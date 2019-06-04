@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.model.segment;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
@@ -91,9 +92,10 @@ public class AdministrativeSegment {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="agencyId")
 	private Agency agency; 
+	
 	private String incidentNumber; 
 	
-	private Date incidentDate;
+	private LocalDate incidentDate;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="incidentDateId")
@@ -187,12 +189,6 @@ public class AdministrativeSegment {
 	public void setIncidentNumber(String incidentNumber) {
 		this.incidentNumber = incidentNumber;
 	}
-	public Date getIncidentDate() {
-		return incidentDate;
-	}
-	public void setIncidentDate(Date incidentDate) {
-		this.incidentDate = incidentDate;
-	}
 	public DateType getIncidentDateType() {
 		return incidentDateType;
 	}
@@ -250,7 +246,7 @@ public class AdministrativeSegment {
 		result = prime * result + ((exceptionalClearanceDate == null) ? 0 : exceptionalClearanceDate.hashCode());
 		result = prime * result
 				+ ((exceptionalClearanceDateType == null) ? 0 : exceptionalClearanceDateType.hashCode());
-		result = prime * result + ((incidentDate == null) ? 0 : incidentDate.hashCode());
+		result = prime * result + ((getIncidentDate() == null) ? 0 : getIncidentDate().hashCode());
 		result = prime * result + ((incidentDateType == null) ? 0 : incidentDateType.hashCode());
 		result = prime * result + ((incidentHour == null) ? 0 : incidentHour.hashCode());
 		result = prime * result + ((incidentNumber == null) ? 0 : incidentNumber.hashCode());
@@ -294,7 +290,7 @@ public class AdministrativeSegment {
 				+ cityIndicator + ", ori=" + ori + ", offenseSegments=" + offenseSegments + ", propertySegments="
 				+ propertySegments + ", arresteeSegments=" + arresteeSegments + ", offenderSegments=" + offenderSegments
 				+ ", victimSegments=" + victimSegments + ", agency=" + agency + ", incidentNumber=" + incidentNumber
-				+ ", incidentDate=" + incidentDate + ", incidentDateType=" + incidentDateType
+				+ ", incidentDate=" + getIncidentDate() + ", incidentDateType=" + incidentDateType
 				+ ", exceptionalClearanceDate=" + exceptionalClearanceDate + ", exceptionalClearanceDateType="
 				+ exceptionalClearanceDateType + ", reportDateIndicator=" + reportDateIndicator + ", incidentHour="
 				+ incidentHour + ", clearedExceptionallyType=" + clearedExceptionallyType + ", cargoTheftIndicatorType="
@@ -350,10 +346,10 @@ public class AdministrativeSegment {
 				return false;
 		} else if (!exceptionalClearanceDateType.equals(other.exceptionalClearanceDateType))
 			return false;
-		if (incidentDate == null) {
-			if (other.incidentDate != null)
+		if (getIncidentDate() == null) {
+			if (other.getIncidentDate() != null)
 				return false;
-		} else if (!incidentDate.equals(other.incidentDate))
+		} else if (!getIncidentDate().equals(other.getIncidentDate()))
 			return false;
 		if (incidentDateType == null) {
 			if (other.incidentDateType != null)
@@ -446,6 +442,14 @@ public class AdministrativeSegment {
 			isClearanceInvolvingOnlyJuvenile = arrestees.stream().allMatch(arrestee -> arrestee.isJuvenile()); 
 		}
 		return isClearanceInvolvingOnlyJuvenile;
+	}
+
+	public LocalDate getIncidentDate() {
+		return incidentDate;
+	}
+
+	public void setIncidentDate(LocalDate incidentDate) {
+		this.incidentDate = incidentDate;
 	}
 
 }

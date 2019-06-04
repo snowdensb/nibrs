@@ -24,11 +24,14 @@ import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 @Transactional
+@Repository
 public interface AdministrativeSegmentRepository 
-	extends JpaRepository<AdministrativeSegment, Integer>{
+	extends JpaRepository<AdministrativeSegment, Integer>, JpaSpecificationExecutor<AdministrativeSegment> {
 	
 	long deleteByIncidentNumber(String incidentNumber);
 	
@@ -37,7 +40,7 @@ public interface AdministrativeSegmentRepository
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	AdministrativeSegment findByAdministrativeSegmentId(Integer administrativeSegmentId);
-	
+		
 	@Query("SELECT count(*) > 0 from AdministrativeSegment a "
 			+ "LEFT JOIN a.segmentActionType s "
 			+ "WHERE a.administrativeSegmentId = "

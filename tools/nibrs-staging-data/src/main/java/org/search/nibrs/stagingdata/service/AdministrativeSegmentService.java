@@ -20,12 +20,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
+import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 /**
@@ -49,6 +59,65 @@ public class AdministrativeSegmentService {
 		return administrativeSegments;
 	}
 	
+	public List<AdministrativeSegment> findByCriteria(IncidentSearchRequest incidentSearchRequest){
+		return administrativeSegmentRepository.findAll(new Specification<AdministrativeSegment>() {
+			private static final long serialVersionUID = 2264585355475434091L;
+
+			@Override
+            public Predicate toPredicate(Root<AdministrativeSegment> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+
+        });
+	}
+
+	public long countByCriteria(IncidentSearchRequest incidentSearchRequest){
+		return administrativeSegmentRepository.count(new Specification<AdministrativeSegment>() {
+			private static final long serialVersionUID = 2264585355475434091L;
+			
+			@Override
+			public Predicate toPredicate(Root<AdministrativeSegment> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+				List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
+				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+			
+		});
+	}
+	
+	private List<Predicate> getAdministrativeSegmentPredicates(IncidentSearchRequest incidentSearchRequest,
+			Root<AdministrativeSegment> root, CriteriaBuilder criteriaBuilder) {
+		List<Predicate> predicates = new ArrayList<>();
+        if(incidentSearchRequest != null) {
+        	if (incidentSearchRequest.getAgencyIds() != null && incidentSearchRequest.getAgencyIds().size() > 0) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.in(root.get("agencyId").in(incidentSearchRequest.getAgencyIds()))));
+        	}
+        	
+        	if (incidentSearchRequest.getIncidentIdentifier() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("incidentNumber"), incidentSearchRequest.getIncidentIdentifier())));
+        	}
+        	
+        	if (incidentSearchRequest.getIncidentDate() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("incidentDate"), incidentSearchRequest.getIncidentDate())));
+        	}
+        	
+        	if (incidentSearchRequest.getUcrOffenseCodeTypeId() != null) {
+        		Join<AdministrativeSegment, OffenseSegment> joinOptions = root.join("offenseSegments", JoinType.LEFT);
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), 
+        				incidentSearchRequest.getUcrOffenseCodeTypeId())));
+        	}
+        	
+        	if (incidentSearchRequest.getSubmissionMonth() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("monthOfTape"), incidentSearchRequest.getSubmissionMonth())));
+        	}
+        	
+        	if (incidentSearchRequest.getSubmissionYear() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("yearOfTape"), incidentSearchRequest.getSubmissionYear())));
+        	}
+        }
+		return predicates;
+	}
+
 	public List<AdministrativeSegment> findByOriAndClearanceDate(String ori, Integer year, Integer month){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){

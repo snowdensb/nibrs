@@ -258,7 +258,7 @@ public class GroupAIncidentService {
 			administrativeSegment.setStateCode(StringUtils.substring(groupAIncidentReport.getOri(), 0, 2));
 			administrativeSegment.setOri(groupAIncidentReport.getOri());
 			administrativeSegment.setIncidentNumber(groupAIncidentReport.getIncidentNumber());
-			administrativeSegment.setIncidentDate(DateUtils.asDate(groupAIncidentReport.getIncidentDate().getValue()));
+			administrativeSegment.setIncidentDate(groupAIncidentReport.getIncidentDate().getValue());
 			administrativeSegment.setIncidentDateType(codeTableService.getDateType(DateUtils.asDate(groupAIncidentReport.getIncidentDate().getValue())));
 			administrativeSegment.setReportDateIndicator(groupAIncidentReport.getReportDateIndicator());
 			administrativeSegment.setReportDateIndicator(groupAIncidentReport.getReportDateIndicator());

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -183,7 +184,7 @@ public class GroupAIncidentServiceTest {
 		assertThat(persisted.getStateCode(), equalTo("NA"));
 		assertThat(persisted.getAgency().getAgencyOri(), equalTo("agencyORI"));
 		assertThat(persisted.getIncidentNumber(), equalTo("1234568910"));
-		assertTrue(DateUtils.isSameDay(persisted.getIncidentDate(), Date.from(LocalDateTime.of(2016, 6, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(persisted.getIncidentDate(), equalTo(LocalDate.of(2016, 6, 12)));
 		assertThat(persisted.getIncidentDateType().getDateTypeId(), equalTo(2355));
 		assertTrue(DateUtils.isSameDay(persisted.getExceptionalClearanceDate(), Date.from(LocalDateTime.of(2016, 7, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
 		assertThat(persisted.getExceptionalClearanceDateType().getDateMMDDYYYY(), equalTo("07122016"));
@@ -465,7 +466,7 @@ public class GroupAIncidentServiceTest {
 		assertThat(updated.getOri(), equalTo("ori"));
 		assertThat(updated.getAgency().getAgencyId(), equalTo(99998));
 		assertThat(updated.getIncidentNumber(), equalTo("1234568910"));
-		assertTrue(DateUtils.isSameDay(persisted.getIncidentDate(), Date.from(LocalDateTime.of(2016, 6, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(persisted.getIncidentDate(), equalTo(LocalDate.of(2016, 6, 12)));
 		assertThat(updated.getIncidentDateType().getDateTypeId(), equalTo(2355));
 		assertNull(updated.getReportDateIndicator());
 		assertThat(updated.getIncidentHour(), equalTo("13"));
@@ -515,7 +516,7 @@ public class GroupAIncidentServiceTest {
 		assertThat(persisted.getOri(), equalTo("WA1234567"));
 		assertThat(persisted.getAgency().getAgencyId(), equalTo(99998));
 		assertThat(persisted.getIncidentNumber(), equalTo("54236732"));
-		assertTrue(DateUtils.isSameDay(persisted.getIncidentDate(), Date.from(LocalDateTime.of(2016, 5, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(persisted.getIncidentDate(), equalTo(LocalDate.of(2016, 5, 12)));
 		assertThat(persisted.getIncidentDateType().getDateTypeId(), equalTo(2324));
 		assertTrue(DateUtils.isSameDay(persisted.getExceptionalClearanceDate(), Date.from(LocalDateTime.of(2016, 5, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
 		assertThat(persisted.getExceptionalClearanceDateType().getDateTypeId(), equalTo(2324));
@@ -808,7 +809,7 @@ public class GroupAIncidentServiceTest {
 		assertThat(persisted.getOri(), equalTo("WA1234567"));
 		assertThat(persisted.getAgency().getAgencyId(), equalTo(99998));
 		assertThat(persisted.getIncidentNumber(), equalTo("9876543"));
-		assertTrue(DateUtils.isSameDay(persisted.getIncidentDate(), Date.from(LocalDateTime.of(2016, 5, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(persisted.getIncidentDate(), equalTo(LocalDate.of(2016, 5, 12)));
 		assertThat(persisted.getIncidentDateType().getDateTypeId(), equalTo(2324));
 		assertTrue(DateUtils.isSameDay(persisted.getExceptionalClearanceDate(), Date.from(LocalDateTime.of(2016, 5, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
 		assertThat(persisted.getExceptionalClearanceDateType().getDateTypeId(), equalTo(2324));
@@ -1152,7 +1153,7 @@ public class GroupAIncidentServiceTest {
 		assertThat(updated.getOri(), equalTo("agencyORI"));
 		assertThat(updated.getAgency().getAgencyId(), equalTo(1));
 		assertThat(updated.getIncidentNumber(), equalTo("54236732"));
-		assertTrue(DateUtils.isSameDay(updated.getIncidentDate(), Date.from(LocalDateTime.of(2016, 5, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(updated.getIncidentDate(), equalTo(LocalDate.of(2016, 5, 12)));
 		assertThat(updated.getIncidentDateType().getDateTypeId(), equalTo(2324));
 		assertNull(updated.getReportDateIndicator());
 		assertThat(updated.getIncidentHour(), equalTo(""));
