@@ -17,7 +17,6 @@ package org.search.nibrs.stagingdata.model.search;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -28,7 +27,7 @@ public class IncidentSearchResult implements Serializable {
 	private ReportType reportType; 
 	private String incidentIdentifier; 
 	private Integer agencyId; 
-	private String agenycyName; 
+	private String agencyName; 
 	private LocalDate incidentDate; 
 	private Integer ucrOffenseCodeTypeId; 
 	private String offenseCode; 
@@ -36,13 +35,24 @@ public class IncidentSearchResult implements Serializable {
 	private String submissionYear; 
 	private Boolean fbiSubmission;
 	
-	public IncidentSearchResult(Integer primaryKey, String incidentIdentifier, 
-			Integer agencyId, LocalDate incidentDate,
+	public IncidentSearchResult(Integer primaryKey,
+			String reportType,
+			String incidentIdentifier, 
+			Integer agencyId, 
+			String agencyName,
+			LocalDate incidentDate,
+			Integer ucrOffenseCodeTypeId,
+			String offenseCode,
 			String submissionMonth, String submissionYear) {
 		super();
 		this.primaryKey = primaryKey;
+		this.reportType = ReportType.valueOf(reportType);
 		this.incidentIdentifier = incidentIdentifier;
 		this.agencyId = agencyId;
+		this.agencyName = agencyName; 
+		this.incidentDate = incidentDate;
+		this.ucrOffenseCodeTypeId = ucrOffenseCodeTypeId;
+		this.offenseCode = offenseCode; 
 		this.submissionMonth = submissionMonth;
 		this.submissionYear = submissionYear;
 	}
@@ -97,11 +107,11 @@ public class IncidentSearchResult implements Serializable {
 	public void setFbiSubmission(Boolean fbiSubmission) {
 		this.fbiSubmission = fbiSubmission;
 	}
-	public String getAgenycyName() {
-		return agenycyName;
+	public String getAgencyName() {
+		return agencyName;
 	}
-	public void setAgenycyName(String agenycyName) {
-		this.agenycyName = agenycyName;
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 	public String getOffenseCode() {
 		return offenseCode;

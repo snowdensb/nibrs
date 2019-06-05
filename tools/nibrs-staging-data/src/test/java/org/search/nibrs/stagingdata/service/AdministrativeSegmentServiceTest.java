@@ -203,22 +203,22 @@ public class AdministrativeSegmentServiceTest {
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
 		IncidentSearchRequest incidentSearchRequest = new IncidentSearchRequest();
-		List<IncidentSearchResult> administrativeSegments = administrativeSegmentService
+		List<IncidentSearchResult> incidentSearchResults = administrativeSegmentService
 				.findAllByCriteria(incidentSearchRequest);
-		assertThat(administrativeSegments.size(), equalTo(3));
+		assertThat(incidentSearchResults.size(), equalTo(3));
 		
 		long count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
 		assertThat(count, equalTo(3L));
 		
 		incidentSearchRequest.setIncidentIdentifier("12345678");
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
-		administrativeSegments = 
+		incidentSearchResults = 
 				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
 		assertThat(count, equalTo(1L));
 		
 		incidentSearchRequest.setIncidentDate(LocalDate.of(2016, 5, 12));
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
-		administrativeSegments = 
+		incidentSearchResults = 
 				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
 		assertThat(count, equalTo(1L));
 		
@@ -235,19 +235,19 @@ public class AdministrativeSegmentServiceTest {
 		assertThat(count, equalTo(0L));
 		
 		incidentSearchRequest.setSubmissionYear(2017);
-		administrativeSegments = 
+		incidentSearchResults = 
 				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
-		assertThat(administrativeSegments.size(), equalTo(1));
+		assertThat(incidentSearchResults.size(), equalTo(1));
 		
-//		Object[] result = administrativeSegments.get(0);
-//		assertThat(result[1], equalTo("12345679"));
-//		
-//		incidentSearchRequest.setSubmissionYear(null);
-//		incidentSearchRequest.setSubmissionMonth(null);
-//		
-//		incidentSearchRequest.setUcrOffenseCodeTypeId(131);
-//		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
-//		assertThat(count, equalTo(3L));
+		IncidentSearchResult result = incidentSearchResults.get(0);
+		assertThat(result.getIncidentIdentifier(), equalTo("12345679"));
+		
+		incidentSearchRequest.setSubmissionYear(null);
+		incidentSearchRequest.setSubmissionMonth(null);
+		
+		incidentSearchRequest.setUcrOffenseCodeTypeId(131);
+		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(3L));
 	}
 	
 }

@@ -43,11 +43,15 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<IncidentSearchResult> query = criteriaBuilder.createQuery(IncidentSearchResult.class);
         Root<AdministrativeSegment> root = query.from(AdministrativeSegment.class);
-        
+		Join<AdministrativeSegment, OffenseSegment> joinOptions = root.join("offenseSegments", JoinType.LEFT);
+
 		query.distinct(true);
 		query.groupBy(root.get("incidentNumber"));
-		query.multiselect(criteriaBuilder.max(root.get("administrativeSegmentId")), root.get("incidentNumber"), 
-				root.get("agency").get("agencyId"), root.get("incidentDate"), 
+		query.multiselect(criteriaBuilder.max(root.get("administrativeSegmentId")),
+				criteriaBuilder.literal("GroupA"),root.get("incidentNumber"), 
+				root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("incidentDate"), 
+				criteriaBuilder.min(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId")),
+				joinOptions.get("ucrOffenseCodeType").get("nibrsCode"),
 				root.get("monthOfTape"), root.get("yearOfTape"));
         List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
 
