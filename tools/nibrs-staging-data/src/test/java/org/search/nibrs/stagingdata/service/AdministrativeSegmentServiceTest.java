@@ -30,6 +30,7 @@ import org.search.nibrs.common.ParsedObject;
 import org.search.nibrs.model.ArresteeSegment;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.util.BaselineIncidentFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,6 +184,70 @@ public class AdministrativeSegmentServiceTest {
 		incidentSearchRequest.setUcrOffenseCodeTypeId(131);
 		count = administrativeSegmentService.countByCriteria(incidentSearchRequest);
 		assertThat(count, equalTo(3L));
+	}
+	
+	@Test
+	@DirtiesContext
+	public void testFindAllByCriteria() {
+		GroupAIncidentReport groupAIncidentReport = BaselineIncidentFactory.getBaselineIncident();
+		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
+		
+		groupAIncidentReport.setIncidentNumber("12345678");
+		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
+		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
+		
+		groupAIncidentReport.setIncidentNumber("12345679");
+		groupAIncidentReport.setExceptionalClearanceDate(new ParsedObject<>(LocalDate.of(2016, 6, 12)));
+		groupAIncidentReport.setMonthOfTape(6);
+		groupAIncidentReport.setYearOfTape(2017);
+		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
+		
+		IncidentSearchRequest incidentSearchRequest = new IncidentSearchRequest();
+		List<IncidentSearchResult> administrativeSegments = administrativeSegmentService
+				.findAllByCriteria(incidentSearchRequest);
+		assertThat(administrativeSegments.size(), equalTo(3));
+		
+		long count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(3L));
+		
+		incidentSearchRequest.setIncidentIdentifier("12345678");
+		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+		administrativeSegments = 
+				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(1L));
+		
+		incidentSearchRequest.setIncidentDate(LocalDate.of(2016, 5, 12));
+		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+		administrativeSegments = 
+				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(1L));
+		
+		incidentSearchRequest.setIncidentIdentifier(null);
+		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(3L));
+		
+		incidentSearchRequest.setSubmissionMonth(6);
+		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(1L));
+		
+		incidentSearchRequest.setSubmissionYear(2016);
+		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(0L));
+		
+		incidentSearchRequest.setSubmissionYear(2017);
+		administrativeSegments = 
+				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
+		assertThat(administrativeSegments.size(), equalTo(1));
+		
+//		Object[] result = administrativeSegments.get(0);
+//		assertThat(result[1], equalTo("12345679"));
+//		
+//		incidentSearchRequest.setSubmissionYear(null);
+//		incidentSearchRequest.setSubmissionMonth(null);
+//		
+//		incidentSearchRequest.setUcrOffenseCodeTypeId(131);
+//		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+//		assertThat(count, equalTo(3L));
 	}
 	
 }

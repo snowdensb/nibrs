@@ -17,6 +17,7 @@ package org.search.nibrs.stagingdata.model.search;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -31,10 +32,25 @@ public class IncidentSearchResult implements Serializable {
 	private LocalDate incidentDate; 
 	private Integer ucrOffenseCodeTypeId; 
 	private String offenseCode; 
-	private Integer submissionMonth; 
-	private Integer submissionYear; 
+	private String submissionMonth; 
+	private String submissionYear; 
 	private Boolean fbiSubmission;
 	
+	public IncidentSearchResult(Integer primaryKey, String incidentIdentifier, 
+			Integer agencyId, LocalDate incidentDate,
+			String submissionMonth, String submissionYear) {
+		super();
+		this.primaryKey = primaryKey;
+		this.incidentIdentifier = incidentIdentifier;
+		this.agencyId = agencyId;
+		this.submissionMonth = submissionMonth;
+		this.submissionYear = submissionYear;
+	}
+	public IncidentSearchResult(Integer primaryKey, String incidentIdentifier) {
+		super();
+		this.primaryKey = primaryKey;
+		this.incidentIdentifier = incidentIdentifier;
+	}
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
@@ -63,16 +79,16 @@ public class IncidentSearchResult implements Serializable {
 	public void setUcrOffenseCodeTypeId(Integer ucrOffenseCodeTypeId) {
 		this.ucrOffenseCodeTypeId = ucrOffenseCodeTypeId;
 	}
-	public Integer getSubmissionMonth() {
+	public String getSubmissionMonth() {
 		return submissionMonth;
 	}
-	public void setSubmissionMonth(Integer submissionMonth) {
+	public void setSubmissionMonth(String submissionMonth) {
 		this.submissionMonth = submissionMonth;
 	}
-	public Integer getSubmissionYear() {
+	public String getSubmissionYear() {
 		return submissionYear;
 	}
-	public void setSubmissionYear(Integer submissionYear) {
+	public void setSubmissionYear(String submissionYear) {
 		this.submissionYear = submissionYear;
 	}
 	public Boolean getFbiSubmission() {

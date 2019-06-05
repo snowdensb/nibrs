@@ -60,7 +60,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
         @NamedAttributeNode("clearedExceptionallyType"),
         @NamedAttributeNode("cargoTheftIndicatorType"),
 	})
-public class AdministrativeSegment {
+public class AdministrativeSegment implements Comparable<AdministrativeSegment>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer administrativeSegmentId;
@@ -450,6 +450,11 @@ public class AdministrativeSegment {
 
 	public void setIncidentDate(LocalDate incidentDate) {
 		this.incidentDate = incidentDate;
+	}
+
+	@Override
+	public int compareTo(AdministrativeSegment o) {
+		return this.getAdministrativeSegmentId().compareTo(o.getAdministrativeSegmentId());
 	}
 
 }

@@ -40,7 +40,7 @@ public interface AdministrativeSegmentRepository
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	AdministrativeSegment findByAdministrativeSegmentId(Integer administrativeSegmentId);
-		
+	
 	@Query("SELECT count(*) > 0 from AdministrativeSegment a "
 			+ "LEFT JOIN a.segmentActionType s "
 			+ "WHERE a.administrativeSegmentId = "
