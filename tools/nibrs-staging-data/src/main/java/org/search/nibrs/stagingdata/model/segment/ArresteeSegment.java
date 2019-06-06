@@ -15,7 +15,7 @@
  */
 package org.search.nibrs.stagingdata.model.segment;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
@@ -62,7 +62,7 @@ public class ArresteeSegment {
 	private AdministrativeSegment administrativeSegment; 
 	private Integer arresteeSequenceNumber; 
 	private String arrestTransactionNumber; 
-	private Date arrestDate;
+	private LocalDate arrestDate;
 	
 	@ManyToOne
 	@JoinColumn(name="arrestDateId")
@@ -115,10 +115,10 @@ public class ArresteeSegment {
 	public void setArresteeSequenceNumber(Integer arresteeSequenceNumber) {
 		this.arresteeSequenceNumber = arresteeSequenceNumber;
 	}
-	public Date getArrestDate() {
+	public LocalDate getArrestDate() {
 		return arrestDate;
 	}
-	public void setArrestDate(Date arrestDate) {
+	public void setArrestDate(LocalDate arrestDate) {
 		this.arrestDate = arrestDate;
 	}
 	public Integer getAgeOfArresteeMin() {

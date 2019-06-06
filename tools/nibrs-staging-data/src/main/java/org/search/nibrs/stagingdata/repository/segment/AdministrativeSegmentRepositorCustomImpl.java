@@ -79,7 +79,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 		List<Predicate> predicates = new ArrayList<>();
         if(incidentSearchRequest != null) {
         	if (incidentSearchRequest.getAgencyIds() != null && incidentSearchRequest.getAgencyIds().size() > 0) {
-        		predicates.add(criteriaBuilder.and(criteriaBuilder.in(root.get("agency").get("agencyId").in(incidentSearchRequest.getAgencyIds()))));
+        		predicates.add(criteriaBuilder.and(root.get("agency").get("agencyId").in(incidentSearchRequest.getAgencyIds())));
         	}
         	
         	if (incidentSearchRequest.getIncidentIdentifier() != null) {

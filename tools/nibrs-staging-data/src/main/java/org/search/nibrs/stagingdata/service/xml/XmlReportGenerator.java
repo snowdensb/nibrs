@@ -813,14 +813,14 @@ public class XmlReportGenerator {
 	}
 
 	private void addArrestElement(Element reportElement, Integer arresteeSequenceNumber, String arrestTransactionNumber, 
-			Date arrestDate, UcrOffenseCodeType ucrOffenseCodeType, TypeOfArrestType typeOfArrestType) {
+			LocalDate arrestDate, UcrOffenseCodeType ucrOffenseCodeType, TypeOfArrestType typeOfArrestType) {
 		Element arrestElement = XmlUtils.appendChildElement(reportElement, Namespace.J, "Arrest");
 		XmlUtils.addAttribute(arrestElement, Namespace.S, "id", "Arrest-" + arresteeSequenceNumber);
 		appendIdentificationIdElement(arrestElement, NC, "ActivityIdentification", arrestTransactionNumber);
 		
 		if (arrestDate != null) {
 			Element activityDate = XmlUtils.appendChildElement(arrestElement, Namespace.NC, "ActivityDate");
-			XmlUtils.appendElementAndValue(activityDate, NC, "Date", DATE_FORMAT.format(arrestDate));
+			XmlUtils.appendElementAndValue(activityDate, NC, "Date", arrestDate.toString());
 		}
 		
 		Element arrestCharge = XmlUtils.appendChildElement(arrestElement, Namespace.J, "ArrestCharge");

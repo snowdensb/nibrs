@@ -604,7 +604,7 @@ public class GroupAIncidentService {
 				arresteeSegment.setAdministrativeSegment(administrativeSegment);
 				arresteeSegment.setArresteeSequenceNumber(arrestee.getArresteeSequenceNumber().getValue());
 				arresteeSegment.setArrestTransactionNumber(arrestee.getArrestTransactionNumber());
-				arresteeSegment.setArrestDate(DateUtils.asDate(arrestee.getArrestDate().getValue()));
+				arresteeSegment.setArrestDate(arrestee.getArrestDate().getValue());
 				arresteeSegment.setArrestDateType(codeTableService.getDateType(DateUtils.asDate(arrestee.getArrestDate().getValue())));
 				
 				TypeOfArrestType typeOfArrestType = codeTableService.getCodeTableType(

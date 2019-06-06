@@ -323,7 +323,7 @@ public class GroupAIncidentServiceTest {
 				//age=33,sex=M,race=B,ethnicity=U
 				assertThat(arresteeSegment.getArrestTransactionNumber(), equalTo("201040889"));
 				assertThat(arresteeSegment.getArresteeSequenceNumber(), equalTo(1));
-				assertTrue(DateUtils.isSameDay(arresteeSegment.getArrestDate(), Date.from(LocalDateTime.of(2016, 6, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
+				assertThat(arresteeSegment.getArrestDate(), equalTo(LocalDate.of(2016, 6, 12)));
 				
 				assertThat(arresteeSegment.getArrestDateType().getDateTypeId(), equalTo(2355));
 				assertThat(arresteeSegment.getArrestDateType().getDateMMDDYYYY(), equalTo("06122016"));
@@ -634,7 +634,7 @@ public class GroupAIncidentServiceTest {
 		
 		assertThat(arresteeSegment.getArrestTransactionNumber(), equalTo("12345"));
 		assertThat(arresteeSegment.getArresteeSequenceNumber(), equalTo(1));
-		assertTrue(DateUtils.isSameDay(arresteeSegment.getArrestDate(), Date.from(LocalDateTime.of(2015, 5, 16, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(arresteeSegment.getArrestDate(), equalTo(LocalDate.of(2015, 5, 16)));
 		
 		assertThat(arresteeSegment.getArrestDateType().getDateTypeId(), equalTo(1962));
 		assertThat(arresteeSegment.getArrestDateType().getDateMMDDYYYY(), equalTo("05162015"));
@@ -938,7 +938,7 @@ public class GroupAIncidentServiceTest {
 		
 		assertThat(arresteeSegment.getArrestTransactionNumber(), equalTo("12345"));
 		assertThat(arresteeSegment.getArresteeSequenceNumber(), equalTo(1));
-		assertTrue(DateUtils.isSameDay(arresteeSegment.getArrestDate(), Date.from(LocalDateTime.of(2015, 5, 16, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(arresteeSegment.getArrestDate(), equalTo(LocalDate.of(2015, 5, 16)));
 		
 		assertThat(arresteeSegment.getArrestDateType().getDateTypeId(), equalTo(1962));
 		assertThat(arresteeSegment.getArrestDateType().getDateMMDDYYYY(), equalTo("05162015"));
@@ -1223,7 +1223,7 @@ public class GroupAIncidentServiceTest {
 		
 		assertThat(arresteeSegment.getArrestTransactionNumber(), equalTo("12345"));
 		assertThat(arresteeSegment.getArresteeSequenceNumber(), equalTo(1));
-		assertTrue(DateUtils.isSameDay(arresteeSegment.getArrestDate(), Date.from(LocalDateTime.of(2015, 5, 16, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(arresteeSegment.getArrestDate(), equalTo(LocalDate.of(2015, 5, 16)));
 		
 		assertThat(arresteeSegment.getArrestDateType().getDateTypeId(), equalTo(1962));
 		assertThat(arresteeSegment.getArrestDateType().getDateMMDDYYYY(), equalTo("05162015"));
