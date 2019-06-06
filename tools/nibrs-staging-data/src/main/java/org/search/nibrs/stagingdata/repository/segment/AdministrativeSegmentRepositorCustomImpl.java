@@ -48,7 +48,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 		query.multiselect(root.get("administrativeSegmentId"),
 				criteriaBuilder.literal("GroupA"),root.get("incidentNumber"), 
 				root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("incidentDate"), 
-				criteriaBuilder.literal(0),
+				joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"),
 				joinOptions.get("ucrOffenseCodeType").get("nibrsCode"),
 				root.get("monthOfTape"), root.get("yearOfTape"));
 
@@ -61,7 +61,17 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 
         subQuery
         	.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
-        query.where(root.get("administrativeSegmentId").in(subQuery));
+        
+        Subquery<Integer> offenseSubQuery = query.subquery(Integer.class);
+        Root<OffenseSegment> offenseSubRoot = offenseSubQuery.from(OffenseSegment.class);
+        offenseSubQuery.select(criteriaBuilder.min(offenseSubRoot.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId")));
+        offenseSubQuery.where(criteriaBuilder.equal(
+        		offenseSubRoot.get("administrativeSegment").get("administrativeSegmentId"), 
+        		root.get("administrativeSegmentId")));
+
+        query.where(criteriaBuilder.and(
+        		root.get("administrativeSegmentId").in(subQuery), 
+        		criteriaBuilder.equal(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), offenseSubQuery)));
         
 		return entityManager.createQuery(query)
 	            .getResultList();

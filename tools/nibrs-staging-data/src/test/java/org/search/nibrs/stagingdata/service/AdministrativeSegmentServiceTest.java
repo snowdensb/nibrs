@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.search.nibrs.common.ParsedObject;
 import org.search.nibrs.model.ArresteeSegment;
 import org.search.nibrs.model.GroupAIncidentReport;
+import org.search.nibrs.model.OffenseSegment;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -203,6 +204,9 @@ public class AdministrativeSegmentServiceTest {
 		groupAIncidentReport.setExceptionalClearanceDate(new ParsedObject<>(LocalDate.of(2016, 6, 12)));
 		groupAIncidentReport.setMonthOfTape(6);
 		groupAIncidentReport.setYearOfTape(2017);
+		OffenseSegment offenseSegment = new OffenseSegment(groupAIncidentReport.getOffenses().get(0));
+		offenseSegment.setUcrOffenseCode("09A");
+		groupAIncidentReport.addOffense(offenseSegment);
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
 		IncidentSearchRequest incidentSearchRequest = new IncidentSearchRequest();
@@ -244,6 +248,8 @@ public class AdministrativeSegmentServiceTest {
 		incidentSearchResults = 
 				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
 		assertThat(incidentSearchResults.size(), equalTo(1));
+		assertThat(incidentSearchResults.get(0).getUcrOffenseCodeTypeId(), equalTo(91));
+		assertThat(incidentSearchResults.get(0).getOffenseCode(), equalTo("09A"));
 		
 		IncidentSearchResult result = incidentSearchResults.get(0);
 		assertThat(result.getIncidentIdentifier(), equalTo("12345679"));
