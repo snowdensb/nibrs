@@ -417,4 +417,29 @@ public class ArrestReportSegment {
 	public void setStateCode(String stateCode) {
 		this.stateCode = stateCode;
 	}
+	
+	public Integer getAverageAge() {
+		Integer ret = null;
+		if (!isAgeUnknown()) {
+			double min = ageOfArresteeMin.doubleValue();
+			double max = ageOfArresteeMax.doubleValue();
+			double average = (min + max) / 2.0;
+			ret = new Integer((int) average);
+		}
+		return ret;
+	}
+	
+    public boolean isAgeUnknown() {
+    	// set forth in rule for data element 52
+    	return ageOfArresteeMax == null && ageOfArresteeMin == null && Objects.equals(nonNumericAge, "00");
+    }
+
+    public boolean isJuvenile() {
+    	boolean ret = false; 
+    	if ( !isAgeUnknown() ) {
+    		ret = ageOfArresteeMax < 18 || (ageOfArresteeMin < 18 && getAverageAge() < 18);
+    	}
+    	return ret;
+    }
+
 }
