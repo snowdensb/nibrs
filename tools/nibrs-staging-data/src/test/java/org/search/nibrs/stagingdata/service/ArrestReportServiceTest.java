@@ -49,6 +49,7 @@ import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentReposi
 import org.search.nibrs.stagingdata.util.BaselineIncidentFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -86,6 +87,7 @@ public class ArrestReportServiceTest {
 	public ArrestReportSegmentFactory arrestReportSegmentFactory; 
 	
 	@Test
+	@DirtiesContext
 	public void test() {
 		ArrestReportSegment arrestReportSegment = arrestReportSegmentFactory.getBasicArrestReportSegment();
 		arrestReportService.saveArrestReportSegment(arrestReportSegment); 
@@ -199,6 +201,7 @@ public class ArrestReportServiceTest {
 	
 	
 	@Test
+	@DirtiesContext
 	public void processGroupBArrestReportTest(){
 		GroupBArrestReport groupBArrestReport = BaselineIncidentFactory.getBaselineGroupBArrestReport();
 		ArrestReportSegment arrestReportSegment = StreamSupport.stream(arrestReportService.saveGroupBArrestReports(groupBArrestReport).spliterator(), false)
@@ -288,6 +291,7 @@ public class ArrestReportServiceTest {
 	}
 	
 	@Test
+	@DirtiesContext
 	public void testFindAllByCriteria() {
 		ArrestReportSegment arrestReportSegment = arrestReportSegmentFactory.getBasicArrestReportSegment();
 		arrestReportService.saveArrestReportSegment(arrestReportSegment); 

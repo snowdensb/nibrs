@@ -51,7 +51,7 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         Subquery<Integer> subQuery = query.subquery(Integer.class);
         Root<ArrestReportSegment> subRoot = subQuery.from(ArrestReportSegment.class);
         subQuery.distinct(true);
-        subQuery.groupBy(root.get("arrestTransactionNumber"));
+        subQuery.groupBy(subRoot.get("arrestTransactionNumber"));
         subQuery.select(criteriaBuilder.max(subRoot.get("arrestReportSegmentId")));
         List<Predicate> predicates = getArrestReportSegmentPredicates(incidentSearchRequest, subRoot, criteriaBuilder);
 
