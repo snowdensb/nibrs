@@ -194,6 +194,9 @@ public class AdministrativeSegmentServiceTest {
 		
 		groupAIncidentReport.setIncidentNumber("12345678");
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
+		
+		groupAIncidentReport.setIncidentDate(new ParsedObject<>(LocalDate.of(2016, 6, 12)));
+		groupAIncidentReport.setMonthOfTape(6);
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
 		groupAIncidentReport.setIncidentNumber("12345679");
@@ -215,6 +218,8 @@ public class AdministrativeSegmentServiceTest {
 		incidentSearchResults = 
 				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
 		assertThat(count, equalTo(1L));
+		assertThat(incidentSearchResults.get(0).getIncidentDate(), equalTo(LocalDate.of(2016, 6, 12)));
+		assertThat(incidentSearchResults.get(0).getSubmissionMonth(), equalTo("06"));
 		
 		incidentSearchRequest.setIncidentDate(LocalDate.of(2016, 5, 12));
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
@@ -224,15 +229,16 @@ public class AdministrativeSegmentServiceTest {
 		
 		incidentSearchRequest.setIncidentIdentifier(null);
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
-		assertThat(count, equalTo(3L));
+		assertThat(count, equalTo(2L));
 		
+		incidentSearchRequest = new IncidentSearchRequest();
 		incidentSearchRequest.setSubmissionMonth(6);
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
-		assertThat(count, equalTo(1L));
+		assertThat(count, equalTo(2L));
 		
 		incidentSearchRequest.setSubmissionYear(2016);
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
-		assertThat(count, equalTo(0L));
+		assertThat(count, equalTo(1L));
 		
 		incidentSearchRequest.setSubmissionYear(2017);
 		incidentSearchResults = 

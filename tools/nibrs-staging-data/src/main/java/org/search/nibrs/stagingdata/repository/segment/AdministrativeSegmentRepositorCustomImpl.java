@@ -26,6 +26,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
@@ -44,20 +45,24 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         CriteriaQuery<IncidentSearchResult> query = criteriaBuilder.createQuery(IncidentSearchResult.class);
         Root<AdministrativeSegment> root = query.from(AdministrativeSegment.class);
 		Join<AdministrativeSegment, OffenseSegment> joinOptions = root.join("offenseSegments", JoinType.LEFT);
-
-		query.distinct(true);
-		query.groupBy(root.get("incidentNumber"));
-		query.multiselect(criteriaBuilder.max(root.get("administrativeSegmentId")),
+		query.multiselect(root.get("administrativeSegmentId"),
 				criteriaBuilder.literal("GroupA"),root.get("incidentNumber"), 
 				root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("incidentDate"), 
-				criteriaBuilder.min(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId")),
+				criteriaBuilder.literal(0),
 				joinOptions.get("ucrOffenseCodeType").get("nibrsCode"),
 				root.get("monthOfTape"), root.get("yearOfTape"));
-        List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
 
-        query
+        Subquery<Integer> subQuery = query.subquery(Integer.class);
+        Root<AdministrativeSegment> subRoot = subQuery.from(AdministrativeSegment.class);
+        subQuery.distinct(true);
+        subQuery.groupBy(subRoot.get("incidentNumber"));
+        subQuery.select(criteriaBuilder.max(subRoot.get("administrativeSegmentId")));
+        List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, subRoot, criteriaBuilder);
+
+        subQuery
         	.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
-
+        query.where(root.get("administrativeSegmentId").in(subQuery));
+        
 		return entityManager.createQuery(query)
 	            .getResultList();
 	}
