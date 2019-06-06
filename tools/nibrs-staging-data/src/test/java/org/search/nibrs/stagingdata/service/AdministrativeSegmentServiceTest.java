@@ -260,6 +260,10 @@ public class AdministrativeSegmentServiceTest {
 		incidentSearchRequest.setUcrOffenseCodeTypeId(131);
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
 		assertThat(count, equalTo(3L));
+		
+		incidentSearchResults = administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
+		List<String> offenses = incidentSearchResults.stream().map(IncidentSearchResult::getOffenseCode).collect(Collectors.toList());
+		assertTrue(offenses.containsAll(Arrays.asList("13A", "09A") ));
 	}
 	
 }
