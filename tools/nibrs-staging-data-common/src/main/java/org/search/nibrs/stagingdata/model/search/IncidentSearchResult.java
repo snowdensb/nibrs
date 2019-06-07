@@ -17,6 +17,7 @@ package org.search.nibrs.stagingdata.model.search;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -34,6 +35,7 @@ public class IncidentSearchResult implements Serializable {
 	private String submissionMonth; 
 	private String submissionYear; 
 	private Boolean fbiSubmission;
+	private LocalDateTime reportTimestamp; 
 	
 	public IncidentSearchResult(Integer primaryKey,
 			String reportType,
@@ -43,7 +45,9 @@ public class IncidentSearchResult implements Serializable {
 			LocalDate incidentDate,
 			Integer ucrOffenseCodeTypeId,
 			String offenseCode,
-			String submissionMonth, String submissionYear) {
+			String submissionMonth, 
+			String submissionYear, 
+			LocalDateTime reportTimestamp) {
 		super();
 		this.primaryKey = primaryKey;
 		this.reportType = ReportType.valueOf(reportType);
@@ -55,6 +59,7 @@ public class IncidentSearchResult implements Serializable {
 		this.offenseCode = offenseCode; 
 		this.submissionMonth = submissionMonth;
 		this.submissionYear = submissionYear;
+		this.reportTimestamp = reportTimestamp;
 	}
 	public IncidentSearchResult(Integer primaryKey, String incidentIdentifier) {
 		super();
@@ -131,5 +136,11 @@ public class IncidentSearchResult implements Serializable {
 	}
 	public void setPrimaryKey(Integer primaryKey) {
 		this.primaryKey = primaryKey;
+	}
+	public LocalDateTime getReportTimestamp() {
+		return reportTimestamp;
+	}
+	public void setReportTimestamp(LocalDateTime reportTimestamp) {
+		this.reportTimestamp = reportTimestamp;
 	}
 }

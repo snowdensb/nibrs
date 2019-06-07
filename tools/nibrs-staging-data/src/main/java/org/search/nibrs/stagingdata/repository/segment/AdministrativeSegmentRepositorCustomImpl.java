@@ -50,7 +50,8 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 				root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("incidentDate"), 
 				joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"),
 				joinOptions.get("ucrOffenseCodeType").get("nibrsCode"),
-				root.get("monthOfTape"), root.get("yearOfTape"));
+				root.get("monthOfTape"), root.get("yearOfTape"), 
+				root.get("reportTimestamp"));
 
         Subquery<Integer> subQuery = query.subquery(Integer.class);
         Root<AdministrativeSegment> subRoot = subQuery.from(AdministrativeSegment.class);
