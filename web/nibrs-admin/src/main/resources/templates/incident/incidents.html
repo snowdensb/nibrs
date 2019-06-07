@@ -1,0 +1,157 @@
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>OJBC Web Portal</title>
+		<th:block th:include="fragments/general.html :: headerfiles"></th:block>
+		<link rel="stylesheet" type="text/css" th:href="@{/webjars/datatables/1.10.19/css/dataTables.bootstrap4.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/5.2.0/css/all.css}" />
+		<link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+	    <!-- Begin page content -->
+	    <div th:fragment="resultsPage">
+	      	<div id="loadingAjaxPane" ></div>
+	        <nav aria-label="breadcrumb">
+	             <ol class="breadcrumb">
+	             <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+	             <li class="breadcrumb-item active" aria-current="page">Incident Search Results</li>
+	           </ol>
+	        </nav>
+	        <h3>Incident Search Results</h3>
+	        <form action="#" th:action="@{/incident/incidentSearch}" th:object="${incidentSearchRequest}" id="searchForm" method="post">
+		        <div class="row" th:replace="incident/incidentSearchForm.html :: incidentSearchFormContent"></div>
+	        </form>
+	        <hr/>
+	        
+	<!--         <div id="searchResultsList" th:fragment="resultsList" >
+		        <p th:utext="${arrestSearchContent}" ></p>
+		        <script th:inline="javascript">
+	              $(function(){
+	            	    $('[data-toggle="popover"]').popover(); 
+	                  $.fn.dataTable.moment( 'MM/DD/YYYY' );
+	
+	                  var table = $('#searchResultsTable').DataTable({
+	                	    responsive: true, 
+	                	    fixedHeader: { header: true },
+	                      "columnDefs": [
+	                          { "orderable": false, "targets": 6 },
+	                          {
+	                              "targets":[2, 4], 
+	                              "type":"date"
+	                          },
+	                        ]
+	                  });
+	                  
+	                  $('[data-toggle="tooltip"]').tooltip({
+	                      trigger : 'hover'
+	                  });   
+	 
+	                  
+	                  $('#searchResultsTable').on('click', 'a.editArrest',function() {
+	                      xhr = $.get( context +"muniArrests/" + $(this).closest("tr").attr("id"), function(data) {
+	                        $('#portalContent').html(data);
+	                      }).fail(ojbc.displayFailMessage);
+	                  });
+	                  $('#searchResultsTable tbody').on('click', 'a.hideArrest',function() {
+		                	  var arrestId = $(this).closest("tr").attr("id"); 
+	                      bootpopup({
+	                          title: "", 
+	                          size: "large",
+	                          showclose: false,
+	                          content: [
+	                                { p: {text: "Hiding an arrest will remove it from your list for 30 days. You will still be able to search for this arrest.  "}},
+	                                { p: {text: "Do you want to hide this arrest?"}}
+	                                ], 
+	                          cancel: function() {},
+	                          ok: function(data, array, event) {  
+	                        	  xhr = $.get( context +"muniArrests/" + arrestId + "/hide", function(data) {
+	                                  $("#searchResultsList").replaceWith(data);
+	                                }).fail(ojbc.displayFailMessage); 
+	                          },
+	                      });
+	                  });
+	                  $('#searchResultsTable tbody').on('click', 'a.unhideArrest',function() {
+		                	  var arrestId = $(this).closest("tr").attr("id"); 
+	                      xhr = $.get( context +"muniArrests/" + arrestId + "/unhide", function(data) {
+	                          $("#searchResultsList").replaceWith(data);
+	                      }).fail(ojbc.displayFailMessage);
+	                  });
+	                  $('#searchResultsTable tbody').on('click', 'a.referArrest',function() {
+	                      var arrestId = $(this).closest("tr").attr("id"); 
+	                      bootpopup({
+	                          title: "", 
+	                          size: "large",
+	                          showclose: false,
+	                          content: [
+	                                { p: {text: "Referring an arrest to the DA will permanently remove the arrest from the municipality’s charge list.  If both the DA and municipal court refer this arrest, the disposition will be updated to ‘NO CHARGES FILED’ in OSBI’s criminal history records.  "}},
+	                                { p: {text: "Do you want to refer this arrest to the DA?"}}
+	                                ], 
+	                          cancel: function() {},
+	                          ok: function(data, array, event) {  
+	                            xhr = $.get( context +"muniArrests/" + arrestId  + "/refer", function(data) {
+	                              $("#searchResultsList").replaceWith(data);
+	                            }).fail(ojbc.displayFailMessage); 
+	                          },
+	                      });
+	                  });
+	             });
+	          </script>
+	        </div>
+	 -->
+	 		<script th:inline="javascript">
+		        /*<![CDATA[*/
+	            var context = [[@{/}]];
+	 	        /*]]>*/
+	
+		        $(function(){
+		            
+	              $('#incidentDate').datepicker({
+	                    uiLibrary: 'bootstrap4', size: 'small'
+	              });
+	/*               $('#incidentDateRangeStartDate').datepicker({
+	                    uiLibrary: 'bootstrap4', size: 'small'
+	              });
+	              $('#incidentDateRangeEndDate').datepicker({
+	                    uiLibrary: 'bootstrap4', size: 'small'
+	              }); */
+	              $('.date').mask('99/99/9999');
+	              
+	              $('#searchForm input').keypress(function (e) {
+	            	  if (e.which == 13) {
+	            	    $('#submit').click();
+	            	    return false;    
+	            	  }
+	            	});
+	              
+	              $('#submit').click (function(){
+	                var formData = $('#searchForm').serialize();
+	                 
+	                xhr = $.post(context + "muniArrests/advancedSearch",formData,function(data) {
+	              	  $('#searchResultsList').replaceWith(data);
+	             	  }).fail();
+	              });
+	              
+	            }); 
+		
+	        </script>
+	    </div>
+	
+	</body>
+</html>

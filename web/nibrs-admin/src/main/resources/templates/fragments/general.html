@@ -122,7 +122,7 @@
 	    	  $('body').on('click', 'a#incidents', function() {   
                 $(this).parent().toggleClass('show');
 
-	              xhr = $.get(context + 'incidents', function(data) {
+	              xhr = $.get(context + 'incidents/searchForm', function(data) {
 	                 $('#portalContent').html(data); 
 	               }).fail(ojbc.displayFailMessage);
 	              return false; 

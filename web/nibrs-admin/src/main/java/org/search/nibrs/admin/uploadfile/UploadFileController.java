@@ -27,8 +27,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
@@ -43,13 +41,9 @@ import org.search.nibrs.util.NibrsFileUtils;
 import org.search.nibrs.validate.common.NibrsValidationUtils;
 import org.search.nibrs.validation.SubmissionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -69,32 +63,6 @@ public class UploadFileController {
 
 	final List<String> acceptedFileTypes = 
 			Arrays.asList("application/zip", "text/plain", "application/octet-stream", "text/xml", "application/xml");
-	
-	@ModelAttribute("showUserInfoDropdown")
-	public Boolean getShowUserInfoDropDown(){
-		return appProperties.getShowUserInfoDropdown(); 
-	}
-	
-	@GetMapping("/")
-	public String getFileUploadForm(Model model) throws IOException {
-	
-	    return "index";
-	}
-	
-	@GetMapping("/logout")
-	public String logout(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    if (auth != null){    
-	        new SecurityContextLogoutHandler().logout(request, response, auth);
-	    }
-	    return "redirect:" + appProperties.getSignOutUrl();
-	}
-
-	@GetMapping("/logoutSuccess")
-	public String logoutSuccess(Model model) throws IOException {
-		
-		return "logoutSuccess";
-	}
 	
     @PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile[] multipartFiles,

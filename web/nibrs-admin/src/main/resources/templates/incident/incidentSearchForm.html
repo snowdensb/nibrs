@@ -1,0 +1,83 @@
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>OJBC Web Portal</title>
+		<th:block th:include="fragments/general.html :: headerfiles"></th:block>
+		<link rel="stylesheet" type="text/css" th:href="@{/webjars/datatables/1.10.19/css/dataTables.bootstrap4.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/5.2.0/css/all.css}" />
+		<link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+     <!-- Begin page content -->
+     <form action="#" th:object="${incidentSearchRequest}" id="searchForm" method="post">
+       <div th:fragment="incidentSearchFormContent">
+           <div class="form-row">
+             <label class="col-2 col-form-label font-weight-bold text-right">Incident Date </label>
+             <div class="col-sm-3"><input type="text" th:field="*{incidentDate}" class="date" width="250" placeholder="incident date"/></div>
+             <div th:if="${#fields.hasErrors('incidentDate')}" th:errors="incidentDate">Incident Date error message</div>
+           </div>
+<!--            <div class="form-row">
+	           <label for="lastName" class="col-2 col-form-label font-weight-bold text-right">Last Name </label>
+	           <div class="col-sm-3">
+	             <input type="text" th:field="*{lastName}" width="250" placeholder="Last Name"/>
+	             <input type="checkbox" th:field="*{lastNameExactMatch}" th:value="${lastNameExactMatch}" />
+	             <span class="align-bottom">Exact Match</span>
+	           </div>
+	           <label for="firstName" class="col-1 col-form-label font-weight-bold text-right">First Name </label>
+	           <div class="col-sm-3">
+	              <input type="text" th:field="*{firstName}" width="250" placeholder="First Name"/>
+	              <input type="checkbox" th:field="*{firstNameExactMatch}" th:value="${firstNameExactMatch}"/>
+	              <span class="align-bottom">Exact Match</span>
+	           </div>
+           </div>
+           <div class="form-row">
+             <label for="ssn" class="col-2 col-form-label font-weight-bold text-right">SSN </label>
+             <div class="col-sm-3"><input type="text" th:field="*{ssn}" width="250" placeholder="SSN"/></div>
+             <label for="dob" class="col-1 col-form-label font-weight-bold text-right">DOB </label>
+             <div class="col-sm-3"><input type="text" th:field="*{dob}" class="date" width="250" placeholder="Date of Birth"/></div>
+           </div>
+           <div class="form-row">
+             <label for="otn" class="col-2 col-form-label font-weight-bold text-right">OTN </label>
+             <div class="col-sm-3"><input type="text" th:field="*{otn}" width="250" placeholder="OTN"/></div>
+           </div>
+           <div class="form-row">
+             <div class="col-2"/>
+             <div class="col-sm-3">
+                <input type="checkbox" th:field="*{arrestWithDeferredDispositions}" th:value="${arrestWithDeferredDispositions}" />
+                <span class="font-weight-bold ">Arrests With Deferred Dispositions</span> 
+             </div>
+             <div class="col-1"/>
+             <div class="col-sm-3">
+                <input type="checkbox" th:field="*{includeHiddenArrestIndicator}" th:value="${includeHiddenArrestIndicator}" />
+                <span class="font-weight-bold ">Include Hidden Arrests</span>
+             </div>
+           </div>
+ -->
+            <div class="form-row mt-2">
+             <div class="col-2"/>
+             <div class="col-sm-3">
+                 <button type="button" class="btn-primary" id="submit">Search</button>
+                 <button type="reset" class="btn-secondary">Reset</button>
+	           </div>
+           </div>
+       </div>
+      </form>
+	</body>
+</html>
