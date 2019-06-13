@@ -15,7 +15,6 @@
     limitations under the License.
 
 -->
-<?xml version="1.0" encoding="UTF-8"?> 
 <nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/2019" 
 	xmlns:cjis="http://fbi.gov/cjis/2.0" 
 	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/2.0" 
@@ -28,9 +27,9 @@
 	xmlns:s="http://release.niem.gov/niem/structures/3.0/" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/2019" 
-	xmlns:hi_nibrs_codes="http://fbi.gov/cjis/nibrs/2019/Extensions/Hawaii/nibrs/codes/1.0"
-	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/2019 ../../../base-xsd/nibrs/2019/nibrs.xsd http://fbi.gov/cjis/nibrs/2019/Extensions/Hawaii/nibrs/codes/1.0 ../../../impl/xsd/hawaii/hi_nibrs_codes.xsd">
+	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/2019"
+	xmlns:hi_nibrs_codes="http://search.org/nibrs/2019/Extensions/Hawaii/codes/1.0"
+	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/2019 ../../../base-xsd/nibrs/2019/nibrs.xsd http://search.org/nibrs/2019/Extensions/Hawaii/codes/1.0 ../../../impl/xsd/hawaii/hi_nibrs_codes.xsd">
 	<cjis:MessageMetadata>
 		<!-- Message Timestamp -->
 		<cjis:MessageDateTime>2017-03-23T03:00:00</cjis:MessageDateTime>
@@ -242,12 +241,12 @@
 			<j:PersonEthnicityCode>N</j:PersonEthnicityCode>
 			<!-- Element 28, Race of Victim -->
 			<!--  j:PersonRaceNDExCode>B</j:PersonRaceNDExCode-->
+			<hi_nibrs_codes:PersonRaceCode>C</hi_nibrs_codes:PersonRaceCode>			
 			<!-- Element 30, Resident Status -->
 			<j:PersonResidentCode>R</j:PersonResidentCode>
 			<!-- Element 27, Sex of Victim -->
 			<j:PersonSexCode>M</j:PersonSexCode>
 			<!-- Element 28, Race of Victim -->
-			<hi_nibrs_codes:RaceCode>C</hi_nibrs_codes:RaceCode>
 		</nc:Person>
 		<nc:Person s:id="PersonVictim2">
 			<!-- Element 26, Age of Victim (only one would be included per victim)-->

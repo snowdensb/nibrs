@@ -18,8 +18,8 @@
 -->
 <xsd:schema xmlns:structures="http://release.niem.gov/niem/structures/3.0/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:i="http://release.niem.gov/niem/appinfo/3.0/" xmlns:nc="http://release.niem.gov/niem/niem-core/3.0/"
-	xmlns:hi_nibrs_codes="http://fbi.gov/cjis/nibrs/2019/Extensions/Hawaii/nibrs/codes/1.0"
-	targetNamespace="http://fbi.gov/cjis/nibrs/2019/Extensions/Hawaii/nibrs/codes/1.0" version="1.0">
+	xmlns:hi_nibrs_codes="http://search.org/nibrs/2019/Extensions/Hawaii/codes/1.0"
+	targetNamespace="http://search.org/nibrs/2019/Extensions/Hawaii/codes/1.0" version="1.0">
 	<xsd:annotation>
 		<xsd:documentation>Hawaii NIBRS Codes</xsd:documentation>
 		<xsd:appinfo>
@@ -33,7 +33,7 @@
 	<xsd:import namespace="http://release.niem.gov/niem/niem-core/3.0/"
 		schemaLocation="../../../base-xsd/niem/niem-core/3.0/niem-core.xsd" />
 	<xsd:import namespace="http://fbi.gov/cjis/nibrs/2019" schemaLocation="../../../base-xsd/nibrs/2019/nibrs.xsd" />
-	<xsd:simpleType name="RaceCodeSimpleType">
+	<xsd:simpleType name="PersonRaceCodeSimpleType">
 		<xsd:annotation>
 			<xsd:documentation>Race Code Set</xsd:documentation>
 			<xsd:appinfo>
@@ -103,7 +103,7 @@
 			</xsd:enumeration>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:complexType name="RaceCodeType">
+	<xsd:complexType name="PersonRaceCodeType">
 		<xsd:annotation>
 			<xsd:documentation>Race Code Set</xsd:documentation>
 			<xsd:appinfo>
@@ -111,12 +111,12 @@
 			</xsd:appinfo>
 		</xsd:annotation>
 		<xsd:simpleContent>
-			<xsd:extension base="hi_nibrs_codes:RaceCodeSimpleType">
+			<xsd:extension base="hi_nibrs_codes:PersonRaceCodeSimpleType">
 				<xsd:attributeGroup ref="structures:SimpleObjectAttributeGroup" />
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
-	<xsd:element name="RaceCode" type="hi_nibrs_codes:RaceCodeType" substitutionGroup="nc:PersonAugmentationPoint">
+	<xsd:element name="PersonRaceCode" type="hi_nibrs_codes:PersonRaceCodeType" substitutionGroup="nc:PersonRace">
 		<xsd:annotation>
 			<xsd:documentation>A code that describes a Race.</xsd:documentation>
 		</xsd:annotation>
