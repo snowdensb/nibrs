@@ -17,7 +17,9 @@ package org.search.nibrs.report;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.search.nibrs.model.reports.ReturnAForm;
+import org.search.nibrs.model.reports.arson.ArsonReport;
+import org.search.nibrs.report.service.ArsonExcelExporter;
+import org.search.nibrs.report.service.AsrExcelExporter;
 import org.search.nibrs.report.service.ExcelExporter;
 import org.search.nibrs.report.service.StagingDataRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,10 @@ public class NibrsSummaryReportApplication implements CommandLineRunner{
 	public StagingDataRestClient restClient; 
 	@Autowired 
 	public ExcelExporter excelExporter;
+	@Autowired 
+	public AsrExcelExporter asrExcelExporter;
+	@Autowired 
+	public ArsonExcelExporter arsonExcelExporter;
 	public static ConfigurableApplicationContext context;
 	
 	public static void main(String[] args) {
@@ -55,9 +61,19 @@ public class NibrsSummaryReportApplication implements CommandLineRunner{
         	System.out.println("arg: " + arg);
         }
         
-        ReturnAForm returnAForm = restClient.getReturnAForm(args[0], args[1], args[2]);
-        System.out.println("returnAForm: \n" + returnAForm);
-        excelExporter.exportReturnAForm(returnAForm);
+//        AsrReports asrAdult = restClient.getAsrReports(args[0], args[1], args[2]);
+//        System.out.println("asrAdult: \n" + asrAdult);
+//        asrExcelExporter.exportAsrJuvenileForm(asrAdult);
+//        asrExcelExporter.exportAsrAdultForm(asrAdult);
+        
+        ArsonReport arsonReport = restClient.getArsonReport(args[0], args[1], args[2]);
+        System.out.println("arsonReport: \n" + arsonReport);
+        arsonExcelExporter.exportArsonReport(arsonReport);
+
+//        ReturnAForm returnAForm = restClient.getReturnAForm(args[0], args[1], args[2]);
+//        System.out.println("returnAForm: \n" + returnAForm);
+//        excelExporter.exportReturnAForm(returnAForm);
+//        excelExporter.exportReturnASupplement(returnAForm);
 
     }
 }

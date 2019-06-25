@@ -16,15 +16,13 @@
 package org.search.nibrs.web;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 @ConfigurationProperties("pct")
 public class AppProperties {
 
-	/**
-	 * Default to true
-	 */
+	private Boolean securityEnabled = false;
 	private Boolean allowAccessWithoutSamlToken = true;
 	private String signOutUrl = "/logoutSuccess"; 
 	private Boolean showUserInfoDropdown = true;
@@ -82,6 +80,14 @@ public class AppProperties {
 
 	public void setShowUserInfoDropdown(Boolean showUserInfoDropdown) {
 		this.showUserInfoDropdown = showUserInfoDropdown;
+	}
+
+	public Boolean getSecurityEnabled() {
+		return securityEnabled;
+	}
+
+	public void setSecurityEnabled(Boolean securityEnabled) {
+		this.securityEnabled = securityEnabled;
 	}
 
 }

@@ -78,9 +78,9 @@ final class NIBRSAgeBuilder {
 					error.setValue(ageString);
 					error.setNIBRSErrorCode(NIBRSErrorCode.valueOf("_" + segmentTypeCode + "22"));
 				}
-			} else if (ageStringTrim.length() == 2) {
+			} else if (ageStringTrim.length() <= 2) {
 				try {
-					ageMin = Integer.parseInt(ageStringTrim.substring(0, 2));
+					ageMin = Integer.parseInt(ageStringTrim);
 					ageMax = ageMin;
 				} catch (NumberFormatException nfe) {
 					nonNumericAge = ageStringTrim;

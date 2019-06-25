@@ -25,14 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.search.nibrs.model.codes.ClearedExceptionallyCode;
 import org.search.nibrs.model.codes.LocationTypeCode;
 import org.search.nibrs.model.codes.OffenseCode;
 import org.search.nibrs.model.codes.PropertyDescriptionCode;
@@ -48,8 +46,6 @@ import org.search.nibrs.stagingdata.model.PropertyType;
 import org.search.nibrs.stagingdata.model.TypeOfWeaponForceInvolved;
 import org.search.nibrs.stagingdata.model.TypeOfWeaponForceInvolvedType;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
-import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
-import org.search.nibrs.stagingdata.model.segment.OffenderSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.search.nibrs.stagingdata.model.segment.PropertySegment;
 import org.search.nibrs.stagingdata.model.segment.VictimSegment;
@@ -143,12 +139,12 @@ public class ReturnAFormService {
 	}
 
 	private void processOffenseClearances(String ori, Integer year, Integer month, ReturnAForm returnAForm) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findIdsByOriAndClearanceDate(ori, year, month);
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findByOriAndClearanceDate(ori, year, month);
 		
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue;
 			
-			boolean isClearanceInvolvingOnlyJuvenile = isClearanceInvolvingOnlyJuvenile(administrativeSegment);
+			boolean isClearanceInvolvingOnlyJuvenile = administrativeSegment.isClearanceInvolvingOnlyJuvenile();
 			
 			List<OffenseSegment> offenses = getClearedOffenses(administrativeSegment);
 			for (OffenseSegment offense: offenses){
@@ -278,19 +274,6 @@ public class ReturnAFormService {
 			}
 		}
 		
-	}
-
-	private boolean isClearanceInvolvingOnlyJuvenile(AdministrativeSegment administrativeSegment) {
-		boolean isClearanceInvolvingOnlyJuvenile = false; 
-		if (ClearedExceptionallyCode.applicableCodeSet().contains(administrativeSegment.getClearedExceptionallyType().getNibrsCode())){
-			Set<OffenderSegment> offenders = administrativeSegment.getOffenderSegments();
-			isClearanceInvolvingOnlyJuvenile = offenders.stream().allMatch(offender -> offender.isJuvenile() || offender.isAgeUnknown()); 
-		}
-		else {
-			Set<ArresteeSegment> arrestees = administrativeSegment.getArresteeSegments();
-			isClearanceInvolvingOnlyJuvenile = arrestees.stream().allMatch(arrestee -> arrestee.isJuvenile() || arrestee.isAgeUnknown()); 
-		}
-		return isClearanceInvolvingOnlyJuvenile;
 	}
 
 	private void countClearedBurglaryOffense(ReturnAForm returnAForm, OffenseSegment offense, boolean isClearanceInvolvingOnlyJuvenile) {

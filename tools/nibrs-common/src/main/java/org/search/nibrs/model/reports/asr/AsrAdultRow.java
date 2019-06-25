@@ -15,20 +15,11 @@
  */
 package org.search.nibrs.model.reports.asr;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public class AsrAdultRow implements Serializable{
+public class AsrAdultRow extends AsrRow{
 	private static final long serialVersionUID = -2900703485491703677L;
-	private int[] maleAgeGroups; 
-	private int[] femaleAgeGroups;
-	private int[] raceGroups;
-	private int[] ethnicityGroups;
-	
-	public enum Race{W, B, I, A, P}
-	public enum Ethnicity{H, N}; 
 	public enum AdultAgeGroup{
 		_18, 
 		_19,
@@ -52,8 +43,6 @@ public class AsrAdultRow implements Serializable{
 		super();
 		setMaleAgeGroups(new int[AdultAgeGroup.values().length]);
 		setFemaleAgeGroups(new int[AdultAgeGroup.values().length]);
-		setRaceGroups(new int[Race.values().length]);
-		setEthnicityGroups(new int[Ethnicity.values().length]);
 	}
 	
 	@Override
@@ -61,35 +50,4 @@ public class AsrAdultRow implements Serializable{
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
-	public int[] getMaleAgeGroups() {
-		return maleAgeGroups;
-	}
-
-	public void setMaleAgeGroups(int[] maleAgeGroups) {
-		this.maleAgeGroups = maleAgeGroups;
-	}
-
-	public int[] getFemaleAgeGroups() {
-		return femaleAgeGroups;
-	}
-
-	public void setFemaleAgeGroups(int[] femaleAgeGroups) {
-		this.femaleAgeGroups = femaleAgeGroups;
-	}
-
-	public int[] getRaceGroups() {
-		return raceGroups;
-	}
-
-	public void setRaceGroups(int[] raceGroups) {
-		this.raceGroups = raceGroups;
-	}
-
-	public int[] getEthnicityGroups() {
-		return ethnicityGroups;
-	}
-
-	public void setEthnicityGroups(int[] ethnicityGroups) {
-		this.ethnicityGroups = ethnicityGroups;
-	}
 }

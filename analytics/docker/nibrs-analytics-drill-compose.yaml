@@ -15,11 +15,13 @@ services:
   zookeeper:
     container_name: zoo
     image: zookeeper
+    restart: always
     networks:
       nibrs_analytics_nw:
   nibrs-analytics-drill:
     container_name: nibrs-analytics-drill
     image: searchncjis/nibrs-drill
+    restart: always
     ports:
       - 8047:8047
     networks:
