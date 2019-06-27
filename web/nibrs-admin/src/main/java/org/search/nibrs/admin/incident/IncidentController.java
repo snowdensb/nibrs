@@ -30,6 +30,7 @@ import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,7 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"incidentSearchRequest"})
+@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping"})
 @RequestMapping("/incidents")
 public class IncidentController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -48,6 +49,23 @@ public class IncidentController {
 	@Resource
 	RestService restService;
 	
+    @ModelAttribute
+    public void addModelAttributes(Model model) {
+    	
+    	log.info("Add ModelAtrributes");
+		
+		if (!model.containsAttribute("agencyMapping")) {
+			model.addAttribute("agencyMapping", restService.getAgencies());
+		}
+		if (!model.containsAttribute("offenseCodeMapping")) {
+			model.addAttribute("offenseCodeMapping", restService.getOffenseCodes());
+		}
+		
+    	log.info("Added ModelAtrributes");
+    	log.info("Model: " + model);
+		
+    }
+    
 	@GetMapping("/searchForm")
 	public String getSearchForm(Map<String, Object> model) throws IOException {
 		IncidentSearchRequest incidentSearchRequest = (IncidentSearchRequest) model.get("incidentSearchRequest");

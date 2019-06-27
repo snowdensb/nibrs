@@ -16,7 +16,9 @@
 package org.search.nibrs.admin.services.rest;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
@@ -38,57 +40,21 @@ public class RestService{
 		this.webClient = webClientBuilder.baseUrl(appProperties.getRestServiceBaseUrl()).build();
 	}
 	
-//	public Map<String, String> getMuniDispositionCodeMap(){
-//		return getCodeDescriptionMap(this::getCodeTableEntries, "/criminalhistory/municipal-disposition-codes");
-//	}
-//
-//	public Map<String, String> getMuniFiledChargeCodeMap(){
-//		return getIdDescriptionMap(this::getCodeTableEntries, "/criminalhistory/municipal-filed-charge-codes");
-//	}
-//	
-//	public Map<String, String> getMuniAmendedChargeCodeMap(){
-//		return getIdDescriptionMap(this::getCodeTableEntries, "/criminalhistory/municipal-amended-charge-codes");
-//	}
-//	
-//	public Map<String, String> getMuniAlternateSentenceMap(){
-//		return getIdDescriptionMap(this::getCodeTableEntries, "/criminalhistory/municipal-alternate-sentences");
-//	}
-//	
-//	public Map<String, String> getMuniReasonsForDismissalMap(){
-//		return getIdDescriptionMap(this::getCodeTableEntries, "/criminalhistory/municipal-reasons-for-dismissal");
-//	}
-//	
-//	
-//	public Map<String, String> getIdDescriptionMap(Function<String, List<CodeTableEntry>> function, String uri){
-//		return function.apply(uri)
-//				.stream()
-//				.filter(i->!"no description".equalsIgnoreCase(StringUtils.lowerCase(i.getDescription().trim())))
-//				.collect(Collectors.toMap(CodeTableEntry::getId, CodeTableEntry::getDescription, 
-//					(oldValue, newValue) -> oldValue, LinkedHashMap::new)); 
-//	}
-//	
-//	public Map<String, String> getCodeDescriptionMap(Function<String, List<CodeTableEntry>> function, String uri){
-//		return function.apply(uri)
-//				.stream()
-//				.collect(Collectors.toMap(CodeTableEntry::getCode, CodeTableEntry::getDescription, 
-//						(oldValue, newValue) -> oldValue, LinkedHashMap::new)); 
-//	}
-//	
-//	public Map<String, String> getIdCitationDescriptionMap(Function<String, List<CodeTableEntry>> function, String uri){
-//		return function.apply(uri)
-//				.stream()
-//				.collect(Collectors.toMap(CodeTableEntry::getId, CodeTableEntry::getCitationDescription, 
-//						(oldValue, newValue) -> oldValue, LinkedHashMap::new)); 
-//	}
-//	
-//	public List<CodeTableEntry> getCodeTableEntries(String uri) {
-//		return this.webClient.get().uri(uri)
-//				.retrieve()
-//				.bodyToMono( new ParameterizedTypeReference<List<CodeTableEntry>>() {})
-//				.defaultIfEmpty(new ArrayList<CodeTableEntry>())
-//				.block();
-//	}
-//	
+	public Map<Integer, String> getAgencies() {
+		return this.webClient.get().uri("/codeTables/agencies")
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
+				.block();
+	}
+	
+	public Map<Integer, String> getOffenseCodes() {
+		return this.webClient.get().uri("/codeTables/offenseCodes")
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
+				.block();
+	}
+	
+	
 	public List<IncidentSearchResult> getIncidents(IncidentSearchRequest incidentSearchRequest){
 		return this.webClient.post().uri("/reports/search")
 				.body(BodyInserters.fromObject(incidentSearchRequest))
