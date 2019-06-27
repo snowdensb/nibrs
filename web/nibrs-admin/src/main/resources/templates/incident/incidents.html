@@ -40,8 +40,35 @@
 	        </form>
 	        <hr/>
 	        
-	<!--         <div id="searchResultsList" th:fragment="resultsList" >
-		        <p th:utext="${arrestSearchContent}" ></p>
+	        <div id="searchResultsList" th:fragment="resultsList" >
+				<table id="searchResultsTable" class="table table-striped table-bordered dt-responsive display responsive" style="width: 100%; border-spacing: 0;" th:if="${incidentSearchResults != null}">
+					<thead>
+						<tr>
+							<th>Incident Identifier</th>
+							<th>Reporting Agency</th>
+							<th>Incident Date</th>
+							<th>ORI</th>
+							<th>Submission Month/Year</th>
+							<th>UCR Offense Type</th>
+							<th>Group</th>
+							<th>FBI submission indicato</th>
+						</tr>
+					</thead>
+					<tbody>
+						<th:block th:each="incidentSearchResult: ${incidentSearchResults}">
+							<tr th:id="${incidentSearchResult.primaryKey}">
+								<td th:text="${incidentSearchResult.incidentIdentifier}"/>
+								<td th:text="${incidentSearchResult.agencyName}"/>
+								<td th:text="${incidentSearchResult.incidentDate}"/>
+								<td th:text="${incidentSearchResult.agencyId}"/>
+								<td th:text="${incidentSearchResult.submissionDateString}"/>
+								<td th:text="${incidentSearchResult.offenseCode}"/>
+								<td th:text="${incidentSearchResult.reportType}"/>
+								<td th:text="${incidentSearchResult.fbiSubmission}"/>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
 		        <script th:inline="javascript">
 	              $(function(){
 	            	    $('[data-toggle="popover"]').popover(); 
@@ -51,9 +78,8 @@
 	                	    responsive: true, 
 	                	    fixedHeader: { header: true },
 	                      "columnDefs": [
-	                          { "orderable": false, "targets": 6 },
 	                          {
-	                              "targets":[2, 4], 
+	                              "targets":[2], 
 	                              "type":"date"
 	                          },
 	                        ]
@@ -64,7 +90,7 @@
 	                  });   
 	 
 	                  
-	                  $('#searchResultsTable').on('click', 'a.editArrest',function() {
+/* 	                  $('#searchResultsTable').on('click', 'a.editArrest',function() {
 	                      xhr = $.get( context +"muniArrests/" + $(this).closest("tr").attr("id"), function(data) {
 	                        $('#portalContent').html(data);
 	                      }).fail(ojbc.displayFailMessage);
@@ -111,10 +137,10 @@
 	                          },
 	                      });
 	                  });
-	             });
+ */	             });
 	          </script>
 	        </div>
-	 -->
+	
 	 		<script th:inline="javascript">
 		        /*<![CDATA[*/
 	            var context = [[@{/}]];

@@ -66,7 +66,7 @@ public class IncidentController {
 		
 		log.info("incidentSearchRequest:" + incidentSearchRequest );
 		getIncidentSearchResults(request, incidentSearchRequest, model);
-		return "/incident/incidents::resultsPage";
+		return "/incident/incidents::resultsList";
 	}
 
 	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,

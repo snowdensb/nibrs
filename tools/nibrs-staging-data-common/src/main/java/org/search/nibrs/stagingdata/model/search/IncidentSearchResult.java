@@ -19,8 +19,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class IncidentSearchResult implements Serializable {
 	private static final long serialVersionUID = 7916910066665545067L;
@@ -146,5 +149,10 @@ public class IncidentSearchResult implements Serializable {
 	}
 	public void setReportTimestamp(LocalDateTime reportTimestamp) {
 		this.reportTimestamp = reportTimestamp;
+	}
+	
+	@JsonIgnore
+	public String getSubmissionDateString() {
+		return StringUtils.left(submissionMonth, 2) + "/" + submissionYear;
 	}
 }
