@@ -29,6 +29,11 @@
      <form action="#" th:object="${incidentSearchRequest}" id="searchForm" method="post">
        <div th:fragment="incidentSearchFormContent">
            <div class="form-row">
+             <label class="col-2 col-form-label font-weight-bold text-right">Incident Identifier</label>
+             <div class="col-sm-3"><input type="text" th:field="*{incidentIdentifier}" width="250" placeholder="incident identifier"/></div>
+             <div th:if="${#fields.hasErrors('incidentIdentifier')}" th:errors="incidentIdentifier">Incident Identifier error message</div>
+           </div>
+           <div class="form-row">
              <label class="col-2 col-form-label font-weight-bold text-right">Incident Date </label>
              <div class="col-sm-3"><input type="text" th:field="*{incidentDate}" class="date" width="250" placeholder="incident date"/></div>
              <div th:if="${#fields.hasErrors('incidentDate')}" th:errors="incidentDate">Incident Date error message</div>

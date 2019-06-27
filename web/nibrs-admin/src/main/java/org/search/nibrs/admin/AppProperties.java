@@ -33,6 +33,8 @@ public class AppProperties {
 	private Boolean inactivityTimeout=true;
 	private Integer inactivityTimeoutInSeconds = 1800; 
 	
+	private String restServiceBaseUrl = "http://localhost:9080";
+
 	public AppProperties() {
 		super();
 	}
@@ -107,6 +109,14 @@ public class AppProperties {
 
 	public void setInactivityTimeoutInSeconds(Integer inactivityTimeoutInSeconds) {
 		this.inactivityTimeoutInSeconds = inactivityTimeoutInSeconds;
+	}
+
+	public String getRestServiceBaseUrl() {
+		return restServiceBaseUrl;
+	}
+
+	public void setRestServiceBaseUrl(String restServiceBaseUrl) {
+		this.restServiceBaseUrl = restServiceBaseUrl;
 	}
 
 }

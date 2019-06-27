@@ -143,7 +143,7 @@
 	              $('#submit').click (function(){
 	                var formData = $('#searchForm').serialize();
 	                 
-	                xhr = $.post(context + "muniArrests/advancedSearch",formData,function(data) {
+	                xhr = $.post(context + "incidents/search",formData,function(data) {
 	              	  $('#searchResultsList').replaceWith(data);
 	             	  }).fail();
 	              });

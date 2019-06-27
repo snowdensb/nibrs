@@ -16,16 +16,24 @@
 package org.search.nibrs.admin.incident;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
+import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -33,11 +41,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @SessionAttributes({"incidentSearchRequest"})
 @RequestMapping("/incidents")
 public class IncidentController {
-	@SuppressWarnings("unused")
 	private final Log log = LogFactory.getLog(this.getClass());
 	@Resource
 	AppProperties appProperties;
 
+	@Resource
+	RestService restService;
+	
 	@GetMapping("/searchForm")
 	public String getSearchForm(Map<String, Object> model) throws IOException {
 		IncidentSearchRequest incidentSearchRequest = (IncidentSearchRequest) model.get("incidentSearchRequest");
@@ -50,6 +60,21 @@ public class IncidentController {
 	    return "/incident/incidents::resultsPage";
 	}
 	
+	@PostMapping("/search")
+	public String advancedSearch(HttpServletRequest request, @Valid @ModelAttribute IncidentSearchRequest incidentSearchRequest, BindingResult bindingResult, 
+			Map<String, Object> model) throws Throwable {
+		
+		log.info("incidentSearchRequest:" + incidentSearchRequest );
+		getIncidentSearchResults(request, incidentSearchRequest, model);
+		return "/incident/incidents::resultsPage";
+	}
+
+	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,
+			Map<String, Object> model) throws Throwable {
+		List<IncidentSearchResult> incidentSearchResults = restService.getIncidents(incidentSearchRequest);
+		model.put("incidentSearchResults", incidentSearchResults); 
+	}	
+
 	
 }
 
