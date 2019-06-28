@@ -19,12 +19,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,8 +39,7 @@ public class IncidentSearchRequest implements Serializable {
 	private Integer ucrOffenseCodeTypeId; 
 	private String offenseCode; 
 
-	@Max(12)
-	@Min(1)
+	@Range(min=1, max=12)
 	private Integer submissionMonth;
 	private Integer submissionYear; 
 	private Boolean fbiSubmission;

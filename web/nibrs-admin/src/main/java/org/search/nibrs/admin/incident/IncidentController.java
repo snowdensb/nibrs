@@ -83,8 +83,13 @@ public class IncidentController {
 			Map<String, Object> model) throws Throwable {
 		
 		log.info("incidentSearchRequest:" + incidentSearchRequest );
+		if (bindingResult.hasErrors()) {
+			log.info("has binding errors");
+			log.info(bindingResult.getAllErrors());
+			return "/incident/incidents::resultsPage";
+		}
 		getIncidentSearchResults(request, incidentSearchRequest, model);
-		return "/incident/incidents::resultsList";
+		return "/incident/incidents::resultsPage";
 	}
 
 	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,

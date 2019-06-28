@@ -35,8 +35,7 @@
 	           </ol>
 	        </nav>
 	        <h3>Incident Search Results</h3>
-	        <form action="#" th:action="@{/incident/incidentSearch}" th:object="${incidentSearchRequest}" id="searchForm" method="post">
-		        <div class="row" th:replace="incident/incidentSearchForm.html :: incidentSearchFormContent"></div>
+	        <form th:replace="incident/incidentSearchForm.html :: incidentSearchFormContent">
 	        </form>
 	        <hr/>
 	        
@@ -153,9 +152,6 @@
 	
 		        $(function(){
 		            
-	              $('#incidentDate').datepicker({
-	                    uiLibrary: 'bootstrap4', size: 'small'
-	              });
 	/*               $('#incidentDateRangeStartDate').datepicker({
 	                    uiLibrary: 'bootstrap4', size: 'small'
 	              });
@@ -175,8 +171,8 @@
 	                var formData = $('#searchForm').serialize();
 	                 
 	                xhr = $.post(context + "incidents/search",formData,function(data) {
-	              	  $('#searchResultsList').replaceWith(data);
-	             	  }).fail();
+	                	$('#portalContent').html(data); 
+	             	}).fail();
 	              });
 	              
 	            }); 
