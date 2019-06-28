@@ -15,7 +15,9 @@
  */
 package org.search.nibrs.stagingdata.controller;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -41,10 +43,13 @@ public class CodeTableController {
 	private UcrOffenseCodeTypeRepository ucrOffenseCodeTypeRepository;
 	@Autowired
 	public AppProperties appProperties;
+	
+	private final List<String> unknownOrBlank = Arrays.asList("UNKOWN", "BLANK");
 
 	@GetMapping("/agencies")
 	public Map<Integer, String> agencies(){
 		Map<Integer, String> agencyMap = StreamSupport.stream(agencyRepository.findAll(new Sort(Sort.Direction.ASC, "agencyName")).spliterator(), false)
+				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
 				.collect(Collectors.toMap(Agency::getAgencyId, Agency::getAgencyName, (u, v) -> u,
 					      LinkedHashMap::new));
 		return agencyMap;
@@ -52,10 +57,11 @@ public class CodeTableController {
 	
 	@GetMapping("/offenseCodes")
 	public Map<Integer, String> offenseCodes(){
-		Map<Integer, String> agencyMap = StreamSupport.stream(ucrOffenseCodeTypeRepository.findAll(new Sort(Sort.Direction.ASC,"stateDescription")).spliterator(), false)
+		Map<Integer, String> offenseCodeMap = StreamSupport.stream(ucrOffenseCodeTypeRepository.findAll(new Sort(Sort.Direction.ASC,"stateDescription")).spliterator(), false)
+				.filter(offenseCode-> !unknownOrBlank.contains(offenseCode.getNibrsDescription().toUpperCase()))
 				.collect(Collectors.toMap(UcrOffenseCodeType::getUcrOffenseCodeTypeId, UcrOffenseCodeType::getStateDescription, (u, v) -> u,
 					      LinkedHashMap::new));
-		return agencyMap;
+		return offenseCodeMap;
 	}
 	
 	@GetMapping(value="/localDateTime")
