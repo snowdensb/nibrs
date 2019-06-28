@@ -47,7 +47,6 @@
 							<th>Incident Identifier</th>
 							<th>Reporting Agency</th>
 							<th>Incident Date</th>
-							<th>ORI</th>
 							<th>Submission Month/Year</th>
 							<th>UCR Offense Type</th>
 							<th>Group</th>
@@ -60,7 +59,6 @@
 								<td th:text="${incidentSearchResult.incidentIdentifier}"/>
 								<td th:text="${incidentSearchResult.agencyName}"/>
 								<td th:text="${incidentSearchResult.incidentDate}"/>
-								<td th:text="${incidentSearchResult.agencyId}"/>
 								<td th:text="${incidentSearchResult.submissionDateString}"/>
 								<td th:text="${incidentSearchResult.offenseCode}"/>
 								<td th:text="${incidentSearchResult.reportType}"/>
@@ -71,7 +69,7 @@
 				</table>
 		        <script th:inline="javascript">
 	              $(function(){
-	            	    $('[data-toggle="popover"]').popover(); 
+            	      $('[data-toggle="popover"]').popover(); 
 	                  $.fn.dataTable.moment( 'MM/DD/YYYY' );
 	
 	                  var table = $('#searchResultsTable').DataTable({

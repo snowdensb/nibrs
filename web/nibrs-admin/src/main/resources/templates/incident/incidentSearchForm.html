@@ -29,54 +29,55 @@
      <form action="#" th:object="${incidentSearchRequest}" id="searchForm" method="post">
        <div th:fragment="incidentSearchFormContent">
            <div class="form-row">
-             <label class="col-2 col-form-label font-weight-bold text-right">Incident Identifier</label>
-             <div class="col-sm-3"><input type="text" th:field="*{incidentIdentifier}" width="250" placeholder="incident identifier"/></div>
-             <div th:if="${#fields.hasErrors('incidentIdentifier')}" th:errors="incidentIdentifier">Incident Identifier error message</div>
-           </div>
-           <div class="form-row">
              <label class="col-2 col-form-label font-weight-bold text-right">Incident Date </label>
-             <div class="col-sm-3"><input type="text" th:field="*{incidentDate}" class="date" width="250" placeholder="incident date"/></div>
-             <div th:if="${#fields.hasErrors('incidentDate')}" th:errors="incidentDate">Incident Date error message</div>
-           </div>
-<!--            <div class="form-row">
-	           <label for="lastName" class="col-2 col-form-label font-weight-bold text-right">Last Name </label>
-	           <div class="col-sm-3">
-	             <input type="text" th:field="*{lastName}" width="250" placeholder="Last Name"/>
-	             <input type="checkbox" th:field="*{lastNameExactMatch}" th:value="${lastNameExactMatch}" />
-	             <span class="align-bottom">Exact Match</span>
-	           </div>
-	           <label for="firstName" class="col-1 col-form-label font-weight-bold text-right">First Name </label>
-	           <div class="col-sm-3">
-	              <input type="text" th:field="*{firstName}" width="250" placeholder="First Name"/>
-	              <input type="checkbox" th:field="*{firstNameExactMatch}" th:value="${firstNameExactMatch}"/>
-	              <span class="align-bottom">Exact Match</span>
-	           </div>
-           </div>
-           <div class="form-row">
-             <label for="ssn" class="col-2 col-form-label font-weight-bold text-right">SSN </label>
-             <div class="col-sm-3"><input type="text" th:field="*{ssn}" width="250" placeholder="SSN"/></div>
-             <label for="dob" class="col-1 col-form-label font-weight-bold text-right">DOB </label>
-             <div class="col-sm-3"><input type="text" th:field="*{dob}" class="date" width="250" placeholder="Date of Birth"/></div>
-           </div>
-           <div class="form-row">
-             <label for="otn" class="col-2 col-form-label font-weight-bold text-right">OTN </label>
-             <div class="col-sm-3"><input type="text" th:field="*{otn}" width="250" placeholder="OTN"/></div>
-           </div>
-           <div class="form-row">
-             <div class="col-2"/>
+             <div class="col-sm-3"><input type="text" th:field="*{incidentDateRangeStartDate}" class="date" width="250" placeholder="from"/></div>
+             <label class="col-1 col-form-label font-weight-bold text-right">To </label>
              <div class="col-sm-3">
-                <input type="checkbox" th:field="*{arrestWithDeferredDispositions}" th:value="${arrestWithDeferredDispositions}" />
-                <span class="font-weight-bold ">Arrests With Deferred Dispositions</span> 
-             </div>
-             <div class="col-1"/>
-             <div class="col-sm-3">
-                <input type="checkbox" th:field="*{includeHiddenArrestIndicator}" th:value="${includeHiddenArrestIndicator}" />
-                <span class="font-weight-bold ">Include Hidden Arrests</span>
+                <input type="text" th:field="*{incidentDateRangeEndDate}" class="date" width="250" placeholder="To"/>
+	            <div th:if="${#fields.hasErrors('incidentDateRangeStartDate')}" th:errors="*{incidentDateRangeStartDate}">Incident Date error message</div>
              </div>
            </div>
- -->
+           <div class="form-row">
+             <label class="col-2 col-form-label font-weight-bold text-right">Incident Identifier</label>
+             <div class="col-sm-3">
+             	<input type="text" th:field="*{incidentIdentifier}" width="250" placeholder="incident identifier"/>
+            	<div th:if="${#fields.hasErrors('incidentIdentifier')}" th:errors="incidentIdentifier">Incident Identifier error message</div>
+             </div>
+             <label class="col-2 col-form-label font-weight-bold text-right">FBI Submission Only</label>
+             <div class="col-sm-3">
+             	<input type="checkbox" th:field="*{fbiSubmission}" th:value="${fbiSubmission}" />
+             </div>
+           </div>
+           <div class="form-row">
+				<div class="col-md-6 mb-2">
+				  <label>Reporting Agency</label>
+				 <select th:field="*{agencyIds}" class="form-control chosen-select" th:errorclass="is-invalid">
+				    <option value="" >Please select ...</option>
+				    <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
+				 </select>
+				</div>
+				<div class="col-md-6 mb-2">
+				  <label>UCR Offense Type</label>
+				  <select th:field="*{ucrOffenseCodeTypeId}" class="form-control chosen-select" th:errorclass="is-invalid">
+				     <option value="" >Please select ...</option>
+				     <option th:each="item: ${offenseCodeMapping}" th:value="${item.key}" th:text="${item.value}" />
+				  </select>
+				</div>
+           </div>
+           <div class="form-row">
+             <label class="col-2 col-form-label font-weight-bold text-right">Submission Month</label>
+             <div class="col-sm-3">
+             	<input type="text" th:field="*{submissionMonth}" width="2" placeholder="submission month"/>
+            	<div th:if="${#fields.hasErrors('submissionMonth')}" th:errors="submissionMonth">Submission Month error message</div>
+             </div>
+             <label class="col-2 col-form-label font-weight-bold text-right">Submission Year</label>
+             <div class="col-sm-3">
+             	<input type="text" th:field="*{submissionYear}" width="4" placeholder="submission year"/>
+            	<div th:if="${#fields.hasErrors('submissionYear')}" th:errors="submissionYear">Submission Year error message</div>
+             </div>
+           </div>
             <div class="form-row mt-2">
-             <div class="col-2"/>
+             <div class="col-2"></div>
              <div class="col-sm-3">
                  <button type="button" class="btn-primary" id="submit">Search</button>
                  <button type="reset" class="btn-secondary">Reset</button>
