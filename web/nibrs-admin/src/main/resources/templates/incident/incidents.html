@@ -69,6 +69,13 @@
 				</table>
 		        <script th:inline="javascript">
 	              $(function(){
+					  $('#incidentDateRangeStartDate').datepicker({
+					     uiLibrary: 'bootstrap4', size: 'small'
+					  });
+					  $('#incidentDateRangeEndDate').datepicker({
+					     uiLibrary: 'bootstrap4', size: 'small'
+					  });
+					  $(".chosen-select").chosen();  
             	      $('[data-toggle="popover"]').popover(); 
 	                  $.fn.dataTable.moment( 'MM/DD/YYYY' );
 	
