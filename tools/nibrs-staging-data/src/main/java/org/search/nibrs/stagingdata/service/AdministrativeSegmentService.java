@@ -115,8 +115,12 @@ public class AdministrativeSegmentService {
         		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("incidentNumber"), incidentSearchRequest.getIncidentIdentifier())));
         	}
         	
-        	if (incidentSearchRequest.getIncidentDate() != null) {
-        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("incidentDate"), incidentSearchRequest.getIncidentDate())));
+        	if (incidentSearchRequest.getIncidentDateRangeStartDate() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("incidentDate"), incidentSearchRequest.getIncidentDateRangeStartDate())));
+        	}
+        	
+        	if (incidentSearchRequest.getIncidentDateRangeEndDate() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("incidentDate"), incidentSearchRequest.getIncidentDateRangeEndDate())));
         	}
         	
         	if (incidentSearchRequest.getUcrOffenseCodeTypeId() != null) {

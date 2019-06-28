@@ -155,7 +155,8 @@ public class AdministrativeSegmentServiceTest {
 		count = administrativeSegmentService.countByCriteria(incidentSearchRequest);
 		assertThat(count, equalTo(1L));
 		
-		incidentSearchRequest.setIncidentDate(LocalDate.of(2016, 5, 12));
+		incidentSearchRequest.setIncidentDateRangeStartDate(LocalDate.of(2016, 5, 12));
+		incidentSearchRequest.setIncidentDateRangeEndDate(LocalDate.of(2016, 5, 12));
 		count = administrativeSegmentService.countByCriteria(incidentSearchRequest);
 		assertThat(count, equalTo(1L));
 		
@@ -225,7 +226,8 @@ public class AdministrativeSegmentServiceTest {
 		assertThat(incidentSearchResults.get(0).getIncidentDate(), equalTo(LocalDate.of(2016, 6, 12)));
 		assertThat(incidentSearchResults.get(0).getSubmissionMonth(), equalTo("06"));
 		
-		incidentSearchRequest.setIncidentDate(LocalDate.of(2016, 5, 12));
+		incidentSearchRequest.setIncidentDateRangeStartDate(LocalDate.of(2016, 5, 12));
+		incidentSearchRequest.setIncidentDateRangeEndDate(LocalDate.of(2016, 5, 12));
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
 		incidentSearchResults = 
 				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);

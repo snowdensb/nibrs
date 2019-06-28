@@ -19,19 +19,31 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class IncidentSearchRequest implements Serializable {
 	private static final long serialVersionUID = 7916910066665545067L;
 	private String incidentIdentifier; 
 	private List<Integer> agencyIds; 
 	private List<String> agenycyNames; 
-	private LocalDate incidentDate; 
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	private LocalDate incidentDateRangeStartDate; 
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	private LocalDate incidentDateRangeEndDate; 
 	private Integer ucrOffenseCodeTypeId; 
 	private String offenseCode; 
-	private Integer submissionMonth; 
+
+	@Max(12)
+	@Min(1)
+	private Integer submissionMonth;
 	private Integer submissionYear; 
 	private Boolean fbiSubmission;
 	
@@ -43,13 +55,7 @@ public class IncidentSearchRequest implements Serializable {
 		return incidentIdentifier;
 	}
 	public void setIncidentIdentifier(String incidentIdentifier) {
-		this.incidentIdentifier = incidentIdentifier;
-	}
-	public LocalDate getIncidentDate() {
-		return incidentDate;
-	}
-	public void setIncidentDate(LocalDate incidentDate) {
-		this.incidentDate = incidentDate;
+		this.incidentIdentifier = StringUtils.trimToNull(incidentIdentifier);
 	}
 	public Integer getUcrOffenseCodeTypeId() {
 		return ucrOffenseCodeTypeId;
@@ -82,10 +88,12 @@ public class IncidentSearchRequest implements Serializable {
 		this.offenseCode = offenseCode;
 	} 
 
+	@JsonIgnore
 	public boolean isEmpty() {
 		return StringUtils.isBlank(incidentIdentifier)
 				&& (agencyIds == null || agencyIds.isEmpty())  
-				&& incidentDate == null 
+				&& incidentDateRangeStartDate == null
+				&& incidentDateRangeEndDate == null
 				&& (ucrOffenseCodeTypeId == null || ucrOffenseCodeTypeId == 0) 
 				&& submissionMonth == null 
 				&& submissionYear == null ;
@@ -101,5 +109,17 @@ public class IncidentSearchRequest implements Serializable {
 	}
 	public void setAgenycyNames(List<String> agenycyNames) {
 		this.agenycyNames = agenycyNames;
+	}
+	public LocalDate getIncidentDateRangeStartDate() {
+		return incidentDateRangeStartDate;
+	}
+	public void setIncidentDateRangeStartDate(LocalDate incidentDateRangeStartDate) {
+		this.incidentDateRangeStartDate = incidentDateRangeStartDate;
+	}
+	public LocalDate getIncidentDateRangeEndDate() {
+		return incidentDateRangeEndDate;
+	}
+	public void setIncidentDateRangeEndDate(LocalDate incidentDateRangeEndDate) {
+		this.incidentDateRangeEndDate = incidentDateRangeEndDate;
 	}
 }

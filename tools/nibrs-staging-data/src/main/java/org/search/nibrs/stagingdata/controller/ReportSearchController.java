@@ -19,6 +19,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
@@ -35,6 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/reports")
 public class ReportSearchController {
+	private static final Log log = LogFactory.getLog(ReportSearchController.class);
+
 	@Autowired
 	public AdministrativeSegmentService administrativeSegmentService; 
 	@Autowired
@@ -45,6 +49,7 @@ public class ReportSearchController {
 
 	@PostMapping("/search")
 	public @ResponseBody List<IncidentSearchResult> search(@RequestBody IncidentSearchRequest incidentSearchRequest){
+		log.info("IncidentSearchRequest:" + incidentSearchRequest);
 		List<IncidentSearchResult> incidentSearchResults = administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
 		List<IncidentSearchResult> arrestIncidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
 		incidentSearchResults.addAll(arrestIncidentSearchResults); 

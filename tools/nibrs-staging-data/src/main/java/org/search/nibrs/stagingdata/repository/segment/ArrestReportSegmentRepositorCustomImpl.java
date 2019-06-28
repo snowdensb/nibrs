@@ -88,8 +88,12 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("arrestTransactionNumber"), incidentSearchRequest.getIncidentIdentifier())));
         	}
         	
-        	if (incidentSearchRequest.getIncidentDate() != null) {
-        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("arrestDate"), incidentSearchRequest.getIncidentDate())));
+        	if (incidentSearchRequest.getIncidentDateRangeStartDate() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("arrestDate"), incidentSearchRequest.getIncidentDateRangeStartDate())));
+        	}
+        	
+        	if (incidentSearchRequest.getIncidentDateRangeEndDate() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("arrestDate"), incidentSearchRequest.getIncidentDateRangeEndDate())));
         	}
         	
         	if (incidentSearchRequest.getUcrOffenseCodeTypeId() != null) {
