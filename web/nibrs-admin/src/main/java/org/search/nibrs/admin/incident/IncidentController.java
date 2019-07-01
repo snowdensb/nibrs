@@ -29,11 +29,14 @@ import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
+import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -79,7 +82,8 @@ public class IncidentController {
 	}
 	
 	@PostMapping("/search")
-	public String advancedSearch(HttpServletRequest request, @Valid @ModelAttribute IncidentSearchRequest incidentSearchRequest, BindingResult bindingResult, 
+	public String advancedSearch(HttpServletRequest request, @Valid @ModelAttribute IncidentSearchRequest 
+			incidentSearchRequest, BindingResult bindingResult, 
 			Map<String, Object> model) throws Throwable {
 		
 		log.info("incidentSearchRequest:" + incidentSearchRequest );
@@ -98,6 +102,21 @@ public class IncidentController {
 		model.put("incidentSearchResults", incidentSearchResults); 
 	}	
 
-	
+	@GetMapping("/{reportType}/{id}")
+	public String getReportDetail(HttpServletRequest request, @PathVariable String id, 
+			@PathVariable String reportType, Map<String, Object> model) throws Throwable {
+		
+		if ("A".equals(reportType)) { 
+			AdministrativeSegment administrativeSegment = restService.getAdministrativeSegment(id);
+			model.put("administrativeSegment", administrativeSegment);
+			return "incident/groupAIncidentDetail::detail";
+		}
+		else {
+			ArrestReportSegment arrestReportSegment = restService.getArrestReportSegment(id);
+			model.put("arrestReportSegment", arrestReportSegment);
+			return "incident/groupBArrestDetail::detail";
+		}
+	}
+
 }
 

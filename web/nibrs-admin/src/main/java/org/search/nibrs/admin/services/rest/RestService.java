@@ -23,6 +23,8 @@ import java.util.Map;
 import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
+import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
@@ -61,6 +63,20 @@ public class RestService{
 				.retrieve()
 				.bodyToMono(new ParameterizedTypeReference<List<IncidentSearchResult>>() {})
 				.defaultIfEmpty(new ArrayList<IncidentSearchResult>())
+				.block();
+	}
+	
+	public AdministrativeSegment getAdministrativeSegment(String id){
+		return this.webClient.get().uri("/reports/A/" + id)
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<AdministrativeSegment>() {})
+				.block();
+	}
+	
+	public ArrestReportSegment getArrestReportSegment(String id){
+		return this.webClient.get().uri("/reports/B/" + id)
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<ArrestReportSegment>() {})
 				.block();
 	}
 	
