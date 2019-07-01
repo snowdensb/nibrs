@@ -29,6 +29,8 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.search.nibrs.stagingdata.model.segment.VictimSegment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Cacheable
 public class TypeInjuryType {
@@ -41,6 +43,7 @@ public class TypeInjuryType {
 	private String nibrsDescription; 
 	
 	@ManyToMany(mappedBy = "typeInjuryTypes", fetch=FetchType.LAZY)
+	@JsonIgnore
 	private Set<VictimSegment> victimSegments;
 	
 	public TypeInjuryType() {

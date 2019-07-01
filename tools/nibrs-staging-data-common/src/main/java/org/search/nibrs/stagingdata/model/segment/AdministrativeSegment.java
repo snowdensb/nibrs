@@ -39,6 +39,8 @@ import org.search.nibrs.stagingdata.model.ClearedExceptionallyType;
 import org.search.nibrs.stagingdata.model.DateType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -60,6 +62,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
         @NamedAttributeNode("clearedExceptionallyType"),
         @NamedAttributeNode("cargoTheftIndicatorType"),
 	})
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class AdministrativeSegment implements Comparable<AdministrativeSegment>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
