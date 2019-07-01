@@ -16,5 +16,5 @@
 package org.search.nibrs.stagingdata.model.search;
 
 public enum ReportType {
-	GroupA, GroupB; 
+	A, B, ZERO; 
 }

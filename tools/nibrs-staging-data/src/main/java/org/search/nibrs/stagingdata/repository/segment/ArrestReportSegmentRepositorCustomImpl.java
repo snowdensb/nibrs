@@ -42,7 +42,7 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         CriteriaQuery<IncidentSearchResult> query = criteriaBuilder.createQuery(IncidentSearchResult.class);
         Root<ArrestReportSegment> root = query.from(ArrestReportSegment.class);
         query.multiselect(root.get("arrestReportSegmentId"),
-        		criteriaBuilder.literal("GroupB"), root.get("arrestTransactionNumber"), 
+        		criteriaBuilder.literal("B"), root.get("arrestTransactionNumber"), 
         		root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("arrestDate"), 
         		root.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"),
         		root.get("ucrOffenseCodeType").get("nibrsCode"),
