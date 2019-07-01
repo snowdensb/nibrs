@@ -24,10 +24,13 @@ import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
+import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.service.AdministrativeSegmentService;
 import org.search.nibrs.stagingdata.service.ArrestReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,6 +65,22 @@ public class ReportSearchController {
 		return incidentSearchResults.stream()
 				.limit(appProperties.getReportSearchResultsLimit())
 				.collect(Collectors.toList());
+	}
+	
+	@GetMapping("/A/{id}")
+	public @ResponseBody AdministrativeSegment getAdministrativeSegment(@PathVariable Integer id){
+		log.info("Getting group A incident detail with id:" + id);
+
+		AdministrativeSegment administrativeSegment = administrativeSegmentService.find(id);
+		return administrativeSegment;
+	}
+	
+	@GetMapping("/B/{id}")
+	public @ResponseBody ArrestReportSegment getArrestReportSegment(@PathVariable Integer id){
+		log.info("Getting group B Arrest detail with id:" + id);
+		
+		ArrestReportSegment arrestReportSegment = arrestReportService.findArrestReportSegment(id);
+		return arrestReportSegment;
 	}
 	
 	@GetMapping(value="/incidentSearchRequest")

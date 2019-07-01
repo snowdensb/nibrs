@@ -38,12 +38,15 @@ import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.VictimOffenderAssociation;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @JsonIdentityInfo(
 	generator = ObjectIdGenerators.PropertyGenerator.class, 
 	property = "offenderSegmentId")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OffenderSegment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -143,6 +146,7 @@ public class OffenderSegment {
 	public void setVictimOffenderAssociations(Set<VictimOffenderAssociation> victimOffenderAssociations) {
 		this.victimOffenderAssociations = victimOffenderAssociations;
 	}
+	@JsonIgnore
     public boolean isJuvenile() {
     	boolean ret = false; 
     	if ( !isAgeUnknown() ) {
@@ -151,6 +155,7 @@ public class OffenderSegment {
     	return ret;
     }
     
+	@JsonIgnore
     public boolean isAdult() {
     	boolean ret = false; 
     	if ( !isAgeUnknown() ) {
@@ -159,6 +164,7 @@ public class OffenderSegment {
     	return ret;
     }
     
+	@JsonIgnore
 	public Integer getAverageAge() {
 		Integer ret = null;
 		if (!isAgeUnknown()) {
@@ -170,6 +176,7 @@ public class OffenderSegment {
 		return ret;
 	}
 
+	@JsonIgnore
     public boolean isAgeUnknown() {
     	// set forth in rule for data element 52
     	return ageOfOffenderMax == null && ageOfOffenderMin == null && Objects.equals(nonNumericAge, "00");
