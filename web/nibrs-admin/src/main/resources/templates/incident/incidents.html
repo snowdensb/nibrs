@@ -115,6 +115,9 @@
 	 
 	                  
  	                  $('#searchResultsTable tbody').on('click', 'tr',function() {
+	                 	table.$('tr.selected').removeClass('selected');
+	                	$(this).addClass('selected');  
+  
 						var rowData = table.row($(this)).data();
 						var reportType = rowData[5]; 
 						xhr = $.get( context +"incidents/" + reportType + "/" + $(this).attr("id")   , function(data) {
