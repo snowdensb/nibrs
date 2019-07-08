@@ -114,6 +114,7 @@ public class IncidentController {
 		else {
 			ArrestReportSegment arrestReportSegment = restService.getArrestReportSegment(id);
 			model.put("arrestReportSegment", arrestReportSegment);
+			log.debug("ArrestReportSegment: " + arrestReportSegment);
 			return "incident/groupBArrestDetail::detail";
 		}
 	}
