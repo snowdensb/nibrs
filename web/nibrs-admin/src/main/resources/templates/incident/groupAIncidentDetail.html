@@ -47,30 +47,30 @@
 				</tbody>
 			</table>	
   		</div> 
-	</div>
+    </div>
     <div class="card">
   		<div class="card-header font-weight-bold">AGENCY</div>
   		<div class="card-body">
   			<table class="table table-bordered">
     			<thead>
-      				<tr>
-				        <th>STATE</th>
-				        <th>ORI </th>
-				        <th>NAME</th>
-				        <th>CITY INDICATOR</th>
-					</tr>
+     				<tr>
+			        <th>STATE</th>
+			        <th>ORI </th>
+			        <th>NAME</th>
+			        <th>CITY INDICATOR</th>
+  					</tr>
     			</thead>
     			<tbody>
-					<tr>
-					  <td th:text="${administrativeSegment.stateCode}">State</td>
-					  <td th:text="${administrativeSegment.ori}">ORI</td>
-					  <td th:text="${administrativeSegment.agency.agencyName}">Name</td>
-					  <td th:text="${administrativeSegment.cityIndicator?:''}">CITY Indicator</td>
-					</tr>
-				</tbody>
-			</table>	
+						<tr>
+						  <td th:text="${administrativeSegment.stateCode}">State</td>
+						  <td th:text="${administrativeSegment.ori}">ORI</td>
+						  <td th:text="${administrativeSegment.agency.agencyName}">Name</td>
+						  <td th:text="${administrativeSegment.cityIndicator?:''}">CITY Indicator</td>
+						</tr>
+				  </tbody>
+        </table>	
   		</div> 
-	</div>
+    </div>
     <div class="card">
   		<div class="card-header font-weight-bold">Incident</div>
   		<div class="card-body">
@@ -97,7 +97,7 @@
 				</tbody>
 			</table>	
   		</div> 
-	</div>
+    </div>
     <div class="card" th:if="${!administrativeSegment.offenseSegments.empty}">
   		<div class="card-header font-weight-bold">OFFENSES</div>
   		<div class="card-body">
@@ -173,7 +173,78 @@
 			  </div>
 	    </div>
  		</div> 
-	</div>
+ 	</div>
+	
+    <div class="card" th:if="${!administrativeSegment.propertySegments.empty}">
+      <div class="card-header font-weight-bold">PROPERTY SEGMENTS</div>
+      <div class="card-body">
+        <div id="accordion">
+          <div class="card" th:each="propertySegment : ${administrativeSegment.propertySegments}">
+						<div class="card-header" id="headingOne">
+						  <h5 class="mb-0">
+						    <button class="btn btn-link" data-toggle="collapse" th:data-target="${'#propertySegment' + propertySegment.propertySegmentId}" aria-expanded="true" aria-controls="collapseOne" 
+						       th:text="${propertySegment.typePropertyLossEtcType.stateDescription}">
+						      PROPERTY - 1
+						    </button>
+						  </h5>
+						</div>
+		   
+						<div th:id="${'propertySegment' + propertySegment.propertySegmentId}" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+							<div class="card-body">
+								<table class="table table-bordered" th:if="${propertySegment.numberOfStolenMotorVehicles != null or propertySegment.numberOfRecoveredMotorVehicles != null}">
+								  <tbody>
+								    <tr th:if="${propertySegment.numberOfStolenMotorVehicles != null}">
+								     <th>STOLEN MOTOR VEHICLES</th>
+								     <td th:text="${propertySegment.numberOfStolenMotorVehicles}">numberOfStolenMotorVehicles</td>
+								    </tr>
+								    <tr th:if="${propertySegment.numberOfRecoveredMotorVehicles != null}">
+								     <th>RECOVERED MOTOR VEHICLES</th>
+								     <td th:text="${propertySegment.numberOfRecoveredMotorVehicles}">numberOfRecoveredMotorVehicles</td>
+								    </tr>
+								  </tbody>
+								</table>  
+								
+								<table class="table table-bordered" th:if="${!propertySegment.propertyTypes.empty}">
+								  <thead>
+								    <tr>
+									    <th>PROPERTY DESCRIPTION</th>
+									    <th>VALUE OF PROPERTY</th>
+									    <th>RECOVERED DATE</th>
+								    </tr>
+								  </thead>
+								  <tbody>
+								    <tr th:each="propertyType : ${propertySegment.propertyTypes}">
+								     <td th:text="${propertyType.propertyDescriptionType.stateDescription}">propertyDescriptionType</td>
+								     <td th:text="${propertyType.valueOfProperty?:''}">valueOfProperty</td>
+								     <td th:text="${propertyType.recoveredDate?:''}">recoveredDate</td>
+								    </tr>
+								  </tbody>
+								</table>  
+								
+								<table class="table table-bordered" th:if="${!propertySegment.suspectedDrugTypes.empty}">
+								  <thead>
+								    <tr>
+									    <th>SUSPECTED DRUG TYPE</th>
+									    <th>DRUG MEASUREMENT TYPE</th>
+									    <th>ESTIMATED DRUG QUANTITY</th>
+								    </tr>
+								  </thead>
+								  <tbody>
+								    <tr th:each="suspectedDrugType : ${propertySegment.suspectedDrugTypes}">
+								     <td th:text="${suspectedDrugType.suspectedDrugTypeType.stateDescription}">suspectedDrugTypeType</td>
+								     <td th:text="${suspectedDrugType.typeDrugMeasurementType.stateDescription}">valueOfProperty</td>
+								     <td th:text="${suspectedDrugType.estimatedDrugQuantity?:''}">estimatedDrugQuantity</td>
+								    </tr>
+								  </tbody>
+								</table>  
+							</div>
+		       </div>
+		     </div>
+		   </div>
+		 </div>
+		</div>
+      
+  	
     <div class="card" th:if="${ !administrativeSegment.arresteeSegments.empty}">
   		<div class="card-header font-weight-bold">ARRESTEES</div>
   		<div class="card-body">
@@ -194,12 +265,12 @@
 				</tbody>
 			</table>	
   		</div> 
-	</div>
+	 </div>
     <script th:inline="javascript">
     	$(function(){
     		
     	});
     </script>
-  </div>
+    </div>
 	</body>
 </html>
