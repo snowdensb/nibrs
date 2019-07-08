@@ -57,6 +57,7 @@
 				        <th>STATE</th>
 				        <th>ORI </th>
 				        <th>NAME</th>
+				        <th>CITY INDICATOR</th>
 					</tr>
     			</thead>
     			<tbody>
@@ -64,6 +65,7 @@
 					  <td th:text="${arrestReportSegment.stateCode}">State</td>
 					  <td th:text="${arrestReportSegment.ori}">ORI</td>
 					  <td th:text="${arrestReportSegment.agency.agencyName}">Name</td>
+					  <td th:text="${arrestReportSegment.cityIndicator?:''}">City Indicator</td>
 					</tr>
 				</tbody>
 			</table>	
