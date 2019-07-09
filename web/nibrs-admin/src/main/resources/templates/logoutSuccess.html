@@ -17,10 +17,15 @@
 -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:include="fragments/header :: header-css">
+<head>
+  <title>NIBRS ADMIN Tool</title>
+  <th:block th:include="fragments/general.html :: headerfiles"></th:block>
 </head>
 <body>
-	<div th:replace="fragments/header :: header"></div>
+	<header>
+	  <div class="banner pt-1" th:include="fragments/general.html :: banner"></div>   
+	</header>
+
 	<div id="mainContent">
 	 	<div id="content" class="container">
  			<div class="jumbotron text-center">
@@ -28,7 +33,8 @@
 			</div>
 		</div>
 	</div>
-	<div th:replace="fragments/footer :: footer"></div>	
+	<footer th:replace="fragments/general.html :: footer"></footer> 
+	<th:block th:include="fragments/general.html :: javascripts"></th:block>
 	
 </body>
 </html>
