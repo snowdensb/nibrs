@@ -72,6 +72,7 @@ public class ReportSearchController {
 		log.info("Getting group A incident detail with id:" + id);
 
 		AdministrativeSegment administrativeSegment = administrativeSegmentService.find(id);
+		log.debug("administrativeSegment: "+ administrativeSegment);
 		return administrativeSegment;
 	}
 	

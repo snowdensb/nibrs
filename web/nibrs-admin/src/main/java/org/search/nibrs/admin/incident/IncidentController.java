@@ -109,6 +109,7 @@ public class IncidentController {
 		if ("A".equals(reportType)) { 
 			AdministrativeSegment administrativeSegment = restService.getAdministrativeSegment(id);
 			model.put("administrativeSegment", administrativeSegment);
+			log.debug("administrativeSegment: " + administrativeSegment);
 			return "incident/groupAIncidentDetail::detail";
 		}
 		else {

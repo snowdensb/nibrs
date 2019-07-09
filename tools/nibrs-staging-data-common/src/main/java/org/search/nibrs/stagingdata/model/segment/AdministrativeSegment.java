@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.model.segment;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -39,8 +40,6 @@ import org.search.nibrs.stagingdata.model.ClearedExceptionallyType;
 import org.search.nibrs.stagingdata.model.DateType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -48,7 +47,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @JsonIdentityInfo(
 	generator = ObjectIdGenerators.PropertyGenerator.class, 
-	property = "administrativeSegmentId")
+	property = "administrativeSegmentId", scope = AdministrativeSegment.class)
 @NamedEntityGraph(name="allAdministrativeSegmentJoins", attributeNodes = {
         @NamedAttributeNode("segmentActionType"),
         @NamedAttributeNode("offenseSegments"),
@@ -62,8 +61,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
         @NamedAttributeNode("clearedExceptionallyType"),
         @NamedAttributeNode("cargoTheftIndicatorType"),
 	})
-@JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public class AdministrativeSegment implements Comparable<AdministrativeSegment>{
+public class AdministrativeSegment implements Comparable<AdministrativeSegment>, Serializable{
+	private static final long serialVersionUID = -3998248086687831675L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer administrativeSegmentId;
@@ -78,7 +78,7 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>{
 	private String ori;
 	
     @OneToMany(mappedBy = "administrativeSegment", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
-	private Set<OffenseSegment> offenseSegments;
+    private Set<OffenseSegment> offenseSegments;
 	
     @OneToMany(mappedBy = "administrativeSegment", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
     private Set<PropertySegment> propertySegments;

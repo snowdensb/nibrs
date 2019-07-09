@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.model.segment;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -47,12 +48,16 @@ import org.search.nibrs.stagingdata.model.VictimOffenderAssociation;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @JsonIdentityInfo(
 	generator = ObjectIdGenerators.PropertyGenerator.class, 
 	property = "victimSegmentId", scope=VictimSegment.class)
-public class VictimSegment {
+@JsonSerialize(as=VictimSegment.class)
+public class VictimSegment implements Serializable{
+	private static final long serialVersionUID = 1947393606928402316L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer victimSegmentId;
