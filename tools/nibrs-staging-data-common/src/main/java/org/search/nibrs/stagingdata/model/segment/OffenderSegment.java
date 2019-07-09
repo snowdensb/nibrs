@@ -45,7 +45,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @JsonIdentityInfo(
 	generator = ObjectIdGenerators.PropertyGenerator.class, 
-	property = "offenderSegmentId")
+	property = "offenderSegmentId", 
+	scope = OffenderSegment.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OffenderSegment {
 	@Id

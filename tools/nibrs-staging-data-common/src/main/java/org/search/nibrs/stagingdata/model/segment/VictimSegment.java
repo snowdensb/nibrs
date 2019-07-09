@@ -51,7 +51,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @JsonIdentityInfo(
 	generator = ObjectIdGenerators.PropertyGenerator.class, 
-	property = "victimSegmentId")
+	property = "victimSegmentId", scope=VictimSegment.class)
 public class VictimSegment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
