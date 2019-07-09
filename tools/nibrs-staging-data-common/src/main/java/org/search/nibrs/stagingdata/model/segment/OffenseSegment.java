@@ -47,7 +47,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @JsonIdentityInfo(
-	generator = ObjectIdGenerators.IntSequenceGenerator.class, 
+	generator = ObjectIdGenerators.PropertyGenerator.class, 
 	property = "offenseSegmentId", 
 	scope=OffenseSegment.class)
 public class OffenseSegment implements Serializable{

@@ -80,7 +80,7 @@ public class OffenderSegment {
 	public String toString(){
 		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.SHORT_PREFIX_STYLE);
 		String resultWithoutParentSegment = 
-				ReflectionToStringBuilder.toStringExclude(this, "administrativeSegment", "victimOffenderAssociations");
+				ReflectionToStringBuilder.toStringExclude(this, "administrativeSegment");
 		int index = StringUtils.indexOf(resultWithoutParentSegment, ",");
 		
 		StringBuilder sb = new StringBuilder(resultWithoutParentSegment);
