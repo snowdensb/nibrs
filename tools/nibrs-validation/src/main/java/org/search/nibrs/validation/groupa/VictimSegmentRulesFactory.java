@@ -544,7 +544,7 @@ public class VictimSegmentRulesFactory {
 						}
 					}
 					
-					if (aahcList.isEmpty() || !validAggravatedAssaultHomicideCodes.containsAll(aahcList)) {
+					if (!aahcList.isEmpty() && !validAggravatedAssaultHomicideCodes.containsAll(aahcList)) {
 						e = victimSegment.getErrorTemplate();
 						e.setNIBRSErrorCode(NIBRSErrorCode._404);
 						e.setDataElementIdentifier("31");
