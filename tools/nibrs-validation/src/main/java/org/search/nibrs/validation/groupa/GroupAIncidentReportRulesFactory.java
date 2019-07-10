@@ -164,6 +164,8 @@ public class GroupAIncidentReportRulesFactory {
 		rulesList.add(getRule104("yearOfTape"));
 		rulesList.add(getRule104("monthOfTape"));
 		rulesList.add(getRule104("cargoTheftIndicator"));
+		rulesList.add(getRule105IncidentDate());
+		rulesList.add(getRule105ExceptionalClearanceDate());
 		rulesList.add(getRule106());
 		rulesList.add(getRule115());
 		rulesList.add(getRule117());
@@ -1181,6 +1183,40 @@ public class GroupAIncidentReportRulesFactory {
 					ret.setValue(subject.getExceptionalClearanceCode());
 					ret.setDataElementIdentifier("5");
 					ret.setNIBRSErrorCode(NIBRSErrorCode._156);
+				}
+				return ret;
+			}
+		};
+	}
+	
+	Rule<GroupAIncidentReport> getRule105ExceptionalClearanceDate() {
+		return new Rule<GroupAIncidentReport>() {
+			@Override
+			public NIBRSError apply(GroupAIncidentReport subject) {
+				NIBRSError ret = null;
+				ParsedObject<LocalDate> exceptionalClearanceDatePO = subject.getExceptionalClearanceDate();
+				if ((!exceptionalClearanceDatePO.isMissing() && !exceptionalClearanceDatePO.isInvalid()) && exceptionalClearanceDatePO.getValue().isAfter(LocalDate.now())) {
+					ret = subject.getErrorTemplate();
+					ret.setValue(exceptionalClearanceDatePO.getValue());
+					ret.setDataElementIdentifier("5");
+					ret.setNIBRSErrorCode(NIBRSErrorCode._105);
+				}
+				return ret;
+			}
+		};
+	}
+	
+	Rule<GroupAIncidentReport> getRule105IncidentDate() {
+		return new Rule<GroupAIncidentReport>() {
+			@Override
+			public NIBRSError apply(GroupAIncidentReport subject) {
+				NIBRSError ret = null;
+				ParsedObject<LocalDate> incidentDatePo = subject.getIncidentDate();
+				if ((!incidentDatePo.isMissing() && !incidentDatePo.isInvalid()) && incidentDatePo.getValue().isAfter(LocalDate.now())) {
+					ret = subject.getErrorTemplate();
+					ret.setValue(incidentDatePo.getValue());
+					ret.setDataElementIdentifier("3");
+					ret.setNIBRSErrorCode(NIBRSErrorCode._105);
 				}
 				return ret;
 			}

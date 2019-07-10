@@ -1553,6 +1553,43 @@ public class GroupAIncidentReportRulesFactoryTest {
 		assertEquals(report, e.getReport());
 	}
 	
+	@Test
+	public void testRule105ExceptionalClearanceDate() {
+		Rule<GroupAIncidentReport> rule105ExceptionalClearanceDate = rulesFactory.getRule105ExceptionalClearanceDate();
+		GroupAIncidentReport report = buildBaseReport();
+		report.setExceptionalClearanceCode("A");
+		report.setExceptionalClearanceDate(new ParsedObject<>(LocalDate.of(2015, 3, 1)));
+		assertNull(rule105ExceptionalClearanceDate.apply(report));
+		report.setExceptionalClearanceDate(new ParsedObject<LocalDate>(LocalDate.now().plusDays(1L)));
+		NIBRSError e = rule105ExceptionalClearanceDate.apply(report);
+		assertNotNull(e);
+		assertEquals(NIBRSErrorCode._105, e.getNIBRSErrorCode());
+		assertEquals(GroupAIncidentReport.ADMIN_SEGMENT_TYPE_IDENTIFIER, e.getSegmentType());
+		assertEquals(report.getExceptionalClearanceDate().getValue(), e.getValue());
+		assertEquals("5", e.getDataElementIdentifier());
+		assertEquals(report.getSource(), e.getContext());
+		assertEquals(report, e.getReport());
+	}
+	
+	@Test
+	public void testRule105IncidentDate() {
+		Rule<GroupAIncidentReport> rule105IncidentDate = rulesFactory.getRule105IncidentDate();
+		GroupAIncidentReport report = buildBaseReport();
+		report.setIncidentDate(new ParsedObject<LocalDate>(LocalDate.now()));
+		NIBRSError e = rule105IncidentDate.apply(report);
+		assertNull(e);
+		
+		report.setIncidentDate(new ParsedObject<LocalDate>(LocalDate.now().plusDays(1L)));
+		e = rule105IncidentDate.apply(report);
+		assertNotNull(e);
+		assertEquals(NIBRSErrorCode._105, e.getNIBRSErrorCode());
+		assertEquals(GroupAIncidentReport.ADMIN_SEGMENT_TYPE_IDENTIFIER, e.getSegmentType());
+		assertEquals(report.getIncidentDate().getValue(), e.getValue());
+		assertEquals("3", e.getDataElementIdentifier());
+		assertEquals(report.getSource(), e.getContext());
+		assertEquals(report, e.getReport());
+	}
+	
 	private GroupAIncidentReport buildBaseReport() {
 		GroupAIncidentReport report = new GroupAIncidentReport();
 		ReportSource source = new ReportSource();
