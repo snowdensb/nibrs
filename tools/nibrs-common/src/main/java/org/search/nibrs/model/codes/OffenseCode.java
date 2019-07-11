@@ -50,7 +50,7 @@ public enum OffenseCode {
 	_26D("26D", "Welfare Fraud", "A"),
 	_26E("26E", "Wire Fraud", "A"),
 	_26F("26F", "Identity Theft", "A"),
-	_26G("26G", "Hacking/Computer Invasion", "A"),
+	_26G("26G", "Fraud Offenses-Hacking/Computer Invasion", "A"),
 	_39A("39A", "Betting/Wagering", "A"),
 	_39B("39B", "Operating/Promoting/Assisting Gambling", "A"),
 	_39C("39C", "Gambling Equipment Violations", "A"),
@@ -94,7 +94,6 @@ public enum OffenseCode {
 	_90F("90F", "Family Offenses, Nonviolent", "B"),
 	_90G("90G", "Liquor Law Violations", "B"),
 	_90H("90H", "Peeping Tom", "B"),
-	_90I("90I", "Runaway", "B"),
 	_90J("90J", "Trespass of Real Property", "B"),
 	_90Z("90Z", "All Other Offenses", "B")
 	;

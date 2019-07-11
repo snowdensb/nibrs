@@ -40,7 +40,7 @@ public enum RelationshipOfVictimToOffenderCode {
 	BG("BG","Victim Was Boyfriend/Girlfriend", "Boyfriend_Girlfriend"),
 	CF("CF","Victim Was Child of Boyfriend/Girlfriend", "Child of Boyfriend_Girlfriend"),
 	XS("XS","Victim Was Ex-Spouse", "Ex_Spouse"),
-	XR("XR","Victim Was Relationship", "Ex_Relationship"),
+	XR("XR","Victim Was Ex-Relationship", "Ex_Relationship"),
 	EE("EE","Victim Was Employee", "Employee"),
 	ER("ER","Victim Was Employer", "Employer"),
 	OK("OK","Victim Was Otherwise Known", "NonFamily_Otherwise Known"),

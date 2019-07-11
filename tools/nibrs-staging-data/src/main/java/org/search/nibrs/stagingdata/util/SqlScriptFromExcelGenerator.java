@@ -46,8 +46,8 @@ public class SqlScriptFromExcelGenerator {
     public static void main(String[] args) throws IOException {
         generatePolulateCodeTableScript("src/test/resources/db/data.sql", 
         		"src/test/resources/codeSpreadSheets/NIBRSCodeTablesGeneral.xlsx", false);
-//        generatePolulateCodeTableScript("src/test/resources/db/dataHawaii.sql", 
-//        		"src/test/resources/codeSpreadSheets/NIBRSCodeTablesHawaii.xlsx", false);
+        generatePolulateCodeTableScript("src/test/resources/db/dataHawaii.sql", 
+        		"src/test/resources/codeSpreadSheets/NIBRSCodeTablesHawaii.xlsx", false);
     }
 
 	private static void generatePolulateCodeTableScript(String sqlScriptPath, String excelFilePath, boolean isSqlServerInsert) 

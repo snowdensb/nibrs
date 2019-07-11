@@ -23,10 +23,6 @@ CREATE schema search_nibrs_staging;
 
 Use search_nibrs_staging; 
 
-
-
-
-
 CREATE TABLE Submission (
                 SubmissionID IDENTITY NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
