@@ -28,7 +28,6 @@ import org.search.nibrs.common.ParsedObject;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.model.ArresteeSegment;
 import org.search.nibrs.model.GroupAIncidentReport;
-import org.search.nibrs.model.NIBRSAge;
 import org.search.nibrs.model.codes.ArresteeWasArmedWithCode;
 import org.search.nibrs.model.codes.AutomaticWeaponIndicatorCode;
 import org.search.nibrs.model.codes.DispositionOfArresteeUnder18Code;
@@ -314,27 +313,6 @@ public class ArresteeSegmentRulesFactory {
 		return personSegmentRulesFactory.getAgeValidRule("47", isGroupAMode() ? NIBRSErrorCode._604 : NIBRSErrorCode._704);
 	}
 
-	/**
-	 * The rule is removed in spec v3-1. 
-	 * @return
-	 */
-	Rule<ArresteeSegment> getRule761() {
-		return isGroupAMode() ? new NullObjectRule<>() : new Rule<ArresteeSegment>() {
-			@Override
-			public NIBRSError apply(ArresteeSegment arresteeSegment) {
-				NIBRSError e = null;
-				NIBRSAge age = arresteeSegment.getAge();
-				if (OffenseCode._90I.code.equals(arresteeSegment.getUcrArrestOffenseCode()) && (age == null || age.isNonNumeric() || age.getAgeMin() > 17)) {
-					e = arresteeSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(NIBRSErrorCode._761);
-					e.setDataElementIdentifier("47");
-					e.setValue(age);
-				}
-				return e;
-			}
-		};
-	}
-	
 	Rule<ArresteeSegment> getRuleX01ForSex() {
 		return personSegmentRulesFactory.getSexValidNonBlankRule("48", isGroupAMode() ? NIBRSErrorCode._601 : NIBRSErrorCode._701);
 	}
