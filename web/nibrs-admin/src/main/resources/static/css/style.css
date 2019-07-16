@@ -135,3 +135,243 @@ header span.fullname {
   text-decoration: none;
   background-color: #808080;
 }
+
+
+/* drop box */
+.dropzone {
+  width: 100%; 
+  height: 100%;
+  border: 2px dashed #ccc;
+  color: darkgray ; 
+  line-height: calc(100vh - 590px);  
+  text-align: center;
+}
+
+.dropzone.dragover {
+  border-color: #000; 
+  color: #000;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputfileLabel {
+  cursor: pointer; /* "hand" cursor */
+  text-decoration: underline;
+}
+
+.inputfileLabel:focus{
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+
+.box.is-uploading .box__input {
+  visibility: none;
+}
+.box.is-uploading .box__uploading {
+  display: block;
+}
+
+.box__dragndrop,
+.box__uploading,
+.box__success,
+.box__error {
+  display: none;
+}
+
+.box.has-advanced-upload {
+  width: 100%; 
+  height: 800px; 
+  background-color: white;
+  outline: 2px dashed black;
+  outline-offset: -10px;
+}
+.box.has-advanced-upload .box__dragndrop {
+  display: inline;
+}
+
+#loadingAjaxPane  { 
+  position: absolute;
+  background-color: #7e7e7e;
+  opacity: 0.75;
+  filter: alpha(opacity=75);
+  background-image: url('../images/loading.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  display:none; 
+  top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  z-index: 10000;
+}
+
+#loading-img {
+  background-image: url('../images/loading.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+    display: none;
+    height: 100px; /* for testing purposes */
+    z-index: 12;
+}
+
+/* .navbar {
+  margin-bottom:0px!important;
+}
+ */
+.jumbotron{
+  margin-bottom:0px;
+  margin-top:0px; 
+}
+
+.jumbotron p{
+  font-size:small;  
+}
+
+.error, #errorMsg{
+  color:red; 
+}
+
+#mainContent{
+  font-size:small;
+}
+
+#version-alert{
+  font-size:small;
+  position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    margin:0 auto;
+}
+
+.hint{
+  color:gray; 
+  font-size: small; 
+  font-weight: bold; 
+  padding: 1em;
+}
+
+/* CSS from Diane*/
+ a.fg-button.ui-button.ui-state-default.ui-state-disabled {
+  color: #2d3092;
+  font-weight: 600;
+}
+td:last-of-type {
+  text-transform: lowercase;
+}
+table.dataTable.display tbody tr.odd > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
+  background-color: rgba(123, 129, 221, 0.13);
+}
+table.dataTable.display tbody tr.even > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_1 {
+  background-color: rgba(228, 230, 255, 0.27);
+}
+table.dataTable.hover tbody tr:hover,
+table.dataTable.display tbody tr:hover {
+  background-color: rgba(255, 182, 0, 0.09);
+}
+table.dataTable thead th.ui-state-default,
+table.dataTable tfoot th.ui-state-default {
+  border-left-width: 0;
+  border-right: 1px dotted #ddd;
+}
+div#errorReport_length {
+  padding-right: 2em;
+}
+th.sorting.ui-state-default {
+  color: #7b7a7a;
+  font-weight: 600;
+  letter-spacing: .015em;
+}
+button.dt-button,
+div.dt-button,
+a.dt-button {
+  padding: 0.2em 1em;
+  border: 1px solid #ccc;
+  border-radius: 3em;
+}
+input[type="search"] {
+  border-radius: 3em;
+}
+
+/*lose big gray box*/
+.jumbotron {
+  background-color: #fff;
+}
+
+/*dark orange center circle with dashed outline*/
+.dropzone {
+    overflow: visible;
+    padding: 3em 1em;
+    width: 15em;
+    height: 15em;
+    border: 2px dashed #fbb03b;
+    color: #fff;
+    text-align: center;
+    margin: auto;
+    position: relative;
+    border-radius: 50%;
+    background: #f66137;
+    position: relative;
+    z-index: 0;
+    line-height: 1.3em;
+}
+
+/*medium orange ring*/
+.dropzone:before {
+  content: " ";
+  position: absolute;
+  z-index: -1;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  border: 18px solid #f68f20;
+  border-radius: 50%;
+}
+
+/*pale grey outer ring*/
+
+.dropzone:after {
+  content: " ";
+  position: absolute;
+  z-index: -2;
+  top: -30px;
+  left: -30px;
+  right: -30px;
+  bottom: -30px;
+  border: 18px solid #e8e7e6;
+  border-radius: 50%;
+}
+
+
+/*the text placement within the circle will need some small html edits to wrap the text in there in some tags: something like:
+
+<span>The file can be a single NIBRS text file or a zip file containing single NIBRS text file. <i>(drag-and-drop is not currently supported in IE)</i></span>
+
+styles below would be for that*/
+
+.dropzone span {
+    display: inline-block;
+    font-size: .8em;
+    line-height: 1.3em;
+    padding-top: 1em;
+}
+
+
+.dropzone span i {
+    color: #ffce8d;
+    font-size: .9em;
+    line-height: 1.2em;
+    display: inline-block;
+    font-weight: 500;
+}

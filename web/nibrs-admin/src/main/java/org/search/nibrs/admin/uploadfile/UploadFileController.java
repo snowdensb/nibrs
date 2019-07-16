@@ -45,6 +45,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -53,6 +54,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @SessionAttributes({"showUserInfoDropdown"})
+@RequestMapping("/files")
 public class UploadFileController {
 	private final Log log = LogFactory.getLog(this.getClass());
 	@Resource
@@ -63,7 +65,14 @@ public class UploadFileController {
 
 	final List<String> acceptedFileTypes = 
 			Arrays.asList("application/zip", "text/plain", "application/octet-stream", "text/xml", "application/xml");
+
+	@GetMapping("/upload")
+	public String getFileUploadForm(Model model) throws IOException {
 	
+	    return "uploadForm::uploadForm";
+	}
+	
+
     @PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile[] multipartFiles,
 			RedirectAttributes redirectAttributes, Model model) throws IOException, ParserConfigurationException {

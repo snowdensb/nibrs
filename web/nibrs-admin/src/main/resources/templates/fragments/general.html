@@ -52,22 +52,25 @@
 	              <a class="nav-link" th:href="@{/}" id="home">Home <span class="sr-only">(current)</span></a>
 	            </li>
 	            <li class="nav-item">
-	              <a class="nav-link" th:href="@{/incidents}" id="incidents">Incidents</a>
+	              <a class="nav-link" href="#" id="incidents">Incidents</a>
+	            </li>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#" id="upload">Validate</a>
 	            </li>
 	          </ul>
 	          
 	          <ul class="navbar-nav flex-row ml-md-auto d-md-flex" sec:authorize="isAuthenticated()">
-			    <li class="nav-item dropdown">
-			      <a class="nav-link dropdown-toggle text-primary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			          <i class="fas fa-user-circle fa-lg"></i>
-	              </a>
-		          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-		            <a class="dropdown-item disabled"><span class="small font-italic pr-2 text-secondary">Signed in as <strong th:text="${#authentication.getPrincipal().getUsername()}"></strong></span></a>
-		            <div class="dropdown-divider"></div>
-		            <a class="dropdown-item" th:href="@{/logout}"><span class="small font-italic pr-2">Sign Out</span> <i class="fas fa-sign-out-alt"></i></a>
-		          </div>
-                </li>
-              </ul>
+              <li class="nav-item dropdown">
+	              <a class="nav-link dropdown-toggle text-primary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				          <i class="fas fa-user-circle fa-lg"></i>
+		            </a>
+			          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+			            <a class="dropdown-item disabled"><span class="small font-italic pr-2 text-secondary">Signed in as <strong th:text="${#authentication.getPrincipal().getUsername()}"></strong></span></a>
+			            <div class="dropdown-divider"></div>
+			            <a class="dropdown-item" th:href="@{/logout}"><span class="small font-italic pr-2">Sign Out</span> <i class="fas fa-sign-out-alt"></i></a>
+			          </div>
+              </li>
+            </ul>
 	        </div>
 	      </nav>
       </header>
@@ -112,53 +115,62 @@
 
 	      $(function(){
 	    	  if( inactivityTimeout ){
-        		  ojbc.reloadPage();
-	   	          $('html').on('mousemove click mouseup mousedown keydown keypress keyup submit change mouseenter scroll resize dblclick', function () {
-	   	              clearTimeout(idleTime);
-	   	              ojbc.reloadPage();
-	   	          });
-          	  }
+       		  ojbc.reloadPage();
+ 	          $('html').on('mousemove click mouseup mousedown keydown keypress keyup submit change mouseenter scroll resize dblclick', function () {
+ 	              clearTimeout(idleTime);
+ 	              ojbc.reloadPage();
+ 	          });
+       	  }
    	      
 	    	  $('body').on('click', 'a#incidents', function() {   
-                $(this).parent().toggleClass('show');
-
-	              xhr = $.get(context + 'incidents/searchForm', function(data) {
-	                 $('#portalContent').html(data); 
-	               }).fail(ojbc.displayFailMessage);
-	              return false; 
-	          });
+						$(this).parent().toggleClass('show');
+						
+						xhr = $.get(context + 'incidents/searchForm', function(data) {
+						   $('#portalContent').html(data); 
+						 }).fail(ojbc.displayFailMessage);
+						return false; 
+          });
 	    	  
- 	          $(document).ajaxStart(function(){
-				if( $(".ojbc-modal").is(':visible')){
-					var visibleOjbcModal = $(".ojbc-modal:visible");
-					var modalDialog = visibleOjbcModal.children(".modal-dialog"); 
-					var loadingDiv = visibleOjbcModal.children(".modalIframeSpinner");
-                
-					console.log("modalDialog.height():" + modalDialog.height()); 
-					console.log("modalDialog.height() + parseInt( modalDialog.css('margin-top'), 10):" + modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10)); 
-					console.log("modalDialog.css('margin-top'):" + modalDialog.css("margin-top")); 
-					console.log("visibleOjbcModal.width():" + visibleOjbcModal.width()); 
-					loadingDiv.height(modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10));
-					loadingDiv.width(visibleOjbcModal.width());
-					
-					loadingDiv.show();           
-	          
-				}
-				else{
-					var loadingDiv =  $("#loadingAjaxPane");
-					var portalContentDiv = $("#portalContent");
-					
-					loadingDiv.height(portalContentDiv.height());
-					loadingDiv.width(portalContentDiv.width());
-					
-					$("#loadingAjaxPane").show();           
-				}               
-             }).ajaxStop(function() {
-               $("#loadingAjaxPane").hide();                
-               $(".modalIframeSpinner").hide();
-             });
+	    	  $('body').on('click', 'a#upload', function() {   
+						$(this).parent().toggleClass('show');
+						
+						xhr = $.get(context + 'files/upload', function(data) {
+						   $('#portalContent').html(data); 
+						 }).fail(ojbc.displayFailMessage);
+						return false; 
+          });
+	    	  
+          $(document).ajaxStart(function(){
+						if( $(".ojbc-modal").is(':visible')){
+							var visibleOjbcModal = $(".ojbc-modal:visible");
+							var modalDialog = visibleOjbcModal.children(".modal-dialog"); 
+							var loadingDiv = visibleOjbcModal.children(".modalIframeSpinner");
+		                
+							console.log("modalDialog.height():" + modalDialog.height()); 
+							console.log("modalDialog.height() + parseInt( modalDialog.css('margin-top'), 10):" + modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10)); 
+							console.log("modalDialog.css('margin-top'):" + modalDialog.css("margin-top")); 
+							console.log("visibleOjbcModal.width():" + visibleOjbcModal.width()); 
+							loadingDiv.height(modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10));
+							loadingDiv.width(visibleOjbcModal.width());
+							
+							loadingDiv.show();           
+			          
+						}
+						else{
+							var loadingDiv =  $("#loadingAjaxPane");
+							var portalContentDiv = $("#portalContent");
+							
+							loadingDiv.height(portalContentDiv.height());
+							loadingDiv.width(portalContentDiv.width());
+							
+							$("#loadingAjaxPane").show();           
+						}               
+          }).ajaxStop(function() {
+            $("#loadingAjaxPane").hide();                
+            $(".modalIframeSpinner").hide();
+          });
  	          
-           	 $('[data-toggle="popover"]').popover(); 
+          $('[data-toggle="popover"]').popover(); 
  	          
 	      });
 	      

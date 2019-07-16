@@ -17,14 +17,14 @@
 -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:include="fragments/header :: header-css">
+<head>
+  <title>NIBRS ADMIN Tool</title>
+  <th:block th:include="fragments/general.html :: headerfiles"></th:block>
 </head>
 <body>
 	<div th:replace="fragments/header :: header"></div>
 	<div id="mainContent">
-	 	<div id="content" class="container">
-<!-- 	 		<div style="padding: 10px;">The NIBRS Pre-Certification Tool validates NIBRS submissions according to the NIBRS flat file format defined in the <a href="https://ucr.fbi.gov/nibrs_technical_specification_version_3.1_pdf ">NIBRS 3.1 Standard </a></div>
- -->
+	 	<div id="content" class="container" th:fragment="uploadForm">
  	 		<div style="padding: 5px;">
  	 			<p>The <strong>NIBRS Pre-Certification Tool (PCT)</strong> provides law enforcement agencies, responsible for submitting Incident-Based Reports (IBR) data to State Uniform Crime Reporting (UCR) programs, the ability to test their submissions in advance of its formal delivery. State UCR programs may also use the NIBRS PCT to test their IBR submissions before beginning the NIBRS certification process with the FBI. 
 				The NIBRS PCT exercises the NIBRS data edit and validation rules and provides formatted output of errors, so that submitters may correct their data submissions and, ultimately, speed the FBI CJIS and/or state IBR certification process.  Through this tool, users can validate NIBRS submissions in "flat file" or XML formats.  
@@ -55,6 +55,5 @@
 			</div>
 		</div>
 	</div>
-	<div th:replace="fragments/footer :: footer"></div>	
 </body>
 </html>
