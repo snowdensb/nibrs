@@ -73,7 +73,7 @@ public class UploadFileController {
 	}
 	
 
-    @PostMapping("/")
+    @PostMapping("/upload")
 	public String handleFileUpload(@RequestParam("file") MultipartFile[] multipartFiles,
 			RedirectAttributes redirectAttributes, Model model) throws IOException, ParserConfigurationException {
 

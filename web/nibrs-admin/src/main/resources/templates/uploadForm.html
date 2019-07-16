@@ -30,18 +30,18 @@
 				The NIBRS PCT exercises the NIBRS data edit and validation rules and provides formatted output of errors, so that submitters may correct their data submissions and, ultimately, speed the FBI CJIS and/or state IBR certification process.  Through this tool, users can validate NIBRS submissions in "flat file" or XML formats.  
 				</p>
 				<p><strong>Important notes:</strong></p>
-				<p>
+				<div>
 					<ul>
 						<li>The validation rules implemented by the NIBRS PCT only reflect the FBI’s NIBRS rules and do not include state-specific data elements and rules. Likewise, the NIBRS PCT cannot validate some NIBRS rules specific to the submitting agency. See <a th:href="@{/toolLimitations}">Tool Limitations</a> for specific details.</li>
 						<li>The NIBRS PCT is intended to assist the user in understanding how well its data aligns with the <a href="https://ucr.fbi.gov/nibrs_technical_specification_version_3.1_pdf">FBI NIBRS standard version 3.1</a>. It is not intended to substitute for FBI NIBRS or State certification.</li>
 					</ul>
-				</p>
+				</div>
 				<p>The NIBRS PCT is licensed under the open source <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2.0 </a>.  The source code is available <a href="https://goo.gl/9my95o">here</a>.</p>
 
 			</div>
 	 		<div class="jumbotron">
 				<div id="errorMsg"></div>
-				<form method="POST" enctype="multipart/form-data" th:action="@{/}" class="box">
+				<form method="POST" enctype="multipart/form-data" th:action="@{/files/upload}" class="box">
 				  	<div id="uploads"></div>
 				 	<div class="dropzone" id="dropzone">
 						<div id="loadingAjaxPane" ></div>
@@ -53,6 +53,12 @@
 			<div align="center" style="padding:2px 10px;">
 				Have questions? Ask SEARCH at <a href="mailto:nibrs@search.org?Subject=NIBRS%20PCT%20Question">nibrs@search.org</a>
 			</div>
+			
+			<script th:inline="javascript">
+			</script>
+			
+			<script type="text/javascript" th:src="@{/js/uploadFile.js}"></script>
+			
 		</div>
 	</div>
 </body>
