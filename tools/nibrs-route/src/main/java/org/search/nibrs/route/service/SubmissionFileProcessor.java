@@ -38,6 +38,7 @@ import org.search.nibrs.flatfile.importer.IncidentBuilder;
 import org.search.nibrs.importer.ReportListener;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.validate.common.NibrsValidationUtils;
+import org.search.nibrs.validate.common.ValidationResults;
 import org.search.nibrs.validation.SubmissionValidator;
 import org.search.nibrs.xmlfile.importer.XmlIncidentBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class SubmissionFileProcessor {
 			public void newReport(AbstractReport report, List<NIBRSError> el) {
 				validationResults.getErrorList().addAll(el);
 				validationResults.getErrorList().addAll(submissionValidator.validateReport(report));
-				addReportWithoutErrors(validationResults, report);
+				NibrsValidationUtils.addReportWithoutErrors(validationResults, report);
 			}
 		};
 
@@ -76,19 +77,6 @@ public class SubmissionFileProcessor {
 
 		return validationResults; 
 
-	}
-	
-	private void addReportWithoutErrors(ValidationResults validationResults, AbstractReport report) {
-		if (validationResults.getErrorList().isEmpty()){
-			validationResults.getReportsWithoutErrors().add(report);
-		}
-		else{
-			NIBRSError nibrsError = validationResults.getErrorList().get(validationResults.getErrorList().size()-1);
-			if (report.getIdentifier() != null && 
-					!report.getIdentifier().equals(nibrsError.getReportUniqueIdentifier())) {
-				validationResults.getReportsWithoutErrors().add(report);
-			}
-		}
 	}
 	
 	public File createErrorReport(@Body ValidationResults validationResults,

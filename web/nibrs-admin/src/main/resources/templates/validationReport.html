@@ -65,7 +65,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<th:block th:each="nibrsError: ${errorList}">
+					<th:block th:each="nibrsError: ${validationResults.filteredErrorList}">
 						<th:block th:switch="${(nibrsError.ruleNumber == '404' and nibrsError.dataElementIdentifier == '35') 
 								or nibrsError.ruleNumber == '342'}">
 							<th:block th:case="true">

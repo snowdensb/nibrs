@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.search.nibrs.route.service;
+package org.search.nibrs.validate.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.model.AbstractReport;
 
@@ -25,6 +28,8 @@ public class ValidationResults{
 
 	private final List<NIBRSError> errorList;
 	private List<AbstractReport> reportsWithoutErrors;
+	private Integer totalReportCount = 0;
+	private List<AbstractReport> reportWithAllowableErrors; 
 	
 	public ValidationResults() {
 		super();
@@ -38,7 +43,7 @@ public class ValidationResults{
 
 	@Override
 	public String toString() {
-		return "ValidationResults [errorList=" + errorList + ", incidentReportsWithoutErrors=" + getReportsWithoutErrors() + "]";
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	public List<AbstractReport> getReportsWithoutErrors() {
@@ -47,6 +52,28 @@ public class ValidationResults{
 
 	public void setReportsWithoutErrors(List<AbstractReport> reportsWithoutErrors) {
 		this.reportsWithoutErrors = reportsWithoutErrors;
+	}
+
+	public Integer getTotalReportCount() {
+		return totalReportCount;
+	}
+
+	public void increaseTotalReportCount() {
+		this.totalReportCount ++;
+	}
+
+	public List<AbstractReport> getReportWithAllowableErrors() {
+		return reportWithAllowableErrors;
+	}
+
+	public void setReportWithAllowableErrors(List<AbstractReport> reportWithAllowableErrors) {
+		this.reportWithAllowableErrors = reportWithAllowableErrors;
+	}
+
+	public List<NIBRSError> getFilteredErrorList() {
+		return this.getErrorList().stream()
+				.filter(error->error.getReport() != null)
+				.collect(Collectors.toList());
 	}
 
 }

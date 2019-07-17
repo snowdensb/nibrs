@@ -28,8 +28,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tika.exception.TikaException;
+import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.flatfile.importer.IncidentBuilder;
 import org.search.nibrs.importer.ReportListener;
+import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.util.NibrsFileUtils;
 import org.search.nibrs.xmlfile.importer.XmlIncidentBuilder;
 import org.xml.sax.SAXException;
@@ -76,6 +78,20 @@ public class NibrsValidationUtils {
 		stream.close();
 	}
 
+	public static void addReportWithoutErrors(ValidationResults validationResults, AbstractReport report) {
+		validationResults.increaseTotalReportCount();
+		if (validationResults.getErrorList().isEmpty()){
+			validationResults.getReportsWithoutErrors().add(report);
+		}
+		else{
+			NIBRSError nibrsError = validationResults.getErrorList().get(validationResults.getErrorList().size()-1);
+			if (report.getIdentifier() != null && 
+					!report.getIdentifier().equals(nibrsError.getReportUniqueIdentifier())) {
+				validationResults.getReportsWithoutErrors().add(report);
+			}
+		}
+	}
 	
+
 }
 

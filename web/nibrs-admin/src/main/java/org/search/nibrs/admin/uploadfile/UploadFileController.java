@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -39,6 +38,7 @@ import org.search.nibrs.importer.ReportListener;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.util.NibrsFileUtils;
 import org.search.nibrs.validate.common.NibrsValidationUtils;
+import org.search.nibrs.validate.common.ValidationResults;
 import org.search.nibrs.validation.SubmissionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -79,8 +79,8 @@ public class UploadFileController {
 
 		log.info("processing file: " + multipartFiles.length);
 		
-		List<NIBRSError> filteredErrorList = getNibrsErrors(multipartFiles); 
-		model.addAttribute("errorList", filteredErrorList);
+		ValidationResults validationResults = getNibrsErrors(multipartFiles); 
+		model.addAttribute("validationResults", validationResults);
         return "validationReport :: #content";
     }
 
@@ -90,7 +90,7 @@ public class UploadFileController {
     	
     	log.info("processing file: " + multipartFiles.length);
     	
-    	List<NIBRSError> filteredErrorList = getNibrsErrors(multipartFiles); 
+    	List<NIBRSError> filteredErrorList = getNibrsErrors(multipartFiles).getFilteredErrorList(); 
     	
     	//Translate NIBRSError to a simplified JSON error class so it can be more easily consumed 
     	
@@ -152,14 +152,15 @@ public class UploadFileController {
 		return nibrsJsonError;
 	}
     
-	private List<NIBRSError> getNibrsErrors(MultipartFile[] multipartFiles)
+	private ValidationResults getNibrsErrors(MultipartFile[] multipartFiles)
 			throws IOException, ParserConfigurationException {
-		final List<NIBRSError> errorList = new ArrayList<>();
+		ValidationResults validationResults = new ValidationResults();
 		ReportListener validatorListener = new ReportListener() {
 			@Override
 			public void newReport(AbstractReport report, List<NIBRSError> el) {
-				errorList.addAll(el);
-				errorList.addAll(submissionValidator.validateReport(report));
+				validationResults.getErrorList().addAll(el);
+				validationResults.getErrorList().addAll(submissionValidator.validateReport(report));
+				NibrsValidationUtils.addReportWithoutErrors(validationResults, report);
 			}
 		};
 		
@@ -178,10 +179,7 @@ public class UploadFileController {
 			
 		}
 		
-		List<NIBRSError> filteredErrorList = errorList.stream()
-				.filter(error->error.getReport() != null)
-				.collect(Collectors.toList());
-		return filteredErrorList;
+		return validationResults;
 	}
 
 	@GetMapping("/about")
