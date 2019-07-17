@@ -21,24 +21,56 @@
 		<div id="content" class="container-fluid">
 			<script type="text/javascript">
  				  $(function() {
-					  $('#errorReport').DataTable({
-						  dom: 'lBfrtip',
-						  pagingType: "full_numbers",
-				    	  colReorder: true,
-				          buttons: [
-				              'excelHtml5',
-				              'csvHtml5',
-				              'pdfHtml5'
-				          ], 
-				          language: {
-				              emptyTable: "No errors found in this NIBRS submission"
-			              }
-					  });
+					  var table = $('#errorReport').DataTable({
+              responsive: true, 
+              fixedHeader: {header: true}, 
+              language: {
+                  emptyTable: "No errors found in this NIBRS submission"
+              },
+              buttons: [
+                  {
+                      extend: 'excelHtml5',
+                      title:'Error Report',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },
+                  {
+                      extend: 'csvHtml5',
+                      title:'Error Report',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },
+                  {
+                      extend: 'pdfHtml5',
+                      title:'Error Report',
+                      orientation:'landscape', 
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },
+                  {
+                      extend: 'print',
+                      title:'Error Report',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },
+                  'colvis'
+              ],
+              "columnDefs": [
+                  { "orderable": false, "targets": 7 },
+                  {
+                      "targets":[6], 
+                      "type":"datetime"
+                  },
+                ]
+            });
 					  
- 					  $("#errorReport_length").addClass("col-sm-2");
-					  $("div.dt_buttons").addClass("col-sm-2");
-					  $("div.dataTables_info").addClass("col-sm-8");
-					  
+            table.buttons().container()
+             .appendTo( '#errorReport_length' ).addClass("mr-5");
+	                  
 				  });
 
  			</script>

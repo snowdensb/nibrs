@@ -23,13 +23,11 @@
 	</head>
 	<body data-spy="scroll" data-target=".navbar">
 		<header th:replace="fragments/general.html :: header"> </header>
-	    <!-- Begin page content -->
-    <main role="main" class="container pt-4">
-      <div id="portalContent">
-	      <div id="loadingAjaxPane" ></div>
-        <div th:replace="homepage::homepageContent"></div>
-      </div>
-    </main>
+    <!-- Begin page content -->
+    <div id="portalContent">
+     <div id="loadingAjaxPane" ></div>
+      <div th:replace="homepage::homepageContent"></div>
+    </div>
 	
 		<footer th:replace="fragments/general.html :: footer"></footer>	
 		<!-- /.container -->
