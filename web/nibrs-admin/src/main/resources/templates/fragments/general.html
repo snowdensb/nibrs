@@ -157,6 +157,9 @@
 								loadingDiv.show();           
 				          
 							}
+							else if ($('#dropzone').is(':visible')){
+						        $("#loadingFileAjaxPane").css({"display": "block"}); 
+							}
 							else{
 								var loadingDiv =  $("#loadingAjaxPane");
 								var portalContentDiv = $("#portalContent");
@@ -169,6 +172,7 @@
 	          }).ajaxStop(function() {
 	            $("#loadingAjaxPane").hide();                
 	            $(".modalIframeSpinner").hide();
+	            $("#loadingFileAjaxPane").css({"display": "none"});                
 	          });
 	 	          
 	          $('[data-toggle="popover"]').popover(); 

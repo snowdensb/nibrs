@@ -27,12 +27,6 @@ $(function(){
 	
     ojbc.handleEsc();
 
- 	$(document).ajaxStart(function(){
-      	$("#loadingAjaxPane").css({"display": "block"}); 
-    }).ajaxStop(function() {
-        $("#loadingAjaxPane").css({"display": "none"});                
-    });
-
 	var $form = $(".box");
 	
 	if (isAdvancedUpload){
