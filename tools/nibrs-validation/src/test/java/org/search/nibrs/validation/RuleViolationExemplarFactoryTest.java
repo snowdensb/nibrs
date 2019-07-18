@@ -44,7 +44,7 @@ public class RuleViolationExemplarFactoryTest {
 	public void testOffenseLocationViolationExemplars() throws Exception {
 		RuleViolationExemplarFactory exemplarFactory = RuleViolationExemplarFactory.getInstance();
 		List<GroupAIncidentReport> incidents = exemplarFactory.getGroupAIncidentsThatViolateRule(252);
-		assertEquals(2789, incidents.size());
+		assertEquals(2834, incidents.size());
 	}
 
 }
