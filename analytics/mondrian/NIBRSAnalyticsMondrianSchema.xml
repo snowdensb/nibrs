@@ -201,7 +201,7 @@
     <Attributes>
       <Attribute name="LocationTypeTypeID" keyColumn="LocationTypeTypeID" hasHierarchy="false"/>
       <Attribute name="LocationTypeDescription" keyColumn="StateDescription" caption="Location Type" hasHierarchy="false"/>
-      <Attribute name="LocationTypeCategoryDescription" keyColumn="StateDescription" caption="Location Category" hasHierarchy="false"/>
+      <Attribute name="LocationTypeCategoryDescription" keyColumn="LocationTypeCategoryDescription" caption="Location Category" hasHierarchy="false"/>
       <Attribute name="LocationTypeDetailCategoryDescription" keyColumn="LocationTypeDetailCategoryDescription" caption="Location Detail Category" hasHierarchy="false"/>
     </Attributes>
     <Hierarchies>
