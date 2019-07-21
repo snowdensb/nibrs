@@ -58,6 +58,10 @@ public class ValidationResults{
 		return totalReportCount;
 	}
 
+	public Integer getCountOfValidReport() {
+		return reportsWithoutErrors.size();
+	}
+	
 	public void increaseTotalReportCount() {
 		this.totalReportCount ++;
 	}

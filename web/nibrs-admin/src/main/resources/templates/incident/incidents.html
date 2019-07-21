@@ -87,51 +87,51 @@
 					</div>
 			    </div>
 		        <script th:inline="javascript">
-	              $(function(){
-					  $('#incidentDateRangeStartDate').datepicker({
-					     uiLibrary: 'bootstrap4', size: 'small'
-					  });
-					  $('#incidentDateRangeEndDate').datepicker({
-					     uiLibrary: 'bootstrap4', size: 'small'
-					  });
-					  $(".chosen-select").chosen();  
-            	      $('[data-toggle="popover"]').popover(); 
-	                  $.fn.dataTable.moment( 'MM/DD/YYYY' );
-	
-	                  var table = $('#searchResultsTable').DataTable({
-                	    responsive: true, 
-                	    fixedHeader: { header: true },
-                        "columnDefs": [
-	                        {
-	                            "targets":[2], 
-	                            "type":"date"
-	                        },
-                        ]
-	                  });
-	                  
-	                  $('[data-toggle="tooltip"]').tooltip({
-	                      trigger : 'hover'
-	                  });   
-	 
-	                  
- 	                  $('#searchResultsTable tbody').on('click', 'tr',function() {
-	                 	table.$('tr.selected').removeClass('selected');
-	                	$(this).addClass('selected');  
-  
-						var rowData = table.row($(this)).data();
-						var reportType = rowData[5]; 
-						xhr = $.get( context +"incidents/" + reportType + "/" + $(this).attr("id")   , function(data) {
-	                    	$('#reportDetailModal .modal-body').html(data);
-	                    	
-	                    	if (reportType === "A"){
-	                    		$('#reportDetailModal .modal-title').html("Group A Incident");
-	                    	}
-	                    	else if (reportType === "B"){
-	                    		$('#reportDetailModal .modal-title').html("Group B Arrest");
-	                    	}
-	                      	$('#reportDetailModal').modal('show');
-						}).fail(ojbc.displayFailMessage);
-	                  });
+	            $(function(){
+							  $('#incidentDateRangeStartDate').datepicker({
+							     uiLibrary: 'bootstrap4', size: 'small'
+							  });
+							  $('#incidentDateRangeEndDate').datepicker({
+							     uiLibrary: 'bootstrap4', size: 'small'
+							  });
+							  $(".chosen-select").chosen();  
+		            	      $('[data-toggle="popover"]').popover(); 
+			                  $.fn.dataTable.moment( 'MM/DD/YYYY' );
+			
+			                  var table = $('#searchResultsTable').DataTable({
+		                	    responsive: true, 
+		                	    fixedHeader: { header: true },
+		                        "columnDefs": [
+			                        {
+			                            "targets":[2], 
+			                            "type":"date"
+			                        },
+		                        ]
+			                  });
+			                  
+			                  $('[data-toggle="tooltip"]').tooltip({
+			                      trigger : 'hover'
+			                  });   
+			 
+			                  
+		 	                  $('#searchResultsTable tbody').on('click', 'tr',function() {
+			                 	table.$('tr.selected').removeClass('selected');
+			                	$(this).addClass('selected');  
+		  
+								var rowData = table.row($(this)).data();
+								var reportType = rowData[5]; 
+								xhr = $.get( context +"incidents/" + reportType + "/" + $(this).attr("id")   , function(data) {
+			                    	$('#reportDetailModal .modal-body').html(data);
+			                    	
+			                    	if (reportType === "A"){
+			                    		$('#reportDetailModal .modal-title').html("Group A Incident");
+			                    	}
+			                    	else if (reportType === "B"){
+			                    		$('#reportDetailModal .modal-title').html("Group B Arrest");
+			                    	}
+			                      	$('#reportDetailModal').modal('show');
+								}).fail(ojbc.displayFailMessage);
+			                  });
 	             });
 	          </script>
 	        </div>
@@ -163,7 +163,7 @@
 	                 
 	                xhr = $.post(context + "incidents/search",formData,function(data) {
 	                	$('#portalContent').html(data); 
-	             	}).fail();
+  	             	}).fail();
 	              });
 	              
 	            }); 

@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -32,6 +35,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
+import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.common.NIBRSJsonError;
 import org.search.nibrs.importer.ReportListener;
@@ -49,16 +53,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@SessionAttributes({"showUserInfoDropdown"})
+@SessionAttributes({"showUserInfoDropdown", "validationResults"})
 @RequestMapping("/files")
 public class UploadFileController {
 	private final Log log = LogFactory.getLog(this.getClass());
 	@Resource
 	AppProperties appProperties;
+	
+	@Resource
+	RestService restService;
 
 	@Autowired
 	SubmissionValidator submissionValidator;
@@ -242,6 +250,40 @@ public class UploadFileController {
 		zippedStream.close();
         inputStream.close();
 	}
+	
+	@PostMapping("/validIncidents")
+	public @ResponseBody String persistIncidentReports(Map<String, Object> model) {
+		
+		ValidationResults validationResults = (ValidationResults) model.get("validationResults");
+		List<AbstractReport> abstractReports = validationResults.getReportsWithoutErrors(); 
+		
+		logCountsOfReports(abstractReports);
+		int count = 0; 
+		for(AbstractReport abstractReport: abstractReports){
+			try{
+				restService.persistAbstractReport(abstractReport);
+				log.info("Progress: " + (++count) + "/" + abstractReports.size());
+			}
+			catch(ResourceAccessException rae){
+				log.error("Failed to connect to the rest service to process the " + abstractReport.getAdminSegmentLevel() + 
+						"level report with Identifier " + abstractReport.getIdentifier());
+				throw rae;
+			}
+			catch(Exception e){
+				log.warn("Failed to persist incident " + abstractReport.getIdentifier());
+				log.error(e);
+				log.info("Progress: " + (++count) + "/" + abstractReports.size());
+			}
+		}
+		
+		return "All valid reports from this submission are processed.";
+	}
+
+	private void logCountsOfReports(List<AbstractReport> abstractReports) {
+		Set<String> incidentNumbers = new HashSet<>();
+		abstractReports.forEach(item->incidentNumbers.add(item.getIdentifier()));
+		log.info("about to process " + abstractReports.size() + " reports with " + incidentNumbers.size() + " distinct identifiers. ");
+	}	
 	
 }
 

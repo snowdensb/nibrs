@@ -259,8 +259,20 @@ header span.fullname {
   padding: 1em;
 }
 
+table.dataTable.display tbody tr.odd > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
+  background-color: rgba(123, 129, 221, 0.13);
+}
+table.dataTable.display tbody tr.even > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_1 {
+  background-color: rgba(228, 230, 255, 0.27);
+}
+table.dataTable.hover tbody tr:hover,
+table.dataTable.display tbody tr:hover {
+  background-color: rgba(255, 182, 0, 0.09);
+}
 /* CSS from Diane*/
- a.fg-button.ui-button.ui-state-default.ui-state-disabled {
+/*  a.fg-button.ui-button.ui-state-default.ui-state-disabled {
   color: #2d3092;
   font-weight: 600;
 }
@@ -302,7 +314,7 @@ a.dt-button {
 input[type="search"] {
   border-radius: 3em;
 }
-
+ */
 /*lose big gray box*/
 .jumbotron {
   background-color: #fff;

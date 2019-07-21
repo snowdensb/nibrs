@@ -20,7 +20,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
+import org.search.nibrs.model.AbstractReport;
+import org.search.nibrs.model.GroupAIncidentReport;
+import org.search.nibrs.model.GroupBArrestReport;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -35,6 +40,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @Profile({"incident-search"})
 public class RestService{
+	private final Log log = LogFactory.getLog(this.getClass());
+
 	private final WebClient webClient;
 
 	@Autowired
@@ -78,6 +85,33 @@ public class RestService{
 				.retrieve()
 				.bodyToMono(new ParameterizedTypeReference<ArrestReportSegment>() {})
 				.block();
+	}
+	
+	public void persistAbstractReport(AbstractReport abstractReport) {
+		if (abstractReport instanceof GroupAIncidentReport){
+			GroupAIncidentReport groupAIncidentReport = (GroupAIncidentReport) abstractReport; 
+			log.info("About to post for group A incident report " + groupAIncidentReport.getIncidentNumber());
+			log.info("Action category " + groupAIncidentReport.getReportActionType());
+			webClient.post().uri("/groupAIncidentReports")
+				.body(BodyInserters.fromObject(groupAIncidentReport))
+				.retrieve()
+				.bodyToMono(String.class)
+				.block();
+		}
+		else if (abstractReport instanceof GroupBArrestReport){
+			GroupBArrestReport groupBArrestReport = (GroupBArrestReport) abstractReport; 
+			log.info("About to post for group B Arrest Report" + groupBArrestReport.getIdentifier());
+			log.info("Action category " + groupBArrestReport.getReportActionType());
+			webClient.post().uri("/arrestReports")
+				.body(BodyInserters.fromObject(groupBArrestReport))
+				.retrieve()
+				.bodyToMono(String.class)
+				.block();
+		}
+		else {
+			log.warn("The report type " +  abstractReport.getClass().getName() + "is not supported");
+		}
+		
 	}
 	
 }
