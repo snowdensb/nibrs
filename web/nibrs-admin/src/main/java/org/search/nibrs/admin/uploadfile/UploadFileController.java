@@ -53,12 +53,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@SessionAttributes({"showUserInfoDropdown", "validationResults"})
+@SessionAttributes({"showUserInfoDropdown", "validationResults", "persistReportTask"})
 @RequestMapping("/files")
 public class UploadFileController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -251,6 +250,30 @@ public class UploadFileController {
         inputStream.close();
 	}
 	
+	@PostMapping("/validIncidentsAsync")
+	public @ResponseBody String persistIncidentReportsAsync(Map<String, Object> model) {
+		
+		ValidationResults validationResults = (ValidationResults) model.get("validationResults");
+		List<AbstractReport> validReports = validationResults.getReportsWithoutErrors(); 
+		
+		logCountsOfReports(validReports);
+		
+		PersistReportTask persistReportTask = new PersistReportTask(validReports);
+		model.put("persistReportTask", persistReportTask);
+		restService.persistValidReportsAsync(persistReportTask);
+		
+		log.info("called the aync method"); 
+		return "Server processing the valid reports.";
+	}
+
+	@GetMapping("/uploadStatus")
+	public @ResponseBody PersistReportTask getUploadStatus(Map<String, Object> model) {
+		
+		PersistReportTask persistReportTask = (PersistReportTask) model.get("persistReportTask");
+		
+		return persistReportTask;
+	}
+	
 	@PostMapping("/validIncidents")
 	public @ResponseBody String persistIncidentReports(Map<String, Object> model) {
 		
@@ -258,27 +281,11 @@ public class UploadFileController {
 		List<AbstractReport> abstractReports = validationResults.getReportsWithoutErrors(); 
 		
 		logCountsOfReports(abstractReports);
-		int count = 0; 
-		for(AbstractReport abstractReport: abstractReports){
-			try{
-				restService.persistAbstractReport(abstractReport);
-				log.info("Progress: " + (++count) + "/" + abstractReports.size());
-			}
-			catch(ResourceAccessException rae){
-				log.error("Failed to connect to the rest service to process the " + abstractReport.getAdminSegmentLevel() + 
-						"level report with Identifier " + abstractReport.getIdentifier());
-				throw rae;
-			}
-			catch(Exception e){
-				log.warn("Failed to persist incident " + abstractReport.getIdentifier());
-				log.error(e);
-				log.info("Progress: " + (++count) + "/" + abstractReports.size());
-			}
-		}
+		restService.persistValidReports(abstractReports);
 		
 		return "All valid reports from this submission are processed.";
 	}
-
+	
 	private void logCountsOfReports(List<AbstractReport> abstractReports) {
 		Set<String> incidentNumbers = new HashSet<>();
 		abstractReports.forEach(item->incidentNumbers.add(item.getIdentifier()));

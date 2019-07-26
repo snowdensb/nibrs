@@ -29,7 +29,10 @@ public class ValidationResults{
 	private final List<NIBRSError> errorList;
 	private List<AbstractReport> reportsWithoutErrors;
 	private Integer totalReportCount = 0;
-	private List<AbstractReport> reportWithAllowableErrors; 
+	private List<AbstractReport> reportWithAllowableErrors;
+
+	private Integer persistedCount = 0; 
+	private List<AbstractReport> failedToPersist = new ArrayList<>();
 	
 	public ValidationResults() {
 		super();
@@ -78,6 +81,22 @@ public class ValidationResults{
 		return this.getErrorList().stream()
 				.filter(error->error.getReport() != null)
 				.collect(Collectors.toList());
+	}
+
+	public Integer getPersistedCount() {
+		return persistedCount;
+	}
+
+	public void increasePersistedCount() {
+		this.persistedCount ++;
+	}
+
+	public List<AbstractReport> getFailedToPersist() {
+		return failedToPersist;
+	}
+
+	public void addToFailedToPersist(AbstractReport report) {
+		this.failedToPersist.add(report);
 	}
 
 }

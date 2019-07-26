@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
+import org.search.nibrs.admin.uploadfile.PersistReportTask;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.GroupBArrestReport;
@@ -33,7 +34,9 @@ import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -113,5 +116,57 @@ public class RestService{
 		}
 		
 	}
+	
+	@Async
+	public void persistValidReportsAsync(PersistReportTask persistReportTask) {
+		log.info("Execute method asynchronously. "
+			      + Thread.currentThread().getName());
+		int count = 0; 
+		for(AbstractReport abstractReport: persistReportTask.getReportsToProcess()){
+			try{
+				this.persistAbstractReport(abstractReport);
+				persistReportTask.increaseProcessedCount();
+				log.info("Progress: " + (++count) + "/" + persistReportTask.getTotalCount());
+			}
+			catch(ResourceAccessException rae){
+				log.error("Failed to connect to the rest service to process the " + abstractReport.getAdminSegmentLevel() + 
+						"level report with Identifier " + abstractReport.getIdentifier());
+				throw rae;
+			}
+			catch(Exception e){
+				persistReportTask.increaseProcessedCount();
+				persistReportTask.addFailedToProcess(abstractReport);
+				log.warn("Failed to persist incident " + abstractReport.getIdentifier());
+				log.error(e);
+				log.info("Progress: " + (++count) + "/" + persistReportTask.getTotalCount());
+			}
+		}
+		
+	}
+	
+	public void persistValidReports(List<AbstractReport> abstractReports) {
+		log.info("Execute method asynchronously. "
+				+ Thread.currentThread().getName());
+		int count = 0; 
+		for(AbstractReport abstractReport: abstractReports){
+			try{
+				this.persistAbstractReport(abstractReport);
+				log.info("Progress: " + (++count) + "/" + abstractReports.size());
+			}
+			catch(ResourceAccessException rae){
+				log.error("Failed to connect to the rest service to process the " + abstractReport.getAdminSegmentLevel() + 
+						"level report with Identifier " + abstractReport.getIdentifier());
+				throw rae;
+			}
+			catch(Exception e){
+				log.warn("Failed to persist incident " + abstractReport.getIdentifier());
+				log.error(e);
+				log.info("Progress: " + (++count) + "/" + abstractReports.size());
+			}
+		}
+		
+	}
+	
+	
 	
 }

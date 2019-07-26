@@ -160,7 +160,7 @@
 							else if ($('#dropzone').is(':visible')){
 						        $("#loadingFileAjaxPane").css({"display": "block"}); 
 							}
-							else{
+							else if (!$('#progress').is(':visible')){
 								var loadingDiv =  $("#loadingAjaxPane");
 								var portalContentDiv = $("#portalContent");
 								
