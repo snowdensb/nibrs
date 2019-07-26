@@ -28,6 +28,7 @@ public class PersistReportTask{
 	private Integer totalCount;
 	private Integer processedCount = 0;
 	private List<AbstractReport> failedToProcess = new ArrayList<>(); 
+	private boolean aborted = false;
 	
 	public PersistReportTask() {
 		super();
@@ -79,5 +80,13 @@ public class PersistReportTask{
 
 	public Integer getProgress() {
 		return (int) Math.round(processedCount.doubleValue()/totalCount.doubleValue() * 100); 
+	}
+
+	public boolean isAborted() {
+		return aborted;
+	}
+
+	public void setAborted(boolean aborted) {
+		this.aborted = aborted;
 	}
 }

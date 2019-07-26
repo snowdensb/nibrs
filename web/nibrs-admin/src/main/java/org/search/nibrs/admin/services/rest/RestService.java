@@ -131,6 +131,7 @@ public class RestService{
 			catch(ResourceAccessException rae){
 				log.error("Failed to connect to the rest service to process the " + abstractReport.getAdminSegmentLevel() + 
 						"level report with Identifier " + abstractReport.getIdentifier());
+				persistReportTask.setAborted(true);
 				throw rae;
 			}
 			catch(Exception e){

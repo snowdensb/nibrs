@@ -88,18 +88,39 @@
 
                     // increment progress bar
                   xhr = $.get(context + 'files/uploadStatus', function(data, status) {
-                	  console.log("data.processedCount:" + data.processedCount);
-                      console.log(" data.totalCount: " +  data.totalCount);
-                	  console.log("data:" + data);
-                      console.log("progress percentage: " + data.progress);
-                      console.log("status:" + status)
+                	  console.log("data.failedToProcess: " + data.failedToProcess);
                     if (status == 'success'){
                       $('#progress').css('width', data.progress + '%').attr('aria-valuenow', data.progress);
                       $('#progress').html('' + data.processedCount + ' out of ' + data.totalCount + ' are processed ');
                     }
-                    if (data.progress >= 100 || status != 'success') {
+                    if (status != 'success' || data.progress >= 100 || data.aborted) {
                       clearInterval(timerId);
                       $('#progress').removeClass('progress-bar-animated active').html('Complete');
+                      
+                      var contentArray = [];
+                      if (status != 'success') {
+                    	  contentArray.push("The system failed to update the status. Please check back later ");
+                   	  }
+                      else if (data.progress>=100){
+                    	  contentArray.push("All " + data.totalCount + ' reports are processed' );
+                      }
+                      else {
+                    	  contentArray.push('The process is aborted due to error.' )
+                      }
+                      
+                      if (data.failedToProcess.size > 0){
+                    	  contentArray.push('The following incidents were failed to persist: ');
+                    	  for (var report in data.failedToProcess) {
+                    		  contentArray.push(report.adminSegmentLevel + ' ' + report.identifier);
+                    		}
+                      }
+                      
+                      bootpopup({
+                          title: "", 
+                          showclose: false,
+                          content: contentArray, 
+                      });
+
                     }
                   });
                 }, 1000);

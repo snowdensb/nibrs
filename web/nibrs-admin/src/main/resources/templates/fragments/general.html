@@ -141,34 +141,36 @@
 							return false; 
 	          });
 		    	  
-	          $(document).ajaxStart(function(){
-							if( $(".ojbc-modal").is(':visible')){
-								var visibleOjbcModal = $(".ojbc-modal:visible");
-								var modalDialog = visibleOjbcModal.children(".modal-dialog"); 
-								var loadingDiv = visibleOjbcModal.children(".modalIframeSpinner");
-			                
-								console.log("modalDialog.height():" + modalDialog.height()); 
-								console.log("modalDialog.height() + parseInt( modalDialog.css('margin-top'), 10):" + modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10)); 
-								console.log("modalDialog.css('margin-top'):" + modalDialog.css("margin-top")); 
-								console.log("visibleOjbcModal.width():" + visibleOjbcModal.width()); 
-								loadingDiv.height(modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10));
-								loadingDiv.width(visibleOjbcModal.width());
-								
-								loadingDiv.show();           
-				          
-							}
-							else if ($('#dropzone').is(':visible')){
-						        $("#loadingFileAjaxPane").css({"display": "block"}); 
-							}
-							else if (!$('#progress').is(':visible')){
-								var loadingDiv =  $("#loadingAjaxPane");
-								var portalContentDiv = $("#portalContent");
-								
-								loadingDiv.height(portalContentDiv.height());
-								loadingDiv.width(portalContentDiv.width());
-								
-								$("#loadingAjaxPane").show();           
-							}               
+	          $(document).ajaxSend(function( event, jqxhr, settings ) {
+	        	  if (!settings.url.includes('files/uploadStatus')){
+								if( $(".ojbc-modal").is(':visible')){
+									var visibleOjbcModal = $(".ojbc-modal:visible");
+									var modalDialog = visibleOjbcModal.children(".modal-dialog"); 
+									var loadingDiv = visibleOjbcModal.children(".modalIframeSpinner");
+				                
+									console.log("modalDialog.height():" + modalDialog.height()); 
+									console.log("modalDialog.height() + parseInt( modalDialog.css('margin-top'), 10):" + modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10)); 
+									console.log("modalDialog.css('margin-top'):" + modalDialog.css("margin-top")); 
+									console.log("visibleOjbcModal.width():" + visibleOjbcModal.width()); 
+									loadingDiv.height(modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10));
+									loadingDiv.width(visibleOjbcModal.width());
+									
+									loadingDiv.show();           
+					          
+								}
+								else if ($('#dropzone').is(':visible')){
+							        $("#loadingFileAjaxPane").css({"display": "block"}); 
+								}
+								else {
+									var loadingDiv =  $("#loadingAjaxPane");
+									var portalContentDiv = $("#portalContent");
+									
+									loadingDiv.height(portalContentDiv.height());
+									loadingDiv.width(portalContentDiv.width());
+									
+									$("#loadingAjaxPane").show();           
+								}        
+	        	  }
 	          }).ajaxStop(function() {
 	            $("#loadingAjaxPane").hide();                
 	            $(".modalIframeSpinner").hide();
