@@ -105,14 +105,16 @@
                     	  contentArray.push("All " + data.totalCount + ' reports are processed' );
                       }
                       else {
-                    	  contentArray.push('The process is aborted due to error.' )
+                    	  contentArray.push('The process is aborted due to error.' );
                       }
                       
-                      if (data.failedToProcess.size > 0){
-                    	  contentArray.push('The following incidents were failed to persist: ');
-                    	  for (var report in data.failedToProcess) {
-                    		  contentArray.push(report.adminSegmentLevel + ' ' + report.identifier);
+                      if (data.failedToProcess.length > 0){
+                    	  contentArray.push('<br>' + data.failedToProcess.length + ' incidents failed to persist due to error: ');
+                    	  contentArray.push('<ul>');
+                    	  for (i=0; i<data.failedToProcess.length; i++ ) {
+                    		  contentArray.push('<li>' + data.failedToProcess[i] + '</li>');
                     		}
+                        contentArray.push('</ul>');
                       }
                       
                       bootpopup({

@@ -136,7 +136,7 @@ public class RestService{
 			}
 			catch(Exception e){
 				persistReportTask.increaseProcessedCount();
-				persistReportTask.addFailedToProcess(abstractReport);
+				persistReportTask.addFailedToProcess(abstractReport.getUniqueReportDescription());
 				log.warn("Failed to persist incident " + abstractReport.getIdentifier());
 				log.error(e);
 				log.info("Progress: " + (++count) + "/" + persistReportTask.getTotalCount());

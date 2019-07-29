@@ -27,7 +27,7 @@ public class PersistReportTask{
 	private List<AbstractReport> reportsToProcess;
 	private Integer totalCount;
 	private Integer processedCount = 0;
-	private List<AbstractReport> failedToProcess = new ArrayList<>(); 
+	private List<String> failedToProcess = new ArrayList<>(); 
 	private boolean aborted = false;
 	
 	public PersistReportTask() {
@@ -46,16 +46,16 @@ public class PersistReportTask{
 	}
 
 
-	public void addFailedToProcess(AbstractReport report) {
-		this.failedToProcess.add(report);
+	public void addFailedToProcess(String reportDescription) {
+		this.failedToProcess.add(reportDescription);
 	}
 	
-	public List<AbstractReport> getFailedToProcess() {
+	public List<String> getFailedToProcess() {
 		return failedToProcess;
 	}
 
-	public void addToFailedToProcess(AbstractReport report) {
-		this.failedToProcess.add(report);
+	public void addToFailedToProcess(String reportDescription) {
+		this.failedToProcess.add(reportDescription);
 	}
 
 	public Integer getProcessedCount() {
