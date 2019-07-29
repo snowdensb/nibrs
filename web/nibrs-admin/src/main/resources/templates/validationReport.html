@@ -71,6 +71,13 @@
             table.buttons().container()
              .appendTo( '#errorReport_length' ).addClass("mr-5");
             
+            if (persistReportTask && !persistReportTask.aborted && !persistReportTask.complete){
+                $('#loadIncidents').attr('disabled', true);
+                $('#loadIncidentsAync').attr('disabled', true);
+                $('#progress').css('width', '0px').addClass('progress-bar-animated active');
+                $('#progressDiv').removeClass('d-none');
+            }
+            
             $('#loadIncidents').click (function(){
                  
                 xhr = $.post(context + "files/validIncidents", function(data) {
@@ -83,7 +90,8 @@
               xhr = $.post(context + "files/validIncidentsAsync", function(data, status){
                 $('#loadIncidents').attr('disabled', true);
                 $('#loadIncidentsAync').attr('disabled', true);
-                $('#progress').css('width', '0px').addClass('progress-bar-animated active').removeClass('d-none');
+                $('#progress').css('width', '0px').addClass('progress-bar-animated active');
+                $('#progressDiv').removeClass('d-none');
                 timerId = setInterval(function() {
 
                     // increment progress bar
@@ -141,8 +149,8 @@
 		       ${validationResults.countOfValidReport} +' incidents into the repository?' "></span>
 	      <button type="button" class="btn btn-primary btn-sm" id="loadIncidents">Load</button>
         <button type="button" class="btn btn-primary btn-sm" id="loadIncidentsAync">Async Load</button>
-        <div class="progress mt-2">
-          <div class="progress-bar progress-bar-striped d-none" role="progressbar" aria-valuenow="0.25" aria-valuemin="0" aria-valuemax="100" id="progress" style="width:0%"></div>
+        <div class="progress mt-2  d-none" id="progressDiv">
+          <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0.25" aria-valuemin="0" aria-valuemax="100" id="progress" style="width:0%"></div>
         </div>
       </div>
 			<p class="hint">Click on any column headers to sort on primary. Hold down the shift key and click on any other column header to sort on secondary columns.</p>

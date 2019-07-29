@@ -89,4 +89,8 @@ public class PersistReportTask{
 	public void setAborted(boolean aborted) {
 		this.aborted = aborted;
 	}
+	
+	public boolean isComplete() {
+		return this.processedCount.equals(this.totalCount);
+	}
 }

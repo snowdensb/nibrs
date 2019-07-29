@@ -74,9 +74,15 @@ public class UploadFileController {
 			Arrays.asList("application/zip", "text/plain", "application/octet-stream", "text/xml", "application/xml");
 
 	@GetMapping("/upload")
-	public String getFileUploadForm(Model model) throws IOException {
-	
-	    return "uploadForm::uploadForm";
+	public String getFileUploadForm(Map<String, Object> model) throws IOException {
+		PersistReportTask persistReportTask = (PersistReportTask) model.get("persistReportTask");
+		
+		if (persistReportTask == null || persistReportTask.isAborted() || persistReportTask.isComplete()) {
+			return "uploadForm::uploadForm";
+		}
+		else {
+	        return "validationReport :: #content";
+		}
 	}
 	
 
