@@ -137,7 +137,7 @@ loadICPSRRaw <- function(conn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhos
     minDate <- min(allDates, na.rm=TRUE)
     maxDate <- max(allDates, na.rm=TRUE)
 
-    ret$Date <- writeDateDimensionTable(minDate, maxDate, conn)
+    ret$Date <- writeDateDimensionTable(minDate, maxDate, conn=conn)
 
     ret$OffenseSegment <- select(ret$OffenseSegment, -UCROffenseCode)
 
