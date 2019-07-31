@@ -19,7 +19,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties("pct")
+@ConfigurationProperties("admin")
 public class AppProperties {
 
 	private Boolean securityEnabled = false;
