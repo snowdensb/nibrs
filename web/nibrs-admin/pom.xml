@@ -213,7 +213,7 @@
 	                        <goal>repackage</goal>
 	                    </goals>
 	                    <configuration>
-	                        <mainClass>org.search.nibrs.admin.NibrsWebApplication</mainClass>
+	                        <mainClass>org.search.nibrs.admin.NibrsAdminApplication</mainClass>
 	                    </configuration>
 					</execution>
 				</executions>
