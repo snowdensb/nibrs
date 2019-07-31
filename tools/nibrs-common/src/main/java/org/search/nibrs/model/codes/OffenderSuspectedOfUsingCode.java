@@ -26,9 +26,9 @@ import java.util.Set;
 public enum OffenderSuspectedOfUsingCode {
 	
 	A("A", "Alcohol"),
-	C("C", "Computer Equipment"),
+	C("C", "Computer Equipment (Handheld Devices)"),
 	D("D", "Drugs/Narcotics"),
-	N("N", "Not Applicable");
+	N("N", "Not Applicable (Mutually Exclusive)");
 	
 	private OffenderSuspectedOfUsingCode(String code, String description) {
 		this.code = code;

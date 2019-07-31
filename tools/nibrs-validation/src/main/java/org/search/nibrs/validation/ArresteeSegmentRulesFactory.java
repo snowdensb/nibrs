@@ -28,7 +28,6 @@ import org.search.nibrs.common.ParsedObject;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.model.ArresteeSegment;
 import org.search.nibrs.model.GroupAIncidentReport;
-import org.search.nibrs.model.NIBRSAge;
 import org.search.nibrs.model.codes.ArresteeWasArmedWithCode;
 import org.search.nibrs.model.codes.AutomaticWeaponIndicatorCode;
 import org.search.nibrs.model.codes.DispositionOfArresteeUnder18Code;
@@ -105,7 +104,7 @@ public class ArresteeSegmentRulesFactory {
 		rulesList.add(getRuleX04ForEthnicity());
 		rulesList.add(getRuleX04ForResidentStatus());
 		rulesList.add(getRuleX04ForDispositionOfArresteeUnder18());
-		rulesList.add(getRuleX41());
+//		rulesList.add(getRuleX41());
 		rulesList.add(getRuleX52());
 		rulesList.add(getRuleX53());
 		rulesList.add(getRuleX05());
@@ -314,27 +313,6 @@ public class ArresteeSegmentRulesFactory {
 		return personSegmentRulesFactory.getAgeValidRule("47", isGroupAMode() ? NIBRSErrorCode._604 : NIBRSErrorCode._704);
 	}
 
-	/**
-	 * The rule is removed in spec v3-1. 
-	 * @return
-	 */
-	Rule<ArresteeSegment> getRule761() {
-		return isGroupAMode() ? new NullObjectRule<>() : new Rule<ArresteeSegment>() {
-			@Override
-			public NIBRSError apply(ArresteeSegment arresteeSegment) {
-				NIBRSError e = null;
-				NIBRSAge age = arresteeSegment.getAge();
-				if (OffenseCode._90I.code.equals(arresteeSegment.getUcrArrestOffenseCode()) && (age == null || age.isNonNumeric() || age.getAgeMin() > 17)) {
-					e = arresteeSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(NIBRSErrorCode._761);
-					e.setDataElementIdentifier("47");
-					e.setValue(age);
-				}
-				return e;
-			}
-		};
-	}
-	
 	Rule<ArresteeSegment> getRuleX01ForSex() {
 		return personSegmentRulesFactory.getSexValidNonBlankRule("48", isGroupAMode() ? NIBRSErrorCode._601 : NIBRSErrorCode._701);
 	}
@@ -404,49 +382,49 @@ public class ArresteeSegmentRulesFactory {
 		};
 	}
 	
-	Rule<ArresteeSegment> getRuleX41() {
-		return new Rule<ArresteeSegment>() {
-			@Override
-			public NIBRSError apply(ArresteeSegment arresteeSegment) {
-				NIBRSError e = null;
-				
-				char reportActionType = arresteeSegment.getReportActionType();
-				
-				NIBRSAge arresteeAge = arresteeSegment.getAge();
-				
-				if ('D' != reportActionType && arresteeAge != null && Integer.valueOf(99).equals(arresteeAge.getAgeMin())) {
-					e = arresteeSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(isGroupAMode() ? NIBRSErrorCode._641 : NIBRSErrorCode._741);
-					e.setDataElementIdentifier("47");
-					e.setValue("99");
-				}
-				return e;
-			}
-		};
-	}
+//	Rule<ArresteeSegment> getRuleX41() {
+//		return new Rule<ArresteeSegment>() {
+//			@Override
+//			public NIBRSError apply(ArresteeSegment arresteeSegment) {
+//				NIBRSError e = null;
+//				
+//				char reportActionType = arresteeSegment.getReportActionType();
+//				
+//				NIBRSAge arresteeAge = arresteeSegment.getAge();
+//				
+//				if ('D' != reportActionType && arresteeAge != null && Integer.valueOf(99).equals(arresteeAge.getAgeMin())) {
+//					e = arresteeSegment.getErrorTemplate();
+//					e.setNIBRSErrorCode(isGroupAMode() ? NIBRSErrorCode._641 : NIBRSErrorCode._741);
+//					e.setDataElementIdentifier("47");
+//					e.setValue("99");
+//				}
+//				return e;
+//			}
+//		};
+//	}
 	
 	/**
 	 * Rule 640 and 740 for DE52 are removed in spec v3-1.  Not adding this to the rule list. 
 	 * @return
 	 */
-	Rule<ArresteeSegment> getRuleX40() {
-		return new Rule<ArresteeSegment>() {
-			@Override
-			public NIBRSError apply(ArresteeSegment arresteeSegment) {
-				NIBRSError e = null;
-				
-				char reportActionType = arresteeSegment.getReportActionType();
-				
-				if ('D' != reportActionType && arresteeSegment.isJuvenile() && arresteeSegment.getDispositionOfArresteeUnder18() == null) {
-					e = arresteeSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(isGroupAMode() ? NIBRSErrorCode._640 : NIBRSErrorCode._740);
-					e.setDataElementIdentifier("52");
-				}
-				return e;
-			}
-
-		};
-	}
+//	Rule<ArresteeSegment> getRuleX40() {
+//		return new Rule<ArresteeSegment>() {
+//			@Override
+//			public NIBRSError apply(ArresteeSegment arresteeSegment) {
+//				NIBRSError e = null;
+//				
+//				char reportActionType = arresteeSegment.getReportActionType();
+//				
+//				if ('D' != reportActionType && arresteeSegment.isJuvenile() && arresteeSegment.getDispositionOfArresteeUnder18() == null) {
+//					e = arresteeSegment.getErrorTemplate();
+//					e.setNIBRSErrorCode(isGroupAMode() ? NIBRSErrorCode._640 : NIBRSErrorCode._740);
+//					e.setDataElementIdentifier("52");
+//				}
+//				return e;
+//			}
+//
+//		};
+//	}
 	
 	Rule<ArresteeSegment> getRuleX20() {
 		return new Rule<ArresteeSegment>() {
@@ -458,7 +436,7 @@ public class ArresteeSegmentRulesFactory {
 				
 				if ('D' != reportActionType && arresteeSegment.isJuvenile() && arresteeSegment.getDispositionOfArresteeUnder18() == null) {
 					e = arresteeSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(isGroupAMode() ? NIBRSErrorCode._640 : NIBRSErrorCode._740);
+					e.setNIBRSErrorCode(isGroupAMode() ? NIBRSErrorCode._1640 : NIBRSErrorCode._740);
 					e.setDataElementIdentifier("52");
 				}
 				return e;

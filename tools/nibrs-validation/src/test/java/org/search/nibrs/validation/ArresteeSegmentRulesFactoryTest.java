@@ -484,35 +484,6 @@ public class ArresteeSegmentRulesFactoryTest {
 	}
 	
 	@Test
-	public void testRule761() {
-		Rule<ArresteeSegment> rule = groupARulesFactory.getRule761();
-		ArresteeSegment arresteeSegment = buildBaseGroupASegment();
-		NIBRSError nibrsError = rule.apply(arresteeSegment);
-		assertNull(nibrsError);
-		rule = groupBRulesFactory.getRule761();
-		arresteeSegment = buildBaseGroupBSegment();
-		nibrsError = rule.apply(arresteeSegment);
-		assertNull(nibrsError);
-		arresteeSegment.setUcrArrestOffenseCode(OffenseCode._90A.code);
-		arresteeSegment.setAge(NIBRSAge.getAge(22, null));
-		nibrsError = rule.apply(arresteeSegment);
-		assertNull(nibrsError);
-		arresteeSegment.setUcrArrestOffenseCode(OffenseCode._90I.code);
-		arresteeSegment.setAge(NIBRSAge.getAge(16, null));
-		nibrsError = rule.apply(arresteeSegment);
-		assertNull(nibrsError);
-		arresteeSegment.setAge(NIBRSAge.getAge(16, 22));
-		nibrsError = rule.apply(arresteeSegment);
-		assertNull(nibrsError);
-		arresteeSegment.setAge(NIBRSAge.getAge(22, null));
-		nibrsError = rule.apply(arresteeSegment);
-		assertNotNull(nibrsError);
-		assertEquals(NIBRSErrorCode._761, nibrsError.getNIBRSErrorCode());
-		assertEquals("47", nibrsError.getDataElementIdentifier());
-		assertEquals(arresteeSegment.getAge(), nibrsError.getValue());
-	}
-	
-	@Test
 	public void testRuleX01ForSex() {
 		// nothing to do here.  this rule is amply tested for victim and offender.
 	}

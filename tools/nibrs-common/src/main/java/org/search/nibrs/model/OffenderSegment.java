@@ -102,5 +102,5 @@ public class OffenderSegment extends AbstractPersonSegment
 				&& getSex() != null && SexCode.knownCodeSet().contains(getSex()) 
 				&& getAge() != null && !getAge().isUnknown();
 	}
-	
+
 }

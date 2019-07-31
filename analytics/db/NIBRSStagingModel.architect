@@ -681,13 +681,13 @@
     <column id="COL197" populated="true" UUID="be66fdfc-1a72-4ac6-9a67-f625f7ede854" autoIncrement="false" autoIncrementSequenceName="OffenderSuspectedOfUsingType_OffenderSuspectedOfUsingType_seq" defaultValue="" name="StateCode" nullable="0" physicalName="StateCode" precision="1" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL198" populated="true" UUID="5c6a548f-1404-4fac-918f-f6dcf6907398" autoIncrement="false" autoIncrementSequenceName="OffenderSuspectedOfUsingType_StateDescription_seq" defaultValue="" name="StateDescription" nullable="0" physicalName="StateDescription" precision="20" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL198" populated="true" UUID="5c6a548f-1404-4fac-918f-f6dcf6907398" autoIncrement="false" autoIncrementSequenceName="OffenderSuspectedOfUsingType_StateDescription_seq" defaultValue="" name="StateDescription" nullable="0" physicalName="StateDescription" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
     <column id="COL199" populated="true" UUID="09cd5028-b9f2-4c17-869b-c48e56b842be" autoIncrement="false" autoIncrementSequenceName="OffenderSuspectedOfUsingType_OffenderSuspectedOfUsingType_seq_1" defaultValue="" name="NIBRSCode" nullable="0" physicalName="NIBRSCode" precision="1" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL200" populated="true" UUID="d93bb994-dff7-4244-8941-13a79a3b2d7a" autoIncrement="false" autoIncrementSequenceName="OffenderSuspectedOfUsingType_NIBRSDescription_seq" defaultValue="" name="NIBRSDescription" nullable="0" physicalName="NIBRSDescription" precision="20" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL200" populated="true" UUID="d93bb994-dff7-4244-8941-13a79a3b2d7a" autoIncrement="false" autoIncrementSequenceName="OffenderSuspectedOfUsingType_NIBRSDescription_seq" defaultValue="" name="NIBRSDescription" nullable="0" physicalName="NIBRSDescription" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
     </folder>
@@ -1750,13 +1750,13 @@
     <column id="COL495" populated="true" UUID="a60d561a-606a-4b90-9172-356361c1d466" autoIncrement="false" autoIncrementSequenceName="PropertyDescriptionType_StateCode_seq_20" defaultValue="" name="StateCode" nullable="0" physicalName="StateCode" precision="1" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL496" populated="true" UUID="16629be3-210d-4d4a-800c-d3e0a387a09d" autoIncrement="false" autoIncrementSequenceName="PropertyDescriptionType_StateDescription_seq_20" defaultValue="" name="StateDescription" nullable="0" physicalName="StateDescription" precision="7" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL496" populated="true" UUID="16629be3-210d-4d4a-800c-d3e0a387a09d" autoIncrement="false" autoIncrementSequenceName="PropertyDescriptionType_StateDescription_seq_20" defaultValue="" name="StateDescription" nullable="0" physicalName="StateDescription" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
     <column id="COL497" populated="true" UUID="b5021f94-da4b-45e3-8188-c4df608b7988" autoIncrement="false" autoIncrementSequenceName="PropertyDescriptionType_NIBRSCode_seq_20" defaultValue="" name="NIBRSCode" nullable="0" physicalName="NIBRSCode" precision="1" referenceCount="1" scale="0" source-column-ref="COL238" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL498" populated="true" UUID="3ec1ae4f-70fd-48c4-bab1-d57aba005776" autoIncrement="false" autoIncrementSequenceName="PropertyDescriptionType_NIBRSDescription_seq_20" defaultValue="" name="NIBRSDescription" nullable="0" physicalName="NIBRSDescription" precision="7" referenceCount="1" scale="0" source-column-ref="COL239" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL498" populated="true" UUID="3ec1ae4f-70fd-48c4-bab1-d57aba005776" autoIncrement="false" autoIncrementSequenceName="PropertyDescriptionType_NIBRSDescription_seq_20" defaultValue="" name="NIBRSDescription" nullable="0" physicalName="NIBRSDescription" precision="50" referenceCount="1" scale="0" source-column-ref="COL239" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
     </folder>
@@ -2115,7 +2115,7 @@
  <ddl-generator type="ca.sqlpower.architect.ddl.H2DDLGenerator" allow-connection="true"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="true" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
- <play-pen zoom="1.0" viewportX="1028" viewportY="221" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+ <play-pen zoom="1.0" viewportX="0" viewportY="1107" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
   <table-pane table-ref="TAB1" x="1162" y="756" bgColor="0xbfd6ff" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB22" x="2040" y="1264" bgColor="0xdfedce" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB29" x="1131" y="376" bgColor="0xbfd6ff" fgColor="0x000000" rounded="false" dashed="false"/>

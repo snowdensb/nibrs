@@ -677,7 +677,7 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 					e.setReportUniqueIdentifier(incident.getIncidentNumber());
 					e.setSegmentType(segmentType);
 					e.setValue(sequenceNumberString);
-					e.setNIBRSErrorCode(NIBRSErrorCode._301);
+					e.setNIBRSErrorCode(NIBRSErrorCode._501);
 					e.setDataElementIdentifier("36");
 					errorList.add(e);
 					sequenceNumber.setInvalid(true);
@@ -717,6 +717,13 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 			if (sequenceNumberString == null) {
 				sequenceNumber.setMissing(true);
 				sequenceNumber.setValue(null);
+				NIBRSError e = new NIBRSError();
+				e.setContext(reportSource);
+				e.setReportUniqueIdentifier(incident.getIncidentNumber());
+				e.setSegmentType(segmentType);
+				e.setNIBRSErrorCode(NIBRSErrorCode._401);
+				e.setDataElementIdentifier("23");
+				errorList.add(e);
 			} else {
 				try {
 					sequenceNumberI = Integer.parseInt(sequenceNumberString);
@@ -727,7 +734,7 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 					e.setReportUniqueIdentifier(incident.getIncidentNumber());
 					e.setSegmentType(segmentType);
 					e.setValue(sequenceNumberString);
-					e.setNIBRSErrorCode(NIBRSErrorCode._401);
+					e.setNIBRSErrorCode(NIBRSErrorCode._402);
 					e.setDataElementIdentifier("23");
 					errorList.add(e);
 					sequenceNumber.setInvalid(true);

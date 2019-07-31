@@ -18,14 +18,6 @@ package org.search.nibrs.model.codes;
 public enum NIBRSErrorCode {
 
 
-	_015("015","Structure Check","CANNOT HAVE EMBEDDED BLANKS BETWEEN FIRST AND LAST NON-BLANK CHARACTERS","Zero-Reporting Segment (Level 0). Although Data Element 2 (Incident Number) should be entered with 12 zeros, a pre-edit found embedded blanks between the first and last significant characters."),
-/**
- * 016 not implemented
- */
-	_016("016","Structure Check","MUST BE LEFT-JUSTIFIED— BLANK DETECTED IN FIRST POSITION","Zero-Reporting Segment (Level 0). Although Data Element 2 (Incident Number) should be entered with 12 zeros, a pre-edit found a blank in the first position. It must begin in position 1 and must also contain 12 zeros."),
-/**
- * 017 not implemented
- */	
 /**
  * 028, 029 cannot be implemented	
  */
@@ -82,7 +74,7 @@ public enum NIBRSErrorCode {
  */
 	_091("091","Structure Check","ZERO-REPORTING YEAR IS INVALID","A Segment Level 0 was submitted that did not have four numeric digits in positions 40 through 43."),
 	_099("099","Structure Check","GROUP B ARREST REPORT CAN HAVE ONLY ONE ARRESTEE","Only one arrestee can be reported in a group B arrest report."),
-	_101("101","Admin Segment","MANDATORY FIELDS MISSING IN ADMIN SEGMENT","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
+	_101("101","Admin Segment","MUST BE PRESENT— MANDATORY FIELD","The referenced data element in a Group A Incident Report must contain data when the referenced data element is mandatory or when the conditions are met for data that must be entered into a conditionally mandatory field."),
 	_104("104","Admin Segment","INVALID DATA VALUE—NOT ON FBI VALIDATION TABLE","The referenced data element must contain a valid data value when it is entered."),
 	_105("105","Admin Segment","INVALID DATA VALUE FOR DATE","The data element in error contains a date that is not entered correctly. Each component of the date must be valid; that is, months must be 01 through 12, days must be 01 through 31, and year must include the century (i.e., 19xx, 20xx). In addition, days cannot exceed maximum for the month (e.g., June cannot have 31days). Also, the date cannot exceed the current date."),
 	_106("106","Admin Segment","INVALID DATA VALUE FOR HOUR","For Offenses of 09A, 13A, 13B and 13C ONLY–When data element 25 (Type of Victim) = L (Law Enforcement Officer) then Data Element 3 (Incident Date/Hour) must be populated with a valid hour (00-23). Incident Hour Unknown (Blank) is not a valid entry."),
@@ -96,8 +88,8 @@ public enum NIBRSErrorCode {
  * 118 cannot be validated	
  */
 	_118("118","Admin Segment","DATE CANNOT BE ON OR AFTER THE INACTIVE DATE [yyyymmdd] OF THE ORI","The UCR Program has determined that an ORI will no longer be submitting data to the FBI as of an inactive date. No data from this ORI will be accepted after this date."),
-	_119("119","Admin Segment","CARGO THEFT DATA CAN ONLY BE SUBMITTED FOR SPECIFIC OFFENSES","Data Element 2A (Cargo Theft) must be populated with a valid data value when Data Element 6 (UCR Offense Code) contains a Cargo Theft- related offense."),
-	_122("122","Admin Segment","INCIDENT MUST INCLUDE AT LEAST ONE CARGO THEFT OFFENSE","Data Element 2A (Cargo Theft) can be Y=Yes only when Data Element 6 (UCR Offense Code) includes at least one of the following: 120=Robbery 210=Extortion/Blackmail 220=Burglary/Breaking & Entering 23D=Theft From Building 23F=Theft From Motor Vehicle 24H=All Other Larceny 240=Motor Vehicle Theft 26A=False Pretenses/Swindle/Confidence Game 26B=Credit Card/Automated Teller Machine Fraud 26C=Impersonation 26E=Wire Fraud 270=Embezzlement 510=Bribery"),
+	_119("119","Admin Segment","CARGO THEFT DATA CAN ONLY BE SUBMITTED FOR SPECIFIC OFFENSES","Data Element 2A (Cargo Theft) must be blank, unless Data Element 6 (UCR Offense Code) includes at least one of the following:120=Robbery 210=Extortion/Blackmail 220=Burglary/Breaking & Entering 23D=Theft From Building 23F=Theft From Motor Vehicle 24H=All Other Larceny 240=Motor Vehicle Theft 26A=False Pretenses/Swindle/Confidence Game 26B=Credit Card/Automated Teller Machine Fraud 26C=Impersonation 26E=Wire Fraud 26F = Identity Theft 26G = Hacking/Computer Invasion 270=Embezzlement 510=Bribery"),
+	_122("122","Admin Segment","CARGO THEFT VALUE REQUIRED WITH SPECIFIC OFFENSES","Data Element 2A (Cargo Theft) must be populated with a Y = Yes or N = No when Data Element 6 (UCR Offense Code) includes at least one of the following: 120=Robbery 210=Extortion/Blackmail 220=Burglary/Breaking & Entering 23D=Theft From Building 23F=Theft From Motor Vehicle 24H=All Other Larceny 240=Motor Vehicle Theft 26A=False Pretenses/Swindle/Confidence Game 26B=Credit Card/Automated Teller Machine Fraud 26C=Impersonation 26E=Wire Fraud 26F = Identity Theft 26G = Hacking/Computer Invasion 270=Embezzlement 510=Bribery"),
 /**
  * 151 not implemented	
  */
@@ -120,9 +112,6 @@ public enum NIBRSErrorCode {
  * 175 not implemented	
  */
 	_175("175","Admin Segment","CANNOT CALCULATE BASE DATE FROM INCIDENT DATE [yyymmdd]","The electronic submission control date (positions 7 through 12, month and year) and Data Element 3 (Incident Date/Hour) must both be valid dates for calculating timeframes."),
-/**
- * 178 not implemented	
- */
 	_178("178","Admin Segment","THIS ADMINISTRATIVE SEGMENT HAS A CONFLICTING LENGTH","Segment Length for the Administrative Segment (Level 1) must be 87 characters (not reporting Cargo Theft) or 88 characters (reporting Cargo Theft). All Administrative Segments in a submission must be formatted in only one of these two lengths."),
 /**
  * 197 not implemented	
@@ -139,10 +128,10 @@ public enum NIBRSErrorCode {
  * 202 not implemented	
  */
 	_202("202","Offense Segment","CONTAINS NONNUMERIC ENTRY","Data Element 10 (Number of Premises Entered) is not a numeric entry of 01 through 99."),
-	_204("204","Offense Segment","INVALID DATA VALUE","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
+	_204("204","Offense Segment","INVALID DATA VALUE","The referenced data element must contain a valid data value when it is entered; blank is permissible on non-mandatory fields."),
 	_205("205","Offense Segment","ERROR–INVALID OFFENSE CODE FOR LOCATION TYPE CYBERSPACE","Data Element 9 (Location Type)=Cyberspace Can only be entered when Data Element 6 Offense Code is one of the violations listed below: 210=Extortion/Blackmail 250=Counterfeiting/Forgery 270=Embezzlement 280=Stolen Property Offenses 290=Destruction/Damage/Vandalism of Property 370=Pornography/Obscene Material 510=Bribery 26A =False Pretenses/Swindle/Confidence Game 26B =Credit Card/Automated Teller Machine Fraud 26C =Impersonation 26D =Welfare Fraud 26E =Wire Fraud 26F =Identity Theft 26G =Hacking/Computer Invasion 9A =Betting/Wagering 39B =Operating/Promoting/Assisting Gambling 39D =Gambling Equipment Violations 13C =Intimidation 35A =Drug/Narcotic Violations 35B =Drug Equipment Violations 520=Weapon Law Violations 64A =Human Trafficking, Commercial Sex Acts 64B =Human Trafficking, Involuntary Servitude 40A =Prostitution 40B =Assisting or Promoting Prostitution 40C =Purchasing Prostitution"),
 	_206("206","Offense Segment","ERROR - DUPLICATE VALUE=[value]","The referenced data element in error is one that contains multiple data values. When more than one code is entered, none can be duplicate codes."),
-	_207("207","Offense Segment","ERROR - MUTUALLY EXCLUSIVE VALUE=[value]","The data element in error can have multiple data values and was entered with multiple values. However, the entry shown cannot be entered with any other data value. Value N=None/Unknown is mutually exclusive with any other information codes."),
+	_207("207","Offense Segment","ERROR - MUTUALLY EXCLUSIVE VALUE=[value]","The data element in error can have multiple data values and was entered with multiple values. However, mutually exclusive values cannot be entered with any other data value. Refer to individual data elements for mutually exclusive data values."),
 /**
  * 215 not implemented	
  */
@@ -158,9 +147,6 @@ public enum NIBRSErrorCode {
 	_219("219","Offense Segment","DATA CAN ONLY BE ENTERED FOR SPECIFIC OFFENSES","Data Element 12 (Type Criminal Activity/Gang Information) Type criminal activity codes of 'B', 'C', 'D', 'E', 'O', 'P', 'T', or 'U'can only be entered when the UCR Offense Code is: 250=Counterfeiting/Forgery 280=Stolen Property Offenses 35A=Drug/Narcotic Violations 35B=Drug Equipment Violations 39C=Gambling Equipment Violations 370=Pornography/Obscene Material 520=Weapon Law Violations (Type Criminal Activity/Gang Information) Gang information codes of 'J', 'G', and 'N'can only be entered when the UCR Offense Code is:09A=Murder and Non-negligent Manslaughter 09B=Negligent Manslaughter 100=Kidnapping/Abduction 11A=Rape 11B=Sodomy 11C=Sexual Assault With An Object 11D=Fondling 120=Robbery 13A=Aggravated Assault 13B=Simple Assault 13C=Intimidation (Type Criminal Activity/Gang Information) Criminal Activity codes of 'A', 'F', 'I', and 'S'can only be entered when the UCR Offense Code is: 720=Animal Cruelty"),
 	_220("220","Offense Segment","DATA MUST BE ENTERED FOR SPECIFIC OFFENSES","Data Element 12 (Type Criminal Activity/Gang Information) Must be populated with a valid data value and cannot be blank when Data Element 6 (UCR Offense Code) is: 250=Counterfeiting/Forgery 280=Stolen Property Offenses 35A=Drug/Narcotic Violations 35B=Drug Equipment Violations 39C=Gambling Equipment Violations 370=Pornography/Obscene Material 520=Weapon Law Violations 720=Animal Cruelty"),
 	_221("221","Offense Segment","DATA MUST BE ENTERED FOR SPECIFIC OFFENSES","Data Element 13 (Type Weapon/Force Involved) must be populated with a valid data value and cannot be blank when Data Element 6 (UCR Offense Code) is: 09A=Murder and Non-negligent Manslaughter 09B=Negligent Manslaughter 09C=Justifiable Homicide 100=Kidnapping/Abduction 11A=Rape 11B=Sodomy 11C=Sexual Assault With An Object 11D=Fondling 120=Robbery 13A=Aggravated Assault 13B=Simple Assault 210=Extortion/Blackmail 520=Weapon Law Violations 64A=Human Trafficking, Commercial Sex Acts 64B=Human Trafficking, Involuntary Servitude"),
-/**
- * 222 new in 3.1	
- */
 	_222("222","Offense Segment","DATA CAN ONLY BE BE ENTERED FOR SPECIFIC OFFENSES","Data Element 13 (Type Weapon/Force Involved) must be populated with a valid data value and cannot be blank when Data Element 6 (UCR Offense Code) is: 09A=Murder and Non-negligent Manslaughter 09B=Negligent Manslaughter 09C=Justifiable Homicide 100=Kidnapping/Abduction 11A=Rape 11B=Sodomy 11C=Sexual Assault With An Object 11D=Fondling 120=Robbery 13A=Aggravated Assault 13B=Simple Assault 210=Extortion/Blackmail 520=Weapon Law Violations 64A=Human Trafficking, Commercial Sex Acts 64B=Human Trafficking, Involuntary Servitude"),
 	_251("251","Offense Segment","INVALID CODE","(Offense Attempted/Completed) Must be a valid code of A=Attempted or C=Completed."),
 	_252("252","Offense Segment","OFFENSE CODE MUST BE 220 WITH A LOCATION TYPE OF 14 OR 19 FOR DATA TO BE ENTERED","When Data Element 10 (Number of Premises Entered) is entered, Data Element 9 (Location Type) must be 14=Hotel/Motel/Etc. or 19=Rental Storage Facility, and Data Element 6 (UCR Offense Code) must be 220 (Burglary)."),
@@ -179,9 +165,6 @@ public enum NIBRSErrorCode {
 	_268("268","Offense Segment","A LARCENY OFFENSE CANNOT HAVE A MOTOR VEHICLE PROPERTY DESCRIPTION ENTERED","Cannot be submitted with a data value for a motor vehicle in Data Element 15 (Property Description) when Data Element 6 (UCR Offense Code) contains an offense of (23A–23H)=Larceny/Theft Offenses; stolen vehicles cannot be reported for a larceny"),
 	_269("269","Offense Segment","POSSIBLE CLASSIFICATION ERROR OF AGGRAVATED ASSAULT 13A CODED AS SIMPLE 13B","If Data Element 6 (UCR Offense Code) is 13B=Simple Assault and the weapon involved is 11=Firearm, 12=Handgun, 13=Rifle, 14=Shotgun, or 15=Other Firearm, then the offense should instead be classified as 13A=Aggravated Assault."),
 	_270("270","Offense Segment","JUSTIFIABLE HOMICIDE MUST BE CODED AS NON-BIAS MOTIVATED","Must be 88=None when Data Element 6 (UCR Offense Code) is 09C=Justifiable Homicide."),
-/**
- * 284 not implemented	
- */
 	_284("284","Offense Segment","THIS OFFENSE SEGMENT HAS A CONFLICTING LENGTH","Segment Length for the Offense Segment (Level 2) must be 63 characters (reporting only Bias Motivation #1) or 71 characters (reporting Bias Motivations #2–#5). All Offense Segments in a submission must be formatted in only one of these two lengths."),
 	_301("301","Property Segment","MUST BE PRESENT— MANDATORY FIELD","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
 /**
@@ -227,31 +210,19 @@ public enum NIBRSErrorCode {
 	_366("366","Property Segment","WITH DATA ENTERED BOTH TYPE (20) AND MEASUREMENT (22) MUST BE PRESENT","Data Element 21 (Estimated Quantity) was entered, but 20 (Suspected Drug Type) and/or 22 (Type Measurement) were not entered; both must be entered."),
 	_367("367","Property Segment","DRUG TYPE MUST BE 'E', 'G', OR 'K' FOR A VALUE OF 'NP'","Data Element 22 (Type Measurement) was entered with NP in combination with an illogical drug type. Based upon the various ways a drug can be measured, very few edits can be done to check for illogical combinations of drug type and measurement. The only restriction will be to limit NP=Number of Plants to the following drugs: DRUG MEASUREMENT E=Marijuana NP G=Opium NP K=Other Hallucinogens NP All other Data Element 22 (Type Measurement) codes are applicable to any Data Element 20 (Suspected Drug Type) code."),
 	_368("368","Property Segment","WITH DATA ENTERED BOTH TYPE (20) AND QUANTITY (21) MUST BE PRESENT","Data Element 22 (Type Measurement) was entered, but 20 (Suspected Drug Type) and/or 21 (Estimated Quantity) were not entered; both must be entered."),
-/**
- * 372 not implemented
- */
 	_372("372","Property Segment","DATA ELEMENTS 15-22 WERE ALL BLANK WITH THIS PROPERTY LOSS CODE","If Data Element 14 (Type Property/Loss/Etc.) is 2=Burned, 3=Counterfeited/ Forged, 4=Destroyed/Damaged/Vandalized, 5=Recovered, 6=Seized, or 7=Stolen/Etc., Data Elements 15 through 22 must have applicable entries in the segment."),
 	_375("375","Property Segment","MANDATORY FIELD WITH THE PROPERTY LOSS CODE ENTERED","At least one Data Element 15 (Property Description) code must be entered when Data Element 14 (Type Property Loss/Etc.) contains Property Segment(s) for: 2=Burned 3=Counterfeited/Forged 4=Destroyed/Damaged/Vandalized 5=Recovered 6=Seized 7=Stolen/Etc."),
 	_376("376","Property Segment","DUPLICATE PROPERTY SEGMENT ON ELECTRONIC SUBMISSION (TYPE LOSS=[loss- code])","When a Group 'A' Incident Report is submitted, the individual segments comprising the incident cannot contain duplicates. Example, two property segments cannot be submitted having the same entry in Data Element 14 (Type Property Loss/Etc.)."),
 	_382("382","Property Segment","DRUG/NARCOTIC VIOLATIONS OFFENSE MUST BE SUBMITTED FOR SEIZED DRUGS","Segment Level 3 (Property Segment) cannot be submitted with 10=Drugs/Narcotics in Data Element 15 (Property Description) and blanks in Data Element 16 (Value of Property) unless Data Element 6 (UCR Offense Code) is 35A=Drug/Narcotic Violations."),
-/**
- * 383 not implemented
- */
 	_383("383","Property Segment","PROPERTY VALUE MUST BE BLANK FOR 35A (SINGLE OFFENSE)","Data Element 16 (Value of Property) has a value other than zero entered. Since Data Element 15 (Property Description) code is 10=Drugs/Narcotics and the only Crime Against Property offense submitted is a 35A=Drug/Narcotic Violations, Data Element 16 (Value of Property) must be blank."),
 	_384("384","Property Segment","DRUG QUANTITY MUST BE NONE WHEN DRUG MEASUREMENT IS NOT REPORTED","Data Element 21 (Estimated Drug Quantity) must be 000000001000=None (i.e., 1) when Data Element 22 (Type Drug Measurement) is XX=Not Reported indicating the drugs were sent to a laboratory for analysis. When the drug analysis is received by the LEA, Data Element 21 and Data Element 22 should be updated with the correct data values."),
 	_387("387","Property Segment","WITH A PROPERTY LOSS=6 AND ONLY OFFENSE 35A CANNOT HAVE DESCRIPTION 11 or WITH A PROPERTY LOSS=6 AND ONLY OFFENSE 35B CANNOT HAVE DESCRIPTION 10","To ensure that 35A-35B Drug/Narcotic Offenses- Drug Equipment Violations are properly reported, Data Element 15 (Property Description) of 11=Drug/Narcotic Equipment is not allowed with only a 35A Drug/Narcotic Violation. Similarly, 10=Drugs/Narcotics is not allowed with only a 35B Drug Equipment Violation. And Data Element 14 (Type Property Loss/Etc.) is 6=Seized."),
 	_388("388","Property Segment","NUMBER STOLEN IS LESS THAN NUMBER OF VEHICLE CODES","More than one vehicle code was entered in Data Element 15 (Property Description), but the number stolen in Data Element 18 (Number of Stolen Motor Vehicles) is less than this number. For example, if vehicle codes of 03=Automobiles and 05=Buses were entered as being stolen, then the number stolen must be at least 2, unless the number stolen was unknown (00). The exception to this rule is when 00=Unknown is entered in Data Element 18."),
-/**
- * 389 not implemented	
- */
 	_389("389","Property Segment","NUMBER RECOVERED IS LESS THAN NUMBER OF VEHICLE CODES","More than one vehicle code was entered in Data Element 15 (Property Description), but the number recovered in Data Element 19 (Number of Recovered Motor Vehicles) was less than this number. For example, if vehicle codes of 03=Automobiles and 05=Buses were entered as being recovered, then the number recovered must be at least 2, unless the number recovered was unknown (00). The exception to this rule is when 00=Unknown is entered in Data Element 18."),
 	_390("390","Property Segment","ILLOGICAL PROPERTY DESCRIPTION FOR THE OFFENSE SUBMITTED","Data Element 15 (Property Description) must contain a data value that is logical for one or more of the offenses entered in Data Element 6 (UCR Offense Code). Illogical combinations include: 1) Property descriptions for structures are illogical with 220=Burglary/Breaking & Entering or 240=Motor Vehicle Theft 2) Property descriptions for items that would not fit in a purse or pocket (aircraft, vehicles, structures, a person's identity, watercraft, etc.) are illogical with 23A=Pocket-picking or 23B=Purse- snatching 3) Property descriptions that cannot be shoplifted due to other UCR definitions (aircraft, vehicles, structures, a person's identity, watercraft, etc.) are illogical with 23C=Shoplifting 4) Property descriptions for vehicles and structures are illogical with 23D=Theft from Building, 23E=Theft from Coin-Operated Machine or Device, 23F=Theft from Motor Vehicle, and 23G=Theft of Motor Vehicle Parts or Accessories Property descriptions for vehicles are illogical with 23H=All Other Larceny"),
 	_391("391","Property Segment","PROPERTY VALUE MUST BE ZERO FOR DESCRIPTION SUBMITTED","Data Element 15 (Property Description) has a code that requires a zero value in Data Element 16 (Value of Property). Either the wrong property description code was entered or the property value was not entered. (This error was formerly error number 340, a warning message.) Data Element 16 (Value of Property) must be zero when Data Element 15 (Property Description) is: 09=Credit/Debit Cards 22=Nonnegotiable Instruments 48=Documents–Personal or Business 65=Identity Documents 66=Identity–Intangible"),
 	_392("392","Property Segment","35A OFFENSE ENTERED AND 1=NONE ENTERED; MISSING SUSPECTED DRUG TYPE (20)","An offense of 35A Drug/Narcotic Violations and Data Element 14 (Type Property Loss/Etc.) with1=None were entered but Data Element 20 (Suspected Drug Type) was not submitted. Since a drug"),
 	_401("401","Victim Segment","MUST BE PRESENT -- MANDATORY FIELD","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
-/**
- * 402 not implemented
- */
 	_402("402","Victim Segment","CONTAINS NONNUMERIC DIGITS","Must contain numeric entry with zero left-fill."),
 	_404("404","Victim Segment","INVALID DATA VALUE","The referenced data element must contain a valid data value when it is entered; blank is permissible on non-mandatory fields."),
 	_406("406","Victim Segment","NCA07: DUPLICATE VALUE=[value]","The referenced data element in error is one that contains multiple data values. When more than one code is entered, none can be duplicate codes."),
@@ -316,9 +287,6 @@ public enum NIBRSErrorCode {
 	_481("481","Victim Segment","VICTIM'S AGE MUST BE LESS THAN 18 FOR STATUTORY RAPE (36B)","Data Element 26 (Age of Victim) should be under 18 when Data Element 24 (Victim Connected to UCR Offense Code) is 36B=Statutory Rape."),
 	_482("482","Victim Segment","LEOKA VICTIM MUST BE CONNECTED TO MURDER OR ASSAULT OFFENSE","Data Element 25 (Type of Victim) cannot be L=Law Enforcement Officer unless Data Element 24 (Victim Connected to UCR Offense Code) is one of the following: 09A=Murder & Non-negligent Manslaughter 13A=Aggravated Assault 13B=Simple Assault 13C=Intimidation"),
 	_483("483","Victim Segment","VICTIM MUST BE LAW ENFORCEMENT OFFICER TO ENTER LEOKA DATA","Data Element 25A (Type of Officer Activity/Circumstance), Data Element 25B (Officer Assignment Type), Data Element 25C (Officer–ORI Other Jurisdiction), Data Element 26 (Age of Victim), Data Element 27 (Sex of Victim), Data Element 28 (Race of Victim), Data Element 29 (Ethnicity of Victim), Data Element 30 (Resident Status of Victim), and Data Element 34 (Offender Number to be Related) can only be entered when Data Element 25 (Type of Victim) is I=Individual or L=Law Enforcement Officer."),
-/**
- * 484 not implemented	
- */
 	_484("484","Victim Segment","THIS VICTIM SEGMENT HAS A CONFLICTING LENGTH","Segment Length for the Victim Segment (Level 4) must be 129 characters (not reporting LEOKA) or 141 characters (reporting LEOKA). All Victim Segments in a submission must be formatted in only one of these two lengths."),
 /**
  * 490 not implemented	
@@ -372,9 +340,6 @@ public enum NIBRSErrorCode {
  * 572 not in 3.1	
  */
 	_572("572","Offender Segment","RELATIONSHIP UNKNOWN IF OFFENDER INFO MISSING","Data Element 37 (Age of Offender) If Data Element 37 (Age of Offender) is 00=Unknown, Data Element 38 (Sex of Offender) is U=Unknown, and Data Element 39 (Race of Offender) is U=Unknown then Data Element 35 (Relationship of Victim to Offender) must be RU=Relationship Unknown."),
-/**
- * 584 not implemented	
- */
 	_584("584","Offender Segment","THIS OFFENDER SEGMENT HAS A CONFLICTING LENGTH","Segment Length for the Offender Segment (Level 5) must be 45 characters (not reporting Offender Ethnicity) or 46 characters (reporting Offender Ethnicity). All Offender Segments in a submission must be formatted in only one of these two lengths."),
 	_601("601","Arrestee Segment","MUST BE PRESENT— MANDATORY FIELD","The referenced data element in a Group A Incident Report must be populated with a valid data value and cannot be blank."),
 /**
@@ -409,8 +374,8 @@ public enum NIBRSErrorCode {
 /**
  * 640 not in 3.1	
  */
-	_640("640","Arrestee Segment","WARNING–NO DISPOSITION FOR POSSIBLE JUVENILE ARRESTEE","Data Element 52 (Disposition of Arrestee Under 18) was not entered, but Data Element 47 (Age of Arrestee) indicates an age-range for a juvenile. The low age is a juvenile and the high age is an adult, but the average age is a juvenile. Note: When an age-range is not entered and the age is a juvenile, then the disposition must be entered. These circumstances were flagged by the computer as a possible discrepancy between age and disposition and should be checked for possible correction by the participant."),
-	_641("641","Arrestee Segment","WARNING - ARRESTEE HAD AN AGE OF 99 OR OLDER","Data Element 47 (Age of Arrestee) was entered with a value of 99 which means the arrestee was over 98 years old. Verify that the submitter of data is not confusing the 99=Over 98 Years Old with 00=Unknown."),
+	_1640("640","Arrestee Segment","WARNING–NO DISPOSITION FOR POSSIBLE JUVENILE ARRESTEE","Data Element 52 (Disposition of Arrestee Under 18) was not entered, but Data Element 47 (Age of Arrestee) indicates an age-range for a juvenile. The low age is a juvenile and the high age is an adult, but the average age is a juvenile. Note: When an age-range is not entered and the age is a juvenile, then the disposition must be entered. These circumstances were flagged by the computer as a possible discrepancy between age and disposition and should be checked for possible correction by the participant."),
+	_1641("641","Arrestee Segment","WARNING - ARRESTEE HAD AN AGE OF 99 OR OLDER","Data Element 47 (Age of Arrestee) was entered with a value of 99 which means the arrestee was over 98 years old. Verify that the submitter of data is not confusing the 99=Over 98 Years Old with 00=Unknown."),
 	_652("652","Arrestee Segment","DISPOSITION MUST BE ENTERED WHEN AGE IS LESS THAN 18","Data Element 52 (Disposition of Juvenile) was not entered, but Data Element 47 (Age of Arrestee) is under 18. Whenever an arrestee's age indicates a juvenile, the disposition must be entered."),
 	_653("653","Arrestee Segment","FOR AGE GREATER THAN 17 DISPOSITION SHOULD NOT BE ENTERED","Data Element 52 (Disposition of Juvenile) was entered, but Data Element 47 (Age of Arrestee) is 18 or greater. Whenever an arrestee's age indicates an adult, the juvenile disposition cannot be entered because it does not apply."),
 	_654("654","Arrestee Segment","AUTOMATIC INDICATOR MUST BE BLANK OR 'A'","Data Element 46 (Arrestee Was Armed With) does not have A=Automatic or a blank in the third position of field."),

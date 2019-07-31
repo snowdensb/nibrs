@@ -420,7 +420,12 @@ public class VictimSegment extends AbstractPersonSegment {
 				&& containOffenses 
 				&& containsOnlyCrimeAgainstSocietyOffenses;
 	}
-	
+
+	public boolean isAggravatedAssaultHomicideCircumstancesMandatory() {
+		return this.getUcrOffenseCodeList()
+				.stream()
+				.anyMatch(OffenseCode::isAggravatedAssaultHomicideCircumstancesOffense);
+	}
 	/**
 	 * Victim segments cannot represent unknown entities in NIBRS.
 	 */

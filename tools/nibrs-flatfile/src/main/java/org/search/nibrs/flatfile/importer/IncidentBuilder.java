@@ -409,9 +409,9 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			
 			boolean cargoTheft = length == 88;
 			if (cargoTheft) {
-				String cargoTheftYN = StringUtils.getStringBetween(88, 88, segmentData);
+				String cargoTheftYN = StringUtils.getStringBetweenNoTrim(88, 88, segmentData);
 				
-				if (org.apache.commons.lang3.StringUtils.isNotBlank(cargoTheftYN)){
+				if (cargoTheftYN != null){
 					newIncident.setCargoTheftIndicator(cargoTheftYN);
 					newIncident.setIncludesCargoTheft(true);
 				}
@@ -433,7 +433,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 			e.setSegmentType(s.getSegmentType());
 			e.setValue(length);
-			e.setNIBRSErrorCode(NIBRSErrorCode._101);
+			e.setNIBRSErrorCode(NIBRSErrorCode._178);
 			newErrorList.add(e);
 		}
 		for (NIBRSError e : newErrorList) {
@@ -635,7 +635,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 					e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 					e.setSegmentType(s.getSegmentType());
 					e.setValue(sequenceNumberString);
-					e.setNIBRSErrorCode(NIBRSErrorCode._301);
+					e.setNIBRSErrorCode(NIBRSErrorCode._501);
 					e.setDataElementIdentifier("36");
 					errorList.add(e);
 					sequenceNumber.setInvalid(true);
@@ -657,7 +657,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 			e.setSegmentType(s.getSegmentType());
 			e.setValue(length);
-			e.setNIBRSErrorCode(NIBRSErrorCode._301);
+			e.setNIBRSErrorCode(NIBRSErrorCode._584);
 			errorList.add(e);
 		}
 		return newOffender;
@@ -670,8 +670,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 		String segmentData = s.getData();
 		int length = s.getSegmentLength();
 
-// comment out temporarily for Hawaii file validation. TODO  -hw		
-//		if (length == 129 || length >= 141) {
+		if (length == 129 || length >= 141) {
 
 			Integer sequenceNumberI = null;
 			ParsedObject<Integer> sequenceNumber = newVictim.getVictimSequenceNumber();
@@ -681,6 +680,13 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			if (sequenceNumberString == null) {
 				sequenceNumber.setMissing(true);
 				sequenceNumber.setValue(null);
+				NIBRSError e = new NIBRSError();
+				e.setContext(s.getReportSource());
+				e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
+				e.setSegmentType(s.getSegmentType());
+				e.setNIBRSErrorCode(NIBRSErrorCode._401);
+				e.setDataElementIdentifier("23");
+				errorList.add(e);
 			} else {
 				try {
 					sequenceNumberI = Integer.parseInt(sequenceNumberString);
@@ -691,7 +697,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 					e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 					e.setSegmentType(s.getSegmentType());
 					e.setValue(sequenceNumberString);
-					e.setNIBRSErrorCode(NIBRSErrorCode._401);
+					e.setNIBRSErrorCode(NIBRSErrorCode._402);
 					e.setDataElementIdentifier("23");
 					errorList.add(e);
 					sequenceNumber.setInvalid(true);
@@ -760,15 +766,13 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			}
 			
 			parentIncident.setIncludesLeoka(leoka);
-//TODO temporary change for Hawaii file validation. 
-//		} else {
-		if (!(length == 129 || length >= 141)){
-				NIBRSError e = new NIBRSError();
+		} else {
+			NIBRSError e = new NIBRSError();
 			e.setContext(s.getReportSource());
 			e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 			e.setSegmentType(s.getSegmentType());
 			e.setValue(length);
-			e.setNIBRSErrorCode(NIBRSErrorCode._401);
+			e.setNIBRSErrorCode(NIBRSErrorCode._484);
 			errorList.add(e);
 		}
 
@@ -1005,7 +1009,7 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 			e.setReportUniqueIdentifier(s.getSegmentUniqueIdentifier());
 			e.setSegmentType(s.getSegmentType());
 			e.setValue(length);
-			e.setNIBRSErrorCode(NIBRSErrorCode._201);
+			e.setNIBRSErrorCode(NIBRSErrorCode._284);
 			errorList.add(e);
 		}
 

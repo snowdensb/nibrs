@@ -128,10 +128,6 @@ final class VictimRuleViolationExemplarFactory {
 			incidents.add(copy);
 			
 			copy = new GroupAIncidentReport(incident);
-			copy.getVictims().get(0).setTypeOfVictim("Z");
-			incidents.add(copy);
-			
-			copy = new GroupAIncidentReport(incident);
 			VictimSegment victim = copy.getVictims().get(0);
 			victim.setUcrOffenseCodeConnection(0, "100");
 			victim.setTypeOfInjury(0, null);
@@ -166,6 +162,15 @@ final class VictimRuleViolationExemplarFactory {
 			victim = copy.getVictims().get(0);
 			victim.setResidentStatus("invalid");
 			incidents.add(copy);
+			
+			copy = new GroupAIncidentReport(incident);
+			copy.getVictims().get(0).setTypeOfVictim("Z");
+			incidents.add(copy);
+			
+			copy = new GroupAIncidentReport(incident);
+			copy.getVictims().get(0).setTypeOfVictim(" ");
+			incidents.add(copy);
+			
 			
 			copy = new GroupAIncidentReport(incident);
 			victim = copy.getVictims().get(0);
@@ -522,8 +527,8 @@ final class VictimRuleViolationExemplarFactory {
 			//UCR Offense Code) contains a Crime Against Person.
 			List<GroupAIncidentReport> incidents = new ArrayList<GroupAIncidentReport>();
 			GroupAIncidentReport copy = new GroupAIncidentReport(incident);
-			copy.getOffenses().get(0).setUcrOffenseCode("220");
-			copy.getVictims().get(0).setUcrOffenseCodeConnection(0, "220");
+			copy.getOffenses().get(0).setUcrOffenseCode("39A");
+			copy.getVictims().get(0).setUcrOffenseCodeConnection(0, "39A");
 			incidents.add(copy);
 			
 			return incidents;

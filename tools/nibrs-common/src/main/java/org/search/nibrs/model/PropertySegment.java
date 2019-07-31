@@ -320,6 +320,11 @@ public class PropertySegment extends AbstractSegment
 					|| (Objects.equals(typeOfPropertyLoss, TypeOfPropertyLossCode._1.code) && !isRule392Exception2) );
 		return mandatoryField;
 	}
+
+	public boolean isTypeOfPropertyLossMandatory() {
+		GroupAIncidentReport parent = (GroupAIncidentReport) this.getParentReport();
+		return parent.getOffenses().stream().anyMatch(i->OffenseCode.isCrimeRequirePropertySegement(i.getUcrOffenseCode()));
+	}
 	
 
 

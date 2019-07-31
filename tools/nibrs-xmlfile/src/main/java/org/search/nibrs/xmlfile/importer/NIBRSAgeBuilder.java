@@ -78,13 +78,25 @@ final class NIBRSAgeBuilder {
 					error.setValue(ageString);
 					error.setNIBRSErrorCode(NIBRSErrorCode.valueOf("_" + segmentTypeCode + "22"));
 				}
-			} else if (ageStringTrim.length() == 2) {
-				try {
-					ageMin = Integer.parseInt(ageStringTrim.substring(0, 2));
-					ageMax = ageMin;
-				} catch (NumberFormatException nfe) {
+			} else if (ageStringTrim.length() <= 2) {
+				if ("NN".equals(ageStringTrim) || "NB".equals(ageStringTrim) || "BB".equals(ageStringTrim)) {
 					nonNumericAge = ageStringTrim;
-					error = buildNonNumericAgeError(segmentTypeCode, ageString);
+					ageMin = 0;
+					ageMax = 0;
+					
+					if (segmentTypeCode != '4'){
+						error = buildNonNumericAgeError(segmentTypeCode, ageString);
+					}
+				} else if ("00".equals(ageStringTrim)) {
+					nonNumericAge = ageStringTrim;
+				} else {
+					try {
+						ageMin = Integer.parseInt(ageStringTrim);
+						ageMax = ageMin;
+					} catch (NumberFormatException nfe) {
+						nonNumericAge = ageStringTrim;
+						error = buildNonNumericAgeError(segmentTypeCode, ageString);
+					}
 				}
 			} else {
 				nonNumericAge = ageStringTrim; 

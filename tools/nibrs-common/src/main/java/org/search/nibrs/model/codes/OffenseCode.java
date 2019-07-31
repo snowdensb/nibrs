@@ -50,7 +50,7 @@ public enum OffenseCode {
 	_26D("26D", "Welfare Fraud", "A"),
 	_26E("26E", "Wire Fraud", "A"),
 	_26F("26F", "Identity Theft", "A"),
-	_26G("26G", "Hacking/Computer Invasion", "A"),
+	_26G("26G", "Fraud Offenses-Hacking/Computer Invasion", "A"),
 	_39A("39A", "Betting/Wagering", "A"),
 	_39B("39B", "Operating/Promoting/Assisting Gambling", "A"),
 	_39C("39C", "Gambling Equipment Violations", "A"),
@@ -222,6 +222,25 @@ public enum OffenseCode {
 	
 	public static final boolean isCrimeRequireIncidentHour(String code) {
 		return Arrays.asList(_09A.code, _13A.code, _13B.code, _13C.code).contains(code);
+	}
+	
+	public static final boolean isCrimeRequiringTypeOfWeaponForceInvolved(String code) {
+		return Arrays.asList(
+				_09A.code,
+				_09B.code,
+				_09C.code,
+				_100.code,
+				_11A.code,
+				_11B.code,
+				_11C.code,
+				_11D.code,
+				_120.code,
+				_13A.code,
+				_13B.code,
+				_210.code,
+				_520.code,
+				_64A.code,
+				_64B.code).contains(code);
 	}
 	
 	public static final boolean isGamblingOffenseCode(String code) {

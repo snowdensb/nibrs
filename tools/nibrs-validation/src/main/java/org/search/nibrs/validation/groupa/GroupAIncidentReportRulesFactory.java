@@ -146,6 +146,8 @@ public class GroupAIncidentReportRulesFactory {
 		cargoTheftOffenses.add(OffenseCode._26B.code);
 		cargoTheftOffenses.add(OffenseCode._26C.code);
 		cargoTheftOffenses.add(OffenseCode._26E.code);
+		cargoTheftOffenses.add(OffenseCode._26F.code);
+		cargoTheftOffenses.add(OffenseCode._26G.code);
 		cargoTheftOffenses.add(OffenseCode._510.code);
 		cargoTheftOffenses.add(OffenseCode._270.code);
 		
@@ -162,6 +164,8 @@ public class GroupAIncidentReportRulesFactory {
 		rulesList.add(getRule104("yearOfTape"));
 		rulesList.add(getRule104("monthOfTape"));
 		rulesList.add(getRule104("cargoTheftIndicator"));
+		rulesList.add(getRule105IncidentDate());
+		rulesList.add(getRule105ExceptionalClearanceDate());
 		rulesList.add(getRule106());
 		rulesList.add(getRule115());
 		rulesList.add(getRule117());
@@ -1122,7 +1126,9 @@ public class GroupAIncidentReportRulesFactory {
 				NIBRSError ret = null;
 				PropertySegment recoveredSegment = subject.getRecoveredPropertySegment();
 				PropertySegment stolenSegment = subject.getStolenPropertySegment();
-				if (recoveredSegment != null && subject.getOffenseForOffenseCode(OffenseCode._250.code) == null && subject.getOffenseForOffenseCode(OffenseCode._280.code) == null) {
+				if (recoveredSegment != null 
+						&& subject.getOffenseForOffenseCode(OffenseCode._250.code) == null 
+						&& subject.getOffenseForOffenseCode(OffenseCode._280.code) == null) {
 					List<String> recoveredPropertyTypes = new ArrayList<>();
 					recoveredPropertyTypes.addAll(Arrays.asList(recoveredSegment.getPropertyDescription()));
 					recoveredPropertyTypes.removeIf(element -> element == null);
@@ -1177,6 +1183,40 @@ public class GroupAIncidentReportRulesFactory {
 					ret.setValue(subject.getExceptionalClearanceCode());
 					ret.setDataElementIdentifier("5");
 					ret.setNIBRSErrorCode(NIBRSErrorCode._156);
+				}
+				return ret;
+			}
+		};
+	}
+	
+	Rule<GroupAIncidentReport> getRule105ExceptionalClearanceDate() {
+		return new Rule<GroupAIncidentReport>() {
+			@Override
+			public NIBRSError apply(GroupAIncidentReport subject) {
+				NIBRSError ret = null;
+				ParsedObject<LocalDate> exceptionalClearanceDatePO = subject.getExceptionalClearanceDate();
+				if ((!exceptionalClearanceDatePO.isMissing() && !exceptionalClearanceDatePO.isInvalid()) && exceptionalClearanceDatePO.getValue().isAfter(LocalDate.now())) {
+					ret = subject.getErrorTemplate();
+					ret.setValue(exceptionalClearanceDatePO.getValue());
+					ret.setDataElementIdentifier("5");
+					ret.setNIBRSErrorCode(NIBRSErrorCode._105);
+				}
+				return ret;
+			}
+		};
+	}
+	
+	Rule<GroupAIncidentReport> getRule105IncidentDate() {
+		return new Rule<GroupAIncidentReport>() {
+			@Override
+			public NIBRSError apply(GroupAIncidentReport subject) {
+				NIBRSError ret = null;
+				ParsedObject<LocalDate> incidentDatePo = subject.getIncidentDate();
+				if ((!incidentDatePo.isMissing() && !incidentDatePo.isInvalid()) && incidentDatePo.getValue().isAfter(LocalDate.now())) {
+					ret = subject.getErrorTemplate();
+					ret.setValue(incidentDatePo.getValue());
+					ret.setDataElementIdentifier("3");
+					ret.setNIBRSErrorCode(NIBRSErrorCode._105);
 				}
 				return ret;
 			}
@@ -1271,11 +1311,10 @@ public class GroupAIncidentReportRulesFactory {
 				boolean cargoTheftIncident = offenses.stream()
 						.anyMatch(offense -> cargoTheftOffenses.contains(offense.getUcrOffenseCode()));
 				NIBRSError ret = null;
-				if (subject.getCargoTheftIndicator() != null 
-						&& subject.getCargoTheftIndicator().equalsIgnoreCase("Y")
+				if (StringUtils.isNotBlank(subject.getCargoTheftIndicator())
 						&& !cargoTheftIncident ) {
 					ret = subject.getErrorTemplate();
-					ret.setValue(null);
+					ret.setValue(subject.getCargoTheftIndicator());
 					ret.setDataElementIdentifier("2A");
 					ret.setNIBRSErrorCode(NIBRSErrorCode._119);
 				}

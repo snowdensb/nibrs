@@ -27,7 +27,7 @@ public enum AggravatedAssaultHomicideCircumstancesCode {
 	_03("03","Drug Dealing"),
 	_04("04","Gangland (Organized Crime Involvement)"),
 	_05("05","Juvenile Gang"),
-	_06("06","Lovers’ Quarrel"),
+	_06("06","Domestic Violence"),
 	_07("07","Mercy Killing (Not applicable to Aggravated Assault)"),
 	_08("08","Other Felony Involved"),
 	_09("09","Other Circumstances"),

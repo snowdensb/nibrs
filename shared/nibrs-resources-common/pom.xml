@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.search.nibrs</groupId>
+	<artifactId>nibrs-resources-common</artifactId>
+	<version>1.0.0</version>
+	
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>Common resources module for NIBRS toolkit</description>
+	<url>http://www.search.org/</url>
+
+	<licenses>
+		<license>
+			<name>Apache 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>SEARCH</name>
+			<email>info@search.org</email>
+			<organization>SEARCH</organization>
+			<organizationUrl>http://www.search.org/</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>https://github.com/SEARCH-NCJIS/nibrs</connection>
+		<developerConnection>https://github.com/SEARCH-NCJIS/nibrs.git</developerConnection>
+		<url>https://github.com/SEARCH-NCJIS/nibrs</url>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	<build>
+
+		<!-- Hack: Duplicate declaration of plugin - instead of inheriting from
+			root pom, to prevent cyclic dependency -->
+		<plugins>
+
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.3</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>3.0</version>
+
+				<configuration>
+					<!-- Reference license on plugin classpath -->
+					<header>license-search.txt</header>
+					<includes>
+						<include>**/*.java</include>
+						<include>**/*.xml</include>
+						<include>**/*.xslt</include>
+						<include>**/*.xsd</include>
+						<include>**/*.wsdl</include>
+						<include>**/*.xsl</include>
+						<include>**/*.xslt</include>
+						<include>**/*.vm</include>
+						<include>**/*.html</include>
+						<include>**/*.js</include>
+						<include>**/*.sql</include>
+					</includes>
+					<mapping>
+						<java>SLASHSTAR_STYLE</java>
+						<wsdl>XML_STYLE</wsdl>
+						<xslt>XML_STYLE</xslt>
+						<sql>SLASHSTAR_STYLE</sql>
+					</mapping>
+				</configuration>
+				<executions>
+					<!-- bind check goal to run on its default phase(validate) -->
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>	
+
+</project>

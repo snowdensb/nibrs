@@ -15,6 +15,8 @@
  */
 package org.search.nibrs.validation.groupa;
 
+import static org.search.nibrs.util.ArrayUtils.allNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import static org.search.nibrs.util.ArrayUtils.allNull;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +52,8 @@ import org.search.nibrs.validation.ValidationConstants;
 import org.search.nibrs.validation.ValidatorProperties;
 import org.search.nibrs.validation.rules.AbstractBeanPropertyRule;
 import org.search.nibrs.validation.rules.DuplicateCodedValueRule;
+import org.search.nibrs.validation.rules.NotAllBlankRule;
+import org.search.nibrs.validation.rules.NotBlankRule;
 import org.search.nibrs.validation.rules.NullObjectRule;
 import org.search.nibrs.validation.rules.Rule;
 import org.search.nibrs.validation.rules.ValidValueListRule;
@@ -68,7 +71,7 @@ public class VictimSegmentRulesFactory {
 		return new VictimSegmentRulesFactory(validatorProperties);
 	}
 	
-	private static final List<String> INJURY_OFFENSE_LIST = Arrays.asList(
+	static final List<String> INJURY_OFFENSE_LIST = Arrays.asList(
 			OffenseCode._100.code,
 			OffenseCode._11A.code,
 			OffenseCode._11B.code,
@@ -119,6 +122,7 @@ public class VictimSegmentRulesFactory {
 	private void initRules(){
 		
 		rulesList__2_1 = new ArrayList<Rule<VictimSegment>>();
+		rulesList__2_1.add(getRule401ForAggravatedAssaultHomicideCircumstances());
 		rulesList__2_1.add(getRule401ForSequenceNumber());
 		rulesList__2_1.add(getRule401ForVictimConnectedToUcrOffenseCode());
 		rulesList__2_1.add(getRule401ForTypeOfVictim());
@@ -133,6 +137,7 @@ public class VictimSegmentRulesFactory {
 		rulesList__2_1.add(getRule404ForRaceOfVictim());		
 		rulesList__2_1.add(getRule404ForEthnicityOfVictim());		
 		rulesList__2_1.add(getRule404ForResidentStatusOfVictim());		
+		rulesList__2_1.add(getRule404ForTypeOfVictim());
 		rulesList__2_1.add(getRule404ForAggravatedAssaultHomicideCircumstances());
 		rulesList__2_1.add(getRule404OffenderNumberToBeRelated());
 		rulesList__2_1.add(getRule404ForTypeOfInjury());
@@ -246,9 +251,9 @@ public class VictimSegmentRulesFactory {
 				NIBRSError e = null;
 				GroupAIncidentReport parent = (GroupAIncidentReport) subject.getParentReport();
 				
-				if (parent.getOffenderCount() >= 3 
+				if (parent.getOffenderCount() >= 2 
 						&& subject.isPerson()
-						&& (subject.getUcrOffenseCodeList().contains(OffenseCode._120.code) ||
+						&& (OffenseCode.containsCrimeAgainstPropertyCode(subject.getUcrOffenseCodeList())||
 							OffenseCode.containsCrimeAgainstPersonCode(subject.getUcrOffenseCodeList()))
 						){
 					long relatedOffenderCount = subject.getOffenderNumberRelatedList().stream()
@@ -409,9 +414,13 @@ public class VictimSegmentRulesFactory {
 	}
 	
 	Rule<VictimSegment> getRule401ForTypeOfVictim() {
-		return new ValidValueListRule<VictimSegment>("typeOfVictim", "25", VictimSegment.class, NIBRSErrorCode._401, TypeOfVictimCode.codeSet(), false);
+		return new NotBlankRule<VictimSegment>("typeOfVictim", "25", VictimSegment.class, NIBRSErrorCode._401) ;
 	}
 
+	Rule<VictimSegment> getRule404ForTypeOfVictim() {
+		return new ValidValueListRule<VictimSegment>("typeOfVictim", "25", VictimSegment.class, NIBRSErrorCode._404, TypeOfVictimCode.codeSet(), false);
+	}
+	
 	Rule<VictimSegment> getRule404ForOfficerOriOtherJurisdiction() {
 		// note:  we cannot check if an ORI is in the FBI's database.  And the field is always optional, so nothing to test here
 		return new NullObjectRule<>();
@@ -426,51 +435,34 @@ public class VictimSegmentRulesFactory {
 	}
 
 	Rule<VictimSegment> getRule401ForTypeOfInjury(){
-		return new Rule<VictimSegment>() {
+		return new NotAllBlankRule<VictimSegment>("typeOfInjury", "33", VictimSegment.class, NIBRSErrorCode._401) {
 			@Override
-			public NIBRSError apply(VictimSegment victimSegment) {
+			public boolean ignore(VictimSegment o) {
+				List<String> offenseCodeList = o.getUcrOffenseCodeList()
+					.stream()
+					.filter(INJURY_OFFENSE_LIST::contains)
+					.distinct()
+					.collect(Collectors.toList());
 				
-				NIBRSError e = null;
-
-				List<String> injuryTypeList = new ArrayList<>();
-				injuryTypeList.addAll(victimSegment.getTypeOfInjuryList());
-				injuryTypeList.removeIf(item -> item == null);
-				List<String> offenseCodeList = victimSegment.getUcrOffenseCodeList();
-				
-				if ( CollectionUtils.containsAny(offenseCodeList, INJURY_OFFENSE_LIST) 
-					&& injuryTypeList.isEmpty()
-					&& victimSegment.isPerson()) {
-					e = victimSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(NIBRSErrorCode._401);
-					e.setDataElementIdentifier("33");
-					e.setValue(null);
-				}
-
-				return e;
-				
+				return !(((offenseCodeList.size() == 1 && offenseCodeList.contains("120") && "I".equals(o.getTypeOfVictim())))
+						||( (offenseCodeList.size() > 1 || ( offenseCodeList.size() == 1 && !offenseCodeList.contains("120")) )&& o.isPerson())); 
 			}
 		};
 	}
 
 	Rule<VictimSegment> getRule404ForTypeOfInjury(){
-		return new Rule<VictimSegment>() {
+		return new ValidValueListRule<VictimSegment>("typeOfInjury", "33", VictimSegment.class, NIBRSErrorCode._404, TypeInjuryCode.codeSet(), false) {
 			@Override
-			public NIBRSError apply(VictimSegment victimSegment) {
+			public boolean ignore(VictimSegment o) {
+				List<String> offenseCodeList = o.getUcrOffenseCodeList()
+					.stream()
+					.filter(INJURY_OFFENSE_LIST::contains)
+					.distinct()
+					.collect(Collectors.toList());
 				
-				NIBRSError e = null;
-
-				List<String> injuryTypeList = new ArrayList<>();
-				injuryTypeList.addAll(victimSegment.getTypeOfInjuryList());
-				injuryTypeList.removeIf(item -> item == null);
-				if ((!injuryTypeList.isEmpty() && !CollectionUtils.containsAll(TypeInjuryCode.codeSet(), injuryTypeList))) {
-					e = victimSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(NIBRSErrorCode._404);
-					e.setDataElementIdentifier("33");
-					e.setValue(null);
-				}
-
-				return e;
-				
+				return ArrayUtils.allNull(o.getTypeOfInjury()) && 
+						!(((offenseCodeList.size() == 1 && offenseCodeList.contains("120") && "I".equals(o.getTypeOfVictim())))
+						||( (offenseCodeList.size() > 1 || ( offenseCodeList.size() == 1 && !offenseCodeList.contains("120")) )&& o.isPerson())); 
 			}
 		};
 	}
@@ -495,6 +487,16 @@ public class VictimSegmentRulesFactory {
 		return personSegmentRulesFactory.getAgeValidRule("26", NIBRSErrorCode._404, false);
 	}
 
+	Rule<VictimSegment> getRule401ForAggravatedAssaultHomicideCircumstances() {
+		return new NotAllBlankRule<VictimSegment>("aggravatedAssaultHomicideCircumstances", "31", VictimSegment.class, NIBRSErrorCode._401) {
+			@Override
+			public boolean ignore(VictimSegment o) {
+				return !o.isAggravatedAssaultHomicideCircumstancesMandatory();
+			}
+		};
+
+	}
+
 	Rule<VictimSegment> getRule404ForAggravatedAssaultHomicideCircumstances() {
 		return new Rule<VictimSegment>() {
 			@Override
@@ -505,12 +507,52 @@ public class VictimSegmentRulesFactory {
 				List<String> aahcList = new ArrayList<>();
 				aahcList.addAll(victimSegment.getAggravatedAssaultHomicideCircumstancesList());
 				aahcList.removeIf(item -> item == null);
-				List<String> offenseCodeList = victimSegment.getUcrOffenseCodeList();
-				if (offenseCodeList.contains(OffenseCode._09C.code) && aahcList.isEmpty()) {
-					e = victimSegment.getErrorTemplate();
-					e.setNIBRSErrorCode(NIBRSErrorCode._404);
-					e.setDataElementIdentifier("31");
-					e.setValue(null);
+				List<String> applicableOffenses = victimSegment.getUcrOffenseCodeList().stream()
+						.filter(Objects::nonNull)
+						.filter(OffenseCode::isAggravatedAssaultHomicideCircumstancesOffense)
+						.collect(Collectors.toList());
+				boolean isMandatory = victimSegment.isAggravatedAssaultHomicideCircumstancesMandatory();
+				if (isMandatory) {
+					Set<String> validAggravatedAssaultHomicideCodes = new HashSet<>();
+					
+					for (String offense : applicableOffenses) {
+						switch (offense) {
+						case "13A":
+						case "09A": 
+							validAggravatedAssaultHomicideCodes.add("01"); 
+							validAggravatedAssaultHomicideCodes.add("02"); 
+							validAggravatedAssaultHomicideCodes.add("03"); 
+							validAggravatedAssaultHomicideCodes.add("04"); 
+							validAggravatedAssaultHomicideCodes.add("05"); 
+							validAggravatedAssaultHomicideCodes.add("06"); 
+							validAggravatedAssaultHomicideCodes.add("07"); 
+							validAggravatedAssaultHomicideCodes.add("08"); 
+							validAggravatedAssaultHomicideCodes.add("09"); 
+							validAggravatedAssaultHomicideCodes.add("10");
+							break; 
+						case "09B":
+							validAggravatedAssaultHomicideCodes.add("30");
+							validAggravatedAssaultHomicideCodes.add("31");
+							validAggravatedAssaultHomicideCodes.add("32");
+							validAggravatedAssaultHomicideCodes.add("33");
+							validAggravatedAssaultHomicideCodes.add("34");
+							break;
+						case "09C": 
+							validAggravatedAssaultHomicideCodes.add("20");
+							validAggravatedAssaultHomicideCodes.add("21");
+							break; 
+						}
+					}
+					
+					if (!aahcList.isEmpty() && !validAggravatedAssaultHomicideCodes.containsAll(aahcList)) {
+						e = victimSegment.getErrorTemplate();
+						e.setNIBRSErrorCode(NIBRSErrorCode._404);
+						e.setDataElementIdentifier("31");
+						List<String> invalidValues = aahcList.stream()
+								.filter(item-> !validAggravatedAssaultHomicideCodes.contains(item))
+								.collect(Collectors.toList());
+						e.setValue(invalidValues);
+					}
 				}
 
 				return e;
@@ -533,10 +575,13 @@ public class VictimSegmentRulesFactory {
 				for (int i= 0; i<relatedOffenderNumbers.size(); i++){
 					ParsedObject<Integer> offenderNumber = relatedOffenderNumbers.get(i);
 					String relationship = relationships.get(i);
-					if ((isEmpty(offenderNumber) && relationship != null) 
-						||(!isEmpty(offenderNumber) && relationship != null
-							&& !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship))) {
-						invalidRelationships.add(relationship);
+					boolean isMandatory = !isEmpty(offenderNumber) &&
+							(OffenseCode.containsCrimeAgainstPersonCode(victimSegment.getUcrOffenseCodeList())
+									|| OffenseCode.containsCrimeAgainstPropertyCode(victimSegment.getUcrOffenseCodeList())); 
+							
+					if ((isMandatory && (StringUtils.isBlank(relationship) || !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship)))
+						||(!isMandatory && (StringUtils.isNotBlank(relationship)) && !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship))) {
+						invalidRelationships.add(StringUtils.trimToEmpty(relationship));
 					}
 				}
 				
@@ -903,7 +948,8 @@ public class VictimSegmentRulesFactory {
 				offenseCodeList.addAll(victimSegment.getUcrOffenseCodeList());
 				offenseCodeList.removeIf(item -> item == null);
 
-				if (!offenderNumberList.isEmpty() && !(OffenseCode.containsCrimeAgainstPersonCode(offenseCodeList) || offenseCodeList.contains(OffenseCode._120.code))) {
+				if (!offenderNumberList.isEmpty() && !(OffenseCode.containsCrimeAgainstPersonCode(offenseCodeList) 
+						|| OffenseCode.containsCrimeAgainstPropertyCode(offenseCodeList))) {
 					e = victimSegment.getErrorTemplate();
 					e.setDataElementIdentifier("34");
 					e.setNIBRSErrorCode(NIBRSErrorCode._459);
@@ -927,9 +973,9 @@ public class VictimSegmentRulesFactory {
 				
 				for (int i=0;i < offenderNumRelatedList.size() && e == null;i++) {
 					ParsedObject<Integer> offenderNumber = offenderNumRelatedList.get(i);
-					if (offenderNumber.isInvalid() || (offenderNumber.getValue() != null && offenderNumber.getValue() > 0)) {
+					if (!offenderNumber.isInvalid() && offenderNumber.getValue() != null && offenderNumber.getValue() > 0) {
 						String rel = victimOffenderRelationshipList.get(i);
-						if (rel == null || !RelationshipOfVictimToOffenderCode.codeSet().contains(rel)) {
+						if (rel == null ) {
 							e = victimSegment.getErrorTemplate();
 							e.setDataElementIdentifier("35");
 							e.setNIBRSErrorCode(NIBRSErrorCode._460);

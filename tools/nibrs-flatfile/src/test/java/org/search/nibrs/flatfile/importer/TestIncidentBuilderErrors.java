@@ -15,7 +15,8 @@
  */
 package org.search.nibrs.flatfile.importer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -128,11 +129,13 @@ public class TestIncidentBuilderErrors {
     	DefaultReportListener incidentListener = new DefaultReportListener();
         List<NIBRSError> errorList = getErrorsForTestData(testData, incidentListener);
         assertEquals(1, errorList.size());
+        
         NIBRSError e = errorList.get(0);
         assertEquals(GroupAIncidentReport.ADMIN_SEGMENT_TYPE_IDENTIFIER, e.getSegmentType());
         ReportSource reportSource = (ReportSource) e.getContext();
         assertEquals("1", reportSource.getSourceLocation());
         assertEquals(80, e.getValue());
+        assertEquals(NIBRSErrorCode._178, e.getNIBRSErrorCode());
     	
         GroupAIncidentReport incident = incidentListener.getGroupAIncidentList().get(0);
 		assertTrue(incident.getHasUpstreamErrors());

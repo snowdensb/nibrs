@@ -25,7 +25,8 @@ import java.util.Set;
 public enum CargoTheftIndicatorCode {
 	
 	Y("Y" , "Yes"),
-	N("N" , "No");
+	N("N" , "No"),
+	_blank(" ", "Not a Cargo Theft offense");
 	
 	public String code;
 	public String description;

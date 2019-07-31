@@ -35,5 +35,6 @@
 
   <modules>
     <module>nibrs-build-common</module>
+    <module>nibrs-resources-common</module>
   </modules>
 </project>
