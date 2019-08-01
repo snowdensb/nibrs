@@ -30,6 +30,8 @@ public class AppProperties {
 	private Integer ajpPort = 9090; 
 	private Boolean ajpEnabled = true; 
 	
+	private String externalTemplatesFolder ;
+	
 	private Boolean inactivityTimeout=true;
 	private Integer inactivityTimeoutInSeconds = 1800; 
 	
@@ -117,6 +119,14 @@ public class AppProperties {
 
 	public void setRestServiceBaseUrl(String restServiceBaseUrl) {
 		this.restServiceBaseUrl = restServiceBaseUrl;
+	}
+
+	public String getExternalTemplatesFolder() {
+		return externalTemplatesFolder;
+	}
+
+	public void setExternalTemplatesFolder(String externalTemplatesFolder) {
+		this.externalTemplatesFolder = externalTemplatesFolder;
 	}
 
 }
