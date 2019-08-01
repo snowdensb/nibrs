@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping"})
+@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping", "incidentSearchResults"})
 @RequestMapping("/incidents")
 public class IncidentController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -79,6 +79,13 @@ public class IncidentController {
 		
 		model.put("incidentSearchRequest", incidentSearchRequest);
 	    return "/incident/incidents::resultsPage";
+	}
+	
+	@GetMapping("/searchForm/reset")
+	public String resetSearchForm(Map<String, Object> model) throws IOException {
+		IncidentSearchRequest incidentSearchRequest = new IncidentSearchRequest();
+		model.put("incidentSearchRequest", incidentSearchRequest);
+		return "/incident/incidentSearchForm::incidentSearchFormContent";
 	}
 	
 	@PostMapping("/search")

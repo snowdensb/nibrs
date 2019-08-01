@@ -35,7 +35,7 @@
 	           </ol>
 	        </nav>
 	        <h3>Incident Search Results</h3>
-	        <form th:replace="incident/incidentSearchForm.html :: incidentSearchFormContent">
+	        <form th:replace="incident/incidentSearchForm.html :: incidentSearchFormContent" th:object="${incidentSearchRequest}">
 	        </form>
 	        <hr/>
 	        
@@ -67,12 +67,12 @@
 					</tbody>
 				</table>
 				<div class="modal ojbc-modal" id="reportDetailModal">
-              		<div class="modalIframeSpinner" ></div>
+       		<div class="modalIframeSpinner" ></div>
 					<div class="modal-dialog modal-lg">
 					    <div class="modal-content">
 					      <!-- Modal Header -->
 					      <div class="modal-header">
-					        <h4 class="modal-title">Add/Edit Disposition</h4>
+					        <h4 class="modal-title"></h4>
 					        <button type="button" class="close" data-dismiss="modal">&times;</button>
 					      </div>
 					
@@ -81,95 +81,60 @@
 				
 					      <!-- Modal footer -->
 					      <div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 					      </div>
-		          		</div>
+          		</div>
 					</div>
-			    </div>
-		        <script th:inline="javascript">
-	            $(function(){
-							  $('#incidentDateRangeStartDate').datepicker({
-							     uiLibrary: 'bootstrap4', size: 'small'
-							  });
-							  $('#incidentDateRangeEndDate').datepicker({
-							     uiLibrary: 'bootstrap4', size: 'small'
-							  });
-							  $(".chosen-select").chosen();  
-		            	      $('[data-toggle="popover"]').popover(); 
-			                  $.fn.dataTable.moment( 'MM/DD/YYYY' );
-			
-			                  var table = $('#searchResultsTable').DataTable({
-		                	    responsive: true, 
-		                	    fixedHeader: { header: true },
-		                        "columnDefs": [
-			                        {
-			                            "targets":[2], 
-			                            "type":"date"
-			                        },
-		                        ]
-			                  });
-			                  
-			                  $('[data-toggle="tooltip"]').tooltip({
-			                      trigger : 'hover'
-			                  });   
-			 
-			                  
-		 	                  $('#searchResultsTable tbody').on('click', 'tr',function() {
-			                 	table.$('tr.selected').removeClass('selected');
-			                	$(this).addClass('selected');  
-		  
-								var rowData = table.row($(this)).data();
-								var reportType = rowData[5]; 
-								xhr = $.get( context +"incidents/" + reportType + "/" + $(this).attr("id")   , function(data) {
-			                    	$('#reportDetailModal .modal-body').html(data);
-			                    	
-			                    	if (reportType === "A"){
-			                    		$('#reportDetailModal .modal-title').html("Group A Incident");
-			                    	}
-			                    	else if (reportType === "B"){
-			                    		$('#reportDetailModal .modal-title').html("Group B Arrest");
-			                    	}
-			                      	$('#reportDetailModal').modal('show');
-								}).fail(ojbc.displayFailMessage);
-			                  });
-	             });
-	          </script>
-	        </div>
+		    </div>
+      </div>
 	
 	 		<script th:inline="javascript">
-		        /*<![CDATA[*/
-	            var context = [[@{/}]];
-	 	        /*]]>*/
+	       /*<![CDATA[*/
+	          var context = [[@{/}]];
+	        /*]]>*/
 	
-		        $(function(){
+	       $(function(){
 		            
-	/*               $('#incidentDateRangeStartDate').datepicker({
-	                    uiLibrary: 'bootstrap4', size: 'small'
-	              });
-	              $('#incidentDateRangeEndDate').datepicker({
-	                    uiLibrary: 'bootstrap4', size: 'small'
-	              }); */
-	              $('.date').mask('99/99/9999');
-	              
-	              $('#searchForm input').keypress(function (e) {
-	            	  if (e.which == 13) {
-	            	    $('#submit').click();
-	            	    return false;    
-	            	  }
-	            	});
-	              
-	              $('#submit').click (function(){
-	                var formData = $('#searchForm').serialize();
-	                 
-	                xhr = $.post(context + "incidents/search",formData,function(data) {
-	                	$('#portalContent').html(data); 
-  	             	}).fail();
-	              });
-	              
-	            }); 
+           $.fn.dataTable.moment( 'MM/DD/YYYY' );
+         
+           var table = $('#searchResultsTable').DataTable({
+             responsive: true, 
+             fixedHeader: { header: true },
+                "columnDefs": [
+                 {
+                     "targets":[2], 
+                     "type":"date"
+                 },
+                ]
+           });
+           
+           $('[data-toggle="tooltip"]').tooltip({
+               trigger : 'hover'
+           });   
+
+                   
+           $('#searchResultsTable tbody').on('click', 'tr',function() {
+             table.$('tr.selected').removeClass('selected');
+             $(this).addClass('selected');  
+ 
+             var rowData = table.row($(this)).data();
+             var reportType = rowData[5]; 
+             xhr = $.get( context +"incidents/" + reportType + "/" + $(this).attr("id")   , function(data) {
+               $('#reportDetailModal .modal-body').html(data);
+               
+               if (reportType === "A"){
+                 $('#reportDetailModal .modal-title').html("Group A Incident");
+               }
+               else if (reportType === "B"){
+                 $('#reportDetailModal .modal-title').html("Group B Arrest");
+               }
+               $('#reportDetailModal').modal('show');
+             }).fail(ojbc.displayFailMessage);
+           });
+         }); 
 		
-	        </script>
-	    </div>
+       </script>
+    </div>
 	
 	</body>
 </html>

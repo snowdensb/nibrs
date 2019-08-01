@@ -81,10 +81,47 @@
              <div class="col-2"></div>
              <div class="col-sm-3">
                  <button type="button" class="btn-primary" id="submit">Search</button>
-                 <button type="reset" class="btn-secondary">Reset</button>
+                 <button type="reset" class="btn-secondary" id="reset">Reset</button>
 	           </div>
            </div>
        </div>
+       
+       <script th:inline="javascript">
+          $(function(){
+            $('#incidentDateRangeStartDate').datepicker({
+               uiLibrary: 'bootstrap4', size: 'small'
+            });
+            $('#incidentDateRangeEndDate').datepicker({
+               uiLibrary: 'bootstrap4', size: 'small'
+            });
+            $(".chosen-select").chosen();  
+            $('[data-toggle="popover"]').popover(); 
+            $('.date').mask('99/99/9999');
+            
+            $('#searchForm input').keypress(function (e) {
+              if (e.which == 13) {
+                $('#submit').click();
+                return false;    
+              }
+            });
+            
+            $('#submit').click (function(){
+              var formData = $('#searchForm').serialize();
+               
+              xhr = $.post(context + "incidents/search",formData,function(data) {
+                $('#portalContent').html(data); 
+              }).fail();
+            });
+            
+            $('#reset').click (function(){
+              xhr = $.get(context + "incidents/searchForm/reset", function(data) {
+                $('#searchForm').replaceWith(data); 
+              }).fail();
+            });
+
+          });
+        </script>
+       
       </form>
 	</body>
 </html>
