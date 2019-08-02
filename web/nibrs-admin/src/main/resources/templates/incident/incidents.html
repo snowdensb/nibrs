@@ -46,7 +46,7 @@
 							<th>Incident Identifier</th>
 							<th>Reporting Agency</th>
 							<th>Incident Date</th>
-							<th>Submission Month/Year</th>
+							<th>Submission Date</th>
 							<th>UCR Offense Type</th>
 							<th>Group</th>
 							<th>FBI submission indicator</th>
@@ -95,17 +95,11 @@
 	
 	       $(function(){
 		            
-           $.fn.dataTable.moment( 'MM/DD/YYYY' );
+           $.fn.dataTable.moment( 'MM/YYYY' );
          
            var table = $('#searchResultsTable').DataTable({
              responsive: true, 
-             fixedHeader: { header: true },
-                "columnDefs": [
-                 {
-                     "targets":[2], 
-                     "type":"date"
-                 },
-                ]
+             fixedHeader: { header: true }
            });
            
            $('[data-toggle="tooltip"]').tooltip({

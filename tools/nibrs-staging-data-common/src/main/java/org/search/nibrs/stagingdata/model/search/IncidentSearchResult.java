@@ -153,6 +153,6 @@ public class IncidentSearchResult implements Serializable {
 	
 	@JsonIgnore
 	public String getSubmissionDateString() {
-		return StringUtils.left(submissionMonth, 2) + "/" + submissionYear;
+		return submissionYear + "-" + StringUtils.left(submissionMonth, 2);
 	}
 }
