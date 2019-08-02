@@ -38,12 +38,14 @@ public class Submission {
 	private Integer submissionId; 
 	
 	private String incidentIdentifier; 
+	private Integer messageIdentifier; 
 	private String requestFilePath;
 	private String responseFilePath;
 	
 	private String faultCode; 
 	private String faultDescription; 
 	private Boolean acceptedIndicator;
+	private String nibrsReportCategoryCode;
 	private LocalDateTime submissionTimestamp;
 	private LocalDateTime responseTimestamp;
 	
@@ -110,39 +112,6 @@ public class Submission {
 		this.responseTimestamp = responseTimestamp;
 	}
 
-	public Set<Violation> getViolations() {
-		return violations;
-	}
-
-	public void setViolations(Set<Violation> violations) {
-		this.violations = violations;
-	}
-
-	public String getFaultCode() {
-		return faultCode;
-	}
-
-	public void setFaultCode(String faultCode) {
-		this.faultCode = faultCode;
-	}
-
-	public String getFaultDescription() {
-		return faultDescription;
-	}
-
-	public void setFaultDescription(String faultDescription) {
-		this.faultDescription = faultDescription;
-	}
-
-	@Override
-	public String toString() {
-		return "Submission [submissionId=" + submissionId + ", incidentIdentifier=" + incidentIdentifier
-				+ ", requestFilePath=" + requestFilePath + ", responseFilePath=" + responseFilePath + ", faultCode="
-				+ faultCode + ", faultDescription=" + faultDescription + ", acceptedIndicator=" + acceptedIndicator
-				+ ", submissionTimestamp=" + submissionTimestamp + ", responseTimestamp=" + responseTimestamp
-				+ ", violations=" + violations + "]";
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -151,6 +120,8 @@ public class Submission {
 		result = prime * result + ((faultCode == null) ? 0 : faultCode.hashCode());
 		result = prime * result + ((faultDescription == null) ? 0 : faultDescription.hashCode());
 		result = prime * result + ((incidentIdentifier == null) ? 0 : incidentIdentifier.hashCode());
+		result = prime * result + ((messageIdentifier == null) ? 0 : messageIdentifier.hashCode());
+		result = prime * result + ((nibrsReportCategoryCode == null) ? 0 : nibrsReportCategoryCode.hashCode());
 		result = prime * result + ((requestFilePath == null) ? 0 : requestFilePath.hashCode());
 		result = prime * result + ((responseFilePath == null) ? 0 : responseFilePath.hashCode());
 		result = prime * result + ((responseTimestamp == null) ? 0 : responseTimestamp.hashCode());
@@ -188,6 +159,16 @@ public class Submission {
 				return false;
 		} else if (!incidentIdentifier.equals(other.incidentIdentifier))
 			return false;
+		if (messageIdentifier == null) {
+			if (other.messageIdentifier != null)
+				return false;
+		} else if (!messageIdentifier.equals(other.messageIdentifier))
+			return false;
+		if (nibrsReportCategoryCode == null) {
+			if (other.nibrsReportCategoryCode != null)
+				return false;
+		} else if (!nibrsReportCategoryCode.equals(other.nibrsReportCategoryCode))
+			return false;
 		if (requestFilePath == null) {
 			if (other.requestFilePath != null)
 				return false;
@@ -213,12 +194,58 @@ public class Submission {
 				return false;
 		} else if (!submissionTimestamp.equals(other.submissionTimestamp))
 			return false;
-		if (violations == null) {
-			if (other.violations != null)
-				return false;
-		} else if (!violations.equals(other.violations))
-			return false;
 		return true;
+	}
+
+	public Set<Violation> getViolations() {
+		return violations;
+	}
+
+	public void setViolations(Set<Violation> violations) {
+		this.violations = violations;
+	}
+
+	public String getFaultCode() {
+		return faultCode;
+	}
+
+	public void setFaultCode(String faultCode) {
+		this.faultCode = faultCode;
+	}
+
+	public String getFaultDescription() {
+		return faultDescription;
+	}
+
+	public void setFaultDescription(String faultDescription) {
+		this.faultDescription = faultDescription;
+	}
+
+	@Override
+	public String toString() {
+		return "Submission [submissionId=" + submissionId + ", incidentIdentifier=" + incidentIdentifier
+				+ ", messageIdentifier=" + messageIdentifier + ", requestFilePath=" + requestFilePath 
+				+ ", responseFilePath=" + responseFilePath + ", faultCode="
+				+ faultCode + ", faultDescription=" + faultDescription + ", acceptedIndicator=" + acceptedIndicator
+				+ ", nibrsReportCategoryCode=" + nibrsReportCategoryCode +  ", submissionTimestamp=" 
+				+ submissionTimestamp + ", responseTimestamp=" + responseTimestamp
+				+ ", violations=" + violations + "]";
+	}
+
+	public Integer getMessageIdentifier() {
+		return messageIdentifier;
+	}
+
+	public void setMessageIdentifier(Integer messageIdentifier) {
+		this.messageIdentifier = messageIdentifier;
+	}
+
+	public String getNibrsReportCategoryCode() {
+		return nibrsReportCategoryCode;
+	}
+
+	public void setNibrsReportCategoryCode(String nibrsReportCategoryCode) {
+		this.nibrsReportCategoryCode = nibrsReportCategoryCode;
 	}
 
 }

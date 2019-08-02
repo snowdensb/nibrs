@@ -23,18 +23,23 @@ CREATE schema search_nibrs_staging;
 
 Use search_nibrs_staging; 
 
+
 CREATE TABLE Submission (
                 SubmissionID IDENTITY NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
+                MessageIdentifier INTEGER NOT NULL,
                 RequestFilePath VARCHAR(300) NOT NULL,
                 ResponseFilePath VARCHAR(300),
                 AcceptedIndicator BOOLEAN DEFAULT false NOT NULL,
                 ResponseTimestamp TIMESTAMP,
                 FaultCode VARCHAR(100),
                 FaultDescription VARCHAR(500),
+                NIBRSReportCategoryCode VARCHAR(30) NOT NULL,
                 SubmissionTimestamp TIMESTAMP NOT NULL,
                 CONSTRAINT SubmissionID PRIMARY KEY (SubmissionID)
 );
+COMMENT ON COLUMN Submission.MessageIdentifier IS 'The pkID of the record in AdministrativeSegment or ArrestReportSegment. ';
+COMMENT ON COLUMN Submission.ReportType IS 'A or B representing Group A or Group B reports respectively. ';
 
 
 CREATE TABLE Violation (
@@ -50,9 +55,9 @@ CREATE TABLE Violation (
 CREATE TABLE CargoTheftIndicatorType (
                 CargoTheftIndicatorTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
-                StateDescription VARCHAR(7) NOT NULL,
+                StateDescription VARCHAR(50) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
-                NIBRSDescription VARCHAR(7) NOT NULL,
+                NIBRSDescription VARCHAR(50) NOT NULL,
                 CONSTRAINT CargoTheftIndicatorTypeID PRIMARY KEY (CargoTheftIndicatorTypeID)
 );
 
@@ -320,9 +325,9 @@ CREATE TABLE TypeOfCriminalActivityType (
 CREATE TABLE OffenderSuspectedOfUsingType (
                 OffenderSuspectedOfUsingTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
-                StateDescription VARCHAR(20) NOT NULL,
+                StateDescription VARCHAR(50) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
-                NIBRSDescription VARCHAR(20) NOT NULL,
+                NIBRSDescription VARCHAR(50) NOT NULL,
                 CONSTRAINT OffenderSuspectedOfUsingType_pk PRIMARY KEY (OffenderSuspectedOfUsingTypeID)
 );
 

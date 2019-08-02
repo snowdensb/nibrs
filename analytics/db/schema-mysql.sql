@@ -28,12 +28,14 @@ use search_nibrs_staging;
 CREATE TABLE Submission (
                 SubmissionID INT AUTO_INCREMENT NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
+                MessageIdentifier INT NOT NULL,
                 RequestFilePath VARCHAR(300) NOT NULL,
                 ResponseFilePath VARCHAR(300),
                 AcceptedIndicator BOOLEAN DEFAULT false NOT NULL,
                 ResponseTimestamp timestamp,
                 FaultCode VARCHAR(100),
                 FaultDescription VARCHAR(500),
+                NIBRSReportCategoryCode VARCHAR(30) NOT NULL,,
                 SubmissionTimestamp TIMESTAMP NOT NULL,
                 PRIMARY KEY (SubmissionID)
 );
@@ -52,9 +54,9 @@ CREATE TABLE Violation (
 CREATE TABLE CargoTheftIndicatorType (
                 CargoTheftIndicatorTypeID INT AUTO_INCREMENT NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
-                StateDescription VARCHAR(7) NOT NULL,
+                StateDescription VARCHAR(50) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
-                NIBRSDescription VARCHAR(7) NOT NULL,
+                NIBRSDescription VARCHAR(50) NOT NULL,
                 PRIMARY KEY (CargoTheftIndicatorTypeID)
 );
 
@@ -322,9 +324,9 @@ CREATE TABLE TypeOfCriminalActivityType (
 CREATE TABLE OffenderSuspectedOfUsingType (
                 OffenderSuspectedOfUsingTypeID INT AUTO_INCREMENT NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
-                StateDescription VARCHAR(20) NOT NULL,
+                StateDescription VARCHAR(50) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
-                NIBRSDescription VARCHAR(20) NOT NULL,
+                NIBRSDescription VARCHAR(50) NOT NULL,
                 PRIMARY KEY (OffenderSuspectedOfUsingTypeID)
 );
 
