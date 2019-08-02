@@ -78,6 +78,12 @@ public class SubmissionReqeustAspect {
     	Submission submission = new Submission();
     	submission.setIncidentIdentifier(incidentIdentifier);
     	
+    	String messageIdentifier = XmlUtils.xPathStringSearch(requestDocument, "nibrs:Submission/cjis:MessageMetadata/cjis:MessageIdentification/nc:IdentificationID");
+    	submission.setMessageIdentifier(Integer.valueOf(messageIdentifier));
+    	
+    	String nibrsReportCategoryCode = XmlUtils.xPathStringSearch(requestDocument, "nibrs:Submission/nibrs:Report/nibrs:ReportHeader/nibrs:NIBRSReportCategoryCode");
+    	submission.setNibrsReportCategoryCode(nibrsReportCategoryCode);
+    	
     	Exchange exchange = (Exchange)joinPoint.getArgs()[1];
     	log.info("Aspect exchange messageID: " + exchange.getIn().getMessageId());
     	
