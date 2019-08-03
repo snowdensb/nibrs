@@ -57,6 +57,8 @@ public class SubmissionRepositoryTest {
 		submission.setResponseFilePath("responseFilePath1");
 		submission.setResponseTimestamp(LocalDateTime.now());
 		submission.setSubmissionTimestamp(LocalDateTime.now());
+		submission.setMessageIdentifier(1);
+		submission.setNibrsReportCategoryCode("GROUP A INCIDENT REPORT");
 		
 		Submission submissionSaved = submissionRepository.save(submission);
 		List<Submission> submissionsAfterInsert1 = submissionRepository.findAll(); 

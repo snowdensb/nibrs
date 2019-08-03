@@ -38,8 +38,6 @@ CREATE TABLE Submission (
                 SubmissionTimestamp TIMESTAMP NOT NULL,
                 CONSTRAINT SubmissionID PRIMARY KEY (SubmissionID)
 );
-COMMENT ON COLUMN Submission.MessageIdentifier IS 'The pkID of the record in AdministrativeSegment or ArrestReportSegment. ';
-COMMENT ON COLUMN Submission.ReportType IS 'A or B representing Group A or Group B reports respectively. ';
 
 
 CREATE TABLE Violation (
