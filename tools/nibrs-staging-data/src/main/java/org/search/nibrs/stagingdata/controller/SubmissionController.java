@@ -66,6 +66,17 @@ public class SubmissionController {
 		return sb.toString();
 	}
 	
+	@GetMapping("/submissions/trigger")
+	public @ResponseBody SubmissionTrigger getSubmissionTrigger(){
+		
+		SubmissionTrigger submissionTrigger = new SubmissionTrigger();
+		submissionTrigger.setEndMonth(8);
+		submissionTrigger.setEndYear(2019);
+		submissionTrigger.setStartMonth(8);
+		submissionTrigger.setStartYear(2019);
+		return submissionTrigger;
+	}
+	
 	@PostMapping("/submissions/trigger/groupa/{id}")
 	public @ResponseBody String generateSubmissionFile(@PathVariable("id") Integer administrativeSegmentId){
 		

@@ -199,7 +199,7 @@ public class XmlReportGenerator {
 		Document document = XmlUtils.createNewDocument();
 		Element submissionElement = XmlUtils.appendChildElement(document, NIBRS, "Submission");
 		
-		addMessageMetadataElement("GroupAIncident"+ administrativeSegment.getAdministrativeSegmentId(), submissionElement);
+		addMessageMetadataElement(administrativeSegment.getAdministrativeSegmentId(), submissionElement);
 		
 		Element reportElement = XmlUtils.appendChildElement(submissionElement, NIBRS, "Report"); 
 		addReportHeaderElement(administrativeSegment, reportElement);
@@ -228,7 +228,7 @@ public class XmlReportGenerator {
 		Document document = XmlUtils.createNewDocument();
 		Element submissionElement = XmlUtils.appendChildElement(document, NIBRS, "Submission");
 		
-		addMessageMetadataElement("GroupBArrest" + arrestReportSegment.getArrestReportSegmentId(), submissionElement);
+		addMessageMetadataElement(arrestReportSegment.getArrestReportSegmentId(), submissionElement);
 		
 		Element reportElement = XmlUtils.appendChildElement(submissionElement, NIBRS, "Report"); 
 		addReportHeaderElement(arrestReportSegment, reportElement);
@@ -291,7 +291,7 @@ public class XmlReportGenerator {
 			if (StringUtils.isNotBlank(incidentHour)){
 				String incidentHourString = "T" + StringUtils.leftPad(incidentHour, 2, '0') + ":00:00"; 
 				Element element = XmlUtils.appendChildElement(activityDate, Namespace.NC, "DateTime");
-				element.setTextContent(DATE_FORMAT.format(incidentDate) + incidentHourString);
+				element.setTextContent(incidentDate + incidentHourString);
 			}
 			else {
 				Element e = XmlUtils.appendChildElement(activityDate, Namespace.NC, "Date");
@@ -314,12 +314,12 @@ public class XmlReportGenerator {
 		}
 	}
 
-	private void addMessageMetadataElement(String messageId, Element submissionElement) {
+	private void addMessageMetadataElement(Integer messageId, Element submissionElement) {
 		Element messageMetadata = XmlUtils.appendChildElement(submissionElement, CJIS, "MessageMetadata");
 		Element messageDateTime = XmlUtils.appendChildElement(messageMetadata, CJIS, "MessageDateTime");
 		messageDateTime.setTextContent(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss")));
 
-		appendIdentificationIdElement(messageMetadata, CJIS, "MessageIdentification", messageId);
+		appendIdentificationIdElement(messageMetadata, CJIS, "MessageIdentification", messageId.toString());
 		
 		Element messageImplementationVersion = XmlUtils.appendChildElement(messageMetadata, CJIS, "MessageImplementationVersion"); 
 		messageImplementationVersion.setTextContent("4.2");

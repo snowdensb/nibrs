@@ -44,7 +44,7 @@ public class CamelRouter extends RouteBuilder {
         	.wireTap("file:"+ appProperties.getNibrsNiemDocumentFolder() + "/request")
         	.log(LoggingLevel.INFO, "About to send to FBI ${body}")
         	.removeHeaders("*")
-        	.to(appProperties.getNibrsNiemServiceEndpointUrl())
+        	.to(appProperties.getNibrsNiemServiceEndpointUrl()).id("nibrsNiemServiceEndPoint")
         	.log(LoggingLevel.INFO, "After calling the FBI service")
         	.log(LoggingLevel.INFO, "MessageID after calling is ${id}.")
         	.log(LoggingLevel.INFO, "File Name after calling is ${in.header.CamelFileName}")
