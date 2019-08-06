@@ -39,6 +39,7 @@ CREATE TABLE Submission (
                 SubmissionTimestamp TIMESTAMP NOT NULL,
                 PRIMARY KEY (SubmissionID)
 );
+create index idx_submission_MessageIdentifier on submission(MessageIdentifier);
 
 
 CREATE TABLE Violation (
