@@ -16,6 +16,7 @@
 package org.search.nibrs.stagingdata.repository.segment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -28,6 +29,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -45,23 +48,27 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         CriteriaQuery<IncidentSearchResult> query = criteriaBuilder.createQuery(IncidentSearchResult.class);
         Root<AdministrativeSegment> root = query.from(AdministrativeSegment.class);
 		Join<AdministrativeSegment, OffenseSegment> joinOptions = root.join("offenseSegments", JoinType.LEFT);
+		
+		Predicate hasFbiSubmission = getFbiSubmissionPredicate(criteriaBuilder, query, root); 
+    	
 		query.multiselect(root.get("administrativeSegmentId"),
 				criteriaBuilder.literal("A"),root.get("incidentNumber"), 
 				root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("incidentDate"), 
 				joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"),
 				joinOptions.get("ucrOffenseCodeType").get("nibrsCode"),
 				root.get("monthOfTape"), root.get("yearOfTape"), 
-				root.get("reportTimestamp"));
+				root.get("reportTimestamp"), 
+				hasFbiSubmission.alias("fbiSubmission"));
 
         Subquery<Integer> subQuery = query.subquery(Integer.class);
         Root<AdministrativeSegment> subRoot = subQuery.from(AdministrativeSegment.class);
         subQuery.distinct(true);
         subQuery.groupBy(subRoot.get("incidentNumber"));
         subQuery.select(criteriaBuilder.max(subRoot.get("administrativeSegmentId")));
-        List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, subRoot, criteriaBuilder);
-
+        List<Predicate> subQueryPredicates = getAdministrativeSegmentPredicates(incidentSearchRequest, subRoot, criteriaBuilder);
+        
         subQuery
-        	.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+        	.where(criteriaBuilder.and(subQueryPredicates.toArray(new Predicate[subQueryPredicates.size()])));
         
         Subquery<Integer> offenseSubQuery = query.subquery(Integer.class);
         Root<OffenseSegment> offenseSubRoot = offenseSubQuery.from(OffenseSegment.class);
@@ -70,12 +77,35 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         		offenseSubRoot.get("administrativeSegment").get("administrativeSegmentId"), 
         		root.get("administrativeSegmentId")));
 
+        List<Predicate> queryPredicates = new ArrayList<>(); 
+        
+        queryPredicates.addAll( Arrays.asList(
+    		criteriaBuilder.equal(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), offenseSubQuery),
+    		root.get("administrativeSegmentId").in(subQuery))
+		);
+        
+        if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
+        	queryPredicates.add(0, hasFbiSubmission);
+        }
+        
         query.where(criteriaBuilder.and(
-        		root.get("administrativeSegmentId").in(subQuery), 
-        		criteriaBuilder.equal(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), offenseSubQuery)));
+        		queryPredicates.toArray( new Predicate[queryPredicates.size()])));
         
 		return entityManager.createQuery(query)
 	            .getResultList();
+	}
+
+	private Predicate getFbiSubmissionPredicate(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query,
+			Root<AdministrativeSegment> root) {
+		Subquery<Submission> submissionSubquery = query.subquery(Submission.class);
+		   Root<Submission> submissionInfo = submissionSubquery.from(Submission.class);
+		   submissionSubquery.select(submissionInfo)//
+              .where(criteriaBuilder.and(
+        		  criteriaBuilder.equal(submissionInfo.get("messageIdentifier"), root.get("administrativeSegmentId")), 
+        		  criteriaBuilder.equal(submissionInfo.get("nibrsReportCategoryCode"), "GROUP A INCIDENT REPORT")));//
+    	
+		Predicate hasFbiSubmission = criteriaBuilder.exists(submissionSubquery);
+		return hasFbiSubmission;
 	}
 
 	@Override
@@ -85,6 +115,10 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         Root<AdministrativeSegment> root = query.from(AdministrativeSegment.class);
         List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
         
+        if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
+        	Predicate hasFbiSubmission = getFbiSubmissionPredicate(criteriaBuilder, query, root);   
+        	predicates.add(0, hasFbiSubmission);
+        }
 		query.select(criteriaBuilder.countDistinct(root.get("incidentNumber")))
 			.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
 		return entityManager.createQuery(query).getSingleResult();
@@ -94,6 +128,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 			Root<AdministrativeSegment> root, CriteriaBuilder criteriaBuilder) {
 		List<Predicate> predicates = new ArrayList<>();
         if(incidentSearchRequest != null) {
+        	
         	if (incidentSearchRequest.getAgencyIds() != null && incidentSearchRequest.getAgencyIds().size() > 0) {
         		predicates.add(criteriaBuilder.and(root.get("agency").get("agencyId").in(incidentSearchRequest.getAgencyIds())));
         	}
@@ -122,6 +157,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         	if (incidentSearchRequest.getSubmissionYear() != null) {
         		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("yearOfTape"), incidentSearchRequest.getSubmissionYear())));
         	}
+        	
         }
 		return predicates;
 	}

@@ -54,7 +54,8 @@ public class IncidentSearchResult implements Serializable {
 			String offenseCode,
 			String submissionMonth, 
 			String submissionYear, 
-			LocalDateTime reportTimestamp) {
+			LocalDateTime reportTimestamp, 
+			Boolean fbiSubmission) {
 		this();
 		this.primaryKey = primaryKey;
 		this.reportType = ReportType.valueOf(reportType);
@@ -67,6 +68,7 @@ public class IncidentSearchResult implements Serializable {
 		this.submissionMonth = submissionMonth;
 		this.submissionYear = submissionYear;
 		this.reportTimestamp = reportTimestamp;
+		this.fbiSubmission = fbiSubmission;
 	}
 	public IncidentSearchResult(Integer primaryKey, String incidentIdentifier) {
 		this();
