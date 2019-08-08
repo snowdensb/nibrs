@@ -37,6 +37,7 @@ public class GlobalControllerAdvice {
         model.addAttribute("inactivityTimeout", appProperties.getInactivityTimeout());
         model.addAttribute("inactivityTimeoutInSeconds", appProperties.getInactivityTimeoutInSeconds());
         model.addAttribute("showUserInfoDropdown", appProperties.getShowUserInfoDropdown());
+        model.addAttribute("securityEnabled", appProperties.getSecurityEnabled());
     }
     
 }

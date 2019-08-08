@@ -109,13 +109,14 @@
 			<script th:inline="javascript">
 		     /*<![CDATA[*/
 		        var context = [[@{/}]];
+		       	var securityEnabled = [[${securityEnabled}]]; 
 		       	var inactivityTimeout = [[${inactivityTimeout}]]; 
 		       	var inactivityTimeoutInSeconds = [[${inactivityTimeoutInSeconds}]]; 
 		     /*]]>*/
 		      var idleTime;
 	
 		      $(function(){
-		    	  if( inactivityTimeout ){
+		    	  if( securityEnabled && inactivityTimeout ){
 	       		  ojbc.reloadPage();
 	 	          $('html').on('mousemove click mouseup mousedown keydown keypress keyup submit change mouseenter scroll resize dblclick', function () {
 	 	              clearTimeout(idleTime);
