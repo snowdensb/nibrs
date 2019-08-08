@@ -280,18 +280,6 @@ public class UploadFileController {
 		return persistReportTask;
 	}
 	
-	@PostMapping("/validIncidents")
-	public @ResponseBody String persistIncidentReports(Map<String, Object> model) {
-		
-		ValidationResults validationResults = (ValidationResults) model.get("validationResults");
-		List<AbstractReport> abstractReports = validationResults.getReportsWithoutErrors(); 
-		
-		logCountsOfReports(abstractReports);
-		restService.persistValidReports(abstractReports);
-		
-		return "All valid reports from this submission are processed.";
-	}
-	
 	private void logCountsOfReports(List<AbstractReport> abstractReports) {
 		Set<String> incidentNumbers = new HashSet<>();
 		abstractReports.forEach(item->incidentNumbers.add(item.getIdentifier()));

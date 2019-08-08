@@ -78,13 +78,6 @@
                 $('#progressDiv').removeClass('d-none');
             }
             
-            $('#loadIncidents').click (function(){
-                 
-                xhr = $.post(context + "files/validIncidents", function(data) {
-                  $('#info').html(data); 
-                }).fail();
-            });
-
             $('#loadIncidentsAync').click (function(){
             	var timerId, percent;
               xhr = $.post(context + "files/validIncidentsAsync", function(data, status){
@@ -147,8 +140,7 @@
 		       th:text="${validationResults.countOfValidReport} + ' of the ' + ${validationResults.totalReportCount} + 
 		       ' are error-free. Would you like to load the '+ 
 		       ${validationResults.countOfValidReport} +' incidents into the repository?' "></span>
-	      <button type="button" class="btn btn-primary btn-sm" id="loadIncidents">Load</button>
-        <button type="button" class="btn btn-primary btn-sm" id="loadIncidentsAync">Async Load</button>
+        <button type="button" class="btn btn-primary btn-sm ml-2" id="loadIncidentsAync">Load</button>
         <div class="progress mt-2  d-none" id="progressDiv">
           <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0.25" aria-valuemin="0" aria-valuemax="100" id="progress" style="width:0%"></div>
         </div>
