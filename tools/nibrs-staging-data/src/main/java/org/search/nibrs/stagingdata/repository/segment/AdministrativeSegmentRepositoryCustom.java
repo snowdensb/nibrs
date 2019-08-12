@@ -20,11 +20,11 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 
 @Transactional
 public interface AdministrativeSegmentRepositoryCustom{
-	List<IncidentSearchResult> findAllByCriteria(IncidentSearchRequest incidentSearchRequest);
+	List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest);
 	long countAllByCriteria(IncidentSearchRequest incidentSearchRequest);
 	
 }

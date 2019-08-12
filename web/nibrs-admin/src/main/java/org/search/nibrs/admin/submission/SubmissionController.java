@@ -16,7 +16,6 @@
 package org.search.nibrs.admin.submission;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -42,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"submissionIncidentSearchRequest", "agencyMapping", "incidentSearchResults"})
+@SessionAttributes({"submissionIncidentSearchRequest", "agencyMapping", "submissionIncidentSearchResult"})
 @RequestMapping("/submission")
 public class SubmissionController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -102,8 +101,8 @@ public class SubmissionController {
 
 	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,
 			Map<String, Object> model) throws Throwable {
-		List<IncidentSearchResult> incidentSearchResults = restService.getIncidents(incidentSearchRequest);
-		model.put("submissionIncidentSearchResults", incidentSearchResults); 
+		IncidentSearchResult incidentSearchResult = restService.getIncidents(incidentSearchRequest);
+		model.put("submissionIncidentSearchResult", incidentSearchResult); 
 	}	
 
 	@GetMapping("/{reportType}/{id}")

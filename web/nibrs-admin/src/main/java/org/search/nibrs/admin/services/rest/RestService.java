@@ -15,9 +15,7 @@
  */
 package org.search.nibrs.admin.services.rest;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -67,12 +65,11 @@ public class RestService{
 	}
 	
 	
-	public List<IncidentSearchResult> getIncidents(IncidentSearchRequest incidentSearchRequest){
+	public IncidentSearchResult getIncidents(IncidentSearchRequest incidentSearchRequest){
 		return this.webClient.post().uri("/reports/search")
 				.body(BodyInserters.fromObject(incidentSearchRequest))
 				.retrieve()
-				.bodyToMono(new ParameterizedTypeReference<List<IncidentSearchResult>>() {})
-				.defaultIfEmpty(new ArrayList<IncidentSearchResult>())
+				.bodyToMono(new ParameterizedTypeReference<IncidentSearchResult>() {})
 				.block();
 	}
 	
@@ -144,30 +141,6 @@ public class RestService{
 		}
 		
 	}
-	
-	public void persistValidReports(List<AbstractReport> abstractReports) {
-		log.info("Execute method asynchronously. "
-				+ Thread.currentThread().getName());
-		int count = 0; 
-		for(AbstractReport abstractReport: abstractReports){
-			try{
-				this.persistAbstractReport(abstractReport);
-				log.info("Progress: " + (++count) + "/" + abstractReports.size());
-			}
-			catch(ResourceAccessException rae){
-				log.error("Failed to connect to the rest service to process the " + abstractReport.getAdminSegmentLevel() + 
-						"level report with Identifier " + abstractReport.getIdentifier());
-				throw rae;
-			}
-			catch(Exception e){
-				log.warn("Failed to persist incident " + abstractReport.getIdentifier());
-				log.error(e);
-				log.info("Progress: " + (++count) + "/" + abstractReports.size());
-			}
-		}
-		
-	}
-	
 	
 	
 }

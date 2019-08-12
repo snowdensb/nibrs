@@ -29,7 +29,7 @@
      <form action="#" th:action="@{/submission/incidentSearch}" th:object="${submissionIncidentSearchRequest}" id="searchForm" method="post" th:fragment="incidentSearchFormContent">
        <div id="incidentSearchFormContent">
           <div class="form-row align-text-center">
-            <label class="col-2 col-form-label font-weight-bold text-right">Submission Date</label>
+            <label class="col-2 col-form-label font-weight-bold text-right">Submission Start Date</label>
             <div class="col-sm-2">
             	<input class="form-control form-control-sm" type="text" th:field="*{submissionMonth}" width="2" maxlength="2" placeholder="month" th:errorclass="is-invalid"/>
            	<div th:if="${#fields.hasErrors('submissionMonth')}" th:errors="*{submissionMonth}" class="invalid-feedback">Submission Month error message</div>

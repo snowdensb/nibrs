@@ -30,7 +30,7 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
@@ -79,7 +79,7 @@ public class AdministrativeSegmentService {
         });
 	}
 
-	public List<IncidentSearchResult> findAllByCriteria(IncidentSearchRequest incidentSearchRequest){
+	public List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest){
 		return administrativeSegmentRepositoryCustom.findAllByCriteria(incidentSearchRequest);
 	}
 	

@@ -31,7 +31,7 @@ import org.search.nibrs.model.ArresteeSegment;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.OffenseSegment;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.util.BaselineIncidentFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,7 +211,7 @@ public class AdministrativeSegmentServiceTest {
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
 		
 		IncidentSearchRequest incidentSearchRequest = new IncidentSearchRequest();
-		List<IncidentSearchResult> incidentSearchResults = administrativeSegmentService
+		List<IncidentPointer> incidentSearchResults = administrativeSegmentService
 				.findAllByCriteria(incidentSearchRequest);
 		assertThat(incidentSearchResults.size(), equalTo(3));
 		
@@ -253,7 +253,7 @@ public class AdministrativeSegmentServiceTest {
 		assertThat(incidentSearchResults.get(0).getUcrOffenseCodeTypeId(), equalTo(91));
 		assertThat(incidentSearchResults.get(0).getOffenseCode(), equalTo("09A"));
 		
-		IncidentSearchResult result = incidentSearchResults.get(0);
+		IncidentPointer result = incidentSearchResults.get(0);
 		assertThat(result.getIncidentIdentifier(), equalTo("12345679"));
 		
 		incidentSearchRequest.setSubmissionYear(null);
@@ -264,7 +264,7 @@ public class AdministrativeSegmentServiceTest {
 		assertThat(count, equalTo(3L));
 		
 		incidentSearchResults = administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
-		List<String> offenses = incidentSearchResults.stream().map(IncidentSearchResult::getOffenseCode).collect(Collectors.toList());
+		List<String> offenses = incidentSearchResults.stream().map(IncidentPointer::getOffenseCode).collect(Collectors.toList());
 		assertTrue(offenses.containsAll(Arrays.asList("13A", "09A") ));
 	}
 	

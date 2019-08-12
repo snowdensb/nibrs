@@ -16,7 +16,6 @@
 package org.search.nibrs.admin.incident;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -42,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping", "incidentSearchResults"})
+@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping", "incidentSearchResult"})
 @RequestMapping("/incidents")
 public class IncidentController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -105,8 +104,8 @@ public class IncidentController {
 
 	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,
 			Map<String, Object> model) throws Throwable {
-		List<IncidentSearchResult> incidentSearchResults = restService.getIncidents(incidentSearchRequest);
-		model.put("incidentSearchResults", incidentSearchResults); 
+		IncidentSearchResult incidentSearchResult = restService.getIncidents(incidentSearchRequest);
+		model.put("incidentSearchResult", incidentSearchResult); 
 	}	
 
 	@GetMapping("/{reportType}/{id}")

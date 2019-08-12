@@ -136,11 +136,12 @@
 
  			</script>
  			<div class="font-weight-bold p-3 small mt-3" id="info" >
-		    <span th:if="${validationResults.countOfValidReport} > 0" 
-		       th:text="${validationResults.countOfValidReport} + ' of the ' + ${validationResults.totalReportCount} + 
-		       ' are error-free. Would you like to load the '+ 
-		       ${validationResults.countOfValidReport} +' incidents into the repository?' "></span>
-        <button type="button" class="btn btn-primary btn-sm ml-2" id="loadIncidentsAync">Load</button>
+ 			  <p th:if="${validationResults.countOfValidReport} > 0">
+			    <span th:text="${validationResults.countOfValidReport} + ' of the ' + ${validationResults.totalReportCount} + 
+			       ' are error-free. Would you like to load the '+ 
+			       ${validationResults.countOfValidReport} +' incidents into the repository?' "></span>
+	        <button type="button" class="btn btn-primary btn-sm ml-2" id="loadIncidentsAync">Load</button>
+        </p>
         <div class="progress mt-2  d-none" id="progressDiv">
           <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0.25" aria-valuemin="0" aria-valuemax="100" id="progress" style="width:0%"></div>
         </div>

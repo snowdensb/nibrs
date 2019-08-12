@@ -29,7 +29,7 @@ import javax.persistence.criteria.Subquery;
 import org.apache.commons.lang3.BooleanUtils;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.springframework.stereotype.Repository;
 
@@ -39,9 +39,9 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
     private EntityManager entityManager;
 
 	@Override
-	public List<IncidentSearchResult> findAllByCriteria(IncidentSearchRequest incidentSearchRequest) {
+	public List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<IncidentSearchResult> query = criteriaBuilder.createQuery(IncidentSearchResult.class);
+        CriteriaQuery<IncidentPointer> query = criteriaBuilder.createQuery(IncidentPointer.class);
         Root<ArrestReportSegment> root = query.from(ArrestReportSegment.class);
         
 		Predicate hasFbiSubmission = getSubmissionPredicate(criteriaBuilder, query, root); 

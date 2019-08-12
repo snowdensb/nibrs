@@ -32,7 +32,7 @@ import javax.persistence.criteria.Subquery;
 import org.apache.commons.lang3.BooleanUtils;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.springframework.stereotype.Repository;
@@ -43,9 +43,9 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
     private EntityManager entityManager;
 
 	@Override
-	public List<IncidentSearchResult> findAllByCriteria(IncidentSearchRequest incidentSearchRequest) {
+	public List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<IncidentSearchResult> query = criteriaBuilder.createQuery(IncidentSearchResult.class);
+        CriteriaQuery<IncidentPointer> query = criteriaBuilder.createQuery(IncidentPointer.class);
         Root<AdministrativeSegment> root = query.from(AdministrativeSegment.class);
 		Join<AdministrativeSegment, OffenseSegment> joinOptions = root.join("offenseSegments", JoinType.LEFT);
 		

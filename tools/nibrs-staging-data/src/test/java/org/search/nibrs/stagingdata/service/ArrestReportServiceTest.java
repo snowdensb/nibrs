@@ -32,7 +32,7 @@ import org.search.nibrs.model.GroupBArrestReport;
 import org.search.nibrs.stagingdata.model.ArrestReportSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.repository.ArresteeWasArmedWithTypeRepository;
@@ -308,7 +308,7 @@ public class ArrestReportServiceTest {
 		long count = arrestReportService.countAllByCriteria(incidentSearchRequest); 
 		assertThat(count, equalTo(1L));
 		
-		List<IncidentSearchResult> incidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
+		List<IncidentPointer> incidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
 		assertThat(incidentSearchResults.size(), equalTo(1));
 		
 		incidentSearchRequest.setAgencyIds(Arrays.asList(1));

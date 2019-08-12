@@ -15,13 +15,12 @@
  */
 package org.search.nibrs.stagingdata.controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.stagingdata.AppProperties;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -51,20 +50,15 @@ public class ReportSearchController {
 	public AppProperties appProperties;
 
 	@PostMapping("/search")
-	public @ResponseBody List<IncidentSearchResult> search(@RequestBody IncidentSearchRequest incidentSearchRequest){
+	public @ResponseBody IncidentSearchResult search(@RequestBody IncidentSearchRequest incidentSearchRequest){
 		log.info("IncidentSearchRequest:" + incidentSearchRequest);
-		List<IncidentSearchResult> incidentSearchResults = administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
-		List<IncidentSearchResult> arrestIncidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
+		List<IncidentPointer> incidentSearchResults = administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
+		List<IncidentPointer> arrestIncidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
 		incidentSearchResults.addAll(arrestIncidentSearchResults); 
 		
-	    Comparator<IncidentSearchResult> incidentSearchResultComparator
-	      = Comparator.comparing(IncidentSearchResult::getReportTimestamp);
-	    
-	    incidentSearchResults.sort(incidentSearchResultComparator.reversed());
+		IncidentSearchResult incidentSearchResult = new IncidentSearchResult(incidentSearchResults, appProperties.getReportSearchResultsLimit());
 		
-		return incidentSearchResults.stream()
-				.limit(appProperties.getReportSearchResultsLimit())
-				.collect(Collectors.toList());
+		return incidentSearchResult;
 	}
 	
 	@GetMapping("/A/{id}")

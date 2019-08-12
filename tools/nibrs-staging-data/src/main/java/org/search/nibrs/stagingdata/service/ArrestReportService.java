@@ -44,7 +44,7 @@ import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.repository.AdditionalJustifiableHomicideCircumstancesTypeRepository;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
@@ -163,7 +163,7 @@ public class ArrestReportService {
 		return arrestReportSegmentRepository.save(arrestReportSegment);
 	}
 	
-	public List<IncidentSearchResult> findAllByCriteria(IncidentSearchRequest incidentSearchRequest){
+	public List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest){
 		return arrestReportSegmentRepositoryCustom.findAllByCriteria(incidentSearchRequest);
 	}
 	
