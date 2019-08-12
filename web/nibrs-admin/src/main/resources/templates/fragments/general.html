@@ -39,7 +39,7 @@
           <div class="text-white pl-3">
             <img th:src="@{/images/oklahoma_logo.png}" height="75px" /> 
             <span class="initials align-bottom" aria-hidden="true">NIBRS</span>
-            <span class="fullname align-middle">Record of NIBRS submissions</span>
+            <span class="fullname align-middle">Record of NIBRS Submissions</span>
           </div>
         </div>
 	      <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
@@ -56,6 +56,9 @@
 	            </li>
 	            <li class="nav-item">
 	              <a class="nav-link" href="#" id="upload">Validate</a>
+	            </li>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#" id="submitToFbi">Submit to FBI</a>
 	            </li>
 	          </ul>
 	          
@@ -137,6 +140,15 @@
 							$(this).parent().toggleClass('show');
 							
 							xhr = $.get(context + 'files/upload', function(data) {
+							   $('#portalContent').html(data); 
+							 }).fail(ojbc.displayFailMessage);
+							return false; 
+	          });
+		    	  
+		    	  $('body').on('click', 'a#submitToFbi', function() {   
+							$(this).parent().toggleClass('show');
+							
+							xhr = $.get(context + 'submission/searchForm', function(data) {
 							   $('#portalContent').html(data); 
 							 }).fail(ojbc.displayFailMessage);
 							return false; 
