@@ -51,6 +51,7 @@
              <button type="button" class="btn btn-primary btn-sm ml-2" id="triggerSubmission">Submit to FBI</button>
            </span>
         </div>
+        <div class="alert alert-info small d-none" id="responseInfo"></div>
 				<table id="searchResultsTable" class="table table-striped table-bordered dt-responsive display responsive" style="width: 100%; border-spacing: 0;" th:if="${submissionIncidentSearchResult != null}">
 					<thead>
 						<tr>
@@ -115,9 +116,15 @@
            });
            
            $('[data-toggle="tooltip"]').tooltip({
-               trigger : 'hover'
+             trigger : 'hover'
            });   
-
+           
+           $('#triggerSubmission').click (function(){
+        	   $(this).prop('disabled', true);
+              xhr = $.get(context + "submission/trigger", function(data) {
+                $('#responseInfo').removeClass('d-none').html(data); 
+              }).fail();
+           });
                    
            $('#searchResultsTable tbody').on('click', 'tr',function() {
              table.$('tr.selected').removeClass('selected');

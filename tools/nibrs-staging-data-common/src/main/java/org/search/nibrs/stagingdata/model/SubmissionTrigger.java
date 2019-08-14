@@ -20,16 +20,32 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class SubmissionTrigger {
 	private List<String> oris; 
+	private List<Integer> agencyIds; 
 	private Integer startYear; 
 	private Integer startMonth; 
 	private Integer endYear; 
 	private Integer endMonth; 
+	
+	public SubmissionTrigger() {
+		super();
+	}
+	
+	public SubmissionTrigger(IncidentSearchRequest incidentSearchRequest) {
+		super();
+		
+		this.agencyIds = incidentSearchRequest.getAgencyIds();
+		this.startYear = incidentSearchRequest.getSubmissionYear(); 
+		this.endYear = incidentSearchRequest.getSubmissionYear(); 
+		this.startMonth = incidentSearchRequest.getSubmissionMonth(); 
+		this.endMonth = incidentSearchRequest.getSubmissionMonth();
+	}
 	
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
@@ -112,6 +128,14 @@ public class SubmissionTrigger {
 	
 	private boolean isValidMonth(Integer month) {
 		return month != null && month > 0 && month <=12;
+	}
+
+	public List<Integer> getAgencyIds() {
+		return agencyIds;
+	}
+
+	public void setAgencyIds(List<Integer> agencyIds) {
+		this.agencyIds = agencyIds;
 	}
 
 }

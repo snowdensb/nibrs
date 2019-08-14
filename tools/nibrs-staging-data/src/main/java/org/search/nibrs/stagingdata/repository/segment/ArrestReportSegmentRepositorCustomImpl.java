@@ -55,22 +55,14 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         		root.get("reportTimestamp"), 
         		hasFbiSubmission.alias("fbiSubmission"));
 
-        Subquery<Integer> subQuery = query.subquery(Integer.class);
-        Root<ArrestReportSegment> subRoot = subQuery.from(ArrestReportSegment.class);
-        subQuery.distinct(true);
-        subQuery.groupBy(subRoot.get("arrestTransactionNumber"));
-        subQuery.select(criteriaBuilder.max(subRoot.get("arrestReportSegmentId")));
-        List<Predicate> predicates = getArrestReportSegmentPredicates(incidentSearchRequest, subRoot, criteriaBuilder);
-
-        subQuery
-        	.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+        List<Predicate> predicates = getArrestReportSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
 
         if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
-        	query.where(criteriaBuilder.and(root.get("arrestReportSegmentId").in(subQuery), hasFbiSubmission));
+        	predicates.add(hasFbiSubmission);
         }
-        else {
-        	query.where(root.get("arrestReportSegmentId").in(subQuery));
-        }
+        
+        query.where(criteriaBuilder.and(
+        		predicates.toArray( new Predicate[predicates.size()])));
 		return entityManager.createQuery(query)
 	            .getResultList();
 	}

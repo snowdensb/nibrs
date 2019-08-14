@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
@@ -84,6 +85,14 @@ public class SubmissionController {
 		return "/submission/eligibleIncidentSearchForm::incidentSearchFormContent";
 	}
 	
+	@GetMapping("/trigger")
+	public @ResponseBody String triggerSubmission(Map<String, Object> model) throws IOException {
+		IncidentSearchRequest submissionIncidentSearchRequest = (IncidentSearchRequest) model.get("submissionIncidentSearchRequest");
+		
+		String response = restService.generateSubmissionFiles(submissionIncidentSearchRequest);
+		return response;
+	}
+	
 	@PostMapping("/search")
 	public String advancedSearch(HttpServletRequest request, @Valid @ModelAttribute IncidentSearchRequest 
 			submissionIncidentSearchRequest, BindingResult bindingResult, 
@@ -102,6 +111,7 @@ public class SubmissionController {
 	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,
 			Map<String, Object> model) throws Throwable {
 		IncidentSearchResult incidentSearchResult = restService.getIncidents(incidentSearchRequest);
+		model.put("submissionIncidentSearchRequest", incidentSearchRequest);
 		model.put("submissionIncidentSearchResult", incidentSearchResult); 
 	}	
 

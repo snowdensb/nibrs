@@ -117,10 +117,12 @@ public class XmlReportGenerator {
 				.countByOriListAndSubmissionDateRange(submissionTrigger.getOris(), 
 						submissionTrigger.getStartDate(), 
 						submissionTrigger.getEndDate());
+		log.info("groupAIncidentCount: " + groupAIncidentCount);
 		long groubBArrestReportCount = arrestReportSegmentRepository
 				.countByOriListAndSubmissionDateRange(submissionTrigger.getOris(), 
 						submissionTrigger.getStartDate(), 
 						submissionTrigger.getEndDate());
+		log.info("groubBArrestReportCount: " + groubBArrestReportCount);
 		return groupAIncidentCount + groubBArrestReportCount; 
 	}
 

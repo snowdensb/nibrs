@@ -25,6 +25,7 @@ import org.search.nibrs.admin.uploadfile.PersistReportTask;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.GroupBArrestReport;
+import org.search.nibrs.stagingdata.model.SubmissionTrigger;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -112,6 +113,17 @@ public class RestService{
 			log.warn("The report type " +  abstractReport.getClass().getName() + "is not supported");
 		}
 		
+	}
+	
+	public String generateSubmissionFiles(IncidentSearchRequest incidentSearchRequest) {
+		SubmissionTrigger submissionTrigger = new SubmissionTrigger(incidentSearchRequest);
+		log.info("submissionTrigger: " + submissionTrigger);
+		log.info("submissionIncidentSearchRequest: " + incidentSearchRequest);
+		return webClient.post().uri("/submissions/trigger")
+				.body(BodyInserters.fromObject(submissionTrigger))
+				.retrieve()
+				.bodyToMono(String.class)
+				.block();
 	}
 	
 	@Async

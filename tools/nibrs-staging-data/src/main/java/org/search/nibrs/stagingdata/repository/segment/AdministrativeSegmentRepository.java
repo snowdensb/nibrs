@@ -81,9 +81,6 @@ public interface AdministrativeSegmentRepository
 	List<Integer> findIdsByOriAndArrestDate(String ori, Integer year, Integer month);
 	
 	@Query("SELECT count(DISTINCT a.administrativeSegmentId) from AdministrativeSegment a "
-			+ "LEFT JOIN a.exceptionalClearanceDateType ae "
-			+ "LEFT JOIN a.arresteeSegments aa "
-			+ "LEFT JOIN aa.arrestDateType aaa "
 			+ "WHERE (?1 = null OR a.ori in (?1)) AND "
 			+ "		(?2 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) >= ?2 ) AND "
 			+ "		(?3 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) <= ?3) ")

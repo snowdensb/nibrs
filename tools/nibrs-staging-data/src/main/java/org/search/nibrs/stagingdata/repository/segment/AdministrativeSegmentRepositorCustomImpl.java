@@ -16,7 +16,6 @@
 package org.search.nibrs.stagingdata.repository.segment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -31,8 +30,8 @@ import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.search.nibrs.stagingdata.model.Submission;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.springframework.stereotype.Repository;
@@ -60,15 +59,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 				root.get("reportTimestamp"), 
 				hasFbiSubmission.alias("fbiSubmission"));
 
-        Subquery<Integer> subQuery = query.subquery(Integer.class);
-        Root<AdministrativeSegment> subRoot = subQuery.from(AdministrativeSegment.class);
-        subQuery.distinct(true);
-        subQuery.groupBy(subRoot.get("incidentNumber"));
-        subQuery.select(criteriaBuilder.max(subRoot.get("administrativeSegmentId")));
-        List<Predicate> subQueryPredicates = getAdministrativeSegmentPredicates(incidentSearchRequest, subRoot, criteriaBuilder);
-        
-        subQuery
-        	.where(criteriaBuilder.and(subQueryPredicates.toArray(new Predicate[subQueryPredicates.size()])));
+        List<Predicate> queryPredicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
         
         Subquery<Integer> offenseSubQuery = query.subquery(Integer.class);
         Root<OffenseSegment> offenseSubRoot = offenseSubQuery.from(OffenseSegment.class);
@@ -77,11 +68,8 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         		offenseSubRoot.get("administrativeSegment").get("administrativeSegmentId"), 
         		root.get("administrativeSegmentId")));
 
-        List<Predicate> queryPredicates = new ArrayList<>(); 
-        
-        queryPredicates.addAll( Arrays.asList(
-    		criteriaBuilder.equal(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), offenseSubQuery),
-    		root.get("administrativeSegmentId").in(subQuery))
+        queryPredicates.add( 
+    		criteriaBuilder.equal(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), offenseSubQuery)
 		);
         
         if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
@@ -154,7 +142,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("monthOfTape"), incidentSearchRequest.getSubmissionMonth())));
         	}
         	
-        	if (incidentSearchRequest.getSubmissionYear() != null) {
+         	if (incidentSearchRequest.getSubmissionYear() != null) {
         		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("yearOfTape"), incidentSearchRequest.getSubmissionYear())));
         	}
         	

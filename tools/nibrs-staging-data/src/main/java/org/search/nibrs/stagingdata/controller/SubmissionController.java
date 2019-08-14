@@ -17,6 +17,8 @@ package org.search.nibrs.stagingdata.controller;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Submission;
@@ -33,6 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SubmissionController {
+	private final Log log = LogFactory.getLog(this.getClass());
+
 	@Autowired
 	private SubmissionRepository submissionRepository;
 	@Autowired
@@ -55,13 +59,15 @@ public class SubmissionController {
 	@PostMapping("/submissions/trigger")
 	public @ResponseBody String generateSubmissionFiles(@RequestBody SubmissionTrigger submissionTrigger){
 
-		xmlReportGenerator.processSubmissionTrigger(submissionTrigger);
+//		xmlReportGenerator.processSubmissionTrigger(submissionTrigger);
 		long countOfReportsToGenerate = xmlReportGenerator.countTheIncidents(submissionTrigger);
 		
+		log.info("submissionTrigger:" + submissionTrigger );
 		StringBuilder sb = new StringBuilder(180); 
 		sb.append(countOfReportsToGenerate);
 		sb.append(" NIBRS reports will be generated and sent to ");
 		sb.append(appProperties.getNibrsNiemDocumentFolder());
+		sb.append(",  Runaway arrest reports are not processed. "); 
 		
 		return sb.toString();
 	}
