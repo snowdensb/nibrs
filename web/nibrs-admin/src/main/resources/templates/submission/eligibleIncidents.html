@@ -44,10 +44,10 @@
           th:if="${submissionIncidentSearchResult != null && submissionIncidentSearchResult.totalCount != submissionIncidentSearchResult.returnedCount}">
            <span th:if="${submissionIncidentSearchResult.totalCount != submissionIncidentSearchResult.returnedCount}" 
              th:text=" 'The latest ' + ${submissionIncidentSearchResult.returnedCount} + ' of the ' + ${submissionIncidentSearchResult.totalCount} + ' search hits are shown in the table. '"></span>
-           <span th:if="${submissionIncidentSearchResult.totalCount - submissionIncidentSearchResult.fbiSubmissionCount > 0}" 
-             th:text=" ${submissionIncidentSearchResult.totalCount - submissionIncidentSearchResult.fbiSubmissionCount} + ' reports are not sent to FBI. Do you want to submit them to FBI now? ' " >
+           <span th:if="${submissionIncidentSearchResult.eligibleFbiSubmissionCount > 0}" 
+             th:text=" ${submissionIncidentSearchResult.eligibleFbiSubmissionCount} + ' reports are eligible to be sent to FBI. Do you want to submit them to FBI now? ' " >
            </span>
-           <span th:if="${submissionIncidentSearchResult.totalCount - submissionIncidentSearchResult.fbiSubmissionCount > 0}">
+           <span th:if="${submissionIncidentSearchResult.eligibleFbiSubmissionCount > 0}">
              <button type="button" class="btn btn-primary btn-sm ml-2" id="triggerSubmission">Submit to FBI</button>
            </span>
         </div>

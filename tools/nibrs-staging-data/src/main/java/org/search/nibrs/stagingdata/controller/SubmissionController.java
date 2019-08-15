@@ -67,7 +67,6 @@ public class SubmissionController {
 		sb.append(countOfReportsToGenerate);
 		sb.append(" NIBRS reports will be generated and sent to ");
 		sb.append(appProperties.getNibrsNiemDocumentFolder());
-		sb.append(",  Runaway arrest reports are not processed. "); 
 		
 		return sb.toString();
 	}

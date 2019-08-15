@@ -41,10 +41,10 @@ public class SubmissionTrigger {
 		super();
 		
 		this.agencyIds = incidentSearchRequest.getAgencyIds();
-		this.startYear = incidentSearchRequest.getSubmissionYear(); 
-		this.endYear = incidentSearchRequest.getSubmissionYear(); 
-		this.startMonth = incidentSearchRequest.getSubmissionMonth(); 
-		this.endMonth = incidentSearchRequest.getSubmissionMonth();
+		this.startYear = incidentSearchRequest.getSubmissionStartYear(); 
+		this.endYear = incidentSearchRequest.getSubmissionEndYear(); 
+		this.startMonth = incidentSearchRequest.getSubmissionStartMonth(); 
+		this.endMonth = incidentSearchRequest.getSubmissionEndMonth();
 	}
 	
 	public String toString() {

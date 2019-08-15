@@ -31,12 +31,23 @@
           <div class="form-row align-text-center">
             <label class="col-2 col-form-label font-weight-bold text-right">Submission Start Date</label>
             <div class="col-sm-2">
-            	<input class="form-control form-control-sm" type="text" th:field="*{submissionMonth}" width="2" maxlength="2" placeholder="month" th:errorclass="is-invalid"/>
-           	<div th:if="${#fields.hasErrors('submissionMonth')}" th:errors="*{submissionMonth}" class="invalid-feedback">Submission Month error message</div>
+            	<input class="form-control form-control-sm" type="text" th:field="*{submissionStartMonth}" width="2" maxlength="2" placeholder="start month" th:errorclass="is-invalid"/>
+           	<div th:if="${#fields.hasErrors('submissionStartMonth')}" th:errors="*{submissionStartMonth}" class="invalid-feedback">Submission Start Month error message</div>
             </div>
             <div class="col-sm-2">
-            	<input class="form-control form-control-sm" type="text" th:field="*{submissionYear}" width="4" placeholder="year" maxlength="4" th:errorclass="is-invalid"/>
-           	<div th:if="${#fields.hasErrors('submissionYear')}" th:errors="*{submissionYear}" class="invalid-feedback">Submission Year error message</div>
+            	<input class="form-control form-control-sm" type="text" th:field="*{submissionStartYear}" width="4" placeholder="start year" maxlength="4" th:errorclass="is-invalid"/>
+           	<div th:if="${#fields.hasErrors('submissionStartYear')}" th:errors="*{submissionStartYear}" class="invalid-feedback">Submission Start Year error message</div>
+            </div>
+          </div>
+          <div class="form-row align-text-center">
+            <label class="col-2 col-form-label font-weight-bold text-right">Submission End Date</label>
+            <div class="col-sm-2">
+            	<input class="form-control form-control-sm" type="text" th:field="*{submissionEndMonth}" width="2" maxlength="2" placeholder="end month" th:errorclass="is-invalid"/>
+           	<div th:if="${#fields.hasErrors('submissionEndMonth')}" th:errors="*{submissionEndMonth}" class="invalid-feedback">Submission End Month error message</div>
+            </div>
+            <div class="col-sm-2">
+            	<input class="form-control form-control-sm" type="text" th:field="*{submissionEndYear}" width="4" placeholder="end year" maxlength="4" th:errorclass="is-invalid"/>
+           	<div th:if="${#fields.hasErrors('submissionEndYear')}" th:errors="*{submissionEndYear}" class="invalid-feedback">Submission End Year error message</div>
             </div>
           </div>
           <div class="form-row">

@@ -89,10 +89,10 @@ public class AdministrativeSegmentRepositoryTest {
 		administrativeSegmentRepository.findAll().forEach(i->log.info(i.getIncidentNumber()));
 		
 		long count = administrativeSegmentRepository
-				.countByOriListAndSubmissionDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)));
+				.countByOriListAndSubmissionDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)), null);
 		assertThat(count, equalTo(3L));
 		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
-				.findIdsByOriListAndSubmissionDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)));
+				.findIdsByOriListAndSubmissionDateRange(Arrays.asList("WA1234567"),Date.valueOf(LocalDate.of(2016, 5, 1)), Date.valueOf(LocalDate.of(2016, 5, 31)), null);
 		assertThat(administrativeSegmentIds.size(), equalTo(3));
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAllById(administrativeSegmentIds);

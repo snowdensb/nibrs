@@ -68,10 +68,12 @@ public interface AdministrativeSegmentRepository
 	
 	@Query("SELECT DISTINCT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "WHERE (?1 = null OR a.ori in (?1)) AND "
+			+ "		(?4 = null OR a.agency.agencyId in (?4)) AND "
 			+ "		(?2 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) >= ?2 ) AND "
-			+ "		(?3 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) <= ?3) "
+			+ "		(?3 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) <= ?3) AND "
+			+ "     ( NOT EXISTS ( SELECT s FROM Submission s where s.messageIdentifier = a.administrativeSegmentId and s.nibrsReportCategoryCode = 'GROUP A INCIDENT REPORT') )"
 			+ "ORDER BY a.administrativeSegmentId asc ")
-	List<Integer> findIdsByOriListAndSubmissionDateRange(List<String> oris, Date startDate, Date endDate);
+	List<Integer> findIdsByOriListAndSubmissionDateRange(List<String> oris, Date startDate, Date endDate, List<Integer> agencyIds);
 	
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "LEFT JOIN a.arresteeSegments aa "
@@ -82,9 +84,11 @@ public interface AdministrativeSegmentRepository
 	
 	@Query("SELECT count(DISTINCT a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "WHERE (?1 = null OR a.ori in (?1)) AND "
+			+ "		(?4 = null OR a.agency.agencyId in (?4)) AND "
 			+ "		(?2 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) >= ?2 ) AND "
-			+ "		(?3 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) <= ?3) ")
-	long countByOriListAndSubmissionDateRange(List<String> oris, Date startDate, Date endDate);
+			+ "		(?3 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) <= ?3)  AND "
+			+ "     ( NOT EXISTS ( SELECT s FROM Submission s where s.messageIdentifier = a.administrativeSegmentId and s.nibrsReportCategoryCode = 'GROUP A INCIDENT REPORT') )")
+	long countByOriListAndSubmissionDateRange(List<String> oris, Date startDate, Date endDate, List<Integer> agencyIds);
 	
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "WHERE (?1 = null OR a.ori = ?1) AND "
