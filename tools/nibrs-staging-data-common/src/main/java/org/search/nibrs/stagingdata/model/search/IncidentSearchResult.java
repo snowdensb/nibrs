@@ -28,7 +28,7 @@ public class IncidentSearchResult implements Serializable {
 
 	private Integer totalCount; 
 	private Integer returnedCount; 
-	private long fbiSubmissionCount; 
+	private long eligibleFbiSubmissionCount; 
 	private List<IncidentPointer> incidentPointers; 
 	public IncidentSearchResult() {
 		super();
@@ -38,8 +38,9 @@ public class IncidentSearchResult implements Serializable {
 		this();
 		this.setTotalCount(incidentPointers.size());
 		
-		this.setFbiSubmissionCount(incidentPointers.stream()
-				.filter(IncidentPointer::getFbiSubmission)
+		this.setEligibleFbiSubmissionCount(incidentPointers.stream()
+				.filter(i->!(i.getOffenseCode().equalsIgnoreCase("90I") || 
+						i.getFbiSubmission()) )
 				.count());
 		
 		if (getTotalCount() > sizeLimit) {
@@ -73,14 +74,6 @@ public class IncidentSearchResult implements Serializable {
 		this.returnedCount = returnedCount;
 	}
 
-	public long getFbiSubmissionCount() {
-		return fbiSubmissionCount;
-	}
-
-	private void setFbiSubmissionCount(long fbiSubmissionCount) {
-		this.fbiSubmissionCount = fbiSubmissionCount;
-	}
-
 	public List<IncidentPointer> getIncidentPointers() {
 		return incidentPointers;
 	}
@@ -95,5 +88,13 @@ public class IncidentSearchResult implements Serializable {
 
 	private void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
+	}
+
+	public long getEligibleFbiSubmissionCount() {
+		return eligibleFbiSubmissionCount;
+	}
+
+	public void setEligibleFbiSubmissionCount(long eligibleFbiSubmissionCount) {
+		this.eligibleFbiSubmissionCount = eligibleFbiSubmissionCount;
 	}
 }

@@ -42,6 +42,12 @@ public class IncidentSearchRequest implements Serializable {
 	@Range(min=1, max=12)
 	private Integer submissionMonth;
 	private Integer submissionYear; 
+	@Range(min=1, max=12)
+	private Integer submissionStartMonth;
+	private Integer submissionStartYear; 
+	@Range(min=1, max=12)
+	private Integer submissionEndMonth;
+	private Integer submissionEndYear; 
 	private Boolean fbiSubmission;
 	
 	@Override
@@ -93,7 +99,12 @@ public class IncidentSearchRequest implements Serializable {
 				&& incidentDateRangeEndDate == null
 				&& (ucrOffenseCodeTypeId == null || ucrOffenseCodeTypeId == 0) 
 				&& submissionMonth == null 
-				&& submissionYear == null ;
+				&& submissionYear == null 
+				&& submissionStartMonth == null 
+				&& submissionStartYear == null 
+				&& submissionEndMonth == null 
+				&& submissionEndYear == null 
+				;
 	}
 	public List<Integer> getAgencyIds() {
 		return agencyIds;
@@ -119,4 +130,64 @@ public class IncidentSearchRequest implements Serializable {
 	public void setIncidentDateRangeEndDate(LocalDate incidentDateRangeEndDate) {
 		this.incidentDateRangeEndDate = incidentDateRangeEndDate;
 	}
+	public Integer getSubmissionStartMonth() {
+		return submissionStartMonth;
+	}
+	public void setSubmissionStartMonth(Integer submissionStartMonth) {
+		this.submissionStartMonth = submissionStartMonth;
+	}
+	public Integer getSubmissionStartYear() {
+		return submissionStartYear;
+	}
+	public void setSubmissionStartYear(Integer submissionStartYear) {
+		this.submissionStartYear = submissionStartYear;
+	}
+	public Integer getSubmissionEndMonth() {
+		return submissionEndMonth;
+	}
+	public void setSubmissionEndMonth(Integer submissionEndMonth) {
+		this.submissionEndMonth = submissionEndMonth;
+	}
+	public Integer getSubmissionEndYear() {
+		return submissionEndYear;
+	}
+	public void setSubmissionEndYear(Integer submissionEndYear) {
+		this.submissionEndYear = submissionEndYear;
+	}
+	
+	public java.sql.Date getSubmissionStartDate() {
+		java.sql.Date date = null;
+		if (submissionStartYear != null && submissionStartYear > 0) {
+			LocalDate localDate = LocalDate.of(submissionStartYear, 1, 1);
+			
+			if (submissionStartMonth != null) {
+					localDate = LocalDate.of(submissionStartYear, submissionStartMonth, 1);
+			}
+			date = java.sql.Date.valueOf(localDate);
+		}
+		
+		return date;
+	}
+	
+	public java.sql.Date getSubmissionEndDate() {
+		
+		java.sql.Date date = null;
+		if (submissionEndYear != null && submissionEndYear > 0) {
+			LocalDate localDate = LocalDate.of(submissionEndYear, 12, 31);
+			
+			if ( submissionEndMonth != null) {
+					if (submissionEndMonth < 12) {
+						localDate = LocalDate.of(submissionEndYear, submissionEndMonth+1, 1).minusDays(1);
+					}
+					else {
+						localDate = LocalDate.of(submissionEndYear, 12, 31);
+					}
+			}
+			
+			date = java.sql.Date.valueOf(localDate);
+		}
+		
+		return date;
+	}
+	
 }

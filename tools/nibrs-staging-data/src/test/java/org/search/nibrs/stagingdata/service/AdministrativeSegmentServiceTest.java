@@ -213,18 +213,22 @@ public class AdministrativeSegmentServiceTest {
 		IncidentSearchRequest incidentSearchRequest = new IncidentSearchRequest();
 		List<IncidentPointer> incidentSearchResults = administrativeSegmentService
 				.findAllByCriteria(incidentSearchRequest);
-		assertThat(incidentSearchResults.size(), equalTo(3));
+		assertThat(incidentSearchResults.size(), equalTo(4));
 		
 		long count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
-		assertThat(count, equalTo(3L));
+		assertThat(count, equalTo(4L));
 		
 		incidentSearchRequest.setIncidentIdentifier("12345678");
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
 		incidentSearchResults = 
 				administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
-		assertThat(count, equalTo(1L));
-		assertThat(incidentSearchResults.get(0).getIncidentDate(), equalTo(LocalDate.of(2016, 6, 12)));
-		assertThat(incidentSearchResults.get(0).getSubmissionMonth(), equalTo("06"));
+		assertThat(count, equalTo(2L));
+		
+		List<LocalDate> incidentDatesFromResults = incidentSearchResults.stream()
+				.map(i->i.getIncidentDate())
+				.collect(Collectors.toList());
+		assertTrue(incidentDatesFromResults.containsAll(Arrays.asList(LocalDate.of(2016, 6, 12), LocalDate.of(2016, 5, 12))));
+		assertTrue(Arrays.asList("05", 06).contains(incidentSearchResults.get(0).getSubmissionMonth()));
 		
 		incidentSearchRequest.setIncidentDateRangeStartDate(LocalDate.of(2016, 5, 12));
 		incidentSearchRequest.setIncidentDateRangeEndDate(LocalDate.of(2016, 5, 12));
@@ -261,11 +265,25 @@ public class AdministrativeSegmentServiceTest {
 		
 		incidentSearchRequest.setUcrOffenseCodeTypeId(131);
 		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
-		assertThat(count, equalTo(3L));
+		assertThat(count, equalTo(4L));
 		
 		incidentSearchResults = administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
 		List<String> offenses = incidentSearchResults.stream().map(IncidentPointer::getOffenseCode).collect(Collectors.toList());
 		assertTrue(offenses.containsAll(Arrays.asList("13A", "09A") ));
+
+		incidentSearchRequest.setSubmissionStartYear(2016);
+		incidentSearchRequest.setSubmissionStartMonth(6);
+		
+		incidentSearchRequest.setUcrOffenseCodeTypeId(null);
+		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(2L));
+		incidentSearchRequest.setSubmissionStartMonth(5);
+		incidentSearchRequest.setSubmissionEndYear(2016);
+		incidentSearchRequest.setSubmissionEndMonth(6);
+		count = administrativeSegmentService.countAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(3L));
+		incidentSearchResults = administrativeSegmentService.findAllByCriteria(incidentSearchRequest);
+		assertThat(incidentSearchResults.size(), equalTo(3));
 	}
 	
 }

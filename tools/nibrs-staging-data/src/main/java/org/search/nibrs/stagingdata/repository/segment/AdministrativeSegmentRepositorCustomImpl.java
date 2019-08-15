@@ -107,7 +107,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         	Predicate hasFbiSubmission = getFbiSubmissionPredicate(criteriaBuilder, query, root);   
         	predicates.add(0, hasFbiSubmission);
         }
-		query.select(criteriaBuilder.countDistinct(root.get("incidentNumber")))
+		query.select(criteriaBuilder.count(root.get("administrativeSegmentId")))
 			.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
 		return entityManager.createQuery(query).getSingleResult();
 	}
@@ -146,6 +146,16 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("yearOfTape"), incidentSearchRequest.getSubmissionYear())));
         	}
         	
+         	if (incidentSearchRequest.getSubmissionStartDate() != null ) {
+         		predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(
+         				criteriaBuilder.function("concat", String.class, root.get("yearOfTape"), criteriaBuilder.literal("-"), root.get("monthOfTape"),  criteriaBuilder.literal("-01")), 
+         				incidentSearchRequest.getSubmissionStartDate().toString())));
+         	}
+         	if (incidentSearchRequest.getSubmissionEndDate() != null ) {
+         		predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(
+         				criteriaBuilder.function("concat", String.class, root.get("yearOfTape"), criteriaBuilder.literal("-"), root.get("monthOfTape"),  criteriaBuilder.literal("-01")), 
+         				incidentSearchRequest.getSubmissionEndDate().toString())));
+         	}
         }
 		return predicates;
 	}

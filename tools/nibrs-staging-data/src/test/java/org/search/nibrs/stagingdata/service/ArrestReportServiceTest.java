@@ -298,6 +298,8 @@ public class ArrestReportServiceTest {
 		
 		arrestReportSegment = arrestReportSegmentFactory.getBasicArrestReportSegment();
 		arrestReportSegment.setArrestDate(LocalDate.of(2017, 05, 12));
+		arrestReportSegment.setYearOfTape("2017");
+		arrestReportSegment.setMonthOfTape("01");
 		arrestReportService.saveArrestReportSegment(arrestReportSegment); 
 		
 		
@@ -306,15 +308,29 @@ public class ArrestReportServiceTest {
 		
 		IncidentSearchRequest incidentSearchRequest = new IncidentSearchRequest();
 		long count = arrestReportService.countAllByCriteria(incidentSearchRequest); 
-		assertThat(count, equalTo(1L));
+		assertThat(count, equalTo(2L));
 		
 		List<IncidentPointer> incidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
-		assertThat(incidentSearchResults.size(), equalTo(1));
+		assertThat(incidentSearchResults.size(), equalTo(2));
 		
 		incidentSearchRequest.setAgencyIds(Arrays.asList(1));
+		incidentSearchRequest.setIncidentDateRangeStartDate(LocalDate.of(2017, 05, 12));
 		incidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
 		assertThat(incidentSearchResults.size(), equalTo(1));
 		assertThat(incidentSearchResults.get(0).getPrimaryKey(), equalTo(2));
 		assertThat(incidentSearchResults.get(0).getIncidentDate(), equalTo(LocalDate.of(2017, 5, 12)));
+		
+		incidentSearchRequest.setIncidentDateRangeStartDate(null);
+		incidentSearchRequest.setSubmissionStartYear(2016);
+		incidentSearchRequest.setSubmissionEndYear(2016);
+		incidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
+		assertThat(incidentSearchResults.size(), equalTo(1));
+		assertThat(incidentSearchResults.get(0).getPrimaryKey(), equalTo(1));
+		assertThat(incidentSearchResults.get(0).getIncidentDate(), equalTo(LocalDate.of(2016, 6, 12)));
+
+		incidentSearchRequest.setSubmissionEndYear(2017);
+		count = arrestReportService.countAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(2L));
+
 	}
 }
