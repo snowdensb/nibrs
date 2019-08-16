@@ -64,7 +64,7 @@
 									<td th:text="${incidentSearchResult.agencyName}"/>
 									<td th:text="${incidentSearchResult.incidentDate}"/>
 									<td th:text="${incidentSearchResult.submissionDateString}"/>
-									<td th:text="${incidentSearchResult.offenseCode}"/>
+									<td th:text="${incidentSearchResult.ucrOffenseCodeTypeId}"/>
 									<td th:text="${incidentSearchResult.reportType}"/>
 									<td th:text="${incidentSearchResult.fbiSubmission}"/>
 								</tr>
@@ -96,6 +96,7 @@
 	 		<script th:inline="javascript">
 	       /*<![CDATA[*/
 	          var context = [[@{/}]];
+            var offenseCodeMapping = [[${offenseCodeMapping}]]; 
 	        /*]]>*/
 	
 	       $(function(){
@@ -104,7 +105,20 @@
 	        
 	          var table = $('#searchResultsTable').DataTable({
 	            responsive: true, 
-	            fixedHeader: { header: true }
+	            fixedHeader: { header: true },
+							columnDefs: [ 
+							    {
+							         "targets": [4],
+							         "render": function ( data, type, row, meta ) {
+							             if (offenseCodeMapping.hasOwnProperty(data)){
+							               return offenseCodeMapping[data];
+							             }
+							             else{
+							               return data;
+							             }
+							         }
+							    }
+							]
 	          });
 	          
 	          $('[data-toggle="tooltip"]').tooltip({

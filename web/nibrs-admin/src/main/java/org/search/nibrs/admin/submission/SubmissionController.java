@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"submissionIncidentSearchRequest", "agencyMapping", "submissionIncidentSearchResult"})
+@SessionAttributes({"submissionIncidentSearchRequest", "agencyMapping", "submissionIncidentSearchResult", "offenseCodeMapping"})
 @RequestMapping("/submission")
 public class SubmissionController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -59,6 +59,10 @@ public class SubmissionController {
 		
 		if (!model.containsAttribute("agencyMapping")) {
 			model.addAttribute("agencyMapping", restService.getAgencies());
+		}
+		
+		if (!model.containsAttribute("offenseCodeMapping")) {
+			model.addAttribute("offenseCodeMapping", restService.getOffenseCodes());
 		}
 		
     	log.info("Added ModelAtrributes");
@@ -110,6 +114,7 @@ public class SubmissionController {
 
 	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,
 			Map<String, Object> model) throws Throwable {
+		model.remove("submissionIncidentSearchRequest");
 		IncidentSearchResult incidentSearchResult = restService.getIncidents(incidentSearchRequest);
 		model.put("submissionIncidentSearchRequest", incidentSearchRequest);
 		model.put("submissionIncidentSearchResult", incidentSearchResult); 

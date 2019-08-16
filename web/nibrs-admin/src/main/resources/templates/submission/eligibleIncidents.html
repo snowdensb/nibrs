@@ -39,7 +39,7 @@
       
       <div id="searchResultsList" th:fragment="resultsList" >
         <div class="alert alert-secondary small" role="alert"
-          th:if="${submissionIncidentSearchResult != null && submissionIncidentSearchResult.totalCount != submissionIncidentSearchResult.returnedCount}">
+          th:if="${submissionIncidentSearchResult != null}">
            <span th:if="${submissionIncidentSearchResult.totalCount != submissionIncidentSearchResult.returnedCount}" 
              th:text=" 'The latest ' + ${submissionIncidentSearchResult.returnedCount} + ' of the ' + ${submissionIncidentSearchResult.totalCount} + ' search hits are shown in the table. '"></span>
            <span th:if="${submissionIncidentSearchResult.eligibleFbiSubmissionCount > 0}" 
@@ -69,7 +69,7 @@
 								<td th:text="${incidentSearchResult.agencyName}"/>
 								<td th:text="${incidentSearchResult.incidentDate}"/>
 								<td th:text="${incidentSearchResult.submissionDateString}"/>
-								<td th:text="${incidentSearchResult.offenseCode}"/>
+								<td th:text="${incidentSearchResult.ucrOffenseCodeTypeId}"/>
 								<td th:text="${incidentSearchResult.reportType}"/>
 								<td th:text="${incidentSearchResult.fbiSubmission}"/>
 							</tr>
@@ -99,18 +99,30 @@
       </div>
 	
 	 		<script th:inline="javascript">
-	       /*<![CDATA[*/
+         /*<![CDATA[*/
 	          var context = [[@{/}]];
-	        /*]]>*/
-	
+            var offenseCodeMapping = [[${offenseCodeMapping}]]; 
+         /*]]>*/
 	       $(function(){
 		            
            $.fn.dataTable.moment( 'MM/YYYY' );
          
            var table = $('#searchResultsTable').DataTable({
              responsive: true, 
-             deferRender: true,
-             fixedHeader: { header: true }
+             fixedHeader: { header: true },
+	           columnDefs: [ 
+	               {
+	                    "targets": [4],
+	                    "render": function ( data, type, row, meta ) {
+	                        if (offenseCodeMapping.hasOwnProperty(data)){
+	                          return offenseCodeMapping[data];
+	                        }
+	                        else{
+	                          return data;
+	                        }
+	                    }
+	               }
+               ]
            });
            
            $('[data-toggle="tooltip"]').tooltip({
@@ -121,7 +133,7 @@
         	   $(this).prop('disabled', true);
               xhr = $.get(context + "submission/trigger", function(data) {
                 $('#responseInfo').removeClass('d-none').html(data); 
-              }).fail();
+              }).fail(ojbc.displayFailMessage);
            });
                    
            $('#searchResultsTable tbody').on('click', 'tr',function() {

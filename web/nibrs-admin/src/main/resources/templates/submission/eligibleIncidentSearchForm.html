@@ -84,13 +84,13 @@
                
               xhr = $.post(context + "submission/search",formData,function(data) {
                 $('#portalContent').html(data); 
-              }).fail();
+              }).fail(ojbc.displayFailMessage);
             });
             
             $('#reset').click (function(){
               xhr = $.get(context + "submission/searchForm/reset", function(data) {
                 $('#searchForm').replaceWith(data); 
-              }).fail();
+              }).fail(ojbc.displayFailMessage);
             });
 
           });

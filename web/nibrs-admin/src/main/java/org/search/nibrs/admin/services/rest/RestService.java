@@ -119,11 +119,13 @@ public class RestService{
 		SubmissionTrigger submissionTrigger = new SubmissionTrigger(incidentSearchRequest);
 		log.info("submissionTrigger: " + submissionTrigger);
 		log.info("submissionIncidentSearchRequest: " + incidentSearchRequest);
-		return webClient.post().uri("/submissions/trigger")
+		
+		String response = webClient.post().uri("/submissions/trigger")
 				.body(BodyInserters.fromObject(submissionTrigger))
 				.retrieve()
 				.bodyToMono(String.class)
 				.block();
+		return response; 
 	}
 	
 	@Async

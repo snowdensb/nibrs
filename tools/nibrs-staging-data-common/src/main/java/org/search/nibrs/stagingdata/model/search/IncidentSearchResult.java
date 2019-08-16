@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -39,8 +40,8 @@ public class IncidentSearchResult implements Serializable {
 		this.setTotalCount(incidentPointers.size());
 		
 		this.setEligibleFbiSubmissionCount(incidentPointers.stream()
-				.filter(i->!(i.getOffenseCode().equalsIgnoreCase("90I") || 
-						i.getFbiSubmission()) )
+				.filter(i-> i.getOffenseCode() == null || !i.getOffenseCode().equalsIgnoreCase("90I"))
+				.filter(i->BooleanUtils.isNotTrue(i.getFbiSubmission()) )
 				.count());
 		
 		if (getTotalCount() > sizeLimit) {
