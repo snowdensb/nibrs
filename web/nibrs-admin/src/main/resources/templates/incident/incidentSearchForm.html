@@ -110,13 +110,13 @@
                
               xhr = $.post(context + "incidents/search",formData,function(data) {
                 $('#portalContent').html(data); 
-              }).fail();
+              }).fail(ojbc.displayFailMessage);
             });
             
             $('#reset').click (function(){
               xhr = $.get(context + "incidents/searchForm/reset", function(data) {
                 $('#searchForm').replaceWith(data); 
-              }).fail();
+              }).fail(ojbc.displayFailMessage);
             });
 
           });
