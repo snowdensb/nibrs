@@ -120,11 +120,19 @@ public class RestService{
 		log.info("submissionTrigger: " + submissionTrigger);
 		log.info("submissionIncidentSearchRequest: " + incidentSearchRequest);
 		
-		String response = webClient.post().uri("/submissions/trigger")
+		String response = ""; 
+		try { 
+			response = webClient.post().uri("/submissions/trigger")
 				.body(BodyInserters.fromObject(submissionTrigger))
 				.retrieve()
 				.bodyToMono(String.class)
 				.block();
+		}
+		catch(Throwable e) {
+			log.error("Got error when calling the service /submissions/trigger", e);
+			response = "Failed to process the request, please report the error or check back later."; 
+		}
+		
 		return response; 
 	}
 	

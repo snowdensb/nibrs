@@ -30,6 +30,7 @@ import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.search.nibrs.stagingdata.model.Submission;
+import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -46,31 +47,32 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<IncidentPointer> query = criteriaBuilder.createQuery(IncidentPointer.class);
         Root<AdministrativeSegment> root = query.from(AdministrativeSegment.class);
-		Join<AdministrativeSegment, OffenseSegment> joinOptions = root.join("offenseSegments", JoinType.LEFT);
 		
 		Predicate hasFbiSubmission = getFbiSubmissionPredicate(criteriaBuilder, query, root); 
     	
+        Subquery<Integer> offenseCodeTypeIdSubQuery = query.subquery(Integer.class);
+        Root<OffenseSegment> offenseSubRoot = offenseCodeTypeIdSubQuery.from(OffenseSegment.class);
+        offenseCodeTypeIdSubQuery.select(criteriaBuilder.min(offenseSubRoot.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId")));
+        offenseCodeTypeIdSubQuery.where(criteriaBuilder.equal(
+        		offenseSubRoot.get("administrativeSegment").get("administrativeSegmentId"), 
+        		root.get("administrativeSegmentId")));
+        
+        Join<AdministrativeSegment, OffenseSegment> joinOptions = root.join("offenseSegments", JoinType.LEFT);
+        joinOptions.on(criteriaBuilder.equal(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), offenseCodeTypeIdSubQuery));
+        
+        Join<OffenseSegment, UcrOffenseCodeType> ucrOffenseCodeTypeJoin = joinOptions.join("ucrOffenseCodeType", JoinType.LEFT);
+        
 		query.multiselect(root.get("administrativeSegmentId"),
 				criteriaBuilder.literal("A"),root.get("incidentNumber"), 
 				root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("incidentDate"), 
 				joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"),
-				joinOptions.get("ucrOffenseCodeType").get("nibrsCode"),
+				ucrOffenseCodeTypeJoin.get("nibrsCode"),
 				root.get("monthOfTape"), root.get("yearOfTape"), 
 				root.get("reportTimestamp"), 
 				hasFbiSubmission.alias("fbiSubmission"));
+		
 
         List<Predicate> queryPredicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
-        
-        Subquery<Integer> offenseSubQuery = query.subquery(Integer.class);
-        Root<OffenseSegment> offenseSubRoot = offenseSubQuery.from(OffenseSegment.class);
-        offenseSubQuery.select(criteriaBuilder.min(offenseSubRoot.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId")));
-        offenseSubQuery.where(criteriaBuilder.equal(
-        		offenseSubRoot.get("administrativeSegment").get("administrativeSegmentId"), 
-        		root.get("administrativeSegmentId")));
-
-        queryPredicates.add( 
-    		criteriaBuilder.equal(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), offenseSubQuery)
-		);
         
         if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
         	queryPredicates.add(0, hasFbiSubmission);

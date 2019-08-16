@@ -40,7 +40,10 @@ public class SubmissionTrigger {
 	public SubmissionTrigger(IncidentSearchRequest incidentSearchRequest) {
 		super();
 		
-		this.agencyIds = incidentSearchRequest.getAgencyIds();
+		if (incidentSearchRequest.getAgencyIds() != null 
+				&& incidentSearchRequest.getAgencyIds().size() > 0) {
+			this.agencyIds = incidentSearchRequest.getAgencyIds();
+		}
 		this.startYear = incidentSearchRequest.getSubmissionStartYear(); 
 		this.endYear = incidentSearchRequest.getSubmissionEndYear(); 
 		this.startMonth = incidentSearchRequest.getSubmissionStartMonth(); 

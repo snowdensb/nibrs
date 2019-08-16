@@ -144,4 +144,13 @@ public class AdministrativeSegmentRepositoryTest {
 		
 	}
 	
+	@Test
+	@DirtiesContext
+	public void testCountByOriListAndSubmissionDateRange() {
+		long count = administrativeSegmentRepository
+				.countByOriListAndSubmissionDateRange(null, null, null, null);
+		
+		assertThat(count, equalTo(3l));
+	}
+
 }
