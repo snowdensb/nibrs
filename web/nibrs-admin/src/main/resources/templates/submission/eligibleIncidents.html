@@ -27,14 +27,12 @@
 	<body>
     <!-- Begin page content -->
     <div th:fragment="resultsPage" class="container">
-     	<div id="loadingAjaxPane" ></div>
       <nav aria-label="breadcrumb">
            <ol class="breadcrumb">
            <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
            <li class="breadcrumb-item active" aria-current="page">Eligible to Submit Search Results</li>
          </ol>
       </nav>
-      <h3>Eligible Incident Search Results</h3>
       <form th:replace="submission/eligibleIncidentSearchForm.html :: incidentSearchFormContent">
       </form>
       <hr/>
