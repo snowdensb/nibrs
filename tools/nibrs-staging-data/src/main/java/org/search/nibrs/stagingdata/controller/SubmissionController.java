@@ -59,7 +59,7 @@ public class SubmissionController {
 	@PostMapping("/submissions/trigger")
 	public @ResponseBody String generateSubmissionFiles(@RequestBody SubmissionTrigger submissionTrigger){
 
-//		xmlReportGenerator.processSubmissionTrigger(submissionTrigger);
+		xmlReportGenerator.processSubmissionTrigger(submissionTrigger);
 		long countOfReportsToGenerate = xmlReportGenerator.countTheIncidents(submissionTrigger);
 		
 		log.info("submissionTrigger:" + submissionTrigger );
