@@ -54,7 +54,7 @@
 								<th>Submission Date</th>
 								<th>UCR Offense Type</th>
 								<th>Group</th>
-								<th>FBI submission indicator</th>
+								<th>FBI Accepted</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -66,7 +66,7 @@
 									<td th:text="${incidentSearchResult.submissionDateString}"/>
 									<td th:text="${incidentSearchResult.ucrOffenseCodeTypeId}"/>
 									<td th:text="${incidentSearchResult.reportType}"/>
-									<td th:text="${incidentSearchResult.fbiSubmission}"/>
+									<td th:text="${incidentSearchResult.fbiSubmissionAccepted}"/>
 								</tr>
 							</th:block>
 						</tbody>

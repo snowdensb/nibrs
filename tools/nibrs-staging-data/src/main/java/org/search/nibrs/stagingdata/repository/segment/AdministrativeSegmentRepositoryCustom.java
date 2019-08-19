@@ -26,5 +26,5 @@ import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 public interface AdministrativeSegmentRepositoryCustom{
 	List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest);
 	long countAllByCriteria(IncidentSearchRequest incidentSearchRequest);
-	
+	int updateSubmissionId(Integer adminstrativeSegmentId, Integer submissionId);
 }

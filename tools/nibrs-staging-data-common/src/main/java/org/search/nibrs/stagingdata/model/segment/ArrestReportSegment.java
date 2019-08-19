@@ -31,6 +31,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.ArrestReportSegmentWasArmedWith;
@@ -41,6 +42,7 @@ import org.search.nibrs.stagingdata.model.RaceOfPersonType;
 import org.search.nibrs.stagingdata.model.ResidentStatusOfPersonType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.SexOfPersonType;
+import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 
@@ -56,7 +58,8 @@ import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
         @NamedAttributeNode("residentStatusOfPersonType"),
         @NamedAttributeNode("dispositionOfArresteeUnder18Type"),
         @NamedAttributeNode("ucrOffenseCodeType"),
-        @NamedAttributeNode("arrestReportSegmentWasArmedWiths")
+        @NamedAttributeNode("arrestReportSegmentWasArmedWiths"),
+        @NamedAttributeNode("submission")
 	})
 public class ArrestReportSegment {
 	@Id
@@ -116,7 +119,11 @@ public class ArrestReportSegment {
 	
 	@OneToMany(mappedBy = "arrestReportSegment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ArrestReportSegmentWasArmedWith> arrestReportSegmentWasArmedWiths;
-	
+
+	@OneToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "submissionId", nullable = true)
+    private Submission submission;
+
 	private LocalDateTime reportTimestamp;
 
 	public Integer getArrestReportSegmentId() {
@@ -441,5 +448,11 @@ public class ArrestReportSegment {
     	}
     	return ret;
     }
+	public Submission getSubmission() {
+		return submission;
+	}
+	public void setSubmission(Submission submission) {
+		this.submission = submission;
+	}
 
 }

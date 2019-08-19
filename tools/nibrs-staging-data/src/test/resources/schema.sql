@@ -34,7 +34,7 @@ CREATE TABLE Submission (
                 ResponseTimestamp TIMESTAMP,
                 FaultCode VARCHAR(100),
                 FaultDescription VARCHAR(500),
-                NIBRSReportCategoryCode VARCHAR(30) NOT NULL,
+                NIBRSReportCategoryCode VARCHAR(40) NOT NULL,
                 SubmissionTimestamp TIMESTAMP NOT NULL,
                 CONSTRAINT SubmissionID PRIMARY KEY (SubmissionID)
 );
@@ -407,6 +407,7 @@ CREATE TABLE ArrestReportSegment (
                 ResidentStatusOfPersonTypeID INTEGER NOT NULL,
                 DispositionOfArresteeUnder18TypeID INTEGER NOT NULL,
                 UCROffenseCodeTypeID INTEGER NOT NULL,
+                SubmissionID INTEGER,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT ArresteReport_pk PRIMARY KEY (ArrestReportSegmentID)
 );
@@ -439,6 +440,7 @@ CREATE TABLE AdministrativeSegment (
                 ExceptionalClearanceDate DATE,
                 ExceptionalClearanceDateID INTEGER NOT NULL,
                 CargoTheftIndicatorTypeID INTEGER NOT NULL,
+                SubmissionID INTEGER,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT AdministrativeSegment_pk PRIMARY KEY (AdministrativeSegmentID)
 );
@@ -663,6 +665,18 @@ CREATE TABLE LEOKASegment (
 
 
 ALTER TABLE Violation ADD CONSTRAINT Submission_Violation_fk
+FOREIGN KEY (SubmissionID)
+REFERENCES Submission (SubmissionID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE AdministrativeSegment ADD CONSTRAINT Submission_AdministrativeSegment_fk
+FOREIGN KEY (SubmissionID)
+REFERENCES Submission (SubmissionID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE ArrestReportSegment ADD CONSTRAINT Submission_ArrestReportSegment_fk
 FOREIGN KEY (SubmissionID)
 REFERENCES Submission (SubmissionID)
 ON DELETE NO ACTION

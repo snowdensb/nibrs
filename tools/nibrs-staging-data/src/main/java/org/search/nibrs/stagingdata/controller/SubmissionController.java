@@ -17,6 +17,8 @@ package org.search.nibrs.stagingdata.controller;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
@@ -24,6 +26,8 @@ import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.SubmissionTrigger;
 import org.search.nibrs.stagingdata.repository.SubmissionRepository;
+import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepositoryCustom;
+import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentRepositoryCustom;
 import org.search.nibrs.stagingdata.service.xml.XmlReportGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,11 +44,16 @@ public class SubmissionController {
 	@Autowired
 	private SubmissionRepository submissionRepository;
 	@Autowired
+	private AdministrativeSegmentRepositoryCustom administrativeSegmentRepositoryCustom;
+	@Autowired
+	private ArrestReportSegmentRepositoryCustom arrestReportSegmentRepositoryCustom;
+	@Autowired
 	public XmlReportGenerator xmlReportGenerator;
 	@Autowired
 	public AppProperties appProperties;
 
 	@PostMapping("/submissions")
+	@Transactional
 	public Submission saveSubmission(@RequestBody Submission submission){
 		/*
 		 * To fulfill the relationship mapping. 
@@ -53,7 +62,20 @@ public class SubmissionController {
 			submission.getViolations()
 				.forEach(violation->violation.setSubmission(submission));
 		}
-		return submissionRepository.save(submission);
+		Submission submissionSaved =  submissionRepository.save(submission);
+		
+		switch(submission.getNibrsReportCategoryCode()) {
+		case "GROUP A INCIDENT REPORT":
+			administrativeSegmentRepositoryCustom.updateSubmissionId(
+						submission.getMessageIdentifier(), submission.getSubmissionId());
+			break; 
+		case "GROUP B ARREST REPORT":
+			arrestReportSegmentRepositoryCustom.updateSubmissionId(
+					submission.getMessageIdentifier(), submission.getSubmissionId());
+			break; 
+		default:
+		}
+		return submissionSaved;
 	}
 	
 	@PostMapping("/submissions/trigger")

@@ -23,8 +23,6 @@ CREATE schema search_nibrs_staging;
 use search_nibrs_staging;
 
 
-
-
 CREATE TABLE Submission (
                 SubmissionID INT AUTO_INCREMENT NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
@@ -35,11 +33,13 @@ CREATE TABLE Submission (
                 ResponseTimestamp timestamp,
                 FaultCode VARCHAR(100),
                 FaultDescription VARCHAR(500),
-                NIBRSReportCategoryCode VARCHAR(30) NOT NULL,,
+                NIBRSReportCategoryCode VARCHAR(40) NOT NULL,
                 SubmissionTimestamp TIMESTAMP NOT NULL,
                 PRIMARY KEY (SubmissionID)
 );
 create index idx_submission_MessageIdentifier on submission(MessageIdentifier);
+
+ALTER TABLE Submission MODIFY COLUMN NIBRSReportCategoryCode VARCHAR(40) COMMENT 'Group A or Group B.';
 
 
 CREATE TABLE Violation (
@@ -409,6 +409,7 @@ CREATE TABLE ArrestReportSegment (
                 ResidentStatusOfPersonTypeID INT NOT NULL,
                 DispositionOfArresteeUnder18TypeID INT NOT NULL,
                 UCROffenseCodeTypeID INT NOT NULL,
+                SubmissionID INT,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (ArrestReportSegmentID)
 );
@@ -441,6 +442,7 @@ CREATE TABLE AdministrativeSegment (
                 ExceptionalClearanceDate DATE,
                 ExceptionalClearanceDateID INT NOT NULL,
                 CargoTheftIndicatorTypeID INT NOT NULL,
+                SubmissionID INT,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (AdministrativeSegmentID)
 );
@@ -665,6 +667,18 @@ CREATE TABLE LEOKASegment (
 
 
 ALTER TABLE Violation ADD CONSTRAINT submission_violation_fk
+FOREIGN KEY (SubmissionID)
+REFERENCES Submission (SubmissionID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE AdministrativeSegment ADD CONSTRAINT submission_administrativesegment_fk
+FOREIGN KEY (SubmissionID)
+REFERENCES Submission (SubmissionID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE ArrestReportSegment ADD CONSTRAINT submission_arrestreportsegment_fk
 FOREIGN KEY (SubmissionID)
 REFERENCES Submission (SubmissionID)
 ON DELETE NO ACTION

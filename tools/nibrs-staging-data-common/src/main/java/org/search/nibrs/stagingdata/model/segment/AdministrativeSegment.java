@@ -32,6 +32,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.search.nibrs.model.codes.ClearedExceptionallyCode;
 import org.search.nibrs.stagingdata.model.Agency;
@@ -39,6 +40,7 @@ import org.search.nibrs.stagingdata.model.CargoTheftIndicatorType;
 import org.search.nibrs.stagingdata.model.ClearedExceptionallyType;
 import org.search.nibrs.stagingdata.model.DateType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
+import org.search.nibrs.stagingdata.model.Submission;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -60,6 +62,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
         @NamedAttributeNode("exceptionalClearanceDateType"),
         @NamedAttributeNode("clearedExceptionallyType"),
         @NamedAttributeNode("cargoTheftIndicatorType"),
+        @NamedAttributeNode("submission")
 	})
 public class AdministrativeSegment implements Comparable<AdministrativeSegment>, Serializable{
 	private static final long serialVersionUID = -3998248086687831675L;
@@ -120,6 +123,10 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="cargoTheftIndicatorTypeId") 
 	private CargoTheftIndicatorType cargoTheftIndicatorType; 
+	
+	@OneToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "submissionId", nullable = true)
+    private Submission submission;
 	
 	private LocalDateTime reportTimestamp;
 	
@@ -458,6 +465,14 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 	@Override
 	public int compareTo(AdministrativeSegment o) {
 		return this.getAdministrativeSegmentId().compareTo(o.getAdministrativeSegmentId());
+	}
+
+	public Submission getSubmission() {
+		return submission;
+	}
+
+	public void setSubmission(Submission submission) {
+		this.submission = submission;
 	}
 
 }

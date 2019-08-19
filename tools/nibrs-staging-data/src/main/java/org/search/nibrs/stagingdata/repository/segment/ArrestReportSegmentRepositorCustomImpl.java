@@ -20,16 +20,18 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.search.nibrs.stagingdata.model.Submission;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.springframework.stereotype.Repository;
 
@@ -44,8 +46,8 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         CriteriaQuery<IncidentPointer> query = criteriaBuilder.createQuery(IncidentPointer.class);
         Root<ArrestReportSegment> root = query.from(ArrestReportSegment.class);
         
-		Predicate hasFbiSubmission = getSubmissionPredicate(criteriaBuilder, query, root); 
-   
+        Join<ArrestReportSegment, Submission> submissionJoin = root.join("submission", JoinType.LEFT);
+
         query.multiselect(root.get("arrestReportSegmentId"),
         		criteriaBuilder.literal("B"), root.get("arrestTransactionNumber"), 
         		root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("arrestDate"), 
@@ -53,30 +55,14 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         		root.get("ucrOffenseCodeType").get("nibrsCode"),
         		root.get("monthOfTape"), root.get("yearOfTape"), 
         		root.get("reportTimestamp"), 
-        		hasFbiSubmission.alias("fbiSubmission"));
+        		submissionJoin.get("acceptedIndicator"));
 
         List<Predicate> predicates = getArrestReportSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
 
-        if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
-        	predicates.add(hasFbiSubmission);
-        }
-        
         query.where(criteriaBuilder.and(
         		predicates.toArray( new Predicate[predicates.size()])));
 		return entityManager.createQuery(query)
 	            .getResultList();
-	}
-
-	private Predicate getSubmissionPredicate(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query,
-			Root<ArrestReportSegment> root) {
-		Subquery<Submission> submissionSubquery = query.subquery(Submission.class);
-		   Root<Submission> submissionInfo = submissionSubquery.from(Submission.class);
-		   submissionSubquery.select(submissionInfo)//
-           .where(criteriaBuilder.and(
-     		  criteriaBuilder.equal(submissionInfo.get("messageIdentifier"), root.get("arrestReportSegmentId")), 
-     		  criteriaBuilder.equal(submissionInfo.get("nibrsReportCategoryCode"), "GROUP B ARREST REPORT")));//
-		Predicate hasFbiSubmission = criteriaBuilder.exists(submissionSubquery);
-		return hasFbiSubmission;
 	}
 
 	@Override
@@ -84,13 +70,9 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
         Root<ArrestReportSegment> root = query.from(ArrestReportSegment.class);
+        
         List<Predicate> predicates = getArrestReportSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
         
-		if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
-			Predicate hasFbiSubmission = getSubmissionPredicate(criteriaBuilder, query, root);
-			predicates.add(0, hasFbiSubmission);
-		}
-		
 		query.select(criteriaBuilder.count(root.get("arrestReportSegmentId")))
 			.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
 		return entityManager.createQuery(query).getSingleResult();
@@ -100,6 +82,10 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
 			Root<ArrestReportSegment> root, CriteriaBuilder criteriaBuilder) {
 		List<Predicate> predicates = new ArrayList<>();
         if(incidentSearchRequest != null) {
+            if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
+            	predicates.add(criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("submission")))); 
+            }
+            
         	if (incidentSearchRequest.getAgencyIds() != null && incidentSearchRequest.getAgencyIds().size() > 0) {
         		predicates.add(criteriaBuilder.and(root.get("agency").get("agencyId").in(incidentSearchRequest.getAgencyIds())));
         	}
@@ -142,5 +128,14 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
 		return predicates;
 	}
 
+	@Override
+	public int updateSubmissionId(Integer arrestReportSegmentId, Integer submissionId) {
+	      Query query = entityManager.createQuery("UPDATE ArrestReportSegment a SET a.submission.submissionId = :submissionId "
+	              + "WHERE a.arrestReportSegmentId = :arrestReportSegmentId");
+	      query.setParameter("arrestReportSegmentId", arrestReportSegmentId);
+	      query.setParameter("submissionId", submissionId);
+	      int rowsUpdated = query.executeUpdate();
+	      return rowsUpdated;
+	}
 
 }

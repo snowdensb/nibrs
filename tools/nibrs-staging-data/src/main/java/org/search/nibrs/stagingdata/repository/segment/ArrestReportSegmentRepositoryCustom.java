@@ -26,5 +26,5 @@ import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 public interface ArrestReportSegmentRepositoryCustom{
 	List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest);
 	long countAllByCriteria(IncidentSearchRequest incidentSearchRequest);
-	
+	int updateSubmissionId(Integer arrestReportSegmentId, Integer submissionId);
 }

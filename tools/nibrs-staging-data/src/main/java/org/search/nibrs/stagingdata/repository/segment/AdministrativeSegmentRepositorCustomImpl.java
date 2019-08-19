@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -47,9 +48,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<IncidentPointer> query = criteriaBuilder.createQuery(IncidentPointer.class);
         Root<AdministrativeSegment> root = query.from(AdministrativeSegment.class);
-		
-		Predicate hasFbiSubmission = getFbiSubmissionPredicate(criteriaBuilder, query, root); 
-    	
+        
         Subquery<Integer> offenseCodeTypeIdSubQuery = query.subquery(Integer.class);
         Root<OffenseSegment> offenseSubRoot = offenseCodeTypeIdSubQuery.from(OffenseSegment.class);
         offenseCodeTypeIdSubQuery.select(criteriaBuilder.min(offenseSubRoot.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId")));
@@ -57,45 +56,30 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         		offenseSubRoot.get("administrativeSegment").get("administrativeSegmentId"), 
         		root.get("administrativeSegmentId")));
         
-        Join<AdministrativeSegment, OffenseSegment> joinOptions = root.join("offenseSegments", JoinType.LEFT);
-        joinOptions.on(criteriaBuilder.equal(joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), offenseCodeTypeIdSubQuery));
+        Join<AdministrativeSegment, OffenseSegment> offenseSegmentJoin = root.join("offenseSegments", JoinType.LEFT);
+        offenseSegmentJoin.on(criteriaBuilder.equal(offenseSegmentJoin.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"), offenseCodeTypeIdSubQuery));
         
-        Join<OffenseSegment, UcrOffenseCodeType> ucrOffenseCodeTypeJoin = joinOptions.join("ucrOffenseCodeType", JoinType.LEFT);
+        Join<OffenseSegment, UcrOffenseCodeType> ucrOffenseCodeTypeJoin = offenseSegmentJoin.join("ucrOffenseCodeType", JoinType.LEFT);
+        
+        Join<AdministrativeSegment, Submission> submissionJoin = root.join("submission", JoinType.LEFT);
         
 		query.multiselect(root.get("administrativeSegmentId"),
 				criteriaBuilder.literal("A"),root.get("incidentNumber"), 
 				root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("incidentDate"), 
-				joinOptions.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"),
+				offenseSegmentJoin.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"),
 				ucrOffenseCodeTypeJoin.get("nibrsCode"),
 				root.get("monthOfTape"), root.get("yearOfTape"), 
 				root.get("reportTimestamp"), 
-				hasFbiSubmission.alias("fbiSubmission"));
+				submissionJoin.get("acceptedIndicator"));
 		
 
         List<Predicate> queryPredicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
-        
-        if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
-        	queryPredicates.add(0, hasFbiSubmission);
-        }
         
         query.where(criteriaBuilder.and(
         		queryPredicates.toArray( new Predicate[queryPredicates.size()])));
         
 		return entityManager.createQuery(query)
 	            .getResultList();
-	}
-
-	private Predicate getFbiSubmissionPredicate(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query,
-			Root<AdministrativeSegment> root) {
-		Subquery<Submission> submissionSubquery = query.subquery(Submission.class);
-		   Root<Submission> submissionInfo = submissionSubquery.from(Submission.class);
-		   submissionSubquery.select(submissionInfo)//
-              .where(criteriaBuilder.and(
-        		  criteriaBuilder.equal(submissionInfo.get("messageIdentifier"), root.get("administrativeSegmentId")), 
-        		  criteriaBuilder.equal(submissionInfo.get("nibrsReportCategoryCode"), "GROUP A INCIDENT REPORT")));//
-    	
-		Predicate hasFbiSubmission = criteriaBuilder.exists(submissionSubquery);
-		return hasFbiSubmission;
 	}
 
 	@Override
@@ -105,10 +89,6 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         Root<AdministrativeSegment> root = query.from(AdministrativeSegment.class);
         List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
         
-        if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
-        	Predicate hasFbiSubmission = getFbiSubmissionPredicate(criteriaBuilder, query, root);   
-        	predicates.add(0, hasFbiSubmission);
-        }
 		query.select(criteriaBuilder.count(root.get("administrativeSegmentId")))
 			.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
 		return entityManager.createQuery(query).getSingleResult();
@@ -118,7 +98,10 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 			Root<AdministrativeSegment> root, CriteriaBuilder criteriaBuilder) {
 		List<Predicate> predicates = new ArrayList<>();
         if(incidentSearchRequest != null) {
-        	
+            if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
+            	predicates.add(criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("submission")))); 
+            }
+
         	if (incidentSearchRequest.getAgencyIds() != null && incidentSearchRequest.getAgencyIds().size() > 0) {
         		predicates.add(criteriaBuilder.and(root.get("agency").get("agencyId").in(incidentSearchRequest.getAgencyIds())));
         	}
@@ -162,5 +145,13 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 		return predicates;
 	}
 
+	public int updateSubmissionId(Integer administrativeSegmentId, Integer submissionId) {
+	      Query query = entityManager.createQuery("UPDATE AdministrativeSegment a SET a.submission.submissionId = :submissionId "
+	              + "WHERE a.administrativeSegmentId = :administrativeSegmentId");
+	      query.setParameter("administrativeSegmentId", administrativeSegmentId);
+	      query.setParameter("submissionId", submissionId);
+	      int rowsUpdated = query.executeUpdate();
+	      return rowsUpdated;
+	  }
 
 }
