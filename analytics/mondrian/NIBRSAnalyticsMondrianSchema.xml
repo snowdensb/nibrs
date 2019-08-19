@@ -549,7 +549,7 @@
         <Attributes>
           <Attribute name="VictimAge" keyColumn="VictimAgeDim" hasHierarchy="false" table="FullIncidentView" orderByColumn="VictimAgeDimSort"/>
           <Attribute name="VictimAgeGroup" keyColumn="VictimAgeGroup" hasHierarchy="false" table="FullIncidentView" orderByColumn="VictimAgeGroupSort"/>
-          <Attribute name="VictimUcrAgeGroup" keyColumn="VictimAgeGroup" hasHierarchy="false" table="FullIncidentView" orderByColumn="VictimUcrAgeGroupSort"/>
+          <Attribute name="VictimUcrAgeGroup" keyColumn="VictimUcrAgeGroup" hasHierarchy="false" table="FullIncidentView" orderByColumn="VictimUcrAgeGroupSort"/>
         </Attributes>
         <Hierarchies>
           <Hierarchy name="Victim Age"  visible="true" hasAll="true"  allMemberCaption="All Ages">
@@ -640,7 +640,7 @@
           <ForeignKeyLink dimension="EthnicityOfPerson" foreignKeyColumn="EthnicityOfPersonTypeID"/>
           <ForeignKeyLink dimension="ResidentStatusOfPerson" foreignKeyColumn="ResidentStatusOfPersonTypeID"/>
           <ForeignKeyLink dimension="AdditionalJustifiableHomicideCircumstances" foreignKeyColumn="AdditionalJustifiableHomicideCircumstancesTypeID"/>
-          <ForeignKeyLink dimension="CompletionStatus" foreignKeyColumn="OffenseAttemptedCompleted"/>
+          <ForeignKeyLink dimension="CompletionStatus" foreignKeyColumn="CompletionStatusIndicator"/>
           <FactLink dimension="Offenses Per Incident"/>
           <FactLink dimension="Premises Entered"/>
           <FactLink dimension="Victim Age"/>
@@ -744,7 +744,7 @@
           <ForeignKeyLink dimension="EthnicityOfPerson" foreignKeyColumn="EthnicityOfPersonTypeID"/>
           <ForeignKeyLink dimension="ResidentStatusOfPerson" foreignKeyColumn="ResidentStatusOfPersonTypeID"/>
           <ForeignKeyLink dimension="AdditionalJustifiableHomicideCircumstances" foreignKeyColumn="AdditionalJustifiableHomicideCircumstancesTypeID"/>
-          <ForeignKeyLink dimension="CompletionStatus" foreignKeyColumn="OffenseAttemptedCompleted"/>
+          <ForeignKeyLink dimension="CompletionStatus" foreignKeyColumn="CompletionStatusIndicator"/>
           <FactLink dimension="Premises Entered"/>
           <FactLink dimension="Victim Age"/>
           <ForeignKeyLink dimension="TypeOfCriminalActivity" foreignKeyColumn="TypeOfCriminalActivityTypeID"/>

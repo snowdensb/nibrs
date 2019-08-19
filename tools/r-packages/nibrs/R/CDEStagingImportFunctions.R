@@ -35,6 +35,11 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
 
   files <- sort(files)
 
+  if (writeProgressDetail) {
+    writeLines(paste0('Will process the following CDE zip files:'))
+    writeLines(files)
+  }
+
   accumListFilePath <- file.path(accumListStorageDir, 'accumList.rds')
 
   mapf <- map
@@ -55,10 +60,6 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
 
   keepCodeTables <- function(dfList) keepTablesOfType(dfList, 'CT')
   keepFactTables <- function(dfList) keepTablesOfType(dfList, 'FT')
-
-  getStateCodeFromFile <- function(file) {
-    gsub(x=basename(file), pattern='^(.{2})-.+', replacement='\\1')
-  }
 
   if (!reusePriorCsv) {
 
@@ -138,7 +139,7 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
     keep(function(member) { !is.null(member$factTableNames) }) %>%
     reduce(function(accum, value) {
       list(factTableNames=sort(unique(c(accum$factTableNames, value$factTableNames))))
-    }) %>% unlist()
+    }, .init=list(factTableNames=c())) %>% unlist()
 
   writeLines(paste0('Accumulated fact table names: ', paste0(accumFactTableNames, collapse=', ')))
 
@@ -291,7 +292,7 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
 
   writeLines('Creating parquet datasets for agency and date code tables')
   accumList %>% iwalk(function(tdf, tableName) {
-    if (tableName != 'CharFieldLengthTallyList') {
+    if (tableName %in% c('Agency', 'DateType')) {
       write_csv(tdf, file.path(sharedCsvDir, paste0(tableName, '.csvh')), na='')
       createTableAndView(tableName)
     }
@@ -305,6 +306,10 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
 
   invisible(c(factTableList, enhancedCodeTableList, accumList))
 
+}
+
+getStateCodeFromFile <- function(file) {
+  gsub(x=basename(file), pattern='^(.{2})-.+', replacement='\\1')
 }
 
 #' Process a directory of FBI Crime Data Explorer extract zips
@@ -325,7 +330,7 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
 #' @importFrom furrr future_map
 #' @importFrom future plan multiprocess
 #' @export
-loadMultiStateYearDataToStaging <- function(zipDirectory, codeTableList=NULL, zipFileSampleFraction=1, stateAbbreviationRegex=NULL, yearRegex=NULL, parallel=FALSE) {
+loadMultiStateYearDataToStaging <- function(zipDirectory, codeTableList=NULL, zipFileSampleFraction=1, stateAbbreviationRegex=NULL, yearRegex=NULL, parallel=FALSE, writeProgressDetail=TRUE) {
 
   if (is.null(codeTableList)) {
     writeLines('Loading code tables')
@@ -363,7 +368,7 @@ loadMultiStateYearDataToStaging <- function(zipDirectory, codeTableList=NULL, zi
     writeLines(paste0('Processing NIBRS CDE file ', file, ', (state=', state, ', year=', year, ')'))
     directory <- tempfile(pattern='dir')
     unzip(file, exdir=directory, junkpaths=TRUE)
-    sdfs <- loadCDEDataToStaging(directory, codeTableList)
+    sdfs <- loadCDEDataToStaging(directory, codeTableList, getStateCodeFromFile(file), writeProgressDetail=writeProgressDetail)
     unlink(directory, TRUE)
     if (!is.null(sdfs)) {
       sdfs$AdministrativeSegment <- sdfs$AdministrativeSegment %>% mutate(CDEYear=year)
