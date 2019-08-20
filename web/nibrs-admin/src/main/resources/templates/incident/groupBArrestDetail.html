@@ -144,7 +144,70 @@
 				</tbody>
 			</table>	
   		</div> 
-	</div>
+	  </div>
+    <div class="card">
+      <div class="card-header font-weight-bold">FBI SUBMISSION</div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th>STATUS</th>  
+              <td th:text="${arrestReportSegment.fbiStatus}">FBI submission Status</td>
+            </tr>
+            <tr th:if="${arrestReportSegment.submission != null}">
+              <th>SUBMISSION TIMESTAMP</th>
+              <td th:text="${arrestReportSegment.submission.submissionTimestamp}">submissionTimestamp</td>
+            </tr>
+            <tr th:if="${arrestReportSegment.submission != null}">
+              <th>REQUEST FILE PATH</th>
+              <td th:text="${arrestReportSegment.submission.requestFilePath}">requestFilePath</td>
+            </tr>
+            <tr th:if="${arrestReportSegment.submission != null}">
+              <th>RESPONSE TIMESTAMP</th>
+              <td th:text="${arrestReportSegment.submission.responseTimestamp}">responseTimestamp</td>
+            </tr>
+            <tr th:if="${arrestReportSegment.submission != null}">
+              <th>RESPONSE FILE PATH</th>
+              <td th:text="${arrestReportSegment.submission.responseFilePath}">responseFilePath</td>
+            </tr>
+            <tr th:if="${arrestReportSegment.submission != null and arrestReportSegment.submission.faultCode != null}">
+              <th>FAULT CODE</th>
+              <td th:text="${arrestReportSegment.submission.faultCode}">faultCode</td>
+            </tr>
+            <tr th:if="${arrestReportSegment.submission != null and arrestReportSegment.submission.faultDescription != null}">
+              <th>FAULT DESCRIPTION</th>
+              <td th:text="${arrestReportSegment.submission.faultDescription}">faultDescription</td>
+            </tr>
+            <tr th:if="${arrestReportSegment.submission != null and !arrestReportSegment.submission.violations.empty}">
+              <td colspan="2">
+                <div class="card">
+                  <div class="card-header font-weight-bold">VIOLATIONS</div>
+                  <div class="card-body">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Violation Code</th>
+                          <th>Violation Level</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <th:block th:each="violation: ${arrestReportSegment.submission.violations}">
+                          <tr>
+                            <td th:text="${violation.violationCode}"/>
+                            <td th:text="${violation.violationLevel}"/>
+                          </tr>
+                        </th:block>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>  
+      </div>
+    </div>
+	
     <script th:inline="javascript">
 		$(function(){
 		});

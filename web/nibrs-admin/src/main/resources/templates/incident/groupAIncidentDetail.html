@@ -32,11 +32,11 @@
 	  		<div class="card-body">
 	  			<table class="table table-bordered">
 	    			<thead>
-	      				<tr>
-					        <th>Action Type</th>
-					        <th>Submission Year</th>
-					        <th>Submission Month</th>
-						</tr>
+      				<tr>
+				        <th>Action Type</th>
+				        <th>Submission Year</th>
+				        <th>Submission Month</th>
+						  </tr>
 	    			</thead>
 	    			<tbody>
 						<tr>
@@ -521,7 +521,69 @@
           </div>
         </div>                  
 	  	</div>
-	  	
+	  	<div class="card">
+        <div class="card-header font-weight-bold">FBI SUBMISSION</div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody>
+	            <tr>
+	              <th>STATUS</th>  
+                <td th:text="${administrativeSegment.fbiStatus}">FBI submission Status</td>
+              </tr>
+              <tr th:if="${administrativeSegment.submission != null}">
+                <th>SUBMISSION TIMESTAMP</th>
+                <td th:text="${administrativeSegment.submission.submissionTimestamp}">submissionTimestamp</td>
+	            </tr>
+              <tr th:if="${administrativeSegment.submission != null}">
+                <th>REQUEST FILE PATH</th>
+                <td th:text="${administrativeSegment.submission.requestFilePath}">requestFilePath</td>
+	            </tr>
+              <tr th:if="${administrativeSegment.submission != null}">
+	              <th>RESPONSE TIMESTAMP</th>
+	              <td th:text="${administrativeSegment.submission.responseTimestamp}">responseTimestamp</td>
+	            </tr>
+              <tr th:if="${administrativeSegment.submission != null}">
+                <th>RESPONSE FILE PATH</th>
+                <td th:text="${administrativeSegment.submission.responseFilePath}">responseFilePath</td>
+              </tr>
+              <tr th:if="${administrativeSegment.submission != null and administrativeSegment.submission.faultCode != null}">
+                <th>FAULT CODE</th>
+                <td th:text="${administrativeSegment.submission.faultCode}">faultCode</td>
+              </tr>
+              <tr th:if="${administrativeSegment.submission != null and administrativeSegment.submission.faultDescription != null}">
+                <th>FAULT DESCRIPTION</th>
+                <td th:text="${administrativeSegment.submission.faultDescription}">faultDescription</td>
+              </tr>
+              <tr th:if="${administrativeSegment.submission != null and !administrativeSegment.submission.violations.empty}">
+                <td colspan="2">
+	                <div class="card">
+	                  <div class="card-header font-weight-bold">VIOLATIONS</div>
+	 					        <div class="card-body">
+					            <table class="table table-bordered">
+					              <thead>
+						              <tr>
+						                <th>Violation Code</th>
+						                <th>Violation Level</th>
+						              </tr>
+					              </thead>
+						            <tbody>
+						              <th:block th:each="violation: ${administrativeSegment.submission.violations}">
+						                <tr>
+						                  <td th:text="${violation.violationCode}"/>
+						                  <td th:text="${violation.violationLevel}"/>
+						                </tr>
+						              </th:block>
+						            </tbody>
+					            </table>
+				            </div>
+			            </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>  
+	      </div>
+      </div>
+	        	
 	    <script th:inline="javascript">
 	    	$(function(){
 	    		

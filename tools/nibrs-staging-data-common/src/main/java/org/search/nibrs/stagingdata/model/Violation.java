@@ -76,7 +76,7 @@ public class Violation {
 	}
 	@Override
 	public String toString() {
-		return "Violation [violationId=" + violationId + ", submission=" + submission.getSubmissionId() + ", violationCode="
+		return "Violation [violationId=" + violationId + ", submissionId=" + submission.getSubmissionId() + ", violationCode="
 				+ violationCode + ", violationLevel=" + violationLevel + ", violationTimestamp=" + violationTimestamp
 				+ "]";
 	}

@@ -45,6 +45,9 @@ import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
+import org.search.nibrs.stagingdata.model.search.FbiSubmissionStatus;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @NamedEntityGraph(name="allArrestReportSegmentJoins", attributeNodes = {
@@ -453,6 +456,17 @@ public class ArrestReportSegment {
 	}
 	public void setSubmission(Submission submission) {
 		this.submission = submission;
+	}
+
+	@JsonIgnore
+	public FbiSubmissionStatus getFbiStatus() {
+		if (submission == null) return FbiSubmissionStatus.NOT_SUBMITTED; 
+		else if (submission.getAcceptedIndicator()) {
+			return FbiSubmissionStatus.ACCEPTED; 
+		}
+		else {
+			return FbiSubmissionStatus.REJECTED; 
+		}
 	}
 
 }

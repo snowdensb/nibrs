@@ -41,6 +41,7 @@ import org.search.nibrs.stagingdata.model.ClearedExceptionallyType;
 import org.search.nibrs.stagingdata.model.DateType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.Submission;
+import org.search.nibrs.stagingdata.model.search.FbiSubmissionStatus;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -473,6 +474,17 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 
 	public void setSubmission(Submission submission) {
 		this.submission = submission;
+	}
+
+	@JsonIgnore
+	public FbiSubmissionStatus getFbiStatus() {
+		if (submission == null) return FbiSubmissionStatus.NOT_SUBMITTED; 
+		else if (submission.getAcceptedIndicator()) {
+			return FbiSubmissionStatus.ACCEPTED; 
+		}
+		else {
+			return FbiSubmissionStatus.REJECTED; 
+		}
 	}
 
 }
