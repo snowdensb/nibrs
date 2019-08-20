@@ -16,5 +16,15 @@
 package org.search.nibrs.stagingdata.model.search;
 
 public enum ReportType {
-	A, B, ZERO; 
+	GroupA("Group A"), GroupB("Group B"), ZERO("Zero Report"); 
+	
+	private String description; 
+	
+	ReportType(String description) {
+		this.description = description;
+	}
+	
+	public String toString() {
+		return description; 
+	}
 }

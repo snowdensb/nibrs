@@ -26,6 +26,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class IncidentPointer implements Serializable {
+	private static final String REJECTED = "Rejected";
+	private static final String ACCEPTED = "Accepted";
+	private static final String NOT_SUBMITTED = "Not submitted";
 	private static final long serialVersionUID = 7916910066665545067L;
 	private Integer primaryKey; 
 	private ReportType reportType; 
@@ -156,5 +159,16 @@ public class IncidentPointer implements Serializable {
 	@JsonIgnore
 	public String getSubmissionDateString() {
 		return submissionYear + "-" + StringUtils.left(submissionMonth, 2);
+	}
+	
+	@JsonIgnore
+	public String getFbiStatus() {
+		if (fbiSubmissionAccepted == null) return NOT_SUBMITTED; 
+		else if (fbiSubmissionAccepted) {
+			return ACCEPTED; 
+		}
+		else {
+			return REJECTED; 
+		}
 	}
 }

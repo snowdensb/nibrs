@@ -64,7 +64,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         Join<AdministrativeSegment, Submission> submissionJoin = root.join("submission", JoinType.LEFT);
         
 		query.multiselect(root.get("administrativeSegmentId"),
-				criteriaBuilder.literal("A"),root.get("incidentNumber"), 
+				criteriaBuilder.literal("GroupA"),root.get("incidentNumber"), 
 				root.get("agency").get("agencyId"), root.get("agency").get("agencyName"), root.get("incidentDate"), 
 				offenseSegmentJoin.get("ucrOffenseCodeType").get("ucrOffenseCodeTypeId"),
 				ucrOffenseCodeTypeJoin.get("nibrsCode"),
