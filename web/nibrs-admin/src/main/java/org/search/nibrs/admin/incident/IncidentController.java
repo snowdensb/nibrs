@@ -105,6 +105,7 @@ public class IncidentController {
 	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,
 			Map<String, Object> model) throws Throwable {
 		IncidentSearchResult incidentSearchResult = restService.getIncidents(incidentSearchRequest);
+		log.debug("incidentSearchResult" + incidentSearchResult);
 		model.put("incidentSearchResult", incidentSearchResult); 
 	}	
 
@@ -112,7 +113,7 @@ public class IncidentController {
 	public String getReportDetail(HttpServletRequest request, @PathVariable String id, 
 			@PathVariable String reportType, Map<String, Object> model) throws Throwable {
 		
-		if ("A".equals(reportType)) { 
+		if ("Group A".equals(reportType)) { 
 			AdministrativeSegment administrativeSegment = restService.getAdministrativeSegment(id);
 			model.put("administrativeSegment", administrativeSegment);
 			log.debug("administrativeSegment: " + administrativeSegment);
