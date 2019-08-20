@@ -304,7 +304,7 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 				+ ", exceptionalClearanceDate=" + exceptionalClearanceDate + ", exceptionalClearanceDateType="
 				+ exceptionalClearanceDateType + ", reportDateIndicator=" + reportDateIndicator + ", incidentHour="
 				+ incidentHour + ", clearedExceptionallyType=" + clearedExceptionallyType + ", cargoTheftIndicatorType="
-				+ cargoTheftIndicatorType + "]";
+				+ cargoTheftIndicatorType + "submission=" + submission== null? "null":submission + "]";
 	}
 
 	@Override

@@ -404,7 +404,7 @@ public class ArrestReportSegment {
 				+ ", sexOfPersonType=" + sexOfPersonType + ", raceOfPersonType=" + raceOfPersonType
 				+ ", ethnicityOfPersonType=" + ethnicityOfPersonType + ", residentStatusOfPersonType="
 				+ residentStatusOfPersonType + ", dispositionOfArresteeUnder18Type=" + dispositionOfArresteeUnder18Type
-				+ ", ucrOffenseCodeType=" + ucrOffenseCodeType + "]";
+				+ ", ucrOffenseCodeType=" + ucrOffenseCodeType + "submission=" + submission==null?"null":submission + "]";
 	}
 	public String getNonNumericAge() {
 		return nonNumericAge;
