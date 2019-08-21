@@ -23,8 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class IncidentPointer implements Serializable {
 	private static final long serialVersionUID = 7916910066665545067L;
 	private Integer primaryKey; 
@@ -137,6 +135,7 @@ public class IncidentPointer implements Serializable {
 	public ReportType getReportType() {
 		return reportType;
 	}
+	
 	public void setReportType(ReportType reportType) {
 		this.reportType = reportType;
 	}
@@ -153,19 +152,17 @@ public class IncidentPointer implements Serializable {
 		this.reportTimestamp = reportTimestamp;
 	}
 	
-	@JsonIgnore
 	public String getSubmissionDateString() {
 		return submissionYear + "-" + StringUtils.left(submissionMonth, 2);
 	}
 	
-	@JsonIgnore
-	public FbiSubmissionStatus getFbiStatus() {
-		if (fbiSubmissionAccepted == null) return FbiSubmissionStatus.NOT_SUBMITTED; 
+	public String getFbiStatus() {
+		if (fbiSubmissionAccepted == null) return FbiSubmissionStatus.NOT_SUBMITTED.toString(); 
 		else if (fbiSubmissionAccepted) {
-			return FbiSubmissionStatus.ACCEPTED; 
+			return FbiSubmissionStatus.ACCEPTED.toString(); 
 		}
 		else {
-			return FbiSubmissionStatus.REJECTED; 
+			return FbiSubmissionStatus.REJECTED.toString(); 
 		}
 	}
 }

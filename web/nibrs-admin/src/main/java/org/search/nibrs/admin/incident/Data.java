@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.search.nibrs.stagingdata.model.search;
+package org.search.nibrs.admin.incident;
 
-public enum FbiSubmissionStatus {
-	REJECTED("Rejected"), ACCEPTED("Accepted"), NOT_SUBMITTED("Not submitted"); 
-	
-	private String description; 
-	
-	FbiSubmissionStatus(String description) {
-		this.setDescription(description);
-	}
-	
-	public String toString() {
-		return getDescription(); 
-	}
+import java.util.List;
 
-	public String getDescription() {
-		return description;
+public class Data<T> {
+	private List<T> data;
+	
+	public Data() {
+		super();
+	}
+	public Data(List<T> list){
+		this();
+		this.data = list; 
 	}
 
-	private void setDescription(String description) {
-		this.description = description;
+	public List<T> getData() {
+		return data;
 	}
+
+	public void setData(List<T> data) {
+		this.data = data;
+	} 
+
 }

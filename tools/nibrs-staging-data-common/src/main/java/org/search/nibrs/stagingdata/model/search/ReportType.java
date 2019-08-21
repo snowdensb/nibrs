@@ -21,10 +21,18 @@ public enum ReportType {
 	private String description; 
 	
 	ReportType(String description) {
-		this.description = description;
+		this.setDescription(description);
 	}
 	
 	public String toString() {
-		return description; 
+		return getDescription(); 
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	private void setDescription(String description) {
+		this.description = description;
 	}
 }

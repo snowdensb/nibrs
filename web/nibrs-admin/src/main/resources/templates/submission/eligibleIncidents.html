@@ -38,7 +38,7 @@
       <hr/>
       
       <div id="searchResultsList" th:fragment="resultsList" >
-        <div class="alert alert-secondary small" role="alert"
+        <div class="alert alert-secondary" role="alert"
           th:if="${submissionIncidentSearchResult != null}">
            <span th:if="${submissionIncidentSearchResult.totalCount != submissionIncidentSearchResult.returnedCount}" 
              th:text=" 'The latest ' + ${submissionIncidentSearchResult.returnedCount} + ' of the ' + ${submissionIncidentSearchResult.totalCount} + ' search hits are shown in the table. '"></span>
@@ -49,7 +49,7 @@
              <button type="button" class="btn btn-primary btn-sm ml-2" id="triggerSubmission">Submit to FBI</button>
            </span>
         </div>
-        <div class="alert alert-info small d-none" id="responseInfo"></div>
+        <div class="alert alert-info d-none" id="responseInfo"></div>
 				<table id="searchResultsTable" class="table table-striped table-bordered dt-responsive display responsive" style="width: 100%; border-spacing: 0;" th:if="${submissionIncidentSearchResult != null}">
 					<thead>
 						<tr>

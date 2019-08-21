@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.admin.services.rest.RestService;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -38,6 +39,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
@@ -98,22 +101,33 @@ public class IncidentController {
 			log.info(bindingResult.getAllErrors());
 			return "/incident/incidents::resultsPage";
 		}
+		
 		getIncidentSearchResults(request, incidentSearchRequest, model);
 		return "/incident/incidents::resultsPage";
 	}
 
 	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,
 			Map<String, Object> model) throws Throwable {
+		model.put("incidentSearchRequest", incidentSearchRequest); 
 		IncidentSearchResult incidentSearchResult = restService.getIncidents(incidentSearchRequest);
 		log.debug("incidentSearchResult" + incidentSearchResult);
 		model.put("incidentSearchResult", incidentSearchResult); 
 	}	
 
+	@RequestMapping(value="/pointers", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Data<IncidentPointer> getIncidentPointers(
+			Map<String, Object> model) throws Throwable {
+		IncidentSearchResult incidentSearchResult = (IncidentSearchResult) model.get("incidentSearchResult");
+		log.debug("incidentSearchResult" + incidentSearchResult);
+		
+		return new Data<IncidentPointer>(incidentSearchResult.getIncidentPointers());
+	}	
+	
 	@GetMapping("/{reportType}/{id}")
 	public String getReportDetail(HttpServletRequest request, @PathVariable String id, 
 			@PathVariable String reportType, Map<String, Object> model) throws Throwable {
 		
-		if ("Group A".equals(reportType)) { 
+		if ("GroupA".equals(reportType)) { 
 			AdministrativeSegment administrativeSegment = restService.getAdministrativeSegment(id);
 			model.put("administrativeSegment", administrativeSegment);
 			log.debug("administrativeSegment: " + administrativeSegment);
