@@ -25,7 +25,9 @@ import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
+import org.search.nibrs.admin.incident.Data;
 import org.search.nibrs.admin.services.rest.RestService;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -118,6 +121,14 @@ public class SubmissionController {
 		IncidentSearchResult incidentSearchResult = restService.getIncidents(incidentSearchRequest);
 		model.put("submissionIncidentSearchRequest", incidentSearchRequest);
 		model.put("submissionIncidentSearchResult", incidentSearchResult); 
+	}	
+	
+	@RequestMapping(value="/pointers", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Data<IncidentPointer> getIncidentPointers(
+			Map<String, Object> model) throws Throwable {
+		IncidentSearchResult submissionIncidentSearchResult = (IncidentSearchResult) model.get("submissionIncidentSearchResult");
+		
+		return new Data<IncidentPointer>(submissionIncidentSearchResult.getIncidentPointers());
 	}	
 
 	@GetMapping("/{reportType}/{id}")

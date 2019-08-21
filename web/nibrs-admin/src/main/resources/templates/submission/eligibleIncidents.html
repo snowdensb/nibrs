@@ -63,17 +63,6 @@
 						</tr>
 					</thead>
 					<tbody>
-						<th:block th:each="incidentSearchResult: ${submissionIncidentSearchResult.incidentPointers}">
-							<tr th:id="${incidentSearchResult.primaryKey}">
-								<td th:text="${incidentSearchResult.incidentIdentifier}"/>
-								<td th:text="${incidentSearchResult.agencyName}"/>
-								<td th:text="${incidentSearchResult.incidentDate}"/>
-								<td th:text="${incidentSearchResult.submissionDateString}"/>
-								<td th:text="${incidentSearchResult.ucrOffenseCodeTypeId}"/>
-								<td th:text="${incidentSearchResult.reportType}"/>
-								<td th:text="${incidentSearchResult.fbiStatus}"/>
-							</tr>
-						</th:block>
 					</tbody>
 				</table>
 				<div class="modal ojbc-modal" id="reportDetailModal">
@@ -110,6 +99,19 @@
            var table = $('#searchResultsTable').DataTable({
              responsive: true, 
              fixedHeader: { header: true },
+             ajax: context +"submission/pointers",
+             rowId: "primaryKey",
+             columns: [
+                 { "data": "incidentIdentifier" },
+                 { "data": "agencyName" },
+                 { "data": "incidentDate" },
+                 { "data": "submissionDateString" },
+                 { "data": "ucrOffenseCodeTypeId" },
+                 { "data": "reportType" },
+                 { "data": "fbiStatus" }, 
+                 { "data": "primaryKey", "visible":false}
+             ], 
+             deferRender: true,
 	           columnDefs: [ 
 	               {
 	                    "targets": [4],
@@ -121,7 +123,21 @@
 	                          return data;
 	                        }
 	                    }
-	               }
+	               },
+                 {
+                      "targets": [5],
+                      "render": function ( data, type, row, meta ) {
+                          if (data === 'GroupA'){
+                            return 'Group A';
+                          }
+                          else if (data === 'GroupB' ){
+                            return 'Group B';
+                          }
+                          else {
+                            return data;
+                          }
+                      }
+                 }
                ]
            });
            
@@ -141,7 +157,7 @@
              $(this).addClass('selected');  
  
              var rowData = table.row($(this)).data();
-             var reportType = rowData[5]; 
+             var reportType = rowData.reportType; 
              xhr = $.get( context +"incidents/" + reportType + "/" + $(this).attr("id")   , function(data) {
                $('#reportDetailModal .modal-body').html(data);
                
