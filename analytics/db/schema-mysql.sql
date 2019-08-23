@@ -23,6 +23,16 @@ CREATE schema search_nibrs_staging;
 use search_nibrs_staging;
 
 
+CREATE TABLE NibrsErrorCodeType (
+                NibrsErrorCodeTypeId INT AUTO_INCREMENT NOT NULL,
+                Code VARCHAR(3) NOT NULL,
+                Type VARCHAR(30) NOT NULL,
+                Message VARCHAR(300) NOT NULL,
+                Description VARCHAR(4000) NOT NULL,
+                PRIMARY KEY (NibrsErrorCodeTypeId)
+);
+
+
 CREATE TABLE Submission (
                 SubmissionID INT AUTO_INCREMENT NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
@@ -33,13 +43,12 @@ CREATE TABLE Submission (
                 ResponseTimestamp timestamp,
                 FaultCode VARCHAR(100),
                 FaultDescription VARCHAR(500),
-                NIBRSReportCategoryCode VARCHAR(40) NOT NULL,
-                SubmissionTimestamp TIMESTAMP NOT NULL,
+                NIBRSReportCategoryCode VARCHAR(30) NOT NULL,
+                SubmissionTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (SubmissionID)
 );
-create index idx_submission_MessageIdentifier on submission(MessageIdentifier);
 
-ALTER TABLE Submission MODIFY COLUMN NIBRSReportCategoryCode VARCHAR(40) COMMENT 'Group A or Group B.';
+ALTER TABLE Submission MODIFY COLUMN NIBRSReportCategoryCode VARCHAR(30) COMMENT 'Group A or Group B.';
 
 
 CREATE TABLE Violation (
@@ -47,6 +56,7 @@ CREATE TABLE Violation (
                 SubmissionID INT NOT NULL,
                 ViolationCode VARCHAR(3) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
+                NibrsErrorCodeTypeId INTEGER NOT NULL,
                 ViolationTimestamp TIMESTAMP NOT NULL,
                 PRIMARY KEY (ViolationID)
 );
@@ -339,6 +349,22 @@ CREATE TABLE SegmentActionTypeType (
                 NIBRSCode VARCHAR(1) NOT NULL,
                 NIBRSDescription VARCHAR(25) NOT NULL,
                 PRIMARY KEY (SegmentActionTypeTypeID)
+);
+
+
+CREATE TABLE NibrsError (
+                NibrsErrorId INT AUTO_INCREMENT NOT NULL,
+                MonthOfTape VARCHAR(2),
+                YearOfTape VARCHAR(4),
+                AgencyID INT NOT NULL,
+                NibrsErrorCodeTypeId INT NOT NULL,
+                SegmentActionTypeTypeID INT NOT NULL,
+                SourceLocation VARCHAR(15) NOT NULL,
+                IncidentIdentifier VARCHAR(50) NOT NULL,
+                DataElement VARCHAR(4) NOT NULL,
+                RejectedValue VARCHAR(50),
+                NibrsErrorTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                PRIMARY KEY (NibrsErrorId)
 );
 
 
@@ -666,6 +692,18 @@ CREATE TABLE LEOKASegment (
 );
 
 
+ALTER TABLE NibrsError ADD CONSTRAINT nibrserrorcodetype_nibrserrorid_fk
+FOREIGN KEY (NibrsErrorCodeTypeId)
+REFERENCES NibrsErrorCodeType (NibrsErrorCodeTypeId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE Violation ADD CONSTRAINT nibrserrorcodetype_violation_fk
+FOREIGN KEY (NibrsErrorCodeTypeId)
+REFERENCES NibrsErrorCodeType (NibrsErrorCodeTypeId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
 ALTER TABLE Violation ADD CONSTRAINT submission_violation_fk
 FOREIGN KEY (SubmissionID)
 REFERENCES Submission (SubmissionID)
@@ -739,6 +777,12 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE ArrestReportSegment ADD CONSTRAINT agency_arrestreportsegment_fk
+FOREIGN KEY (AgencyID)
+REFERENCES Agency (AgencyID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE NibrsError ADD CONSTRAINT agency_nibrserrorid_fk
 FOREIGN KEY (AgencyID)
 REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION
@@ -1003,6 +1047,12 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE ArrestReportSegment ADD CONSTRAINT segmentactiontype_arrestreportsegment_fk
+FOREIGN KEY (SegmentActionTypeTypeID)
+REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE NibrsError ADD CONSTRAINT segmentactiontypetype_nibrserrorid_fk
 FOREIGN KEY (SegmentActionTypeTypeID)
 REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
 ON DELETE NO ACTION

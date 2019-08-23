@@ -24,6 +24,17 @@ CREATE schema search_nibrs_staging;
 Use search_nibrs_staging; 
 
 
+
+CREATE TABLE NibrsErrorCodeType (
+                NibrsErrorCodeTypeId IDENTITY NOT NULL,
+                Code VARCHAR(3) NOT NULL,
+                Type VARCHAR(30) NOT NULL,
+                Message VARCHAR(300) NOT NULL,
+                Description VARCHAR(4000) NOT NULL,
+                CONSTRAINT NibrsErrorCodeTypeId PRIMARY KEY (NibrsErrorCodeTypeId)
+);
+
+
 CREATE TABLE Submission (
                 SubmissionID IDENTITY NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
@@ -34,18 +45,20 @@ CREATE TABLE Submission (
                 ResponseTimestamp TIMESTAMP,
                 FaultCode VARCHAR(100),
                 FaultDescription VARCHAR(500),
-                NIBRSReportCategoryCode VARCHAR(40) NOT NULL,
-                SubmissionTimestamp TIMESTAMP NOT NULL,
+                NIBRSReportCategoryCode VARCHAR(30) NOT NULL,
+                SubmissionTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT SubmissionID PRIMARY KEY (SubmissionID)
 );
-create index idx_submission_MessageIdentifier on submission(MessageIdentifier);
+COMMENT ON COLUMN Submission.NIBRSReportCategoryCode IS 'Group A or Group B.';
+
 
 CREATE TABLE Violation (
                 ViolationID IDENTITY NOT NULL,
                 SubmissionID INTEGER NOT NULL,
                 ViolationCode VARCHAR(3) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
-                ViolationTimestamp TIMESTAMP NOT NULL,
+                NibrsErrorCodeTypeId INTEGER NOT NULL,
+                ViolationTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT ViolationID PRIMARY KEY (ViolationID)
 );
 
@@ -337,6 +350,22 @@ CREATE TABLE SegmentActionTypeType (
                 NIBRSCode VARCHAR(1) NOT NULL,
                 NIBRSDescription VARCHAR(25) NOT NULL,
                 CONSTRAINT SegmentActionTypeType_pk PRIMARY KEY (SegmentActionTypeTypeID)
+);
+
+
+CREATE TABLE NibrsError (
+                NibrsErrorId IDENTITY NOT NULL,
+                MonthOfTape VARCHAR(2),
+                YearOfTape VARCHAR(4),
+                AgencyID INTEGER NOT NULL,
+                NibrsErrorCodeTypeId INTEGER NOT NULL,
+                SegmentActionTypeTypeID INTEGER NOT NULL,
+                SourceLocation VARCHAR(15) NOT NULL,
+                IncidentIdentifier VARCHAR(50) NOT NULL,
+                DataElement VARCHAR(4) NOT NULL,
+                RejectedValue VARCHAR(50),
+                NibrsErrorTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                CONSTRAINT NibrsErrorId PRIMARY KEY (NibrsErrorId)
 );
 
 
@@ -664,6 +693,18 @@ CREATE TABLE LEOKASegment (
 );
 
 
+ALTER TABLE NibrsError ADD CONSTRAINT NibrsErrorCodeType_NibrsErrorId_fk
+FOREIGN KEY (NibrsErrorCodeTypeId)
+REFERENCES NibrsErrorCodeType (NibrsErrorCodeTypeId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE Violation ADD CONSTRAINT NibrsErrorCodeType_Violation_fk
+FOREIGN KEY (NibrsErrorCodeTypeId)
+REFERENCES NibrsErrorCodeType (NibrsErrorCodeTypeId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
 ALTER TABLE Violation ADD CONSTRAINT Submission_Violation_fk
 FOREIGN KEY (SubmissionID)
 REFERENCES Submission (SubmissionID)
@@ -737,6 +778,12 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE ArrestReportSegment ADD CONSTRAINT Agency_ArrestReportSegment_fk
+FOREIGN KEY (AgencyID)
+REFERENCES Agency (AgencyID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE NibrsError ADD CONSTRAINT Agency_NibrsErrorId_fk
 FOREIGN KEY (AgencyID)
 REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION
@@ -1001,6 +1048,12 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE ArrestReportSegment ADD CONSTRAINT SegmentActionType_ArrestReportSegment_fk
+FOREIGN KEY (SegmentActionTypeTypeID)
+REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE NibrsError ADD CONSTRAINT SegmentActionTypeType_NibrsErrorId_fk
 FOREIGN KEY (SegmentActionTypeTypeID)
 REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
 ON DELETE NO ACTION
