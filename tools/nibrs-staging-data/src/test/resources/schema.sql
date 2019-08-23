@@ -24,7 +24,6 @@ CREATE schema search_nibrs_staging;
 Use search_nibrs_staging; 
 
 
-
 CREATE TABLE NibrsErrorCodeType (
                 NibrsErrorCodeTypeId IDENTITY NOT NULL,
                 Code VARCHAR(3) NOT NULL,
@@ -56,6 +55,7 @@ CREATE TABLE Violation (
                 ViolationID IDENTITY NOT NULL,
                 SubmissionID INTEGER NOT NULL,
                 ViolationCode VARCHAR(3) NOT NULL,
+                ViolationDescription VARCHAR(200) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
                 NibrsErrorCodeTypeId INTEGER NOT NULL,
                 ViolationTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

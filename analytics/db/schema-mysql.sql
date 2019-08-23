@@ -55,6 +55,7 @@ CREATE TABLE Violation (
                 ViolationID INT AUTO_INCREMENT NOT NULL,
                 SubmissionID INT NOT NULL,
                 ViolationCode VARCHAR(3) NOT NULL,
+                ViolationDescription VARCHAR(200) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
                 NibrsErrorCodeTypeId INTEGER NOT NULL,
                 ViolationTimestamp TIMESTAMP NOT NULL,
