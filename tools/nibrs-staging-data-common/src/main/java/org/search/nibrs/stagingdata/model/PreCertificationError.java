@@ -33,16 +33,16 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @JsonIdentityInfo(
 	generator = ObjectIdGenerators.PropertyGenerator.class, 
-	property = "nibrsErrorId")
-@NamedEntityGraph(name="allNibrsErrorJoins", attributeNodes = {
+	property = "preCertificationErrorId")
+@NamedEntityGraph(name="allPreCertificationJoins", attributeNodes = {
         @NamedAttributeNode("segmentActionType"),
         @NamedAttributeNode("agency"),
         @NamedAttributeNode("nibrsErrorCodeType"),
 })
-public class NibrsError {
+public class PreCertificationError {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer nibrsErrorId;
+	private Integer preCertificationErrorId;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="segmentActionTypeTypeID") 
@@ -63,7 +63,7 @@ public class NibrsError {
 	private String incidentIdentifier; 
 	private String dataElement; 
 	private String rejectedValue;
-	private LocalDateTime nibrsErrorTimestamp;
+	private LocalDateTime preCertificationErrorTimestamp;
 	
 	public SegmentActionTypeType getSegmentActionType() {
 		return segmentActionType;
@@ -71,11 +71,11 @@ public class NibrsError {
 	public void setSegmentActionType(SegmentActionTypeType segmentActionType) {
 		this.segmentActionType = segmentActionType;
 	}
-	public Integer getNibrsErrorId() {
-		return nibrsErrorId;
+	public Integer getPreCertificationErrorId() {
+		return preCertificationErrorId;
 	}
-	public void setNibrsErrorId(Integer nibrsErrorId) {
-		this.nibrsErrorId = nibrsErrorId;
+	public void setPreCertificationErrorId(Integer preCertificationErrorId) {
+		this.preCertificationErrorId = preCertificationErrorId;
 	}
 	public Agency getAgency() {
 		return agency;
@@ -125,11 +125,11 @@ public class NibrsError {
 	public void setRejectedValue(String rejectedValue) {
 		this.rejectedValue = rejectedValue;
 	}
-	public LocalDateTime getNibrsErrorTimestamp() {
-		return nibrsErrorTimestamp;
+	public LocalDateTime getPreCertificationErrorTimestamp() {
+		return preCertificationErrorTimestamp;
 	}
-	public void setNibrsErrorTimestamp(LocalDateTime nibrsErrorTimestamp) {
-		this.nibrsErrorTimestamp = nibrsErrorTimestamp;
+	public void setPreCertificationErrorTimestamp(LocalDateTime preCertificationErrorTimestamp) {
+		this.preCertificationErrorTimestamp = preCertificationErrorTimestamp;
 	}
 	@Override
 	public int hashCode() {
@@ -140,8 +140,8 @@ public class NibrsError {
 		result = prime * result + ((dataElement == null) ? 0 : dataElement.hashCode());
 		result = prime * result + ((incidentIdentifier == null) ? 0 : incidentIdentifier.hashCode());
 		result = prime * result + ((monthOfTape == null) ? 0 : monthOfTape.hashCode());
-		result = prime * result + ((nibrsErrorId == null) ? 0 : nibrsErrorId.hashCode());
-		result = prime * result + ((nibrsErrorTimestamp == null) ? 0 : nibrsErrorTimestamp.hashCode());
+		result = prime * result + ((preCertificationErrorId == null) ? 0 : preCertificationErrorId.hashCode());
+		result = prime * result + ((preCertificationErrorTimestamp == null) ? 0 : preCertificationErrorTimestamp.hashCode());
 		result = prime * result + ((rejectedValue == null) ? 0 : rejectedValue.hashCode());
 		result = prime * result + ((segmentActionType == null) ? 0 : segmentActionType.hashCode());
 		result = prime * result + ((sourceLocation == null) ? 0 : sourceLocation.hashCode());
@@ -156,7 +156,7 @@ public class NibrsError {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NibrsError other = (NibrsError) obj;
+		PreCertificationError other = (PreCertificationError) obj;
 		if (nibrsErrorCodeType == null) {
 			if (other.nibrsErrorCodeType != null)
 				return false;
@@ -182,15 +182,15 @@ public class NibrsError {
 				return false;
 		} else if (!monthOfTape.equals(other.monthOfTape))
 			return false;
-		if (nibrsErrorId == null) {
-			if (other.nibrsErrorId != null)
+		if (preCertificationErrorId == null) {
+			if (other.preCertificationErrorId != null)
 				return false;
-		} else if (!nibrsErrorId.equals(other.nibrsErrorId))
+		} else if (!preCertificationErrorId.equals(other.preCertificationErrorId))
 			return false;
-		if (nibrsErrorTimestamp == null) {
-			if (other.nibrsErrorTimestamp != null)
+		if (preCertificationErrorTimestamp == null) {
+			if (other.preCertificationErrorTimestamp != null)
 				return false;
-		} else if (!nibrsErrorTimestamp.equals(other.nibrsErrorTimestamp))
+		} else if (!preCertificationErrorTimestamp.equals(other.preCertificationErrorTimestamp))
 			return false;
 		if (rejectedValue == null) {
 			if (other.rejectedValue != null)
@@ -216,11 +216,11 @@ public class NibrsError {
 	}
 	@Override
 	public String toString() {
-		return "NibrsError [nibrsErrorId=" + nibrsErrorId + ", segmentActionType=" + segmentActionType + ", agency="
+		return "NibrsError [nibrsErrorId=" + preCertificationErrorId + ", segmentActionType=" + segmentActionType + ", agency="
 				+ agency + ", NibrsErrorCodeType=" + nibrsErrorCodeType + ", monthOfTape=" + monthOfTape
 				+ ", yearOfTape=" + yearOfTape + ", sourceLocation=" + sourceLocation + ", incidentIdentifier="
 				+ incidentIdentifier + ", dataElement=" + dataElement + ", rejectedValue=" + rejectedValue
-				+ ", nibrsErrorTimestamp=" + nibrsErrorTimestamp + "]";
+				+ ", nibrsErrorTimestamp=" + preCertificationErrorTimestamp + "]";
 	}
 	
 }

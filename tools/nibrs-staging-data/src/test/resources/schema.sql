@@ -353,8 +353,8 @@ CREATE TABLE SegmentActionTypeType (
 );
 
 
-CREATE TABLE NibrsError (
-                NibrsErrorId IDENTITY NOT NULL,
+CREATE TABLE PreCertificationError (
+                PreCertificationErrorId IDENTITY NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
                 AgencyID INTEGER NOT NULL,
@@ -364,8 +364,8 @@ CREATE TABLE NibrsError (
                 IncidentIdentifier VARCHAR(50) NOT NULL,
                 DataElement VARCHAR(4) NOT NULL,
                 RejectedValue VARCHAR(50),
-                NibrsErrorTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                CONSTRAINT NibrsErrorId PRIMARY KEY (NibrsErrorId)
+                PreCertificationErrorTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                CONSTRAINT PreCertificationErrorId PRIMARY KEY (PreCertificationErrorId)
 );
 
 
@@ -693,7 +693,7 @@ CREATE TABLE LEOKASegment (
 );
 
 
-ALTER TABLE NibrsError ADD CONSTRAINT NibrsErrorCodeType_NibrsErrorId_fk
+ALTER TABLE PreCertificationError ADD CONSTRAINT NibrsErrorCodeType_NibrsErrorId_fk
 FOREIGN KEY (NibrsErrorCodeTypeId)
 REFERENCES NibrsErrorCodeType (NibrsErrorCodeTypeId)
 ON DELETE NO ACTION
@@ -783,7 +783,7 @@ REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE NibrsError ADD CONSTRAINT Agency_NibrsErrorId_fk
+ALTER TABLE PreCertificationError ADD CONSTRAINT Agency_NibrsErrorId_fk
 FOREIGN KEY (AgencyID)
 REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION
@@ -1053,7 +1053,7 @@ REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE NibrsError ADD CONSTRAINT SegmentActionTypeType_NibrsErrorId_fk
+ALTER TABLE PreCertificationError ADD CONSTRAINT SegmentActionTypeType_NibrsErrorId_fk
 FOREIGN KEY (SegmentActionTypeTypeID)
 REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
 ON DELETE NO ACTION

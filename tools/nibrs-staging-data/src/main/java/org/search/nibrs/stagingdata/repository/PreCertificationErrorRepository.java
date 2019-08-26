@@ -19,26 +19,26 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.search.nibrs.stagingdata.model.NibrsError;
+import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 @Transactional
-public interface NibrsErrorRepository 
-	extends JpaRepository<NibrsError, Integer>{
+public interface PreCertificationErrorRepository 
+	extends JpaRepository<PreCertificationError, Integer>{
 	
-	@EntityGraph(value="allNibrsErrorJoins", type=EntityGraphType.LOAD)
-	NibrsError findByIncidentIdentifier(String incidentIdentifier);
+	@EntityGraph(value="allPreCertificationJoins", type=EntityGraphType.LOAD)
+	PreCertificationError findByIncidentIdentifier(String incidentIdentifier);
 	
-	@EntityGraph(value="allNibrsErrorJoins", type=EntityGraphType.LOAD)
-	NibrsError findByNibrsErrorId(Integer nibrsErrorId);
+	@EntityGraph(value="allPreCertificationJoins", type=EntityGraphType.LOAD)
+	PreCertificationError findByPreCertificationErrorId(Integer nibrsErrorId);
 	
-	@EntityGraph(value="allSubmissionJoins", type=EntityGraphType.LOAD)
-	List<NibrsError> findAllById(Iterable<Integer> ids);
+	@EntityGraph(value="allPreCertificationJoins", type=EntityGraphType.LOAD)
+	List<PreCertificationError> findAllById(Iterable<Integer> ids);
 	
-	@Query("SELECT DISTINCT s.nibrsErrorId from NibrsError s "
+	@Query("SELECT DISTINCT s.preCertificationErrorId from PreCertificationError s "
 			+ "WHERE s.incidentIdentifier = ?1 ")
 	List<Integer> findIdsByIncidentIdentifier(String incidentIdentifier);
 	

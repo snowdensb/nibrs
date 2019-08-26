@@ -1881,40 +1881,40 @@
     </index>
    </folder>
   </table>
-  <table id="TAB533" populated="true" UUID="9a7a6bf7-c6cb-40f4-8e27-5b9d9199387f" name="NibrsError" objectType="TABLE" physicalName="NibrsError" >
+  <table id="TAB533" populated="true" UUID="9a7a6bf7-c6cb-40f4-8e27-5b9d9199387f" name="PreCertificationError" objectType="TABLE" physicalName="PreCertificationError" >
    <remarks></remarks>
    <folder id="FOLTAB5331" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL534" populated="true" UUID="8caca519-0f92-43c0-84e8-46f6bc5d1f96" autoIncrement="true" autoIncrementSequenceName="NibrsError_NibrsErrorId_seq" defaultValue="" name="NibrsErrorId" nullable="0" physicalName="NibrsErrorId" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL534" populated="true" UUID="8caca519-0f92-43c0-84e8-46f6bc5d1f96" autoIncrement="true" autoIncrementSequenceName="PreCertificationError_PreCertificationErrorId_seq" defaultValue="" name="PreCertificationErrorId" nullable="0" physicalName="PreCertificationErrorId" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL535" populated="true" UUID="93ff9ce7-5423-41b5-874f-2026dceebc70" autoIncrement="false" autoIncrementSequenceName="NibrsError_MonthOfTape_seq" defaultValue="" name="MonthOfTape" nullable="1" physicalName="MonthOfTape" precision="2" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL535" populated="true" UUID="93ff9ce7-5423-41b5-874f-2026dceebc70" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_MonthOfTape_seq" defaultValue="" name="MonthOfTape" nullable="1" physicalName="MonthOfTape" precision="2" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL536" populated="true" UUID="8d282c11-9663-4ceb-bcce-b594872d7ee1" autoIncrement="false" autoIncrementSequenceName="NibrsError_YearOfTape_seq" defaultValue="" name="YearOfTape" nullable="1" physicalName="YearOfTape" precision="4" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL536" populated="true" UUID="8d282c11-9663-4ceb-bcce-b594872d7ee1" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_YearOfTape_seq" defaultValue="" name="YearOfTape" nullable="1" physicalName="YearOfTape" precision="4" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL537" populated="true" UUID="0d25ad36-0a1e-4da1-9398-28bd875e5699" autoIncrement="false" autoIncrementSequenceName="NibrsError_AgencyID_seq" defaultValue="" name="AgencyID" nullable="0" physicalName="AgencyID" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL537" populated="true" UUID="0d25ad36-0a1e-4da1-9398-28bd875e5699" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_AgencyID_seq" defaultValue="" name="AgencyID" nullable="0" physicalName="AgencyID" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL538" populated="true" UUID="8663c418-e2d8-48bf-be21-7a278c040476" autoIncrement="false" autoIncrementSequenceName="NibrsError_NibrsErrorCodeTypeId_seq" defaultValue="" name="NibrsErrorCodeTypeId" nullable="0" physicalName="NibrsErrorCodeTypeId" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL538" populated="true" UUID="8663c418-e2d8-48bf-be21-7a278c040476" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_NibrsErrorCodeTypeId_seq" defaultValue="" name="NibrsErrorCodeTypeId" nullable="0" physicalName="NibrsErrorCodeTypeId" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
     <column id="COL539" populated="true" UUID="63d7a6dd-622b-4604-ae14-5e307a7aad35" autoIncrement="false" autoIncrementSequenceName="SegmentActionTypeType_SegmentActionTypeID_seq_1" defaultValue="" name="SegmentActionTypeTypeID" nullable="0" physicalName="SegmentActionTypeTypeID" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL540" populated="true" UUID="df6660f4-6da9-4f25-8f69-939038990f5f" autoIncrement="false" autoIncrementSequenceName="NibrsError_SourceLocation_seq" defaultValue="" name="SourceLocation" nullable="0" physicalName="SourceLocation" precision="15" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL540" populated="true" UUID="df6660f4-6da9-4f25-8f69-939038990f5f" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_SourceLocation_seq" defaultValue="" name="SourceLocation" nullable="0" physicalName="SourceLocation" precision="15" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL541" populated="true" UUID="d6c9de64-d1e0-48d5-9372-61b41009624c" autoIncrement="false" autoIncrementSequenceName="NibrsError_IncidentIdentifier_seq" defaultValue="" name="IncidentIdentifier" nullable="0" physicalName="IncidentIdentifier" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL541" populated="true" UUID="d6c9de64-d1e0-48d5-9372-61b41009624c" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_IncidentIdentifier_seq" defaultValue="" name="IncidentIdentifier" nullable="0" physicalName="IncidentIdentifier" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL542" populated="true" UUID="3ddf07cc-1cff-4666-afbe-84750b1d65b8" autoIncrement="false" autoIncrementSequenceName="NibrsError_DataElement_seq" defaultValue="" name="DataElement" nullable="0" physicalName="DataElement" precision="4" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL542" populated="true" UUID="3ddf07cc-1cff-4666-afbe-84750b1d65b8" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_DataElement_seq" defaultValue="" name="DataElement" nullable="0" physicalName="DataElement" precision="4" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL543" populated="true" UUID="a34fafea-3bd7-42cd-8b6e-d60bfd980fdc" autoIncrement="false" autoIncrementSequenceName="NibrsError_RejectedValue_seq" defaultValue="" name="RejectedValue" nullable="1" physicalName="RejectedValue" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL543" populated="true" UUID="a34fafea-3bd7-42cd-8b6e-d60bfd980fdc" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_RejectedValue_seq" defaultValue="" name="RejectedValue" nullable="1" physicalName="RejectedValue" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL544" populated="true" UUID="0eac5fcf-28e7-4a23-ac5b-882353d79382" autoIncrement="false" autoIncrementSequenceName="NibrsError_NibrsErrorTimestamp_seq" defaultValue="CURRENT_TIMESTAMP" name="NibrsErrorTimestamp" nullable="0" physicalName="NibrsErrorTimestamp" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
+    <column id="COL544" populated="true" UUID="0eac5fcf-28e7-4a23-ac5b-882353d79382" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_PreCertificationErrorTimestamp_seq" defaultValue="CURRENT_TIMESTAMP" name="PreCertificationErrorTimestamp" nullable="0" physicalName="PreCertificationErrorTimestamp" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
      <remarks></remarks>
     </column>
     </folder>
@@ -1923,8 +1923,8 @@
     <folder id="FOLTAB5332" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
     </folder>
     <folder id="FOLTAB5334" populated="true" name="Indices" physicalName="Indices" type="4">
-    <index id="IDX545" populated="true" UUID="a0297494-37da-436a-b41e-7a233bb82004" clustered="false" name="NibrsErrorId" physicalName="NibrsErrorId" primaryKeyIndex="true" unique="false" >
-     <index-column id="IDC546" populated="true" UUID="1a2c639d-49a7-4382-b375-f28b9f9ba0ab" ascendingOrDescending="UNSPECIFIED" column-ref="COL534" name="NibrsErrorId" physicalName="NibrsErrorId" />
+    <index id="IDX545" populated="true" UUID="a0297494-37da-436a-b41e-7a233bb82004" clustered="false" name="PreCertificationErrorId" physicalName="NibrsErrorId" primaryKeyIndex="true" unique="false" >
+     <index-column id="IDC546" populated="true" UUID="1a2c639d-49a7-4382-b375-f28b9f9ba0ab" ascendingOrDescending="UNSPECIFIED" column-ref="COL534" name="PreCertificationErrorId" physicalName="PreCertificationErrorId" />
     </index>
    </folder>
   </table>
