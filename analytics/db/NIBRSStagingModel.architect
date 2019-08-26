@@ -1864,7 +1864,7 @@
     <column id="COL528" populated="true" UUID="7d5622c5-b952-4dc3-bc15-d89ebfdb6133" autoIncrement="false" autoIncrementSequenceName="Violation_ViolationLevel_seq" defaultValue="" name="ViolationLevel" nullable="0" physicalName="ViolationLevel" precision="1" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL529" populated="true" UUID="a5d05d98-1590-4f22-92fe-7bdf02bd1c69" autoIncrement="false" autoIncrementSequenceName="NibrsErrorCodeType_NibrsErrorCodeTypeId_seq" defaultValue="" name="NibrsErrorCodeTypeId" nullable="0" physicalName="NibrsErrorCodeTypeId" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL529" populated="true" UUID="a5d05d98-1590-4f22-92fe-7bdf02bd1c69" autoIncrement="false" autoIncrementSequenceName="NibrsErrorCodeType_NibrsErrorCodeTypeId_seq" defaultValue="" name="NibrsErrorCodeTypeId" nullable="1" physicalName="NibrsErrorCodeTypeId" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
     <column id="COL530" populated="true" UUID="92913f24-5314-421a-9095-257cb27ba9d9" autoIncrement="false" autoIncrementSequenceName="Violation_ViolationTimestamp_seq" defaultValue="CURRENT_TIMESTAMP" name="ViolationTimestamp" nullable="0" physicalName="ViolationTimestamp" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
@@ -2224,7 +2224,7 @@
    </relationship>
   </relationships>
  </target-database>
- <ddl-generator type="ca.sqlpower.architect.ddl.H2DDLGenerator" allow-connection="false"> </ddl-generator>
+ <ddl-generator type="ca.sqlpower.architect.ddl.H2DDLGenerator" allow-connection="true"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="true" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
  <play-pen zoom="1.0" viewportX="2265" viewportY="1054" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
