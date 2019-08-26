@@ -28,55 +28,55 @@
      <!-- Begin page content -->
      <form action="#" th:action="@{/incident/incidentSearch}" th:object="${incidentSearchRequest}" id="searchForm" method="post" th:fragment="incidentSearchFormContent">
        <div id="incidentSearchFormContent">
-           <div class="form-row">
-             <label class="col-2 col-form-label font-weight-bold text-right">Incident Date </label>
-             <div class="col-sm-3"><input type="text" th:field="*{incidentDateRangeStartDate}" class="date" width="250" placeholder="From" th:errorclass="is-invalid"/></div>
-             <label class="col-1 col-form-label font-weight-bold text-right">To </label>
-             <div class="col-sm-3">
-                <input type="text" th:field="*{incidentDateRangeEndDate}" class="date" width="250" placeholder="To"/>
-	            <div th:if="${#fields.hasErrors('incidentDateRangeStartDate')}" th:errors="*{incidentDateRangeStartDate}" class="invalid-feedback">Incident Date error message</div>
-             </div>
+         <div class="form-row">
+           <label class="col-2 col-form-label font-weight-bold text-right">Incident Date </label>
+           <div class="col-sm-3"><input type="text" th:field="*{incidentDateRangeStartDate}" class="date" width="250" placeholder="From" th:errorclass="is-invalid"/></div>
+           <label class="col-1 col-form-label font-weight-bold text-right">To </label>
+           <div class="col-sm-3">
+              <input type="text" th:field="*{incidentDateRangeEndDate}" class="date" width="250" placeholder="To"/>
+           <div th:if="${#fields.hasErrors('incidentDateRangeStartDate')}" th:errors="*{incidentDateRangeStartDate}" class="invalid-feedback">Incident Date error message</div>
            </div>
-           <div class="form-row align-text-center">
-             <label class="col-2 col-form-label font-weight-bold text-right">Incident Identifier</label>
-             <div class="col-3">
-             	<input class="form-control form-control-sm" type="text" th:field="*{incidentIdentifier}" width="250"/>
-            	<div th:if="${#fields.hasErrors('incidentIdentifier')}" th:errors="incidentIdentifier">Incident Identifier error message</div>
-             </div>
-             <label class="col-2 col-form-label font-weight-bold text-right">Submission Date</label>
-             <div class="col-sm-2">
-             	<input class="form-control form-control-sm" type="text" th:field="*{submissionMonth}" width="2" maxlength="2" placeholder="month" th:errorclass="is-invalid"/>
-            	<div th:if="${#fields.hasErrors('submissionMonth')}" th:errors="*{submissionMonth}" class="invalid-feedback">Submission Month error message</div>
-             </div>
-             <div class="col-sm-2">
-             	<input class="form-control form-control-sm" type="text" th:field="*{submissionYear}" width="4" placeholder="year" maxlength="4" th:errorclass="is-invalid"/>
-            	<div th:if="${#fields.hasErrors('submissionYear')}" th:errors="*{submissionYear}" class="invalid-feedback">Submission Year error message</div>
-             </div>
+         </div>
+         <div class="form-row align-text-center">
+           <label class="col-2 col-form-label font-weight-bold text-right">Incident Identifier</label>
+           <div class="col-3">
+           	<input class="form-control form-control-sm" type="text" th:field="*{incidentIdentifier}" width="250"/>
+          	<div th:if="${#fields.hasErrors('incidentIdentifier')}" th:errors="incidentIdentifier">Incident Identifier error message</div>
            </div>
-           <div class="form-row">
-				<label class="col-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
-				<div class="col-sm-3">
+           <label class="col-2 col-form-label font-weight-bold text-right">Submission Date</label>
+           <div class="col-sm-2">
+           	<input class="form-control form-control-sm" type="text" th:field="*{submissionMonth}" width="2" maxlength="2" placeholder="month" th:errorclass="is-invalid"/>
+          	<div th:if="${#fields.hasErrors('submissionMonth')}" th:errors="*{submissionMonth}" class="invalid-feedback">Submission Month error message</div>
+           </div>
+           <div class="col-sm-2">
+           	<input class="form-control form-control-sm" type="text" th:field="*{submissionYear}" width="4" placeholder="year" maxlength="4" th:errorclass="is-invalid"/>
+          	<div th:if="${#fields.hasErrors('submissionYear')}" th:errors="*{submissionYear}" class="invalid-feedback">Submission Year error message</div>
+           </div>
+         </div>
+         <div class="form-row">
+						<label class="col-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
+						<div class="col-sm-3">
      			    <select th:field="*{agencyIds}" class="form-control form-control-sm chosen-select" multiple th:errorclass="is-invalid" data-placeholder="Please select all that apply...">
-					  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
-					</select>
-				</div>
-				<label class="col-2 col-form-label font-weight-bold text-right">UCR Offense Type</label>
-				<div class="col-sm-3">
-					<select th:field="*{ucrOffenseCodeTypeId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid">
-					   <option value="" >Please select ...</option>
-					   <option th:each="item: ${offenseCodeMapping}" th:value="${item.key}" th:text="${item.value}" />
-					</select>
-				</div>
-           </div>
-           <div class="form-row">
-             <div class="col-2"></div>
-             <div class="form-check col-3 ml-3 pl-2">
-				 <input class="form-check-input" type="checkbox" th:field="*{fbiSubmission}" th:value="${fbiSubmission}"/>
-				 <label class="form-check-label font-weight-bold" for="fbiSubmission">
-				   FBI Submission Only
-				 </label>
-			 </div>
-           </div>
+    					  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
+		    			</select>
+				    </div>
+				    <label class="col-2 col-form-label font-weight-bold text-right">UCR Offense Type</label>
+				    <div class="col-sm-3">
+							<select th:field="*{ucrOffenseCodeTypeId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid">
+							   <option value="" >Please select ...</option>
+							   <option th:each="item: ${offenseCodeMapping}" th:value="${item.key}" th:text="${item.value}" />
+							</select>
+    				</div>
+         </div>
+         <div class="form-row">
+           <label class="col-2 col-form-label font-weight-bold text-right">FBI Submission Status</label>
+           <div class="form-check col-3">
+              <select th:field="*{fbiSubmissionStatus}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid">
+                 <option value="" >Please select ...</option>
+                 <option th:each="item: ${fbiSubmissionStatuses}" th:value="${item.name}" th:text="${item.description}" />
+              </select>
+				   </div>
+         </div>
             <div class="form-row mt-2">
              <div class="col-2"></div>
              <div class="col-sm-3">

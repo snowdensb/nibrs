@@ -29,7 +29,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
@@ -73,7 +72,7 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 				submissionJoin.get("acceptedIndicator"));
 		
 
-        List<Predicate> queryPredicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
+        List<Predicate> queryPredicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder, submissionJoin);
         
         query.where(criteriaBuilder.and(
         		queryPredicates.toArray( new Predicate[queryPredicates.size()])));
@@ -87,7 +86,9 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
         Root<AdministrativeSegment> root = query.from(AdministrativeSegment.class);
-        List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
+        Join<AdministrativeSegment, Submission> submissionJoin = root.join("submission", JoinType.LEFT);
+
+        List<Predicate> predicates = getAdministrativeSegmentPredicates(incidentSearchRequest, root, criteriaBuilder, submissionJoin);
         
 		query.select(criteriaBuilder.count(root.get("administrativeSegmentId")))
 			.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
@@ -95,11 +96,22 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 	}
 
 	private List<Predicate> getAdministrativeSegmentPredicates(IncidentSearchRequest incidentSearchRequest,
-			Root<AdministrativeSegment> root, CriteriaBuilder criteriaBuilder) {
+			Root<AdministrativeSegment> root, CriteriaBuilder criteriaBuilder, Join<AdministrativeSegment, Submission> submissionJoin) {
 		List<Predicate> predicates = new ArrayList<>();
         if(incidentSearchRequest != null) {
-            if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
-            	predicates.add(criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("submission")))); 
+        	
+            if (incidentSearchRequest.getFbiSubmissionStatus() != null) {
+            	switch (incidentSearchRequest.getFbiSubmissionStatus()){
+            	case NOT_SUBMITTED: 
+                	predicates.add(criteriaBuilder.and(criteriaBuilder.isNull(root.get("submission")))); 
+            		break; 
+            	case ACCEPTED: 
+                	predicates.add(criteriaBuilder.and(criteriaBuilder.isTrue(submissionJoin.get("acceptedIndicator")))); 
+            		break; 
+            	case REJECTED: 
+                	predicates.add(criteriaBuilder.and(criteriaBuilder.isFalse(submissionJoin.get("acceptedIndicator")))); 
+            		break; 
+            	}
             }
 
         	if (incidentSearchRequest.getAgencyIds() != null && incidentSearchRequest.getAgencyIds().size() > 0) {

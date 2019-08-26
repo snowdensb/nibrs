@@ -28,6 +28,10 @@ public enum FbiSubmissionStatus {
 		return getDescription(); 
 	}
 
+	public String getName() {
+		return name(); 
+	}
+	
 	public String getDescription() {
 		return description;
 	}

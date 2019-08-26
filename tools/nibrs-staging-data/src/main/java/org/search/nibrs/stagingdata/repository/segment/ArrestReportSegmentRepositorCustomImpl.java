@@ -28,7 +28,6 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
@@ -57,7 +56,7 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         		root.get("reportTimestamp"), 
         		submissionJoin.get("acceptedIndicator"));
 
-        List<Predicate> predicates = getArrestReportSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
+        List<Predicate> predicates = getArrestReportSegmentPredicates(incidentSearchRequest, root, criteriaBuilder, submissionJoin);
 
         query.where(criteriaBuilder.and(
         		predicates.toArray( new Predicate[predicates.size()])));
@@ -71,7 +70,9 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
         Root<ArrestReportSegment> root = query.from(ArrestReportSegment.class);
         
-        List<Predicate> predicates = getArrestReportSegmentPredicates(incidentSearchRequest, root, criteriaBuilder);
+        Join<ArrestReportSegment, Submission> submissionJoin = root.join("submission", JoinType.LEFT);
+        
+        List<Predicate> predicates = getArrestReportSegmentPredicates(incidentSearchRequest, root, criteriaBuilder, submissionJoin);
         
 		query.select(criteriaBuilder.count(root.get("arrestReportSegmentId")))
 			.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
@@ -79,11 +80,23 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
 	}
 
 	private List<Predicate> getArrestReportSegmentPredicates(IncidentSearchRequest incidentSearchRequest,
-			Root<ArrestReportSegment> root, CriteriaBuilder criteriaBuilder) {
+			Root<ArrestReportSegment> root, CriteriaBuilder criteriaBuilder, Join<ArrestReportSegment, Submission> submissionJoin) {
 		List<Predicate> predicates = new ArrayList<>();
+		
         if(incidentSearchRequest != null) {
-            if (BooleanUtils.isTrue(incidentSearchRequest.getFbiSubmission())) {
-            	predicates.add(criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("submission")))); 
+        	
+            if (incidentSearchRequest.getFbiSubmissionStatus() != null) {
+            	switch (incidentSearchRequest.getFbiSubmissionStatus()){
+            	case NOT_SUBMITTED: 
+                	predicates.add(criteriaBuilder.and(criteriaBuilder.isNull(root.get("submission")))); 
+            		break; 
+            	case ACCEPTED: 
+                	predicates.add(criteriaBuilder.and(criteriaBuilder.isTrue(submissionJoin.get("acceptedIndicator")))); 
+            		break; 
+            	case REJECTED: 
+                	predicates.add(criteriaBuilder.and(criteriaBuilder.isFalse(submissionJoin.get("acceptedIndicator")))); 
+            		break; 
+            	}
             }
             
         	if (incidentSearchRequest.getAgencyIds() != null && incidentSearchRequest.getAgencyIds().size() > 0) {

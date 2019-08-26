@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.admin.services.rest.RestService;
+import org.search.nibrs.stagingdata.model.search.FbiSubmissionStatus;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
@@ -44,7 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping", "incidentSearchResult"})
+@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping", "incidentSearchResult", "fbiSubmissionStatuses"})
 @RequestMapping("/incidents")
 public class IncidentController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -64,6 +65,9 @@ public class IncidentController {
 		}
 		if (!model.containsAttribute("offenseCodeMapping")) {
 			model.addAttribute("offenseCodeMapping", restService.getOffenseCodes());
+		}
+		if (!model.containsAttribute("fbiSubmissionStatuses")) {
+			model.addAttribute("fbiSubmissionStatuses", FbiSubmissionStatus.values());
 		}
 		
     	log.info("Added ModelAtrributes");

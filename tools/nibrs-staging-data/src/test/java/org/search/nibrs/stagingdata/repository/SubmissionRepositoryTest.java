@@ -79,12 +79,14 @@ public class SubmissionRepositoryTest {
 		Violation violation1 = new Violation();
 		violation1.setViolationCode("451");
 		violation1.setViolationLevel("E");
+		violation1.setViolationDescription("VICTIM NUMBER ALREADY EXISTS");
 		violation1.setViolationTimestamp(LocalDateTime.now());
 		violation1.setSubmission(submissionSaved);
 		
 		Violation violation2 = new Violation();
 		violation2.setViolationCode("355");
 		violation2.setViolationLevel("E");
+		violation2.setViolationDescription("PROPERTY LOSS CODE (14) MUST=5 (RECOVERED) FOR DATA TO BE ENTERED");
 		violation2.setViolationTimestamp(LocalDateTime.now());
 		violation2.setSubmission(submissionSaved);
 		

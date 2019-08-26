@@ -48,7 +48,7 @@ public class IncidentSearchRequest implements Serializable {
 	@Range(min=1, max=12)
 	private Integer submissionEndMonth;
 	private Integer submissionEndYear; 
-	private Boolean fbiSubmission;
+	private FbiSubmissionStatus fbiSubmissionStatus;
 	
 	@Override
 	public String toString() {
@@ -77,12 +77,6 @@ public class IncidentSearchRequest implements Serializable {
 	}
 	public void setSubmissionYear(Integer submissionYear) {
 		this.submissionYear = submissionYear;
-	}
-	public Boolean getFbiSubmission() {
-		return fbiSubmission;
-	}
-	public void setFbiSubmission(Boolean fbiSubmission) {
-		this.fbiSubmission = fbiSubmission;
 	}
 	public String getOffenseCode() {
 		return offenseCode;
@@ -188,6 +182,12 @@ public class IncidentSearchRequest implements Serializable {
 		}
 		
 		return date;
+	}
+	public FbiSubmissionStatus getFbiSubmissionStatus() {
+		return fbiSubmissionStatus;
+	}
+	public void setFbiSubmissionStatus(FbiSubmissionStatus fbiSubmissionStatus) {
+		this.fbiSubmissionStatus = fbiSubmissionStatus;
 	}
 	
 }
