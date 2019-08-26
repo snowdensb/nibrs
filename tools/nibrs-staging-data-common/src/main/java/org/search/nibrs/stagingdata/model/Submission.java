@@ -30,7 +30,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 @NamedEntityGraph(name="allSubmissionJoins", attributeNodes = {
-        @NamedAttributeNode("violations"),
+        @NamedAttributeNode("violations")
 	})
 public class Submission {
 	@Id
