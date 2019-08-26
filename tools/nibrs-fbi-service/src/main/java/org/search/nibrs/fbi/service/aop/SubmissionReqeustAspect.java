@@ -124,12 +124,12 @@ public class SubmissionReqeustAspect {
 				submission.setFaultDescription(StringUtils.normalizeSpace(XmlUtils.xPathStringSearch(returnedDocument, "//faultstring")));
 			}
 			
+			stagingDataRestClient.persistSubmission(submission);
 
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
     	
-		stagingDataRestClient.persistSubmission(submission);
     }
 
 	private void processViolations(Submission submission, Document returnedDocument) {
@@ -141,6 +141,7 @@ public class SubmissionReqeustAspect {
 			Violation violation = new Violation(); 
 			violation.setViolationCode(XmlUtils.xPathStringSearch(violations, "violationCode"));
 			violation.setViolationLevel(XmlUtils.xPathStringSearch(violations, "violationLevel"));
+			violation.setViolationDescription(XmlUtils.xPathStringSearch(violations, "violationDescription"));
 			violation.setViolationTimestamp(submission.getResponseTimestamp());
 			violationSet.add(violation);
 		}

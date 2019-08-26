@@ -187,6 +187,7 @@
                       <thead>
                         <tr>
                           <th>Violation Code</th>
+                          <th>Violation Description</th>
                           <th>Violation Level</th>
                         </tr>
                       </thead>
@@ -194,6 +195,7 @@
                         <th:block th:each="violation: ${arrestReportSegment.submission.violations}">
                           <tr>
                             <td th:text="${violation.violationCode}"/>
+                            <td th:text="${violation.violationDescription}"/>
                             <td th:text="${violation.violationLevel}"/>
                           </tr>
                         </th:block>

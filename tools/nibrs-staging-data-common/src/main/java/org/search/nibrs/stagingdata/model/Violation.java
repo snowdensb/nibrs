@@ -41,6 +41,7 @@ public class Violation {
 	private Submission submission; 
 	
 	private String violationCode; 
+	private String violationDescription; 
 	private String violationLevel; 
 	private LocalDateTime violationTimestamp;
 	
@@ -74,11 +75,18 @@ public class Violation {
 	public void setViolationTimestamp(LocalDateTime violationTimestamp) {
 		this.violationTimestamp = violationTimestamp;
 	}
+	public String getViolationDescription() {
+		return violationDescription;
+	}
+	public void setViolationDescription(String violationDescription) {
+		this.violationDescription = violationDescription;
+	}
+
 	@Override
 	public String toString() {
-		return "Violation [violationId=" + violationId + ", submissionId=" + submission.getSubmissionId() + ", violationCode="
-				+ violationCode + ", violationLevel=" + violationLevel + ", violationTimestamp=" + violationTimestamp
-				+ "]";
+		return "Violation [violationId=" + violationId + ", violationCode="
+				+ violationCode + ", violationDescription=" + violationDescription + ", violationLevel="
+				+ violationLevel + ", violationTimestamp=" + violationTimestamp + "]";
 	}
 	@Override
 	public int hashCode() {
@@ -86,6 +94,7 @@ public class Violation {
 		int result = 1;
 		result = prime * result + ((submission == null) ? 0 : submission.hashCode());
 		result = prime * result + ((violationCode == null) ? 0 : violationCode.hashCode());
+		result = prime * result + ((violationDescription == null) ? 0 : violationDescription.hashCode());
 		result = prime * result + ((violationId == null) ? 0 : violationId.hashCode());
 		result = prime * result + ((violationLevel == null) ? 0 : violationLevel.hashCode());
 		result = prime * result + ((violationTimestamp == null) ? 0 : violationTimestamp.hashCode());
@@ -103,12 +112,17 @@ public class Violation {
 		if (submission == null) {
 			if (other.submission != null)
 				return false;
-		} else if (!submission.getSubmissionId().equals(other.submission.getSubmissionId()))
+		} else if (!submission.equals(other.submission))
 			return false;
 		if (violationCode == null) {
 			if (other.violationCode != null)
 				return false;
 		} else if (!violationCode.equals(other.violationCode))
+			return false;
+		if (violationDescription == null) {
+			if (other.violationDescription != null)
+				return false;
+		} else if (!violationDescription.equals(other.violationDescription))
 			return false;
 		if (violationId == null) {
 			if (other.violationId != null)
@@ -127,5 +141,4 @@ public class Violation {
 			return false;
 		return true;
 	}
-
 }

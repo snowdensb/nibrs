@@ -30,7 +30,7 @@ public class AppProperties {
 	private Map<String, String> nonNumericAgeCodeMapping = new HashMap<>();
 	private Map<String, String> propertyCodeMapping = new HashMap<>();
 	private Map<String, String> locationCodeMapping = new HashMap<>();
-	private Integer reportSearchResultsLimit = 5000;
+	private Integer reportSearchResultsLimit = 10000;
 
 	public AppProperties() {
 		super();

@@ -57,7 +57,7 @@ CREATE TABLE Violation (
                 ViolationCode VARCHAR(3) NOT NULL,
                 ViolationDescription VARCHAR(200) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
-                NibrsErrorCodeTypeId INTEGER NOT NULL,
+                NibrsErrorCodeTypeId INTEGER,
                 ViolationTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT ViolationID PRIMARY KEY (ViolationID)
 );
