@@ -1902,13 +1902,13 @@
     <column id="COL539" populated="true" UUID="63d7a6dd-622b-4604-ae14-5e307a7aad35" autoIncrement="false" autoIncrementSequenceName="SegmentActionTypeType_SegmentActionTypeID_seq_1" defaultValue="" name="SegmentActionTypeTypeID" nullable="0" physicalName="SegmentActionTypeTypeID" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL540" populated="true" UUID="df6660f4-6da9-4f25-8f69-939038990f5f" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_SourceLocation_seq" defaultValue="" name="SourceLocation" nullable="0" physicalName="SourceLocation" precision="15" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL540" populated="true" UUID="df6660f4-6da9-4f25-8f69-939038990f5f" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_SourceLocation_seq" defaultValue="" name="SourceLocation" nullable="1" physicalName="SourceLocation" precision="15" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL541" populated="true" UUID="d6c9de64-d1e0-48d5-9372-61b41009624c" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_IncidentIdentifier_seq" defaultValue="" name="IncidentIdentifier" nullable="0" physicalName="IncidentIdentifier" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL541" populated="true" UUID="d6c9de64-d1e0-48d5-9372-61b41009624c" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_IncidentIdentifier_seq" defaultValue="" name="IncidentIdentifier" nullable="1" physicalName="IncidentIdentifier" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL542" populated="true" UUID="3ddf07cc-1cff-4666-afbe-84750b1d65b8" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_DataElement_seq" defaultValue="" name="DataElement" nullable="0" physicalName="DataElement" precision="4" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL542" populated="true" UUID="3ddf07cc-1cff-4666-afbe-84750b1d65b8" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_DataElement_seq" defaultValue="" name="DataElement" nullable="1" physicalName="DataElement" precision="4" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
     <column id="COL543" populated="true" UUID="a34fafea-3bd7-42cd-8b6e-d60bfd980fdc" autoIncrement="false" autoIncrementSequenceName="PreCertificationError_RejectedValue_seq" defaultValue="" name="RejectedValue" nullable="1" physicalName="RejectedValue" precision="50" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
@@ -1923,7 +1923,7 @@
     <folder id="FOLTAB5332" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
     </folder>
     <folder id="FOLTAB5334" populated="true" name="Indices" physicalName="Indices" type="4">
-    <index id="IDX545" populated="true" UUID="a0297494-37da-436a-b41e-7a233bb82004" clustered="false" name="PreCertificationErrorId" physicalName="NibrsErrorId" primaryKeyIndex="true" unique="false" >
+    <index id="IDX545" populated="true" UUID="a0297494-37da-436a-b41e-7a233bb82004" clustered="false" name="PreCertificationErrorId" physicalName="PreCertificationErrorId" primaryKeyIndex="true" unique="false" >
      <index-column id="IDC546" populated="true" UUID="1a2c639d-49a7-4382-b375-f28b9f9ba0ab" ascendingOrDescending="UNSPECIFIED" column-ref="COL534" name="PreCertificationErrorId" physicalName="PreCertificationErrorId" />
     </index>
    </folder>
@@ -2371,7 +2371,7 @@
   <table-link relationship-ref="REL725" pkConnection="0.7433628318584071" fkConnection="0.08851674641148326" rLineColor="0x000000" pkLabelText="" fkLabelText="" orientation="72"/>
   <table-link relationship-ref="REL703" pkConnection="0.948339483394834" fkConnection="0.03428571428571429" rLineColor="0x000000" pkLabelText="" fkLabelText="" orientation="132"/>
   <table-link relationship-ref="REL621" pkConnection="0.6576576576576577" fkConnection="0.3526570048309179" rLineColor="0x000000" pkLabelText="" fkLabelText="" orientation="33"/>
-  <table-link relationship-ref="REL727" pkConnection="0.7657657657657657" fkConnection="0.33816425120772947" rLineColor="0x000000" pkLabelText="" fkLabelText="" orientation="18"/>
+  <table-link relationship-ref="REL727" pkConnection="0.7657657657657657" fkConnection="0.34782608695652173" rLineColor="0x000000" pkLabelText="" fkLabelText="" orientation="18"/>
   <table-link relationship-ref="REL729" pkConnection="0.24324324324324326" fkConnection="0.7335423197492164" rLineColor="0x000000" pkLabelText="" fkLabelText="" orientation="130"/>
  </play-pen>
  <critic-manager>

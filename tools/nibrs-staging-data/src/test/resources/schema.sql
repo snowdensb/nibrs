@@ -360,9 +360,9 @@ CREATE TABLE PreCertificationError (
                 AgencyID INTEGER NOT NULL,
                 NibrsErrorCodeTypeId INTEGER NOT NULL,
                 SegmentActionTypeTypeID INTEGER NOT NULL,
-                SourceLocation VARCHAR(15) NOT NULL,
-                IncidentIdentifier VARCHAR(50) NOT NULL,
-                DataElement VARCHAR(4) NOT NULL,
+                SourceLocation VARCHAR(15),
+                IncidentIdentifier VARCHAR(50),
+                DataElement VARCHAR(4),
                 RejectedValue VARCHAR(50),
                 PreCertificationErrorTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT PreCertificationErrorId PRIMARY KEY (PreCertificationErrorId)
