@@ -65,43 +65,24 @@
 					</tr>
 				</thead>
 				<tbody>
-					<th:block th:each="nibrsError: ${errorList}">
-						<th:block th:switch="${(nibrsError.ruleNumber == '404' and nibrsError.dataElementIdentifier == '35') 
-								or nibrsError.ruleNumber == '342'}">
-							<th:block th:case="true">
-								<tr th:each="rejectedValue:${#lists.toList(nibrsError.value)}">
-									<td th:text="${nibrsError.dateOfTape}"/>
-									<td th:text="${nibrsError.context.sourceLocation}"/>
-									<td th:text="${nibrsError.report.reportActionType}"/>
-									<td th:text="${nibrsError.report.ori}"/>
-									<td th:text="${nibrsError.reportUniqueIdentifier}" nowrap="nowrap"/>
-									<td th:text="${nibrsError.segmentTypeOutput}"/>
-									<td th:text="${nibrsError.offenseSegmentIdentifier}"/>
-									<td th:text="${nibrsError.OffenderArresteeVictimSegmentIdentifier}"/>
-									<td th:text="${nibrsError.propertySegmentIdentifier}"/>
-									<td th:text="${nibrsError.dataElementIdentifierOutput}"/>
-									<td th:text="${nibrsError.nIBRSErrorCode.code}" />
-									<td th:text="${rejectedValue}" />
-									<td th:text="${nibrsError.errorMessage}" />
-								</tr>
-							</th:block>
-							<tr th:case="*">
-								<td th:text="${nibrsError.dateOfTape}"/>
-								<td th:text="${nibrsError.context.sourceLocation}"/>
-								<td th:text="${nibrsError.report.reportActionType}"/>
-								<td th:text="${nibrsError.report.ori}"/>
-								<td th:text="${nibrsError.reportUniqueIdentifier}" nowrap="nowrap"/>
-								<td th:text="${nibrsError.segmentTypeOutput}"/>
-								<td th:text="${nibrsError.offenseSegmentIdentifier}"/>
-								<td th:text="${nibrsError.OffenderArresteeVictimSegmentIdentifier}"/>
-								<td th:text="${nibrsError.propertySegmentIdentifier}"/>
-								<td th:text="${nibrsError.dataElementIdentifierOutput}"/>
-								<td th:text="${nibrsError.nIBRSErrorCode.code}" />
-								<td th:text="${nibrsError.offendingValues}" />
-								<td th:text="${nibrsError.errorMessage}" />
-							</tr>
-						</th:block>
-					</th:block>
+          <th:block th:each="nibrsError: ${errorList}">
+            <tr>
+              <td th:text="${nibrsError.dateOfTape}"/>
+              <td th:text="${nibrsError.context.sourceLocation}"/>
+              <td th:text="${nibrsError.report.reportActionType}"/>
+              <td th:text="${nibrsError.report.ori}"/>
+              <td th:text="${nibrsError.reportUniqueIdentifier}" nowrap="nowrap"/>
+              <td th:text="${nibrsError.segmentTypeOutput}"/>
+              <td th:text="${nibrsError.offenseSegmentIdentifier}"/>
+              <td th:text="${nibrsError.OffenderArresteeVictimSegmentIdentifier}"/>
+              <td th:text="${nibrsError.propertySegmentIdentifier}"/>
+              <td th:text="${nibrsError.dataElementIdentifierOutput}"/>
+              <td th:text="${nibrsError.nIBRSErrorCode.code}" />
+              <td th:text="${(nibrsError.ruleNumber == '404' and nibrsError.dataElementIdentifier == '35') 
+                or nibrsError.ruleNumber == '342'} ? ${#lists.toList(nibrsError.value)}: ${nibrsError.offendingValues}" />
+              <td th:text="${nibrsError.errorMessage}" />
+            </tr>
+          </th:block>
 				</tbody>
 			</table>
 		</div>
