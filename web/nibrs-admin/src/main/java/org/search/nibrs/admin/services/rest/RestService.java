@@ -32,6 +32,8 @@ import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.search.nibrs.stagingdata.model.SubmissionTrigger;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
+import org.search.nibrs.stagingdata.model.search.PrecertErrorSearchRequest;
+import org.search.nibrs.stagingdata.model.search.SearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,12 @@ public class RestService{
 				.block();
 	}
 	
+	public Map<Integer, String> getNibrsErrorCodes() {
+		return this.webClient.get().uri("/codeTables/nibrsErrorCodes")
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
+				.block();
+	}
 	
 	public IncidentSearchResult getIncidents(IncidentSearchRequest incidentSearchRequest){
 		return this.webClient.post().uri("/reports/search")
@@ -183,6 +191,14 @@ public class RestService{
 		
 		return savedCount + " errors are persisted."; 
 		
+	}
+
+	public SearchResult<PreCertificationError> getPrecertErrors(PrecertErrorSearchRequest precertErrorSearchRequest) {
+		return this.webClient.post().uri("/preCertificationErrors/search")
+				.body(BodyInserters.fromObject(precertErrorSearchRequest))
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<SearchResult<PreCertificationError>>() {})
+				.block();
 	}
 	
 	

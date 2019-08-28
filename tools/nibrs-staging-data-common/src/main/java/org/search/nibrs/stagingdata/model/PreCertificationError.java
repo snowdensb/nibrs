@@ -260,7 +260,7 @@ public class PreCertificationError {
 	}
 	@Override
 	public String toString() {
-		return "NibrsError [nibrsErrorId=" + preCertificationErrorId + ", segmentActionType=" + segmentActionType + ", agency="
+		return "PreCertificationError [preCertificationErrorId=" + preCertificationErrorId + ", segmentActionType=" + segmentActionType + ", agency="
 				+ agency + ", NibrsErrorCodeType=" + nibrsErrorCodeType + ", monthOfTape=" + monthOfTape
 				+ ", yearOfTape=" + yearOfTape + ", sourceLocation=" + sourceLocation + ", incidentIdentifier="
 				+ incidentIdentifier + ", dataElement=" + dataElement + ", rejectedValue=" + rejectedValue
@@ -290,5 +290,10 @@ public class PreCertificationError {
 	public void setSegmentActionTypeCode(String segmentActionTypeCode) {
 		this.segmentActionTypeCode = segmentActionTypeCode;
 	}
-	
+
+	@Transient
+	public String getSubmissionDateString() {
+		return yearOfTape + "-" + StringUtils.left(monthOfTape, 2);
+	}
+
 }

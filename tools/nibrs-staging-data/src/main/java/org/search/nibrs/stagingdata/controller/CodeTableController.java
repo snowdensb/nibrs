@@ -25,8 +25,10 @@ import java.util.stream.StreamSupport;
 import org.joda.time.LocalDateTime;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
+import org.search.nibrs.stagingdata.model.NibrsErrorCodeType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
+import org.search.nibrs.stagingdata.repository.NibrsErrorCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -41,6 +43,8 @@ public class CodeTableController {
 	private AgencyRepository agencyRepository;
 	@Autowired
 	private UcrOffenseCodeTypeRepository ucrOffenseCodeTypeRepository;
+	@Autowired
+	private NibrsErrorCodeTypeRepository nibrsErrorCodeTypeRepository;
 	@Autowired
 	public AppProperties appProperties;
 	
@@ -62,6 +66,15 @@ public class CodeTableController {
 				.collect(Collectors.toMap(UcrOffenseCodeType::getUcrOffenseCodeTypeId, UcrOffenseCodeType::getStateDescription, (u, v) -> u,
 					      LinkedHashMap::new));
 		return offenseCodeMap;
+	}
+	
+	@GetMapping("/nibrsErrorCodes")
+	public Map<Integer, String> nibrsErrorCodes(){
+		Map<Integer, String> nibrsErrorCodeMap = StreamSupport.stream(nibrsErrorCodeTypeRepository.findAll(new Sort(Sort.Direction.ASC,"code")).spliterator(), false)
+				.filter(nibrsErrorCode-> !unknownOrBlank.contains(nibrsErrorCode.getMessage().toUpperCase()))
+				.collect(Collectors.toMap(NibrsErrorCodeType::getNibrsErrorCodeTypeId, NibrsErrorCodeType::getCode, (u, v) -> u,
+						LinkedHashMap::new));
+		return nibrsErrorCodeMap;
 	}
 	
 	@GetMapping(value="/localDateTime")

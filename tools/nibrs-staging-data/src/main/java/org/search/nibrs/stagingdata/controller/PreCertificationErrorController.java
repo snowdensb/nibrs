@@ -25,21 +25,29 @@ import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.NibrsErrorCodeType;
 import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
+import org.search.nibrs.stagingdata.model.search.PrecertErrorSearchRequest;
+import org.search.nibrs.stagingdata.model.search.SearchResult;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.repository.NibrsErrorCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.PreCertificationErrorRepository;
+import org.search.nibrs.stagingdata.repository.PreCertificationErrorRepositoryCustom;
 import org.search.nibrs.stagingdata.repository.SegmentActionTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/preCertificationErrors")
 public class PreCertificationErrorController {
 	private final Log log = LogFactory.getLog(this.getClass());
 
 	@Autowired
 	private PreCertificationErrorRepository preCertificationErrorRepository;
+	@Autowired
+	private PreCertificationErrorRepositoryCustom preCertificationErrorRepositoryCustom;
 	@Autowired
 	private AgencyRepository agencyRepository;
 	@Autowired
@@ -49,7 +57,7 @@ public class PreCertificationErrorController {
 	@Autowired
 	public AppProperties appProperties;
 
-	@PostMapping("/preCertificationErrors")
+	@PostMapping("/")
 	public Integer savePreCertificationErrors(@RequestBody List<PreCertificationError> preCertificationErrors){
 		
 		log.info("About to save " + preCertificationErrors.size() + " Pre Certification Errors...");
@@ -76,4 +84,16 @@ public class PreCertificationErrorController {
 		
 		return preCertificationError; 
 	}
+	
+	@PostMapping("/search")
+	public @ResponseBody SearchResult<PreCertificationError> search(@RequestBody PrecertErrorSearchRequest precertErrorSearchRequest){
+		log.info("precertErrorSearchRequest:" + precertErrorSearchRequest);
+		List<PreCertificationError> preCertificationErrors = preCertificationErrorRepositoryCustom.findAllByCriteria(precertErrorSearchRequest);
+		
+		SearchResult<PreCertificationError> searchResult = new SearchResult<>(preCertificationErrors, appProperties.getReportSearchResultsLimit());
+		
+		return searchResult;
+	}
+	
+
 }

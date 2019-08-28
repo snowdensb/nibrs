@@ -15,9 +15,15 @@
  */
 package org.search.nibrs.stagingdata.repository;
 
-import org.search.nibrs.stagingdata.model.NibrsErrorCodeType;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-public interface NibrsErrorCodeTypeRepository extends JpaRepository<NibrsErrorCodeType, Integer>{
-	public NibrsErrorCodeType findFirstByCode(String code);
+import javax.transaction.Transactional;
+
+import org.search.nibrs.stagingdata.model.PreCertificationError;
+import org.search.nibrs.stagingdata.model.search.PrecertErrorSearchRequest;
+
+@Transactional
+public interface PreCertificationErrorRepositoryCustom{
+	List<PreCertificationError> findAllByCriteria(PrecertErrorSearchRequest precertErrorSearchRequest);
+	long countAllByCriteria(PrecertErrorSearchRequest precertErrorSearchRequest);
 }
