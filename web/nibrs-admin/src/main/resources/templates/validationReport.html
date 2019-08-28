@@ -79,7 +79,14 @@
             }
             
             $('#loadIncidentsAync').click (function(){
-            	var timerId, percent;
+            	var data = table.rows().data();
+            	if (data.length > 0){
+            		  xhr =  $.post(context + "files/preCertificationErrors", function(data, status){  
+            			  $('div#alert').append('<div>' + data + '</div>');
+            		  }).fail(ojbc.displayFailMessage);
+            	}
+            	
+             	var timerId, percent;
               xhr = $.post(context + "files/validIncidentsAsync", function(data, status){
                 $('#loadIncidents').attr('disabled', true);
                 $('#loadIncidentsAync').attr('disabled', true);
@@ -128,7 +135,7 @@
                   });
                 }, 1000);
               }).fail(ojbc.displayFailMessage);
-              
+               
             });
 
 	                  
@@ -136,7 +143,7 @@
 
  			</script>
  			<div class="mt-3" id="info" >
- 			  <div class="alert alert-secondary" role="alert" th:if="${validationResults.countOfValidReport} > 0">
+ 			  <div class="alert alert-secondary" role="alert" th:if="${validationResults.countOfValidReport} > 0" id="alert">
 			    <span th:text="${validationResults.countOfValidReport} + ' of the ' + ${validationResults.totalReportCount} + 
 			       ' are error-free. Would you like to load the '+ 
 			       ${validationResults.countOfValidReport} +' incidents into the repository?' "></span>
@@ -168,41 +175,22 @@
 				</thead>
 				<tbody>
 					<th:block th:each="nibrsError: ${validationResults.filteredErrorList}">
-						<th:block th:switch="${(nibrsError.ruleNumber == '404' and nibrsError.dataElementIdentifier == '35') 
-								or nibrsError.ruleNumber == '342'}">
-							<th:block th:case="true">
-								<tr th:each="rejectedValue:${#lists.toList(nibrsError.value)}">
-									<td th:text="${nibrsError.dateOfTape}"/>
-									<td th:text="${nibrsError.context.sourceLocation}"/>
-									<td th:text="${nibrsError.report.reportActionType}"/>
-									<td th:text="${nibrsError.report.ori}"/>
-									<td th:text="${nibrsError.reportUniqueIdentifier}" nowrap="nowrap"/>
-									<td th:text="${nibrsError.segmentTypeOutput}"/>
-									<td th:text="${nibrsError.offenseSegmentIdentifier}"/>
-									<td th:text="${nibrsError.OffenderArresteeVictimSegmentIdentifier}"/>
-									<td th:text="${nibrsError.propertySegmentIdentifier}"/>
-									<td th:text="${nibrsError.dataElementIdentifierOutput}"/>
-									<td th:text="${nibrsError.nIBRSErrorCode.code}" />
-									<td th:text="${rejectedValue}" />
-									<td th:text="${nibrsError.errorMessage}" />
-								</tr>
-							</th:block>
-							<tr th:case="*">
-								<td th:text="${nibrsError.dateOfTape}"/>
-								<td th:text="${nibrsError.context.sourceLocation}"/>
-								<td th:text="${nibrsError.report.reportActionType}"/>
-								<td th:text="${nibrsError.report.ori}"/>
-								<td th:text="${nibrsError.reportUniqueIdentifier}" nowrap="nowrap"/>
-								<td th:text="${nibrsError.segmentTypeOutput}"/>
-								<td th:text="${nibrsError.offenseSegmentIdentifier}"/>
-								<td th:text="${nibrsError.OffenderArresteeVictimSegmentIdentifier}"/>
-								<td th:text="${nibrsError.propertySegmentIdentifier}"/>
-								<td th:text="${nibrsError.dataElementIdentifierOutput}"/>
-								<td th:text="${nibrsError.nIBRSErrorCode.code}" />
-								<td th:text="${nibrsError.offendingValues}" />
-								<td th:text="${nibrsError.errorMessage}" />
-							</tr>
-						</th:block>
+						<tr>
+							<td th:text="${nibrsError.dateOfTape}"/>
+							<td th:text="${nibrsError.context.sourceLocation}"/>
+							<td th:text="${nibrsError.report.reportActionType}"/>
+							<td th:text="${nibrsError.report.ori}"/>
+							<td th:text="${nibrsError.reportUniqueIdentifier}" nowrap="nowrap"/>
+							<td th:text="${nibrsError.segmentTypeOutput}"/>
+							<td th:text="${nibrsError.offenseSegmentIdentifier}"/>
+							<td th:text="${nibrsError.OffenderArresteeVictimSegmentIdentifier}"/>
+							<td th:text="${nibrsError.propertySegmentIdentifier}"/>
+							<td th:text="${nibrsError.dataElementIdentifierOutput}"/>
+							<td th:text="${nibrsError.nIBRSErrorCode.code}" />
+							<td th:text="${(nibrsError.ruleNumber == '404' and nibrsError.dataElementIdentifier == '35') 
+                or nibrsError.ruleNumber == '342'} ? ${#lists.toList(nibrsError.value)}: ${nibrsError.offendingValues}" />
+							<td th:text="${nibrsError.errorMessage}" />
+						</tr>
 					</th:block>
 				</tbody>
 			</table>

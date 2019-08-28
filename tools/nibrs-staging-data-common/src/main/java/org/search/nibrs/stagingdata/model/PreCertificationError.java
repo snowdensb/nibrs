@@ -26,6 +26,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.Transient;
+
+import org.apache.commons.lang.StringUtils;
+import org.search.nibrs.common.NIBRSError;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -54,8 +58,14 @@ public class PreCertificationError {
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="nibrsErrorCodeTypeId")
-	private NibrsErrorCodeType nibrsErrorCodeType; 
+	private NibrsErrorCodeType nibrsErrorCodeType;
 	
+	@Transient
+	private String nibrsErrorCode;
+	@Transient
+	private String ori;
+	@Transient
+	private String segmentActionTypeCode; 
 	
 	private String monthOfTape; 
 	private String yearOfTape; 
@@ -64,6 +74,40 @@ public class PreCertificationError {
 	private String dataElement; 
 	private String rejectedValue;
 	private LocalDateTime preCertificationErrorTimestamp;
+	
+	public PreCertificationError() {
+		super();
+		preCertificationErrorTimestamp = LocalDateTime.now();
+	}
+	
+	public PreCertificationError(NIBRSError nibrsError) {
+		this();
+		
+		if (nibrsError.getReport().getMonthOfTape() != null) {
+			this.monthOfTape = StringUtils.leftPad(nibrsError.getReport().getMonthOfTape().toString(), 2);
+		}
+		
+		if (nibrsError.getReport().getYearOfTape() != null) {
+			this.yearOfTape = nibrsError.getReport().getYearOfTape().toString(); 
+		}
+		
+		
+		this.sourceLocation = nibrsError.getContext().getSourceLocation(); 
+		this.incidentIdentifier = nibrsError.getReportUniqueIdentifier(); 
+		this.dataElement = nibrsError.getDataElementIdentifierOutput();
+		
+		if ( ("404".equals(nibrsError.getRuleNumber()) && "35".contentEquals(nibrsError.getDataElementIdentifier()))
+			 || "342".contentEquals(nibrsError.getRuleNumber())) { 
+			this.rejectedValue = nibrsError.getValue().toString(); 
+		}
+		else {
+			this.rejectedValue = nibrsError.getOffendingValues();
+		}
+		
+		this.setOri(nibrsError.getReport().getOri()); 
+		this.nibrsErrorCode = nibrsError.getRuleNumber();
+		this.setSegmentActionTypeCode(String.valueOf(nibrsError.getReport().getReportActionType()));
+	}
 	
 	public SegmentActionTypeType getSegmentActionType() {
 		return segmentActionType;
@@ -221,6 +265,30 @@ public class PreCertificationError {
 				+ ", yearOfTape=" + yearOfTape + ", sourceLocation=" + sourceLocation + ", incidentIdentifier="
 				+ incidentIdentifier + ", dataElement=" + dataElement + ", rejectedValue=" + rejectedValue
 				+ ", nibrsErrorTimestamp=" + preCertificationErrorTimestamp + "]";
+	}
+
+	public String getNibrsErrorCode() {
+		return nibrsErrorCode;
+	}
+
+	public void setNibrsErrorCode(String nibrsErrorCode) {
+		this.nibrsErrorCode = nibrsErrorCode;
+	}
+
+	public String getOri() {
+		return ori;
+	}
+
+	public void setOri(String ori) {
+		this.ori = ori;
+	}
+
+	public String getSegmentActionTypeCode() {
+		return segmentActionTypeCode;
+	}
+
+	public void setSegmentActionTypeCode(String segmentActionTypeCode) {
+		this.segmentActionTypeCode = segmentActionTypeCode;
 	}
 	
 }

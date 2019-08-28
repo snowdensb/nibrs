@@ -16,15 +16,19 @@
 package org.search.nibrs.admin.services.rest;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.admin.uploadfile.PersistReportTask;
+import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.GroupBArrestReport;
+import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.search.nibrs.stagingdata.model.SubmissionTrigger;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
@@ -161,6 +165,23 @@ public class RestService{
 				log.info("Progress: " + (++count) + "/" + persistReportTask.getTotalCount());
 			}
 		}
+		
+	}
+	
+	public String persistPreCertificationErrors(List<NIBRSError> nibrsErrors) {
+		log.info("Execute method asynchronously. "
+				+ Thread.currentThread().getName());
+		
+		List<PreCertificationError> preCertificationErrors = nibrsErrors.stream()
+				.map(nibrsError -> new PreCertificationError(nibrsError))
+				.collect(Collectors.toList());
+		Integer savedCount = webClient.post().uri("/preCertificationErrors")
+			.body(BodyInserters.fromObject(preCertificationErrors))
+			.retrieve()
+			.bodyToMono(Integer.class)
+			.block();
+		
+		return savedCount + " errors are persisted."; 
 		
 	}
 	

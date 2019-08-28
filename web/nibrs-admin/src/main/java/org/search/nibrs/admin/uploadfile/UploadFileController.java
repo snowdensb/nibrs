@@ -272,6 +272,15 @@ public class UploadFileController {
 		return "Server processing the valid reports.";
 	}
 
+	@PostMapping("/preCertificationErrors")
+	public @ResponseBody String persistPreCertificationErrors(Map<String, Object> model) {
+		
+		ValidationResults validationResults = (ValidationResults) model.get("validationResults");
+		String response = restService.persistPreCertificationErrors(validationResults.getErrorList());
+		
+		return response;
+	}
+	
 	@GetMapping("/uploadStatus")
 	public @ResponseBody PersistReportTask getUploadStatus(Map<String, Object> model) {
 		
