@@ -357,6 +357,7 @@ CREATE TABLE PreCertificationError (
                 PreCertificationErrorId INT AUTO_INCREMENT NOT NULL,
                 MonthOfTape VARCHAR(2),
                 YearOfTape VARCHAR(4),
+                ORI VARCHAR(9),
                 AgencyID INT NOT NULL,
                 NibrsErrorCodeTypeId INT NOT NULL,
                 SegmentActionTypeTypeID INT NOT NULL,
