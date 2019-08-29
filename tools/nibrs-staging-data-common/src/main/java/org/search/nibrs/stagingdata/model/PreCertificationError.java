@@ -65,7 +65,7 @@ public class PreCertificationError implements Serializable{
 	
 	@Transient
 	private String nibrsErrorCode;
-	@Transient
+	
 	private String ori;
 	@Transient
 	private String segmentActionTypeCode; 

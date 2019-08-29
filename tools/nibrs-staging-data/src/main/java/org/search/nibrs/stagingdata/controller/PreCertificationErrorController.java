@@ -57,7 +57,7 @@ public class PreCertificationErrorController {
 	@Autowired
 	public AppProperties appProperties;
 
-	@PostMapping("/")
+	@PostMapping("")
 	public Integer savePreCertificationErrors(@RequestBody List<PreCertificationError> preCertificationErrors){
 		
 		log.info("About to save " + preCertificationErrors.size() + " Pre Certification Errors...");
