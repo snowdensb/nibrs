@@ -26,6 +26,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang3.StringUtils;
 import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.search.nibrs.stagingdata.model.search.PrecertErrorSearchRequest;
 import org.springframework.stereotype.Repository;
@@ -48,10 +49,7 @@ public class PreCertificationErrorSegmentRepositorCustomImpl implements PreCerti
         	 .orderBy(criteriaBuilder.desc(root.get("preCertificationErrorTimestamp")));
         
         EntityGraph<PreCertificationError> fetchGraph = entityManager.createEntityGraph(PreCertificationError.class);
-//        fetchGraph.addAttributeNodes("segmentActionType", "agency", "nibrsErrorCodeType");
-        fetchGraph.addSubgraph("segmentActionType");
-        fetchGraph.addSubgraph("agency");
-        fetchGraph.addSubgraph("nibrsErrorCodeType");
+        fetchGraph.addAttributeNodes("segmentActionType", "agency", "nibrsErrorCodeType");
 		return entityManager.createQuery(query).setHint("javax.persistence.loadgraph", fetchGraph)
 	            .getResultList();
 	}
@@ -59,6 +57,26 @@ public class PreCertificationErrorSegmentRepositorCustomImpl implements PreCerti
 	private List<Predicate> getPreCertificationErrorPredicates(PrecertErrorSearchRequest precertErrorSearchRequest,
 			Root<PreCertificationError> root, CriteriaBuilder criteriaBuilder) {
 		List<Predicate> predicates = new ArrayList<>();
+		
+		if (!precertErrorSearchRequest.isEmpty()) {
+			if (StringUtils.isNotBlank(precertErrorSearchRequest.getIncidentIdentifier())) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("incidentIdentifier"), precertErrorSearchRequest.getIncidentIdentifier())));
+			}
+        	if (precertErrorSearchRequest.getAgencyIds() != null && precertErrorSearchRequest.getAgencyIds().size() > 0) {
+        		predicates.add(criteriaBuilder.and(root.get("agency").get("agencyId").in(precertErrorSearchRequest.getAgencyIds())));
+        	}
+			if (precertErrorSearchRequest.getNibrsErrorCodeTypeId() != null && precertErrorSearchRequest.getNibrsErrorCodeTypeId() > 0) {
+				predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("nibrsErrorCodeType").get("nibrsErrorCodeTypeId"),precertErrorSearchRequest.getNibrsErrorCodeTypeId())));
+			}
+        	if (precertErrorSearchRequest.getSubmissionMonth() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("monthOfTape"), precertErrorSearchRequest.getSubmissionMonth())));
+        	}
+        	
+         	if (precertErrorSearchRequest.getSubmissionYear() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("yearOfTape"), precertErrorSearchRequest.getSubmissionYear())));
+        	}
+		}
+		
 		return predicates;
 	}
 

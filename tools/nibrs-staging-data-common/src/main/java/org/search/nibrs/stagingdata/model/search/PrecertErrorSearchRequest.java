@@ -29,7 +29,6 @@ public class PrecertErrorSearchRequest implements Serializable {
 	private static final long serialVersionUID = 7916910066665545067L;
 	private String incidentIdentifier; 
 	private List<Integer> agencyIds; 
-	private List<String> agenycyNames; 
 	private Integer nibrsErrorCodeTypeId; 
 
 	@Range(min=1, max=12)
@@ -72,12 +71,6 @@ public class PrecertErrorSearchRequest implements Serializable {
 	}
 	public void setAgencyIds(List<Integer> agencyIds) {
 		this.agencyIds = agencyIds;
-	}
-	public List<String> getAgenycyNames() {
-		return agenycyNames;
-	}
-	public void setAgenycyNames(List<String> agenycyNames) {
-		this.agenycyNames = agenycyNames;
 	}
 	public Integer getNibrsErrorCodeTypeId() {
 		return nibrsErrorCodeTypeId;

@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -43,7 +44,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
         @NamedAttributeNode("agency"),
         @NamedAttributeNode("nibrsErrorCodeType"),
 })
-public class PreCertificationError {
+public class PreCertificationError implements Serializable{
+	private static final long serialVersionUID = 6449178331536877659L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer preCertificationErrorId;
