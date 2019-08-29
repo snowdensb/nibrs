@@ -65,6 +65,8 @@ public class PreCertificationError implements Serializable{
 	
 	@Transient
 	private String nibrsErrorCode;
+	@Transient
+	private String nibrsErrorMessage;
 	
 	private String ori;
 	@Transient
@@ -83,6 +85,25 @@ public class PreCertificationError implements Serializable{
 		preCertificationErrorTimestamp = LocalDateTime.now();
 	}
 	
+	public PreCertificationError(Integer preCertificationErrorId, String nibrsErrorCode, String nibrsErrorMessage,
+			String ori, String segmentActionTypeCode, String monthOfTape, String yearOfTape, String sourceLocation,
+			String incidentIdentifier, String dataElement, String rejectedValue,
+			LocalDateTime preCertificationErrorTimestamp) {
+		super();
+		this.preCertificationErrorId = preCertificationErrorId;
+		this.nibrsErrorCode = nibrsErrorCode;
+		this.nibrsErrorMessage = nibrsErrorMessage;
+		this.ori = ori;
+		this.segmentActionTypeCode = segmentActionTypeCode;
+		this.monthOfTape = monthOfTape;
+		this.yearOfTape = yearOfTape;
+		this.sourceLocation = sourceLocation;
+		this.incidentIdentifier = incidentIdentifier;
+		this.dataElement = dataElement;
+		this.rejectedValue = rejectedValue;
+		this.preCertificationErrorTimestamp = preCertificationErrorTimestamp;
+	}
+
 	public PreCertificationError(NIBRSError nibrsError) {
 		this();
 		
@@ -297,6 +318,14 @@ public class PreCertificationError implements Serializable{
 	@Transient
 	public String getSubmissionDateString() {
 		return yearOfTape + "-" + StringUtils.left(monthOfTape, 2);
+	}
+
+	public String getNibrsErrorMessage() {
+		return nibrsErrorMessage;
+	}
+
+	public void setNibrsErrorMessage(String nibrsErrorMessage) {
+		this.nibrsErrorMessage = nibrsErrorMessage;
 	}
 
 }

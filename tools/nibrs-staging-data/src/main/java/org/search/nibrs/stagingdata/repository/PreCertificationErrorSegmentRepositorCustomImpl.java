@@ -18,7 +18,6 @@ package org.search.nibrs.stagingdata.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -44,13 +43,20 @@ public class PreCertificationErrorSegmentRepositorCustomImpl implements PreCerti
         
         List<Predicate> queryPredicates = getPreCertificationErrorPredicates(precertErrorSearchRequest, root, criteriaBuilder);
         
-        query.select(root).where(criteriaBuilder.and(
+        
+ 		query.multiselect(root.get("preCertificationErrorId"),
+ 				root.get("nibrsErrorCodeType").get("code"), 
+ 				root.get("nibrsErrorCodeType").get("message"), 
+ 				root.get("ori"), root.get("segmentActionType").get("stateCode"), 
+ 				root.get("monthOfTape"), root.get("yearOfTape"),
+ 				root.get("sourceLocation"), root.get("incidentIdentifier"), 
+ 				root.get("dataElement"), root.get("rejectedValue"),
+ 				root.get("preCertificationErrorTimestamp"));
+        query.where(criteriaBuilder.and(
         		queryPredicates.toArray( new Predicate[queryPredicates.size()])))
         	 .orderBy(criteriaBuilder.desc(root.get("preCertificationErrorTimestamp")));
         
-        EntityGraph<PreCertificationError> fetchGraph = entityManager.createEntityGraph(PreCertificationError.class);
-        fetchGraph.addAttributeNodes("segmentActionType", "agency", "nibrsErrorCodeType");
-		return entityManager.createQuery(query).setHint("javax.persistence.loadgraph", fetchGraph)
+		return entityManager.createQuery(query)
 	            .getResultList();
 	}
 
