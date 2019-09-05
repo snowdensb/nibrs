@@ -153,6 +153,7 @@ public class RestService{
 		log.info("Execute method asynchronously. "
 			      + Thread.currentThread().getName());
 		int count = 0; 
+		persistReportTask.setStarted(true);
 		for(AbstractReport abstractReport: persistReportTask.getReportsToProcess()){
 			try{
 				this.persistAbstractReport(abstractReport);

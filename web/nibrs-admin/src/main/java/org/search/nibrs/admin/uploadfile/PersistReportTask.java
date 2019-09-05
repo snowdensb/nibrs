@@ -29,6 +29,7 @@ public class PersistReportTask{
 	private Integer processedCount = 0;
 	private List<String> failedToProcess = new ArrayList<>(); 
 	private boolean aborted = false;
+	private boolean started = false; 
 	
 	public PersistReportTask() {
 		super();
@@ -92,5 +93,13 @@ public class PersistReportTask{
 	
 	public boolean isComplete() {
 		return this.processedCount.equals(this.totalCount);
+	}
+
+	public boolean isStarted() {
+		return started;
+	}
+
+	public void setStarted(boolean started) {
+		this.started = started;
 	}
 }

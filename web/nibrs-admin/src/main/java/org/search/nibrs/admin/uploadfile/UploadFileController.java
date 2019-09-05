@@ -29,6 +29,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
@@ -74,10 +75,10 @@ public class UploadFileController {
 			Arrays.asList("application/zip", "text/plain", "application/octet-stream", "text/xml", "application/xml");
 
 	@GetMapping("/upload")
-	public String getFileUploadForm(Map<String, Object> model) throws IOException {
+	public String getFileUploadForm(HttpServletRequest request, Map<String, Object> model) throws IOException {
 		PersistReportTask persistReportTask = (PersistReportTask) model.get("persistReportTask");
 		
-		if (persistReportTask == null || persistReportTask.isAborted() || persistReportTask.isComplete()) {
+		if (persistReportTask == null || persistReportTask.isAborted() || persistReportTask.isComplete() || !persistReportTask.isStarted()) {
 			return "uploadForm::uploadForm";
 		}
 		else {
@@ -94,6 +95,11 @@ public class UploadFileController {
 		
 		ValidationResults validationResults = getNibrsErrors(multipartFiles); 
 		model.addAttribute("validationResults", validationResults);
+		
+		List<AbstractReport> validReports = validationResults.getReportsWithoutErrors(); 
+		PersistReportTask persistReportTask = new PersistReportTask(validReports);
+		model.addAttribute("persistReportTask", persistReportTask);
+
         return "validationReport :: #content";
     }
 
@@ -261,11 +267,9 @@ public class UploadFileController {
 		
 		ValidationResults validationResults = (ValidationResults) model.get("validationResults");
 		List<AbstractReport> validReports = validationResults.getReportsWithoutErrors(); 
-		
 		logCountsOfReports(validReports);
 		
-		PersistReportTask persistReportTask = new PersistReportTask(validReports);
-		model.put("persistReportTask", persistReportTask);
+		PersistReportTask persistReportTask = (PersistReportTask) model.get("persistReportTask");
 		restService.persistValidReportsAsync(persistReportTask);
 		
 		log.info("called the aync method"); 
@@ -285,7 +289,6 @@ public class UploadFileController {
 	public @ResponseBody PersistReportTask getUploadStatus(Map<String, Object> model) {
 		
 		PersistReportTask persistReportTask = (PersistReportTask) model.get("persistReportTask");
-		
 		return persistReportTask;
 	}
 	

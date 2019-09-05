@@ -71,7 +71,7 @@
             table.buttons().container()
              .appendTo( '#errorReport_length' ).addClass("mr-5");
             
-            if (persistReportTask && !persistReportTask.aborted && !persistReportTask.complete){
+            if (persistReportTask && !persistReportTask.aborted && !persistReportTask.complete && persistReportTask.started){
                 $('#loadIncidents').attr('disabled', true);
                 $('#loadIncidentsAync').attr('disabled', true);
                 $('#progress').css('width', '0px').addClass('progress-bar-animated active');
@@ -86,13 +86,12 @@
             		  }).fail(ojbc.displayFailMessage);
             	}
             	
-             	var timerId, percent;
               xhr = $.post(context + "files/validIncidentsAsync", function(data, status){
                 $('#loadIncidents').attr('disabled', true);
                 $('#loadIncidentsAync').attr('disabled', true);
                 $('#progress').css('width', '0px').addClass('progress-bar-animated active');
                 $('#progressDiv').removeClass('d-none');
-                timerId = setInterval(function() {
+                var timerId = setInterval(function() {
 
                     // increment progress bar
                   xhr = $.get(context + 'files/uploadStatus', function(data, status) {
@@ -128,9 +127,9 @@
                       bootpopup({
                           title: "", 
                           showclose: false,
-                          content: contentArray, 
+                          content: contentArray,
+                          complete:function() { clearInterval(timerId); }
                       });
-
                     }
                   });
                 }, 1000);
