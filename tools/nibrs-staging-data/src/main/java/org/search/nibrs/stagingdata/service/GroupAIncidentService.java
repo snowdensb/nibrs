@@ -810,4 +810,9 @@ public class GroupAIncidentService {
 		}
 	}
 
+	public Integer deleteGroupAIncidentReports(String ori, String yearOfTape, String monthOfTape) {
+		return administrativeSegmentRepository.deleteByOriAndYearOfTapeAndMonthOfTape(ori, yearOfTape, monthOfTape);
+	}
+	
+
 }

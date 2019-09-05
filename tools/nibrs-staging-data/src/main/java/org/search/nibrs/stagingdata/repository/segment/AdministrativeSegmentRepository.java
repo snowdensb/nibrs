@@ -25,6 +25,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -95,6 +96,9 @@ public interface AdministrativeSegmentRepository
 			+ "		(year(a.incidentDate) = ?2 AND ( ?3 = 0 OR month(a.incidentDate) = ?3)) "
 			+ "GROUP BY a.incidentNumber ")
 	List<Integer> findIdsByOriAndIncidentDate(String ori, Integer year, Integer month);
+	
+	Integer deleteByOriAndYearOfTapeAndMonthOfTape(String ori, String yearOfTape, String monthOfTape);
+	
 	
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "LEFT JOIN a.offenseSegments ao "

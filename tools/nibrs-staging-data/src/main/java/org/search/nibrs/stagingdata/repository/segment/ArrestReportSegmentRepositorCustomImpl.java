@@ -22,12 +22,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
+import org.apache.commons.lang3.StringUtils;
+import org.search.nibrs.stagingdata.model.ArrestReportSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
@@ -143,12 +147,57 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
 
 	@Override
 	public int updateSubmissionId(Integer arrestReportSegmentId, Integer submissionId) {
-	      Query query = entityManager.createQuery("UPDATE ArrestReportSegment a SET a.submission.submissionId = :submissionId "
-	              + "WHERE a.arrestReportSegmentId = :arrestReportSegmentId");
+	      Query query = entityManager.createQuery("UPDATE ArrestReportSegment a "
+	      		+ "SET a.submission.submissionId = :submissionId "
+                + "WHERE a.arrestReportSegmentId = :arrestReportSegmentId");
 	      query.setParameter("arrestReportSegmentId", arrestReportSegmentId);
 	      query.setParameter("submissionId", submissionId);
 	      int rowsUpdated = query.executeUpdate();
 	      return rowsUpdated;
+	}
+
+	@Override
+	public int deleteByOriAndSubmissionDate(String ori, String yearOfTape, String monthOfTape) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaDelete<ArrestReportSegmentWasArmedWith> arrestReportWasArmedWithDelete = criteriaBuilder.createCriteriaDelete(ArrestReportSegmentWasArmedWith.class);
+		Root<ArrestReportSegmentWasArmedWith> arrestReportWasArmedWithRoot = arrestReportWasArmedWithDelete.from(ArrestReportSegmentWasArmedWith.class);
+		
+        Subquery<Integer> arrestReportSubQuery = arrestReportWasArmedWithDelete.subquery(Integer.class);
+        Root<ArrestReportSegment> arrestReportSubQueryRoot = arrestReportSubQuery.from(ArrestReportSegment.class);
+        arrestReportSubQuery.select(arrestReportSubQueryRoot.get("arrestReportSegmentId"));
+        List<Predicate> armedWithPredicates = new ArrayList<>();
+        if (StringUtils.isNotBlank(ori)) {
+        	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportSubQueryRoot.get("ori"), ori)));
+        }
+        if (StringUtils.isNotBlank(yearOfTape)) {
+        	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportSubQueryRoot.get("yearOfTape"), yearOfTape)));
+        }
+        if (StringUtils.isNotBlank(monthOfTape)) {
+        	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportSubQueryRoot.get("monthOfTape"), monthOfTape)));
+        }
+        arrestReportSubQuery.where(armedWithPredicates.toArray(new Predicate[armedWithPredicates.size()]));
+
+    	
+    	arrestReportWasArmedWithDelete.where(arrestReportWasArmedWithRoot.get("arrestReportSegment").get("arrestReportSegmentId").in(arrestReportSubQuery));
+    	entityManager.createQuery(arrestReportWasArmedWithDelete).executeUpdate();
+    	
+    	CriteriaDelete<ArrestReportSegment> arrestReportSegmentDelete = criteriaBuilder.createCriteriaDelete(ArrestReportSegment.class);
+    	Root<ArrestReportSegment> arrestReportRoot = arrestReportSegmentDelete.from(ArrestReportSegment.class);
+    	
+    	List<Predicate> predicates = new ArrayList<>();
+    	if (StringUtils.isNotBlank(ori)) {
+    		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("ori"), ori)));
+    	}
+    	if (StringUtils.isNotBlank(yearOfTape)) {
+    		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("yearOfTape"), yearOfTape)));
+    	}
+    	if (StringUtils.isNotBlank(monthOfTape)) {
+    		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("monthOfTape"), monthOfTape)));
+    	}
+    	
+    	arrestReportSegmentDelete.where(predicates.toArray(new Predicate[predicates.size()])); 
+
+		return entityManager.createQuery(arrestReportSegmentDelete).executeUpdate();
 	}
 
 }

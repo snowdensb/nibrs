@@ -333,4 +333,9 @@ public class ArrestReportService {
 			arrestReportSegment.setArrestReportSegmentWasArmedWiths(armedWiths);
 		}
 	}
+	
+	@Transactional
+	public int deleteByOriAndSubmissionDate(String ori, String yearOfTape, String monthOfTape) {
+		return arrestReportSegmentRepositoryCustom.deleteByOriAndSubmissionDate(ori, yearOfTape, monthOfTape);
+	}
 }

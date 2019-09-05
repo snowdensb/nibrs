@@ -27,4 +27,5 @@ public interface ArrestReportSegmentRepositoryCustom{
 	List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest);
 	long countAllByCriteria(IncidentSearchRequest incidentSearchRequest);
 	int updateSubmissionId(Integer arrestReportSegmentId, Integer submissionId);
+	int deleteByOriAndSubmissionDate(String ori, String yearOfTape, String monthOfTape);
 }
