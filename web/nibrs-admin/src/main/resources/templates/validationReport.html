@@ -141,6 +141,14 @@
 				  });
 
  			</script>
+ 			<nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+           <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+           <li class="breadcrumb-item"><a href="#" class="uploadToValidate">Upload to Validate</a></li>
+           <li class="breadcrumb-item active" aria-current="page">Validation Results</li>
+         </ol>
+      </nav>
+ 			
  			<div class="mt-3" id="info" >
  			  <div class="alert alert-secondary" role="alert" th:if="${validationResults.countOfValidReport} > 0" id="alert">
 			    <span th:text="${validationResults.countOfValidReport} + ' of the ' + ${validationResults.totalReportCount} + 
