@@ -53,12 +53,7 @@
 			</xsd:enumeration>
 			<xsd:enumeration value="I">
 				<xsd:annotation>
-					<xsd:documentation>American Indian</xsd:documentation>
-				</xsd:annotation>
-			</xsd:enumeration>
-			<xsd:enumeration value="A">
-				<xsd:annotation>
-					<xsd:documentation>Alaskan Native</xsd:documentation>
+					<xsd:documentation>American Indian/Alaskan Native</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
 			<xsd:enumeration value="C">
@@ -81,7 +76,7 @@
 					<xsd:documentation>Korean</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
-			<xsd:enumeration value="O">
+			<xsd:enumeration value="A">
 				<xsd:annotation>
 					<xsd:documentation>Other Asian</xsd:documentation>
 				</xsd:annotation>
@@ -101,6 +96,11 @@
 					<xsd:documentation>Other Pacific Islander</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
+			<xsd:enumeration value="U">
+				<xsd:annotation>
+					<xsd:documentation>Unknown</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>			
 		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:complexType name="PersonRaceCodeType">

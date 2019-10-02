@@ -775,6 +775,11 @@
           <xsd:documentation>Peeping Tom</xsd:documentation>
         </xsd:annotation>
       </xsd:enumeration>
+      <xsd:enumeration value="90I">
+        <xsd:annotation>
+          <xsd:documentation>Runaway</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>      
       <xsd:enumeration value="90J">
         <xsd:annotation>
           <xsd:documentation>Trespass of Real</xsd:documentation>
