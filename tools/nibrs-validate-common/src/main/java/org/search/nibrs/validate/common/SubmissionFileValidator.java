@@ -32,29 +32,35 @@ import org.search.nibrs.flatfile.importer.IncidentBuilder;
 import org.search.nibrs.importer.ReportListener;
 import org.search.nibrs.util.NibrsFileUtils;
 import org.search.nibrs.xmlfile.importer.XmlIncidentBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
-/**
- * Utilities class for getting file content type
- *
- */
-public class NibrsValidationUtils {
-	private static final Log log = LogFactory.getLog(NibrsValidationUtils.class);
+@Component
+@Scope("prototype")
+public class SubmissionFileValidator {
+	private static final Log log = LogFactory.getLog(SubmissionFileValidator.class);
+	@Autowired
+	XmlIncidentBuilder xmlIncidentBuilder;
+
+	@Autowired
+	IncidentBuilder incidentBuilder;
 	
-	public static void validateFile(ReportListener validatorListener, 
+	
+	public void validateFile(ReportListener validatorListener, 
 			File file) throws ParserConfigurationException, IOException, TikaException, SAXException {
 		String fileType = NibrsFileUtils.getMediaType(file);
 		FileInputStream inputStream = new FileInputStream(file);
 		validateInputStream(validatorListener, fileType, inputStream, file.getAbsolutePath());
 	}
 
-	public static final void validateInputStream(ReportListener validatorListener, String fileContentType,
+	public final void validateInputStream(ReportListener validatorListener, String fileContentType,
 			InputStream stream, String readerLocationName) throws ParserConfigurationException, IOException {
 
 		switch (fileContentType){
 		case "text/xml":
 		case "application/xml":
-			XmlIncidentBuilder xmlIncidentBuilder = new XmlIncidentBuilder();
 			xmlIncidentBuilder.addIncidentListener(validatorListener);
 			xmlIncidentBuilder.buildIncidents(stream, readerLocationName);
 
@@ -62,7 +68,6 @@ public class NibrsValidationUtils {
 		case "text/plain": 
 		case "application/octet-stream": 
 			Reader inputReader = new BufferedReader(new InputStreamReader(stream));
-			IncidentBuilder incidentBuilder = new IncidentBuilder();
 
 			incidentBuilder.addIncidentListener(validatorListener);
 
