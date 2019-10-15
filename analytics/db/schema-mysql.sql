@@ -48,8 +48,6 @@ CREATE TABLE Submission (
                 PRIMARY KEY (SubmissionID)
 );
 
-ALTER TABLE Submission MODIFY COLUMN NIBRSReportCategoryCode VARCHAR(30) COMMENT 'Group A or Group B.';
-
 
 CREATE TABLE Violation (
                 ViolationID INT AUTO_INCREMENT NOT NULL,
@@ -57,7 +55,7 @@ CREATE TABLE Violation (
                 ViolationCode VARCHAR(3) NOT NULL,
                 ViolationDescription VARCHAR(200) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
-                NibrsErrorCodeTypeId,
+                NibrsErrorCodeTypeId INT,
                 ViolationTimestamp TIMESTAMP NOT NULL,
                 PRIMARY KEY (ViolationID)
 );
