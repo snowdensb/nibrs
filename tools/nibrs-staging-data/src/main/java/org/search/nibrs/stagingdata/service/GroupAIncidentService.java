@@ -237,7 +237,8 @@ public class GroupAIncidentService {
 			String reportActionType = String.valueOf(groupAIncidentReport.getReportActionType()).trim();
 			
 			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
-				if (administrativeSegmentRepository.existsByIncidentNumber(groupAIncidentReport.getIncidentNumber())){
+				if (administrativeSegmentRepository
+						.existsByIncidentNumberAndOri(groupAIncidentReport.getIncidentNumber(), groupAIncidentReport.getOri())){
 					reportActionType = "R"; 
 				}
 			}

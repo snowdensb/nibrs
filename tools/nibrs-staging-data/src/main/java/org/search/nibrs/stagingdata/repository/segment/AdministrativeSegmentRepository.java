@@ -25,7 +25,6 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -45,9 +44,10 @@ public interface AdministrativeSegmentRepository
 	@Query("SELECT count(*) > 0 from AdministrativeSegment a "
 			+ "LEFT JOIN a.segmentActionType s "
 			+ "WHERE a.administrativeSegmentId = "
-			+ "			(SELECT max(administrativeSegmentId) FROM AdministrativeSegment where incidentNumber = ?1 ) "
+			+ "		(SELECT max(administrativeSegmentId) FROM AdministrativeSegment "
+			+ "			where incidentNumber = ?1 and ori = ?2) "
 			+ "		AND s.nibrsCode != 'D' ")
-	boolean existsByIncidentNumber(String incidentNumber);
+	boolean existsByIncidentNumberAndOri(String incidentNumber, String ori);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	List<AdministrativeSegment> findDistinctByOriAndIncidentDateTypeYearNumAndIncidentDateTypeMonthNum(String ori, Integer year,  Integer month);

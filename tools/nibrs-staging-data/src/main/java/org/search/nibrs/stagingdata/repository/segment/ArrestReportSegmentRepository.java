@@ -36,9 +36,10 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 	@Query("SELECT count(*) > 0 from ArrestReportSegment a "
 			+ "LEFT JOIN a.segmentActionType s "
 			+ "WHERE a.arrestReportSegmentId = "
-			+ "			(SELECT max(arrestReportSegmentId) FROM ArrestReportSegment where arrestTransactionNumber = ?1 ) "
+			+ "			(SELECT max(arrestReportSegmentId) FROM ArrestReportSegment "
+			+ "				where arrestTransactionNumber = ?1 AND ori = ?2 ) "
 			+ "		AND s.nibrsCode != 'D' ")
-	boolean existsByArrestTransactionNumber(String arrestTransactionNumber);
+	boolean existsByArrestTransactionNumberAndOri(String arrestTransactionNumber, String ori);
 	
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)
 	ArrestReportSegment findByArrestReportSegmentId(Integer arrestReportSegmentId);

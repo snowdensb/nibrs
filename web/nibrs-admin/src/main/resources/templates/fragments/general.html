@@ -57,7 +57,7 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" th:href="@{/}" id="dropdown09" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pre-Certificate</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown09">
-                  <a class="dropdown-item" href="#" id="upload">Validate</a>
+                  <a class="dropdown-item uploadToValidate" href="#" id="upload">Validate</a>
                   <a class="dropdown-item" href="#" id="errors">Errors</a>
                 </div>
               </li>
@@ -139,7 +139,7 @@
 							return false; 
 	          });
 		    	  
-		    	  $('body').on('click', 'a#upload', function() {   
+		    	  $('body').on('click', 'a.uploadToValidate', function() {   
 							$(this).parent().toggleClass('show');
 							
 							xhr = $.get(context + 'files/upload', function(data) {

@@ -227,7 +227,8 @@ public class ArrestReportService {
 			String reportActionType = String.valueOf(groupBArrestReport.getReportActionType()).trim();
 			
 			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
-				if (arrestReportSegmentRepository.existsByArrestTransactionNumber(groupBArrestReport.getIdentifier())){
+				if (arrestReportSegmentRepository
+						.existsByArrestTransactionNumberAndOri(groupBArrestReport.getIdentifier(), groupBArrestReport.getOri())){
 					reportActionType = "R"; 
 				}
 			}

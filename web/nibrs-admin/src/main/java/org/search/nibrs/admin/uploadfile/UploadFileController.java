@@ -42,7 +42,7 @@ import org.search.nibrs.common.NIBRSJsonError;
 import org.search.nibrs.importer.ReportListener;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.util.NibrsFileUtils;
-import org.search.nibrs.validate.common.NibrsValidationUtils;
+import org.search.nibrs.validate.common.SubmissionFileValidator;
 import org.search.nibrs.validate.common.ValidationResults;
 import org.search.nibrs.validation.SubmissionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +70,9 @@ public class UploadFileController {
 
 	@Autowired
 	SubmissionValidator submissionValidator;
+	
+	@Autowired
+	SubmissionFileValidator submissionFileValidator;
 
 	final List<String> acceptedFileTypes = 
 			Arrays.asList("application/zip", "text/plain", "application/octet-stream", "text/xml", "application/xml");
@@ -179,7 +182,7 @@ public class UploadFileController {
 			public void newReport(AbstractReport report, List<NIBRSError> el) {
 				validationResults.getErrorList().addAll(el);
 				validationResults.getErrorList().addAll(submissionValidator.validateReport(report));
-				NibrsValidationUtils.addReportWithoutErrors(validationResults, report);
+				addReportWithoutErrors(validationResults, report);
 			}
 		};
 		
@@ -192,7 +195,7 @@ public class UploadFileController {
 				validateZippedFile( validatorListener, multipartFile.getInputStream());
 			}
 			else {
-				NibrsValidationUtils.validateInputStream(
+				submissionFileValidator.validateInputStream(
 						validatorListener, multipartFile.getContentType(), multipartFile.getInputStream(), "console");
 			}
 			
@@ -252,7 +255,7 @@ public class UploadFileController {
 		    String mediaType = NibrsFileUtils.getMediaType(inStream);
 
 		    try {
-		    	NibrsValidationUtils.validateInputStream(validatorlistener, mediaType, inStream, "console");
+		    	submissionFileValidator.validateInputStream(validatorlistener, mediaType, inStream, "console");
 			} catch (ParserConfigurationException e) {
 				log.error("Got exception while parsing the file " + zipEntry.getName(), e);
 			}
@@ -297,6 +300,19 @@ public class UploadFileController {
 		abstractReports.forEach(item->incidentNumbers.add(item.getIdentifier()));
 		log.info("about to process " + abstractReports.size() + " reports with " + incidentNumbers.size() + " distinct identifiers. ");
 	}	
+	
+	private void addReportWithoutErrors(ValidationResults validationResults, AbstractReport report) {
+		if (validationResults.getErrorList().isEmpty()){
+			validationResults.getReportsWithoutErrors().add(report);
+		}
+		else{
+			NIBRSError nibrsError = validationResults.getErrorList().get(validationResults.getErrorList().size()-1);
+			if (report.getIdentifier() != null && 
+					!report.getIdentifier().equals(nibrsError.getReportUniqueIdentifier())) {
+				validationResults.getReportsWithoutErrors().add(report);
+			}
+		}
+	}
 	
 }
 
