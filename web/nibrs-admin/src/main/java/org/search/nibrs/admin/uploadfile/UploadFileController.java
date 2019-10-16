@@ -302,6 +302,7 @@ public class UploadFileController {
 	}	
 	
 	private void addReportWithoutErrors(ValidationResults validationResults, AbstractReport report) {
+		validationResults.increaseTotalReportCount();
 		if (validationResults.getErrorList().isEmpty()){
 			validationResults.getReportsWithoutErrors().add(report);
 		}
