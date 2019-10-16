@@ -233,7 +233,6 @@ public class GroupAIncidentService {
 			AdministrativeSegment administrativeSegment = new AdministrativeSegment();
 			
 			log.info("Persisting GroupAIncident: " + groupAIncidentReport.getIncidentNumber());
-			administrativeSegment.setAgency(agencyRepository.findFirstByAgencyOri(groupAIncidentReport.getOri()));
 			
 			String reportActionType = String.valueOf(groupAIncidentReport.getReportActionType()).trim();
 			

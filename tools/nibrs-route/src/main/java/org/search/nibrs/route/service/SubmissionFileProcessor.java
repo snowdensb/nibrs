@@ -34,13 +34,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.tika.exception.TikaException;
 import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.flatfile.errorexport.ErrorExporter;
-import org.search.nibrs.flatfile.importer.IncidentBuilder;
 import org.search.nibrs.importer.ReportListener;
 import org.search.nibrs.model.AbstractReport;
-import org.search.nibrs.validate.common.NibrsValidationUtils;
-import org.search.nibrs.validate.common.ValidationResults;
+import org.search.nibrs.validate.common.SubmissionFileValidator;
 import org.search.nibrs.validation.SubmissionValidator;
-import org.search.nibrs.xmlfile.importer.XmlIncidentBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -51,12 +48,10 @@ import org.xml.sax.SAXException;
 public class SubmissionFileProcessor {
 	private final Log log = LogFactory.getLog(SubmissionFileProcessor.class);
 
-	@Autowired
-	IncidentBuilder incidentBuilder;
-	@Autowired
-	XmlIncidentBuilder xmlIncidentBuilder;
-	@Autowired
 	SubmissionValidator submissionValidator;
+	@Autowired
+	SubmissionFileValidator submissionFileValidator;
+
 	@Autowired
 	ErrorExporter errorExporter;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -69,14 +64,27 @@ public class SubmissionFileProcessor {
 			public void newReport(AbstractReport report, List<NIBRSError> el) {
 				validationResults.getErrorList().addAll(el);
 				validationResults.getErrorList().addAll(submissionValidator.validateReport(report));
-				NibrsValidationUtils.addReportWithoutErrors(validationResults, report);
+				addReportWithoutErrors(validationResults, report);
 			}
 		};
 
-		NibrsValidationUtils.validateFile(validatorListener, file);
+		submissionFileValidator.validateFile(validatorListener, file);
 
 		return validationResults; 
 
+	}
+	
+	private void addReportWithoutErrors(ValidationResults validationResults, AbstractReport report) {
+		if (validationResults.getErrorList().isEmpty()){
+			validationResults.getReportsWithoutErrors().add(report);
+		}
+		else{
+			NIBRSError nibrsError = validationResults.getErrorList().get(validationResults.getErrorList().size()-1);
+			if (report.getIdentifier() != null && 
+					!report.getIdentifier().equals(nibrsError.getReportUniqueIdentifier())) {
+				validationResults.getReportsWithoutErrors().add(report);
+			}
+		}
 	}
 	
 	public File createErrorReport(@Body ValidationResults validationResults,

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/4.2"
+	xmlns:cjis="http://fbi.gov/cjis/1.0" 
+	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/1.0"
+	xmlns:i="http://release.niem.gov/niem/appinfo/3.0/" 
+	xmlns:ucr="http://release.niem.gov/niem/codes/fbi_ucr/3.0/"
+	xmlns:j="http://release.niem.gov/niem/domains/jxdm/5.2/" 
+	xmlns:term="http://release.niem.gov/niem/localTerminology/3.0/"
+	xmlns:nc="http://release.niem.gov/niem/niem-core/3.0/" 
+	xmlns:niem-xsd="http://release.niem.gov/niem/proxy/xsd/3.0/"
+	xmlns:s="http://release.niem.gov/niem/structures/3.0/" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:hi_nibrs_codes="http://search.org/nibrs/2019/Extensions/Hawaii/codes/1.0"
+	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/4.2"
+	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/4.2 ../base-xsd/nibrs/4.2/nibrs.xsd">
+	
+	<cjis:MessageMetadata>
+		<!-- Message Timestamp -->
+		<cjis:MessageDateTime>2017-03-23T03:00:00</cjis:MessageDateTime>
+		<!-- Message ID -->
+		<cjis:MessageIdentification>
+			<nc:IdentificationID>123456</nc:IdentificationID>
+		</cjis:MessageIdentification>
+		<!-- NIBRS IEPD Version -->
+		<cjis:MessageImplementationVersion>4.2</cjis:MessageImplementationVersion>
+		<cjis:MessageSubmittingOrganization>
+			<j:OrganizationAugmentation>
+				<j:OrganizationORIIdentification>
+					<!-- Submitting Agency ORI -->
+					<nc:IdentificationID>FBI111111</nc:IdentificationID>
+				</j:OrganizationORIIdentification>
+			</j:OrganizationAugmentation>
+		</cjis:MessageSubmittingOrganization>
+	</cjis:MessageMetadata>
+	<nibrs:Report>
+		<nibrs:ReportHeader>
+			<!-- Submission Type -->
+			<nibrs:NIBRSReportCategoryCode>GROUP B ARREST REPORT</nibrs:NIBRSReportCategoryCode>
+			<!-- Submission Action Type -->
+			<nibrs:ReportActionCategoryCode>A</nibrs:ReportActionCategoryCode>
+			<!-- Year/Month Of Report -->
+			<nibrs:ReportDate>
+				<nc:YearMonthDate>2016-02</nc:YearMonthDate>
+			</nibrs:ReportDate>
+			<nibrs:ReportingAgency>
+				<j:OrganizationAugmentation>
+					<j:OrganizationORIIdentification>
+						<!-- Element 1, ORI Code -->
+						<nc:IdentificationID>WVNDX0100</nc:IdentificationID>
+					</j:OrganizationORIIdentification>
+				</j:OrganizationAugmentation>
+				<cjis:OrganizationAugmentation>
+	            	<cjis:DirectReportingCityIdentification>
+	                	<nc:IdentificationID>GAA7</nc:IdentificationID>
+					</cjis:DirectReportingCityIdentification>
+	            </cjis:OrganizationAugmentation>
+			</nibrs:ReportingAgency>
+		</nibrs:ReportHeader>
+		<nc:Person s:id="PersonArrestee1">
+			<!-- Element 47, Age of Arrestee (only one would be included per victim) -->
+			<nc:PersonAgeMeasure>
+				<nc:MeasureIntegerValue>30</nc:MeasureIntegerValue>
+			</nc:PersonAgeMeasure>
+			<!-- Element 50, Ethnicity of Arrestee -->
+			<j:PersonEthnicityCode>N</j:PersonEthnicityCode>
+			<!-- Element 49, Race of Arrestee -->
+			<hi_nibrs_codes:PersonRaceCode>C</hi_nibrs_codes:PersonRaceCode>
+			<!-- Element 51, Resident Status -->
+			<j:PersonResidentCode>R</j:PersonResidentCode>
+			<!-- Element 48, Sex of Arrestee -->
+			<j:PersonSexCode>M</j:PersonSexCode>
+		</nc:Person>
+		<j:Arrestee s:id="Arrestee1">
+			<nc:RoleOfPerson s:ref="PersonArrestee1" />
+			<!-- Element 40, Arrestee Sequence Number -->
+			<j:ArrestSequenceID>1</j:ArrestSequenceID>
+			<!-- Clearance Indicator -->
+			<j:ArresteeClearanceIndicator>true</j:ArresteeClearanceIndicator>
+			<!-- Element 46, Arrestee Was Armed With -->
+			<j:ArresteeArmedWithCode>12</j:ArresteeArmedWithCode>
+			<!-- Element 52, Disposition of Arrestee Under 18 -->
+			<j:ArresteeJuvenileDispositionCode>H</j:ArresteeJuvenileDispositionCode>
+			<!-- Element 44, Multiple Arrestee Segments IndicaFtor -->
+			<j:ArrestSubjectCountCode>N</j:ArrestSubjectCountCode>
+		</j:Arrestee>
+		<j:Arrest s:id="Arrest1">
+			<!-- Element 41, Arrest Transaction Number -->
+			<nc:ActivityIdentification>
+				<nc:IdentificationID>12345</nc:IdentificationID>
+			</nc:ActivityIdentification>
+			<!-- Element 42, Arrest Date -->
+			<nc:ActivityDate>
+				<nc:Date>2016-02-28</nc:Date>
+			</nc:ActivityDate>
+			<!-- Element 45, UCR Arrest Offense Code -->
+			<j:ArrestCharge>
+				<nibrs:ChargeUCRCode>64A</nibrs:ChargeUCRCode>
+			</j:ArrestCharge>
+			<!-- Element 43, Type Of Arrest -->
+			<j:ArrestCategoryCode>O</j:ArrestCategoryCode>
+		</j:Arrest>
+		<!-- Associations ==================================== -->
+		<j:ArrestSubjectAssociation>
+			<nc:Activity s:ref="Arrest1" />
+			<j:Subject s:ref="Arrestee1" />
+		</j:ArrestSubjectAssociation>
+	</nibrs:Report>
+</nibrs:Submission>
