@@ -528,23 +528,25 @@ public class ReturnAFormService {
 		for (PropertySegment propertySegment: administrativeSegment.getPropertySegments()){
 			List<PropertyType> propertyTypes = propertySegment.getPropertyTypes()
 					.stream()
-					.filter(propertyType -> propertyType.getValueOfProperty() > 0)
+					.filter(propertyType -> propertyType.getValueOfProperty()!= null &&  propertyType.getValueOfProperty()> 0)
 					.collect(Collectors.toList()); 
 			
 			if (propertyTypes.size() > 0){
 				for (PropertyType propertyType: propertyTypes){
 					String propertyDescription = appProperties.getPropertyCodeMapping().get(propertyType.getPropertyDescriptionType().getNibrsCode());
-					PropertyTypeValueRowName rowName = PropertyTypeValueRowName.valueOf(propertyDescription); 
-					switch (propertySegment.getTypePropertyLossEtcType().getNibrsCode()){
-					case "7":
-						returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseStolen(propertyType.getValueOfProperty());
-						returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseStolen(propertyType.getValueOfProperty());
-						break; 
-					case "5":
-						returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
-						returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
-						break; 
-					default:
+					if (StringUtils.isNotBlank(propertyDescription)) {
+						PropertyTypeValueRowName rowName = PropertyTypeValueRowName.valueOf(propertyDescription); 
+						switch (propertySegment.getTypePropertyLossEtcType().getNibrsCode()){
+						case "7":
+							returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseStolen(propertyType.getValueOfProperty());
+							returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseStolen(propertyType.getValueOfProperty());
+							break; 
+						case "5":
+							returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
+							returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
+							break; 
+						default:
+						}
 					}
 				}
 			}
@@ -636,7 +638,7 @@ public class ReturnAFormService {
 	}
 
 	private boolean countMotorVehicleTheftOffense(ReturnAForm returnAForm, OffenseSegment offense) {
-		
+		log.info("returnA form before adding moto theft: " + returnAForm);
 		List<PropertySegment> properties =  offense.getAdministrativeSegment().getPropertySegments()
 				.stream().filter(property->TypeOfPropertyLossCode._7.code.equals(property.getTypePropertyLossEtcType().getNibrsCode()))
 				.collect(Collectors.toList());
@@ -648,9 +650,11 @@ public class ReturnAFormService {
 					.map(propertyType -> propertyType.getPropertyDescriptionType().getNibrsCode())
 					.filter(code -> PropertyDescriptionCode.isMotorVehicleCode(code))
 					.collect(Collectors.toList()); 
-			
+			log.info("motorVehicleCodes:" + motorVehicleCodes);
 			int numberOfStolenMotorVehicles = Optional.ofNullable(property.getNumberOfStolenMotorVehicles()).orElse(0);
+			log.info("numberOfStolenMotorVehicles:" + numberOfStolenMotorVehicles);
 			
+			log.info("offense.getOffenseAttemptedCompleted():" + offense.getOffenseAttemptedCompleted());
 			if ("A".equals(offense.getOffenseAttemptedCompleted())){
 				returnAForm.getRows()[ReturnARowName.AUTOS_THEFT.ordinal()].increaseReportedOffenses(motorVehicleCodes.size());
 				offenseCountInThisProperty += motorVehicleCodes.size();
@@ -713,6 +717,7 @@ public class ReturnAFormService {
 		returnAForm.getPropertyStolenByClassifications()
 			[PropertyStolenByClassificationRowName.GRAND_TOTAL.ordinal()]
 				.increaseNumberOfOffenses(totalOffenseCount);
+		log.info("returnA form after adding moto theft: " + returnAForm);
 		return totalOffenseCount > 0; 
 	}
 
