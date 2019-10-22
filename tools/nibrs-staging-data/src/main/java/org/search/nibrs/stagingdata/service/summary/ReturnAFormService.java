@@ -87,7 +87,7 @@ public class ReturnAFormService {
 		partIOffensesMap.put("23H", 8); 
 		partIOffensesMap.put("240", 9); 
 		partIOffensesMap.put("23F", 10); 
-		
+				
 		larcenyOffenseByNatureMap = new HashMap<>();
 		larcenyOffenseByNatureMap.put("23B", PropertyStolenByClassificationRowName.LARCENY_PURSE_SNATCHING);  // Purse-snatching
 		larcenyOffenseByNatureMap.put("23A", PropertyStolenByClassificationRowName.LARCENY_POCKET_PICKING);  // Pocket-picking
@@ -357,17 +357,20 @@ public class ReturnAFormService {
 				
 				ReturnARowName returnARowName = null; 
 				int burglaryOffenseCount = 0; 
+				int offenseCount = 1; 
 				boolean hasMotorVehicleTheftOffense = false; 
 				double stolenPropertyValue = 0.0;
 				OffenseCode offenseCode = OffenseCode.forCode(offense.getUcrOffenseCodeType().getNibrsCode()); 
 				switch (offenseCode){
 				case _09A:
-					returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE; 
+					returnARowName = ReturnARowName.MURDER_NONNEGLIGENT_HOMICIDE;
+					offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
 					processStolenProperties(stolenProperties, administrativeSegment, PropertyStolenByClassificationRowName.MURDER_AND_NONNEGLIGENT_MANSLAUGHTER);	
 					sumPropertyValuesByType(returnAForm, administrativeSegment);
 					break; 
 				case _09B: 
 					returnARowName = ReturnARowName.MANSLAUGHTER_BY_NEGLIGENCE; 
+					offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
 					stolenPropertyValue = getStolenPropertyValue(administrativeSegment);
 					log.info("09B offense stolen property value: " + stolenPropertyValue); 
 					break; 
@@ -377,6 +380,7 @@ public class ReturnAFormService {
 				//	break; 
 				case _11A: 
 					returnARowName = getRowFor11AOffense(administrativeSegment, offense);
+					offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
 					if (returnARowName != null){
 						processStolenProperties(stolenProperties, administrativeSegment, PropertyStolenByClassificationRowName.RAPE);
 						sumPropertyValuesByType(returnAForm, administrativeSegment);
@@ -391,10 +395,12 @@ public class ReturnAFormService {
 					break; 
 				case _13A:
 					returnARowName = getReturnARowForAssault(offense);
+					offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
 					break;
 				case _13B: 
 				case _13C: 
 					returnARowName = getReturnARowFor13B13COffense(offense);
+					offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
 					break;
 				case _220: 
 					burglaryOffenseCount = countBurglaryOffense(returnAForm, offense);
@@ -419,7 +425,7 @@ public class ReturnAFormService {
 				}
 				
 				if (returnARowName != null){
-					returnAForm.getRows()[returnARowName.ordinal()].increaseReportedOffenses(1);
+					returnAForm.getRows()[returnARowName.ordinal()].increaseReportedOffenses(offenseCount);
 				}
 				
 				if ( burglaryOffenseCount > 0 || hasMotorVehicleTheftOffense){
@@ -433,6 +439,14 @@ public class ReturnAFormService {
 			
 		}
 		
+	}
+
+	private int getOffenseCountByConnectedVictim(AdministrativeSegment administrativeSegment, OffenseSegment offense) {
+		long offenseCount = administrativeSegment.getVictimSegments()
+				.stream()
+				.filter(victim->victim.getOffenseSegments().contains(offense))
+				.count();
+		return Long.valueOf(offenseCount).intValue();
 	}
 
 	private void processLarcenyStolenPropertyByNature(PropertyStolenByClassification[] stolenProperties, OffenseCode offenseCode, 
@@ -528,23 +542,25 @@ public class ReturnAFormService {
 		for (PropertySegment propertySegment: administrativeSegment.getPropertySegments()){
 			List<PropertyType> propertyTypes = propertySegment.getPropertyTypes()
 					.stream()
-					.filter(propertyType -> propertyType.getValueOfProperty() > 0)
+					.filter(propertyType -> propertyType.getValueOfProperty()!= null && propertyType.getValueOfProperty() > 0)
 					.collect(Collectors.toList()); 
 			
 			if (propertyTypes.size() > 0){
 				for (PropertyType propertyType: propertyTypes){
 					String propertyDescription = appProperties.getPropertyCodeMapping().get(propertyType.getPropertyDescriptionType().getNibrsCode());
-					PropertyTypeValueRowName rowName = PropertyTypeValueRowName.valueOf(propertyDescription); 
-					switch (propertySegment.getTypePropertyLossEtcType().getNibrsCode()){
-					case "7":
-						returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseStolen(propertyType.getValueOfProperty());
-						returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseStolen(propertyType.getValueOfProperty());
-						break; 
-					case "5":
-						returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
-						returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
-						break; 
-					default:
+					if (StringUtils.isNotBlank(propertyDescription)) {
+						PropertyTypeValueRowName rowName = PropertyTypeValueRowName.valueOf(propertyDescription); 
+						switch (propertySegment.getTypePropertyLossEtcType().getNibrsCode()){
+						case "7":
+							returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseStolen(propertyType.getValueOfProperty());
+							returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseStolen(propertyType.getValueOfProperty());
+							break; 
+						case "5":
+							returnAForm.getPropertyTypeValues()[rowName.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
+							returnAForm.getPropertyTypeValues()[PropertyTypeValueRowName.TOTAL.ordinal()].increaseRecovered(propertyType.getValueOfProperty());
+							break; 
+						default:
+						}
 					}
 				}
 			}
