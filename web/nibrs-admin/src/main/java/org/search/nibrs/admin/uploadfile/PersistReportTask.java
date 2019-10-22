@@ -24,7 +24,6 @@ import org.search.nibrs.model.AbstractReport;
 
 public class PersistReportTask{
 
-	private List<AbstractReport> reportsToProcess;
 	private Integer totalCount;
 	private Integer processedCount = 0;
 	private List<String> failedToProcess = new ArrayList<>(); 
@@ -37,7 +36,6 @@ public class PersistReportTask{
 
 	public PersistReportTask(List<AbstractReport> reportsToProcess) {
 		this();
-		this.reportsToProcess = reportsToProcess;
 		this.totalCount = reportsToProcess.size();
 	}
 	
@@ -73,10 +71,6 @@ public class PersistReportTask{
 
 	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
-	}
-
-	public List<AbstractReport> getReportsToProcess() {
-		return reportsToProcess;
 	}
 
 	public Integer getProgress() {

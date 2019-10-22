@@ -149,12 +149,12 @@ public class RestService{
 	}
 	
 	@Async
-	public void persistValidReportsAsync(PersistReportTask persistReportTask) {
+	public void persistValidReportsAsync(PersistReportTask persistReportTask, List<AbstractReport> validReports) {
 		log.info("Execute method asynchronously. "
 			      + Thread.currentThread().getName());
 		int count = 0; 
 		persistReportTask.setStarted(true);
-		for(AbstractReport abstractReport: persistReportTask.getReportsToProcess()){
+		for(AbstractReport abstractReport: validReports){
 			try{
 				this.persistAbstractReport(abstractReport);
 				persistReportTask.increaseProcessedCount();

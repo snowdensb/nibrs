@@ -273,7 +273,7 @@ public class UploadFileController {
 		logCountsOfReports(validReports);
 		
 		PersistReportTask persistReportTask = (PersistReportTask) model.get("persistReportTask");
-		restService.persistValidReportsAsync(persistReportTask);
+		restService.persistValidReportsAsync(persistReportTask, validReports);
 		
 		log.info("called the aync method"); 
 		return "Server processing the valid reports.";
