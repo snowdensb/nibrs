@@ -42,6 +42,7 @@ import org.search.nibrs.model.PropertySegment;
 import org.search.nibrs.model.VictimSegment;
 import org.search.nibrs.model.ZeroReport;
 import org.search.nibrs.model.codes.AutomaticWeaponIndicatorCode;
+import org.search.nibrs.xmlfile.NibrsXmlFileProperties;
 
 public class XmlIncidentBuilderGroupAIncidentReportTest {
 	
@@ -55,7 +56,7 @@ public class XmlIncidentBuilderGroupAIncidentReportTest {
 		InputStream inputStream = new FileInputStream(new File("src/test/resources/iep-sample/nibrs_AllFields_Sample.xml"));
 		incidentListener = new DefaultReportListener();
 		
-		XmlIncidentBuilder incidentBuilder = new XmlIncidentBuilder();
+		XmlIncidentBuilder incidentBuilder = new XmlIncidentBuilder( new NibrsXmlFileProperties());
 		incidentBuilder.addIncidentListener(incidentListener);
 		incidentBuilder.buildIncidents(inputStream, getClass().getName());
 		List<NIBRSError> errorList = incidentListener.getErrorList();

@@ -34,6 +34,7 @@ import org.search.nibrs.model.ArresteeSegment;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.GroupBArrestReport;
 import org.search.nibrs.model.ZeroReport;
+import org.search.nibrs.xmlfile.NibrsXmlFileProperties;
 
 public class XmlIncidentBuilderGroupBReportTest {
 	private DefaultReportListener incidentListener;
@@ -43,7 +44,7 @@ public class XmlIncidentBuilderGroupBReportTest {
 		InputStream inputStream = new FileInputStream(new File("src/test/resources/iep-sample/nibrs_GroupBArrest_Sample.xml"));
 		incidentListener = new DefaultReportListener();
 		
-		XmlIncidentBuilder incidentBuilder = new XmlIncidentBuilder();
+		XmlIncidentBuilder incidentBuilder = new XmlIncidentBuilder(new NibrsXmlFileProperties());
 		incidentBuilder.addIncidentListener(incidentListener);
 		incidentBuilder.buildIncidents(inputStream, getClass().getName());
 		List<NIBRSError> errorList = incidentListener.getErrorList();
