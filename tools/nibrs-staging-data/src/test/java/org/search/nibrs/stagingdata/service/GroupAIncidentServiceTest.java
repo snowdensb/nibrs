@@ -1109,7 +1109,7 @@ public class GroupAIncidentServiceTest {
 	}
 
 	private void testUpdateGroupAIncidentReport(GroupAIncidentReport groupAIncidentReport) {
-		groupAIncidentReport.setOri("agencyORI");
+		groupAIncidentReport.setOri("WA1234567");
 		groupAIncidentReport.setCargoTheftIndicator("Y");
 		
 		org.search.nibrs.model.OffenseSegment o = new org.search.nibrs.model.OffenseSegment();
@@ -1150,8 +1150,8 @@ public class GroupAIncidentServiceTest {
 		assertThat(updated.getMonthOfTape(), equalTo("05"));
 		assertThat(updated.getYearOfTape(), equalTo("2016"));
 		assertThat(updated.getCityIndicator(), equalTo("Y"));
-		assertThat(updated.getOri(), equalTo("agencyORI"));
-		assertThat(updated.getAgency().getAgencyId(), equalTo(1));
+		assertThat(updated.getOri(), equalTo("WA1234567"));
+		assertThat(updated.getAgency().getAgencyId(), equalTo(99998));
 		assertThat(updated.getIncidentNumber(), equalTo("54236732"));
 		assertThat(updated.getIncidentDate(), equalTo(LocalDate.of(2016, 5, 12)));
 		assertThat(updated.getIncidentDateType().getDateTypeId(), equalTo(2324));
