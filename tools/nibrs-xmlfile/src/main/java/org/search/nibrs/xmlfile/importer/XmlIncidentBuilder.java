@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -64,6 +63,7 @@ import org.search.nibrs.model.codes.RelationshipOfVictimToOffenderCode;
 import org.search.nibrs.model.codes.TypeOfPropertyLossCode;
 import org.search.nibrs.xml.XmlUtils;
 import org.search.nibrs.xmlfile.NibrsXmlFileProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -86,7 +86,6 @@ import org.xml.sax.SAXException;
 public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 	private static final Log log = LogFactory.getLog(XmlIncidentBuilder.class);
 	
-	@Resource
 	NibrsXmlFileProperties nibrsXmlFileProperties;
 
 	private DocumentBuilder documentBuilder; 
@@ -98,6 +97,12 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 		initDocumentBuilder();
 	}
 
+	@Autowired
+	public XmlIncidentBuilder(NibrsXmlFileProperties nibrsXmlFileProperties) throws ParserConfigurationException {
+		this();
+		this.nibrsXmlFileProperties = nibrsXmlFileProperties;
+	}
+	
 	private void initDocumentBuilder() throws ParserConfigurationException {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 

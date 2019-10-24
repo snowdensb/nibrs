@@ -16,7 +16,9 @@
 package org.search.nibrs.stagingdata.model.segment;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,6 +31,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -425,4 +428,12 @@ public class VictimSegment implements Serializable{
 	public void setNonNumericAge(String nonNumericAge) {
 		this.nonNumericAge = nonNumericAge;
 	}
+	
+	@Transient
+	public List<String> getConnectedOffenseCodes(){
+		return this.getOffenseSegments().stream()
+				.map(offenseSegment->offenseSegment.getUcrOffenseCodeType().getNibrsCode())
+				.collect(Collectors.toList());
+	}
+
 }

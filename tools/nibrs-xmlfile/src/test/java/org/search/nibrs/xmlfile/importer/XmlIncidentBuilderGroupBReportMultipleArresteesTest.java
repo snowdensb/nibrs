@@ -15,7 +15,7 @@
  */
 package org.search.nibrs.xmlfile.importer;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -34,6 +34,7 @@ import org.search.nibrs.model.ArresteeSegment;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.GroupBArrestReport;
 import org.search.nibrs.model.ZeroReport;
+import org.search.nibrs.xmlfile.NibrsXmlFileProperties;
 
 public class XmlIncidentBuilderGroupBReportMultipleArresteesTest {
 	private DefaultReportListener incidentListener;
@@ -43,7 +44,7 @@ public class XmlIncidentBuilderGroupBReportMultipleArresteesTest {
 		InputStream inputStream = new FileInputStream(new File("src/test/resources/iep-sample/nibrs_GroupBArrest_Sample_multipleArrestees.xml"));
 		incidentListener = new DefaultReportListener();
 		
-		XmlIncidentBuilder incidentBuilder = new XmlIncidentBuilder();
+		XmlIncidentBuilder incidentBuilder = new XmlIncidentBuilder(new NibrsXmlFileProperties());
 		incidentBuilder.addIncidentListener(incidentListener);
 		incidentBuilder.buildIncidents(inputStream, getClass().getName());
 		List<NIBRSError> errorList = incidentListener.getErrorList();
@@ -64,45 +65,45 @@ public class XmlIncidentBuilderGroupBReportMultipleArresteesTest {
 		assertNotNull(groupBArrestReport);
 		assertEquals("12345", groupBArrestReport.getIdentifier());
 		assertEquals("WVNDX0100", groupBArrestReport.getOri());
-		assertThat(groupBArrestReport.getCityIndicator(), is("GAA7"));
+		assertThat(groupBArrestReport.getCityIndicator(), equalTo("GAA7"));
 		assertEquals('7', groupBArrestReport.getAdminSegmentLevel());
 		assertEquals('A', groupBArrestReport.getReportActionType());
 		assertEquals(Integer.valueOf(2), groupBArrestReport.getMonthOfTape());
 		assertEquals(Integer.valueOf(2016), groupBArrestReport.getYearOfTape());
 		
-		assertThat(groupBArrestReport.getArresteeCount(), is(2));
+		assertThat(groupBArrestReport.getArresteeCount(), equalTo(2));
 		
 		ArresteeSegment arrestee = groupBArrestReport.getArrestees().get(0);
-		assertThat(arrestee.getAge().getAgeMin(), is(30));
-		assertThat(arrestee.getRace(), is("W"));
-		assertThat(arrestee.getEthnicity(), is("N"));
-		assertThat(arrestee.getResidentStatus(), is("R"));
-		assertThat(arrestee.getSex(), is("M"));
-		assertThat(arrestee.getDispositionOfArresteeUnder18(), is("H"));
-		assertThat(arrestee.getArresteeSequenceNumber().getValue(), is(1));
+		assertThat(arrestee.getAge().getAgeMin(), equalTo(30));
+		assertThat(arrestee.getRace(), equalTo("W"));
+		assertThat(arrestee.getEthnicity(), equalTo("N"));
+		assertThat(arrestee.getResidentStatus(), equalTo("R"));
+		assertThat(arrestee.getSex(), equalTo("M"));
+		assertThat(arrestee.getDispositionOfArresteeUnder18(), equalTo("H"));
+		assertThat(arrestee.getArresteeSequenceNumber().getValue(), equalTo(1));
 		
-		assertThat(arrestee.getArrestDate().getValue(), is(LocalDate.of(2016, 2, 28)));
-		assertThat(arrestee.getArrestTransactionNumber(), is("12345"));
-		assertThat(arrestee.getTypeOfArrest(), is("O"));
-		assertThat(arrestee.getUcrArrestOffenseCode(), is("64A"));
+		assertThat(arrestee.getArrestDate().getValue(), equalTo(LocalDate.of(2016, 2, 28)));
+		assertThat(arrestee.getArrestTransactionNumber(), equalTo("12345"));
+		assertThat(arrestee.getTypeOfArrest(), equalTo("O"));
+		assertThat(arrestee.getUcrArrestOffenseCode(), equalTo("64A"));
 		
-		assertThat(arrestee.getArresteeArmedWith(0), is("12"));
+		assertThat(arrestee.getArresteeArmedWith(0), equalTo("12"));
 		
 		ArresteeSegment arrestee1 = groupBArrestReport.getArrestees().get(1);
-		assertThat(arrestee1.getAge().getAgeMin(), is(30));
-		assertThat(arrestee1.getRace(), is("W"));
-		assertThat(arrestee1.getEthnicity(), is("N"));
-		assertThat(arrestee1.getResidentStatus(), is("R"));
-		assertThat(arrestee1.getSex(), is("M"));
-		assertThat(arrestee1.getDispositionOfArresteeUnder18(), is("H"));
-		assertThat(arrestee1.getArresteeSequenceNumber().getValue(), is(2));
+		assertThat(arrestee1.getAge().getAgeMin(), equalTo(30));
+		assertThat(arrestee1.getRace(), equalTo("W"));
+		assertThat(arrestee1.getEthnicity(), equalTo("N"));
+		assertThat(arrestee1.getResidentStatus(), equalTo("R"));
+		assertThat(arrestee1.getSex(), equalTo("M"));
+		assertThat(arrestee1.getDispositionOfArresteeUnder18(), equalTo("H"));
+		assertThat(arrestee1.getArresteeSequenceNumber().getValue(), equalTo(2));
 		
-		assertThat(arrestee1.getArrestDate().getValue(), is(LocalDate.of(2016, 2, 28)));
-		assertThat(arrestee1.getArrestTransactionNumber(), is("12345"));
-		assertThat(arrestee1.getTypeOfArrest(), is("O"));
-		assertThat(arrestee1.getUcrArrestOffenseCode(), is("64A"));
+		assertThat(arrestee1.getArrestDate().getValue(), equalTo(LocalDate.of(2016, 2, 28)));
+		assertThat(arrestee1.getArrestTransactionNumber(), equalTo("12345"));
+		assertThat(arrestee1.getTypeOfArrest(), equalTo("O"));
+		assertThat(arrestee1.getUcrArrestOffenseCode(), equalTo("64A"));
 		
-		assertThat(arrestee1.getArresteeArmedWith(0), is("12"));
+		assertThat(arrestee1.getArresteeArmedWith(0), equalTo("12"));
 	}
 
 }

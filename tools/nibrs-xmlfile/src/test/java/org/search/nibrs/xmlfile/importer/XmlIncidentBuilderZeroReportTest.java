@@ -30,6 +30,7 @@ import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.importer.DefaultReportListener;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.ZeroReport;
+import org.search.nibrs.xmlfile.NibrsXmlFileProperties;
 
 public class XmlIncidentBuilderZeroReportTest {
 	private DefaultReportListener incidentListener;
@@ -39,7 +40,7 @@ public class XmlIncidentBuilderZeroReportTest {
 		InputStream inputStream = new FileInputStream(new File("src/test/resources/iep-sample/nibrs_ZeroReport_Sample.xml"));
 		incidentListener = new DefaultReportListener();
 		
-		XmlIncidentBuilder incidentBuilder = new XmlIncidentBuilder();
+		XmlIncidentBuilder incidentBuilder = new XmlIncidentBuilder(new NibrsXmlFileProperties());
 		incidentBuilder.addIncidentListener(incidentListener);
 		incidentBuilder.buildIncidents(inputStream, getClass().getName());
 		List<NIBRSError> errorList = incidentListener.getErrorList();
