@@ -244,6 +244,34 @@ public class VictimSegmentRulesFactory {
 		};
 	}
 	
+	Rule<VictimSegment> getRule085_31() {
+		return new Rule<VictimSegment>() {
+			@Override
+			public NIBRSError apply(VictimSegment subject) {
+				NIBRSError e = null;
+				GroupAIncidentReport parent = (GroupAIncidentReport) subject.getParentReport();
+				
+				if (parent.getOffenderCount() >= 3 
+						&& subject.isPerson()
+						&& (subject.getUcrOffenseCodeList().contains(OffenseCode._120.code)||
+							OffenseCode.containsCrimeAgainstPersonCode(subject.getUcrOffenseCodeList()))
+						){
+					long relatedOffenderCount = subject.getOffenderNumberRelatedList().stream()
+							.filter(item->!(item.isInvalid() || item.isMissing() ||item.getValue() == null)).count();
+					if (relatedOffenderCount < 2){
+						e = subject.getErrorTemplate();
+						e.setNIBRSErrorCode(NIBRSErrorCode._085);
+						e.setDataElementIdentifier("34");
+						e.setCrossSegment(true);
+						e.setWithinSegmentIdentifier(null); 
+					}
+				}
+					
+				return e;
+			}
+		};
+	}
+	
 	Rule<VictimSegment> getRule085() {
 		return new Rule<VictimSegment>() {
 			@Override
@@ -271,6 +299,7 @@ public class VictimSegmentRulesFactory {
 			}
 		};
 	}
+			
 			
 	Rule<VictimSegment> getRule401ForSequenceNumber() {
 		return new Rule<VictimSegment>() {
@@ -581,6 +610,47 @@ public class VictimSegmentRulesFactory {
 							
 					if ((isMandatory && (StringUtils.isBlank(relationship) || !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship)))
 						||(!isMandatory && (StringUtils.isNotBlank(relationship)) && !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship))) {
+						invalidRelationships.add(StringUtils.trimToEmpty(relationship));
+					}
+				}
+				
+				if ( !invalidRelationships.isEmpty() ){
+					e = victimSegment.getErrorTemplate();
+					e.setNIBRSErrorCode(NIBRSErrorCode._404);
+					e.setDataElementIdentifier("35");
+					e.setValue(invalidRelationships);
+				}
+
+				return e;
+				
+			}
+
+			private boolean isEmpty(ParsedObject<Integer> offenderNumber) {
+				return offenderNumber.getValue() == null || offenderNumber.getValue() == 0;
+			}
+		};
+	}
+	
+	Rule<VictimSegment> getRule404ForRelationshipOfVictimToOffender_31() {
+		return new Rule<VictimSegment>() {
+			@Override
+			public NIBRSError apply(VictimSegment victimSegment) {
+				
+				NIBRSError e = null;
+				
+				List<ParsedObject<Integer>> relatedOffenderNumbers = victimSegment.getOffenderNumberRelatedList();
+				List<String> relationships = victimSegment.getVictimOffenderRelationshipList();
+				List<String> invalidRelationships = new ArrayList<>();
+				
+				for (int i= 0; i<relatedOffenderNumbers.size(); i++){
+					ParsedObject<Integer> offenderNumber = relatedOffenderNumbers.get(i);
+					String relationship = relationships.get(i);
+					boolean isMandatory = !isEmpty(offenderNumber) &&
+							(OffenseCode.containsCrimeAgainstPersonCode(victimSegment.getUcrOffenseCodeList())
+									|| OffenseCode.containsCrimeAgainstPropertyCode(victimSegment.getUcrOffenseCodeList())); 
+							
+					if ((isMandatory && (StringUtils.isBlank(relationship) || (!RelationshipOfVictimToOffenderCode.codeSet().contains(relationship) && !"HR".equalsIgnoreCase(relationship))))
+						||(!isMandatory && (StringUtils.isNotBlank(relationship)) && !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship) && !"HR".equalsIgnoreCase(relationship))) {
 						invalidRelationships.add(StringUtils.trimToEmpty(relationship));
 					}
 				}
