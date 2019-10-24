@@ -15,7 +15,9 @@
  */
 package org.search.nibrs.stagingdata.model.segment;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -44,6 +46,7 @@ import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.TypeInjuryType;
 import org.search.nibrs.stagingdata.model.TypeOfVictimType;
 import org.search.nibrs.stagingdata.model.VictimOffenderAssociation;
+import org.springframework.data.annotation.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -419,5 +422,12 @@ public class VictimSegment {
 	}
 	public void setNonNumericAge(String nonNumericAge) {
 		this.nonNumericAge = nonNumericAge;
+	}
+	
+	@Transient
+	public List<String> getConnectedOffenseCodes(){
+		return this.getOffenseSegments().stream()
+				.map(offenseSegment->offenseSegment.getUcrOffenseCodeType().getNibrsCode())
+				.collect(Collectors.toList());
 	}
 }
