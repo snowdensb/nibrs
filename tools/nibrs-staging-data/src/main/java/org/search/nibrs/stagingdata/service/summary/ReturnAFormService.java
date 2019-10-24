@@ -706,7 +706,7 @@ public class ReturnAFormService {
 				
 				int numberOfStolenMotorVehicles = Optional.ofNullable(property.getNumberOfStolenMotorVehicles()).orElse(0);
 				
-				log.info("offense.getOffenseAttemptedCompleted():" + offense.getOffenseAttemptedCompleted()); 
+//				log.info("offense.getOffenseAttemptedCompleted():" + offense.getOffenseAttemptedCompleted()); 
 				if ( numberOfStolenMotorVehicles > 0){
 					offenseCountInThisProperty += numberOfStolenMotorVehicles;
 					if (motorVehicleCodes.contains(PropertyDescriptionCode._03.code)){
@@ -776,6 +776,8 @@ public class ReturnAFormService {
 //		listed in Data Element 10 as the number of burglaries to be counted.
 		if (returnARowName != null){
 			int numberOfPremisesEntered = Optional.ofNullable(offense.getNumberOfPremisesEntered()).orElse(0);
+//			log.info("numberOfPremisesEntered:" + numberOfPremisesEntered);
+//			log.info("LocationTypeCode._19.code.equals(offense.getLocationType().getNibrsCode()):" + LocationTypeCode._19.code.equals(offense.getLocationType().getNibrsCode()));
 			if ( numberOfPremisesEntered > 0 
 					&& LocationTypeCode._19.code.equals(offense.getLocationType().getNibrsCode())){
 				burglaryOffenseCount = offense.getNumberOfPremisesEntered();
@@ -935,11 +937,16 @@ public class ReturnAFormService {
 		OffenseSegment reportingOffense = null; 
 		Integer reportingOffenseValue = 99; 
 		
+//		List<String> offenseCodes = administrativeSegment.getOffenseSegments()
+//				.stream().map(offense->offense.getUcrOffenseCodeType().getNibrsCode())
+//				.collect(Collectors.toList());
 		for (OffenseSegment offense: administrativeSegment.getOffenseSegments()){
-			if (offense.getUcrOffenseCodeType().getNibrsCode().equals("240")) {
-				log.info("240 Offense");
-				log.info("offense.getOffenseAttemptedCompleted():" + offense.getOffenseAttemptedCompleted());
-			}
+//			if (offense.getUcrOffenseCodeType().getNibrsCode().startsWith("23")
+//					&& CollectionUtils.containsAny(offenseCodes, Arrays.asList("09A", "09B", "11A", "11B", "11C", "120", "13A", "13B", "13C", "220" ))) {
+//				log.info("Larcency Offense Not Added");
+//				log.info("OffenseCodes: " + offenseCodes);
+//				log.info("offense.getOffenseAttemptedCompleted():" + offense.getOffenseAttemptedCompleted());
+//			}
 			if (!Arrays.asList("A", "C").contains(offense.getOffenseAttemptedCompleted())){
 				continue;
 			}
@@ -951,9 +958,26 @@ public class ReturnAFormService {
 			Integer offenseValue = Optional.ofNullable(partIOffensesMap.get(offense.getUcrOffenseCodeType().getNibrsCode())).orElse(99); 
 			
 			if (offenseValue < reportingOffenseValue){
+//				if (reportingOffense!= null && reportingOffense.getUcrOffenseCodeType().getNibrsCode().equals("220")) {
+//					log.info("220 added against the rule");
+//					int numberOfPremisesEntered = Optional.ofNullable(reportingOffense.getNumberOfPremisesEntered()).orElse(0);
+//					log.info("numberOfPremisesEntered: " + numberOfPremisesEntered);
+//					log.info("LocationTypeCode._19.code.equals(offense.getLocationType().getNibrsCode()): " + LocationTypeCode._19.code.equals(reportingOffense.getLocationType().getNibrsCode()));
+//					offenses.add(reportingOffense);
+//					log.info("reportingOffense: " + offense.getUcrOffenseCodeType().getNibrsCode());
+//				}
 				reportingOffense = offense; 
 				reportingOffenseValue = offenseValue; 
 			}
+//			else if (offense.getUcrOffenseCodeType().getNibrsCode().equals("220")) {
+//				offenses.add(offense);
+////				log.info("administrativeSegmentID: " + offense.getAdministrativeSegment().getAdministrativeSegmentId());
+//				int numberOfPremisesEntered = Optional.ofNullable(offense.getNumberOfPremisesEntered()).orElse(0);
+//				log.info("220 added against the rule");
+//				log.info("numberOfPremisesEntered: " + numberOfPremisesEntered);
+//				log.info("LocationTypeCode._19.code.equals(offense.getLocationType().getNibrsCode()): " + LocationTypeCode._19.code.equals(offense.getLocationType().getNibrsCode()));
+//				log.info("reportingOffense: " + reportingOffense.getUcrOffenseCodeType().getNibrsCode());
+//			}
 		}
 		
 		if (reportingOffense != null){
