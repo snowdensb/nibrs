@@ -141,5 +141,19 @@ public class AdministrativeSegmentService {
 		return arresteeSegments; 
 		
 	}
+
+	public List<AdministrativeSegment> findHumanTraffickingIncidentByOriAndClearanceDate(String ori, Integer year,
+			Integer month) {
+		if ("StateWide".equalsIgnoreCase(ori)){
+			ori = null;
+		}
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"));
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		return administrativeSegments; 
+	}
 	
 }

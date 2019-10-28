@@ -18,8 +18,10 @@ package org.search.nibrs.stagingdata.controller;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
+import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
 import org.search.nibrs.stagingdata.service.summary.ArsonFormService;
 import org.search.nibrs.stagingdata.service.summary.AsrFormService;
+import org.search.nibrs.stagingdata.service.summary.HumanTraffickingFormService;
 import org.search.nibrs.stagingdata.service.summary.ReturnAFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +40,9 @@ public class SummaryFormController {
 	@Autowired
 	private ArsonFormService arsonFormService;
 	
+	@Autowired
+	private HumanTraffickingFormService humanTraffickingFormService;
+	
 	@RequestMapping("/returnAForm/{ori}/{year}/{month}")
 	public ReturnAForm getReturnAForm(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
 		return returnAFormService.createReturnASummaryReport(ori, year, month);
@@ -46,6 +51,10 @@ public class SummaryFormController {
 	@RequestMapping("/arsonReport/{ori}/{year}/{month}")
 	public ArsonReport getArsonReport(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
 		return arsonFormService.createArsonSummaryReports(ori, year, month);
+	}
+	@RequestMapping("/humanTraffickingReport/{ori}/{year}/{month}")
+	public HumanTraffickingForm getHumanTraffickingReport(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
+		return humanTraffickingFormService.createHumanTraffickingReport(ori, year, month);
 	}
 	
 	@RequestMapping("/asrReports/{ori}/{arrestYear}/{arrestMonth}")

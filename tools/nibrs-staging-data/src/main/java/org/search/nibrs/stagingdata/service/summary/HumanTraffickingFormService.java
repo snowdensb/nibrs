@@ -82,7 +82,7 @@ public class HumanTraffickingFormService {
 	}
 
 	private void processOffenseClearances(String ori, Integer year, Integer month, HumanTraffickingForm humanTraffickingForm) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findHumanTraffickingIncidentByOriAndIncidentDate(ori, year, month);
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findHumanTraffickingIncidentByOriAndClearanceDate(ori, year, month);
 		
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue;
