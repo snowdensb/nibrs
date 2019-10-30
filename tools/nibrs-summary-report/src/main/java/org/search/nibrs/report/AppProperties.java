@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("app")
 public class AppProperties {
 
-	private String stagingDataRestServiceBaseUrl = "http://localhost:8080";
+	private String stagingDataRestServiceBaseUrl = "http://localhost:9080";
 	private String returnAFormOutputPath = ".";
 	
 	public String getStagingDataRestServiceBaseUrl() {

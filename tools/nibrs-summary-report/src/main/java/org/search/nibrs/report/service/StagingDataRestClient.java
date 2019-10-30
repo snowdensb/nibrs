@@ -25,6 +25,7 @@ import org.apache.tomcat.util.buf.StringUtils;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
+import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
 import org.search.nibrs.report.AppProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -62,7 +63,7 @@ public class StagingDataRestClient {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"asrReports", ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
-		log.info("Getting the ReturnAForm object from the url " + url);
+		log.info("Getting the ASR Report object from the url " + url);
 		
 		AsrReports asrAdult = restTemplate.getForObject( url, AsrReports.class);
 		log.info("asrAdult: " + asrAdult);
@@ -73,11 +74,22 @@ public class StagingDataRestClient {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"arsonReport", ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
-		log.info("Getting the ReturnAForm object from the url " + url);
+		log.info("Getting the Arson Report object from the url " + url);
 		
 		ArsonReport arsonReport = restTemplate.getForObject( url, ArsonReport.class);
 		log.info("arsonReport: " + arsonReport);
 		return arsonReport;
+	}
+	
+	public HumanTraffickingForm getHumanTraffickingForm(String ori, String year, String month) {
+		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
+				"humanTraffickingReport", ori, year, month); 
+		String url = StringUtils.join(urlParts, '/');
+		log.info("Getting the humanTraffickingForm object from the url " + url);
+		
+		HumanTraffickingForm humanTraffickingForm = restTemplate.getForObject( url, HumanTraffickingForm.class);
+		log.info("humanTraffickingForm: " + humanTraffickingForm);
+		return humanTraffickingForm;
 	}
 	
 	private List<HttpMessageConverter<?>> getMessageConverters() {
