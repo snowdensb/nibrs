@@ -16,6 +16,7 @@
 package org.search.nibrs.stagingdata.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -182,6 +183,21 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
+	public List<AdministrativeSegment> findHumanTraffickingIncidentByOriAndIncidentDate(String ori, Integer year, Integer month){
+		
+		if ("StateWide".equalsIgnoreCase(ori)){
+			ori = null;
+		}
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"));
+//		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"));
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		return administrativeSegments; 
+	}
+	
 	public List<AdministrativeSegment> findArsonIncidentByOriAndAClearanceDate(String ori, Integer year, Integer month){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
@@ -215,6 +231,20 @@ public class AdministrativeSegmentService {
 				.collect(Collectors.toList());
 		return arresteeSegments; 
 		
+	}
+
+	public List<AdministrativeSegment> findHumanTraffickingIncidentByOriAndClearanceDate(String ori, Integer year,
+			Integer month) {
+		if ("StateWide".equalsIgnoreCase(ori)){
+			ori = null;
+		}
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"));
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		return administrativeSegments; 
 	}
 	
 }
