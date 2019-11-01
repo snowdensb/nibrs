@@ -6,21 +6,17 @@ library(purrr)
 nibrsxml <- read_xml("data/nibrs1.xml")
 nibrsns <- xml_ns(nibrsxml)
 
-offenseNodes <- nibrsxml %>% xml_find_first('//j:Offense')
 
-#######
-nibrsFiles <- list.files('data/', full.names=TRUE)
+nibrsOffenseDF <- map_df(nibrsFiles, createNIBRSOffenseDF)
+nibrsAdministrativeDF <- map_df(nibrsFiles, createNIBRSAdministrativeDF)
 
-nibrsReports <- map_df(nibrsFiles, function(f) {
+#FUNCTIONS
+
+createNIBRSOffenseDF <- function(f) {
   
   x <- read_xml(f)
+  offenseNodes <- nibrsxml %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Offense')
   
-#  statusDate <- ymd(gsub(x=basename(f), pattern='CJIS_(.+)\\.xml', replacement='\\1'))
-  
-  ##create offense data frame
-  ## can't just do //j:Offense since it'll pick up the assoc elements
-  offenseNodes <- nibrsxml %>% xml_find_all('//j:Offense[../nc:Incident/nc:ActivityIdentification/nc:IdentificationID]')
- 
   map2_df(offenseNodes, seq(offenseNodes), function(offenseNode, withinFileIndex) {
     
     tibble(
@@ -28,14 +24,33 @@ nibrsReports <- map_df(nibrsFiles, function(f) {
       OffenseUCRCode=offenseNode %>% xml_find_first('moibrs:OffenseUCRCode') %>% xml_text(),
       CriminalActivityCode=offenseNode %>% xml_find_first('nibrs:CriminalActivityCategoryCode') %>% xml_text(),
       BiasMotivation=offenseNode %>% xml_find_first('j:OffenseFactorBiasMotivationCode') %>% xml_text(),
+      StructuresEnteredQuantity=offenseNode %>% xml_find_first('j:OffenseStructuresEnteredQuantity') %>% xml_text(),
       OffenseFactorCode=offenseNode %>% xml_find_first('j:OffenseFactor/j:OffenseFactorCode') %>% xml_text(),
+      OffenseEntryPoint=offenseNode %>% xml_find_first('j:OffenseEntryPoint/j:PassagePointMethodCode') %>% xml_text(),
       OffenseForceCategoryCode=offenseNode %>% xml_find_first('j:OffenseForce/j:ForceCategoryCode') %>% xml_text(),
       OffenseAttemptedIndiator=offenseNode %>% xml_find_first('j:OffenseAttemptedIndicator') %>% xml_text(),
-      WithinFileIndex=withinFileIndex
+      #WithinFileIndex=withinFileIndex
     )
     
   })
   
-})
+}
 
-saveRDS(probationCases, 'probationCases.rds')
+createNIBRSAdministrativeDF <- function(f) {
+  
+  x <- read_xml(f)
+  incidentNodes <- nibrsxml %>% xml_find_all('/nibrs:Submission/nibrs:Report')
+  
+  map2_df(incidentNodes, seq(incidentNodes), function(incidentNode, withinFileIndex) {
+    
+    tibble(
+      IncidentID=incidentNode %>% xml_find_first('nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
+      ReportCategory=incidentNode %>% xml_find_first('nibrs:ReportHeader/nibrs:NIBRSReportCategoryCode') %>% xml_text(),
+      Action=incidentNode %>% xml_find_first('nibrs:ReportHeader/nibrs:ReportActionCategoryCode') %>% xml_text(),
+      ReportDate=incidentNode %>% xml_find_first('nibrs:ReportHeader/nibrs:ReportDate/nc:YearMonthDate') %>% xml_text(),
+      ReportingORI=incidentNode %>% xml_find_first('nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification') %>% xml_text()
+    )
+    
+  })
+  
+}
