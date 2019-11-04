@@ -77,7 +77,7 @@ public class HumanTraffickingFormService {
 		
 		fillTheGrandTotalRow(humanTraffickingForm);
 
-		log.info("returnAForm: " + humanTraffickingForm);
+		log.info("humanTraffickingForm: " + humanTraffickingForm);
 		return humanTraffickingForm;
 	}
 
