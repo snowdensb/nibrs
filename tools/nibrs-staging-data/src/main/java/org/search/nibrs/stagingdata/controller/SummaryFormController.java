@@ -19,10 +19,12 @@ import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
+import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.stagingdata.service.summary.ArsonFormService;
 import org.search.nibrs.stagingdata.service.summary.AsrFormService;
 import org.search.nibrs.stagingdata.service.summary.HumanTraffickingFormService;
 import org.search.nibrs.stagingdata.service.summary.ReturnAFormService;
+import org.search.nibrs.stagingdata.service.summary.SupplementaryHomicideReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +45,9 @@ public class SummaryFormController {
 	@Autowired
 	private HumanTraffickingFormService humanTraffickingFormService;
 	
+	@Autowired
+	private SupplementaryHomicideReportService supplementaryHomicideReportService;
+	
 	@RequestMapping("/returnAForm/{ori}/{year}/{month}")
 	public ReturnAForm getReturnAForm(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
 		return returnAFormService.createReturnASummaryReport(ori, year, month);
@@ -60,6 +65,11 @@ public class SummaryFormController {
 	@RequestMapping("/asrReports/{ori}/{arrestYear}/{arrestMonth}")
 	public AsrReports getAsrReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
 		return asrFormService.createAsrSummaryReports(ori, arrestYear, arrestMonth);
+	}
+	
+	@RequestMapping("/shrReports/{ori}/{arrestYear}/{arrestMonth}")
+	public SupplementaryHomicideReport getSupplementaryHomicideReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
+		return supplementaryHomicideReportService.createSupplementaryHomicideReport(ori, arrestYear, arrestMonth);
 	}
 	
 }

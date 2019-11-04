@@ -36,6 +36,7 @@ import org.search.nibrs.stagingdata.model.RaceOfPersonType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.VictimOffenderAssociation;
+import org.springframework.data.annotation.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -181,4 +182,17 @@ public class OffenderSegment {
 		this.nonNumericAge = nonNumericAge;
 	}
 
+	@Transient
+	public String getAgeString() {
+		String ageString = StringUtils.EMPTY;
+		
+		Integer averageAge = getAverageAge();
+		if (averageAge != null) {
+			ageString = StringUtils.leftPad(averageAge.toString(), 2, '0'); 
+		}
+		else if (nonNumericAge != null) {
+			ageString = nonNumericAge;
+		}
+		return ageString;
+	}
 }
