@@ -3,9 +3,12 @@ library(xml2)
 library(purrr)
 
 nibrsFiles <- list.files('data/', full.names=TRUE)
+
+
 nibrsDF <- map_df(nibrsFiles, function(f) {
   x <- read_xml(f)
   
+  #incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report[normalize-space(nibrs:ReportHeader/nibrs:NIBRSReportCategoryCode)="GROUP A INCIDENT REPORT"]')
   incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   i <- map2_df(incidentNodes, seq(incidentNodes), function(incidentNode, withinFileIndex) {
     
@@ -27,21 +30,20 @@ nibrsDF <- map_df(nibrsFiles, function(f) {
   
   offenseNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Offense')
   o <- map2_df(offenseNodes, seq(offenseNodes), function(offenseNode, withinFileIndex) {
-    
     tibble(
       IncidentNumber=offenseNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
-      UCROffenseCode=offenseNode %>% xml_find_first('moibrs:OffenseUCRCode') %>% xml_text(),
+      UCROffenseCode=offenseNode %>% xml_find_first('nibrs:OffenseUCRCode') %>% xml_text(),
       OffenseAttemptedIndicator=offenseNode %>% xml_find_first('j:OffenseAttemptedIndicator') %>% xml_text(),
-      #Offender Suspect of Using?
+      OffenderSuspectedOfUsingCode=offenseNode %>% xml_find_first('j:OffenseFactor/j:OffenseFactorCode') %>% xml_text(),
       BiasMotivation=offenseNode %>% xml_find_first('j:OffenseFactorBiasMotivationCode') %>% xml_text(),
-      #LocationType?
+      #consider whether the LocationType XPath is robust enough
+      LocationType=offenseNode %>% xml_find_first('../nc:Location/nibrs:LocationCategoryCode') %>% xml_text(),
       NumberOfPremisesEntered=offenseNode %>% xml_find_first('j:OffenseStructuresEnteredQuantity') %>% xml_text(),
       MethodOfEntry=offenseNode %>% xml_find_first('j:OffenseEntryPoint/j:PassagePointMethodCode') %>% xml_text(),
       TypeCriminalActivityGangInformation=offenseNode %>% xml_find_first('nibrs:CriminalActivityCategoryCode') %>% xml_text(),
-      OffenseFactorCode=offenseNode %>% xml_find_first('j:OffenseFactor/j:OffenseFactorCode') %>% xml_text(),
-      OffenseForceCategoryCode=offenseNode %>% xml_find_first('j:OffenseForce/j:ForceCategoryCode') %>% xml_text()
+      TypeOfWeaponForceInvolved=offenseNode %>% xml_find_first('j:OffenseForce/j:ForceCategoryCode') %>% xml_text()
+      
     )
-    
   })
   
   #join offenses to incident
