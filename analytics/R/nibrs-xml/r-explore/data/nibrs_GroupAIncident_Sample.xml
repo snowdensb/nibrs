@@ -95,10 +95,33 @@
 			<!-- Element 7, Attempted/Completed -->
 			<j:OffenseAttemptedIndicator>false</j:OffenseAttemptedIndicator>
 		</j:Offense>
+		<j:Offense s:id="Offense2">
+			<!-- Element 6, Offense Code -->
+			<nibrs:OffenseUCRCode>510</nibrs:OffenseUCRCode>
+			<!-- Element 12, Type Criminal Activity/Gang Information -->
+			<nibrs:CriminalActivityCategoryCode>N</nibrs:CriminalActivityCategoryCode>
+			<!-- Element 8A, Bias Motivation -->
+			<j:OffenseFactorBiasMotivationCode>15</j:OffenseFactorBiasMotivationCode>
+			<!-- Element 10, Number Of Premises Entered -->
+			<j:OffenseStructuresEnteredQuantity>0</j:OffenseStructuresEnteredQuantity>
+			<!-- Element 8, Offender(s) Suspected Of Using -->
+			<j:OffenseFactor>
+				<j:OffenseFactorCode>N</j:OffenseFactorCode>
+			</j:OffenseFactor>
+			<!-- Element 13, Type Weapon/Force Involved -->
+			<j:OffenseForce>
+				<j:ForceCategoryCode>11A</j:ForceCategoryCode>
+			</j:OffenseForce>
+			<!-- Element 7, Attempted/Completed -->
+			<j:OffenseAttemptedIndicator>true</j:OffenseAttemptedIndicator>
+		</j:Offense>
 		<!-- Begin Property -->
 		<!-- Element 9, Location Type -->
 		<nc:Location s:id="Location1">
 			<nibrs:LocationCategoryCode>16</nibrs:LocationCategoryCode>
+		</nc:Location>
+		<nc:Location s:id="Location2">
+			<nibrs:LocationCategoryCode>17</nibrs:LocationCategoryCode>
 		</nc:Location>
 	    <nc:Item>
 	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
@@ -302,6 +325,10 @@
 			<j:Offense s:ref="Offense1"/>
 			<nc:Location s:ref="Location1"/>
 		</j:OffenseLocationAssociation>
+		<j:OffenseLocationAssociation>
+			<j:Offense s:ref="Offense2"/>
+			<nc:Location s:ref="Location2"/>
+		</j:OffenseLocationAssociation>
 		<!-- Element 24, Victim Connected to UCR Offense Code -->
 		<j:OffenseVictimAssociation>
 			<j:Offense s:ref="Offense1"/>
@@ -309,7 +336,7 @@
 		</j:OffenseVictimAssociation>
 		<!-- Element 24, Victim Connected to UCR Offense Code -->
 		<j:OffenseVictimAssociation>
-			<j:Offense s:ref="Offense1"/>
+			<j:Offense s:ref="Offense2"/>
 			<j:Victim s:ref="Victim2"/>
 		</j:OffenseVictimAssociation>
 		<!--Element 34, Offender Number(s) to be related -->

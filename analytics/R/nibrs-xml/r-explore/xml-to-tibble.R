@@ -1,6 +1,7 @@
 library(tidyverse)
 library(xml2)
 library(purrr)
+library(openssl)
 
 nibrsFiles <- list.files('data/', full.names=TRUE)
 
@@ -10,7 +11,7 @@ nibrsDF <- map_df(nibrsFiles, function(f) {
   
   #incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report[normalize-space(nibrs:ReportHeader/nibrs:NIBRSReportCategoryCode)="GROUP A INCIDENT REPORT"]')
   incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
-  i <- map2_df(incidentNodes, seq(incidentNodes), function(incidentNode, withinFileIndex) {
+  incident <- map2_df(incidentNodes, seq(incidentNodes), function(incidentNode, withinFileIndex) {
     
     tibble(
       IncidentNumber=incidentNode %>% xml_find_first('nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
@@ -29,15 +30,14 @@ nibrsDF <- map_df(nibrsFiles, function(f) {
   })
   
   offenseNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Offense')
-  o <- map2_df(offenseNodes, seq(offenseNodes), function(offenseNode, withinFileIndex) {
+  offense <- map2_df(offenseNodes, seq(offenseNodes), function(offenseNode, withinFileIndex) {
     tibble(
+      OffenseID=offenseNode %>% xml_find_first('@s:id') %>% xml_text() %>% paste(f),
       IncidentNumber=offenseNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
       UCROffenseCode=offenseNode %>% xml_find_first('nibrs:OffenseUCRCode') %>% xml_text(),
       OffenseAttemptedIndicator=offenseNode %>% xml_find_first('j:OffenseAttemptedIndicator') %>% xml_text(),
       OffenderSuspectedOfUsingCode=offenseNode %>% xml_find_first('j:OffenseFactor/j:OffenseFactorCode') %>% xml_text(),
       BiasMotivation=offenseNode %>% xml_find_first('j:OffenseFactorBiasMotivationCode') %>% xml_text(),
-      #consider whether the LocationType XPath is robust enough
-      LocationType=offenseNode %>% xml_find_first('../nc:Location/nibrs:LocationCategoryCode') %>% xml_text(),
       NumberOfPremisesEntered=offenseNode %>% xml_find_first('j:OffenseStructuresEnteredQuantity') %>% xml_text(),
       MethodOfEntry=offenseNode %>% xml_find_first('j:OffenseEntryPoint/j:PassagePointMethodCode') %>% xml_text(),
       TypeCriminalActivityGangInformation=offenseNode %>% xml_find_first('nibrs:CriminalActivityCategoryCode') %>% xml_text(),
@@ -46,7 +46,35 @@ nibrsDF <- map_df(nibrsFiles, function(f) {
     )
   })
   
-  #join offenses to incident
-  i %>% 
-    left_join(o, by="IncidentNumber")
+  locationNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/nc:Location')
+  location <- map2_df(locationNodes, seq(locationNodes), function(locationNode, withinFileIndex) {
+    tibble(
+      LocationID=locationNode %>% xml_find_first('@s:id') %>% xml_text() %>% paste(f),
+      LocationType=locationNode %>% xml_find_first('nibrs:LocationCategoryCode') %>% xml_text()
+    )
+  })
+  
+  offenseLocationNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:OffenseLocationAssociation')
+  offenseLocation <- map2_df(offenseLocationNodes, seq(offenseLocationNodes), function(offenseLocationNode, withinFileIndex) {
+    tibble(
+      LocationID=offenseLocationNode %>% xml_find_first('nc:Location/@s:ref') %>% xml_text() %>% paste(f),
+      OffenseID=offenseLocationNode %>% xml_find_first('j:Offense/@s:ref') %>% xml_text() %>% paste(f)
+    )
+  })
+  
+  propertyNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/nc:Item')
+  property <- map2_df(propertyNodes, seq(propertyNodes), function(propertyNode, withinFileIndex) {
+    tibble(
+      IncidentNumber=propertyNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
+      TypePropertyLoss=propertyNode %>% xml_find_first('nc:ItemStatus/cjis:ItemStatusCode') %>% xml_text(),
+      PropertyDescription=propertyNode %>% xml_find_first('j:ItemCategoryNIBRSPropertyCategoryCode') %>% xml_text()
+    )
+  })
+  
+  incident %>% 
+    left_join(offense, by="IncidentNumber") %>% 
+    left_join(offenseLocation, by="OffenseID") %>% 
+    left_join(location, by="LocationID") %>% 
+    left_join(property, by="IncidentNumber") %>% 
+    select (-c(LocationID, OffenseID))
 })
