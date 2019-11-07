@@ -3,7 +3,8 @@ library(xml2)
 library(purrr)
 library(openssl)
 
-nibrsFiles <- list.files('data/', full.names=TRUE)
+#load xml files in this directory
+nibrsFiles <- list.files('data/', pattern = "\\.xml$", full.names=TRUE)
 
 
 nibrsDF <- map_df(nibrsFiles, function(f) {
@@ -11,7 +12,7 @@ nibrsDF <- map_df(nibrsFiles, function(f) {
   
   #incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report[normalize-space(nibrs:ReportHeader/nibrs:NIBRSReportCategoryCode)="GROUP A INCIDENT REPORT"]')
   incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
-  incident <- map2_df(incidentNodes, seq(incidentNodes), function(incidentNode, withinFileIndex) {
+  incident <- map2_df(incidentNodes, seq(incidentNodes), function(incidentNode, reportNodeNumber) {
     
     tibble(
       IncidentNumber=incidentNode %>% xml_find_first('nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
@@ -24,7 +25,8 @@ nibrsDF <- map_df(nibrsFiles, function(f) {
       IncidentHour=incidentNode %>% xml_find_first('nc:Incident/nc:ActivityDate/nc:DateTime') %>% xml_text() %>% substr(12,13),
       CargoTheftIndicator=incidentNode %>% xml_find_first('nc:Incident/cjis:IncidentAugmentation/j:OffenseCargoTheftIndicator') %>% xml_text(),
       ExceptionalClearanceCode=incidentNode %>% xml_find_first('nc:Incident/j:IncidentAugmentation/j:IncidentExceptionalClearanceCode') %>% xml_text(),
-      ExceptionalClearanceDate=incidentNode %>% xml_find_first('nc:Incident/j:IncidentAugmenatation/j:IncidentExceptionalClearanceDate/nc:Date') %>% xml_text() 
+      ExceptionalClearanceDate=incidentNode %>% xml_find_first('nc:Incident/j:IncidentAugmenatation/j:IncidentExceptionalClearanceDate/nc:Date') %>% xml_text()
+      
     )
     
   })
@@ -34,14 +36,14 @@ nibrsDF <- map_df(nibrsFiles, function(f) {
     tibble(
       OffenseID=offenseNode %>% xml_find_first('@s:id') %>% xml_text() %>% paste(f),
       IncidentNumber=offenseNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
-      UCROffenseCode=offenseNode %>% xml_find_first('nibrs:OffenseUCRCode') %>% xml_text(),
+      UCROffenseCode=offenseNode %>% xml_find_first('moibrs:OffenseUCRCode | nibrs:OffenseUCRCode') %>% xml_text(),
       OffenseAttemptedIndicator=offenseNode %>% xml_find_first('j:OffenseAttemptedIndicator') %>% xml_text(),
-      OffenderSuspectedOfUsingCode=offenseNode %>% xml_find_first('j:OffenseFactor/j:OffenseFactorCode') %>% xml_text(),
-      BiasMotivation=offenseNode %>% xml_find_first('j:OffenseFactorBiasMotivationCode') %>% xml_text(),
+      OffenderSuspectedOfUsingCode=offenseNode %>% xml_find_all('j:OffenseFactor/j:OffenseFactorCode') %>% xml_text(),
+      BiasMotivation=offenseNode %>% xml_find_all('j:OffenseFactorBiasMotivationCode') %>% xml_text(),
       NumberOfPremisesEntered=offenseNode %>% xml_find_first('j:OffenseStructuresEnteredQuantity') %>% xml_text(),
       MethodOfEntry=offenseNode %>% xml_find_first('j:OffenseEntryPoint/j:PassagePointMethodCode') %>% xml_text(),
       TypeCriminalActivityGangInformation=offenseNode %>% xml_find_first('nibrs:CriminalActivityCategoryCode') %>% xml_text(),
-      TypeOfWeaponForceInvolved=offenseNode %>% xml_find_first('j:OffenseForce/j:ForceCategoryCode') %>% xml_text()
+      TypeOfWeaponForceInvolved=offenseNode %>% xml_find_all('j:OffenseForce/j:ForceCategoryCode') %>% xml_text()
       
     )
   })
