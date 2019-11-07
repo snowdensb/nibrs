@@ -58,6 +58,7 @@ public class SupplementaryHomicideReportExporter {
 	XSSFFont normalWeightFont; 
 	XSSFFont underlineFont;
 	CellStyle wrappedStyle;
+	CellStyle vTopWrappedStyle;
 	CellStyle wrappedBorderedStyle;
 	CellStyle centeredWrappedBorderedStyle;
 	CellStyle centeredStyle;
@@ -70,6 +71,10 @@ public class SupplementaryHomicideReportExporter {
         wrappedStyle = workbook.createCellStyle();
         wrappedStyle.setWrapText(true);
         
+        vTopWrappedStyle = workbook.createCellStyle();
+        vTopWrappedStyle.cloneStyleFrom(wrappedStyle);
+        vTopWrappedStyle.setVerticalAlignment(VerticalAlignment.TOP);
+		
         wrappedBorderedStyle = workbook.createCellStyle(); 
         wrappedBorderedStyle.cloneStyleFrom(wrappedStyle);
         wrappedBorderedStyle.setBorderBottom(BorderStyle.THIN);
@@ -113,7 +118,8 @@ public class SupplementaryHomicideReportExporter {
         greyForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         
         createNonNegligentSheet(supplementaryHomicideReport, workbook);
-		
+        createNegligentSheet(supplementaryHomicideReport, workbook);
+        
         try {
         	String fileName = appProperties.getReturnAFormOutputPath() + "/SupplementaryHomicideReport-" + supplementaryHomicideReport.getOri() + "-" + supplementaryHomicideReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(supplementaryHomicideReport.getMonth()), 2, '0') + ".xlsx"; 
             FileOutputStream outputStream = new FileOutputStream(fileName);
@@ -142,19 +148,57 @@ public class SupplementaryHomicideReportExporter {
 
     	rowNum = createMurderAndNonNegligentTitleRow(sheet, rowNum);
     	
-    	rowNum += 2;
-		rowNum = createSupplementaryHomicideReportHeaderRow(sheet, rowNum);
-		rowNum ++ ; 
-//		rowNum = addAdministrativeInformation(sheet, rowNum); 
+		rowNum = createSupplementaryHomicideReportHeaderRow(sheet, rowNum, true);
 		
         for (SupplementaryHomicideReportRow supplementaryHomicideReportRow: supplementaryHomicideReport.getMurderAndNonNegligenceManslaughter()){
         	writeSupplementaryHomicideReportRow(sheet, supplementaryHomicideReportRow, rowNum++);
         }
-		
-		setBordersToMergedCells(sheet);
+        
+		if (supplementaryHomicideReport.getMurderAndNonNegligenceManslaughter().isEmpty()) {
+	    	rowNum = createEmptyRow(sheet, rowNum++);
+		}
+
+		setBordersToMergedCells(sheet, 0, rowNum);
 		setColumnsWidth(sheet);
 	}
 
+	private void createNegligentSheet(SupplementaryHomicideReport supplementaryHomicideReport, XSSFWorkbook workbook) {
+		XSSFSheet sheet = workbook.createSheet("SHR-negligent");
+		sheet.setFitToPage(true);
+		PrintSetup ps = sheet.getPrintSetup();
+		ps.setLandscape(true);
+		ps.setFitWidth( (short) 1);
+		ps.setFitHeight( (short) 1);
+		
+		int rowNum = 0;
+		log.info("Write to the excel file");
+		
+		rowNum = createNegligentTitleRow(sheet, rowNum);
+		
+		rowNum = createSupplementaryHomicideReportHeaderRow(sheet, rowNum, false);
+//		rowNum = addAdministrativeInformation(sheet, rowNum); 
+		
+		for (SupplementaryHomicideReportRow supplementaryHomicideReportRow: supplementaryHomicideReport.getManslaughterByNegligence()){
+			writeSupplementaryHomicideReportRow(sheet, supplementaryHomicideReportRow, rowNum++);
+		}
+		
+		if (supplementaryHomicideReport.getManslaughterByNegligence().size() == 0) {
+	    	rowNum = createEmptyRow(sheet, rowNum);
+		}
+		
+		setBordersToMergedCells(sheet, 1, rowNum);
+		setColumnsWidth(sheet);
+	}
+
+	private int createEmptyRow(XSSFSheet sheet, int rowNum) {
+		Row row = sheet.createRow(rowNum);
+		for (int colNum = 0; colNum < 16; colNum++) {
+			Cell cell = row.createCell(colNum);
+			cell.setCellStyle(wrappedBorderedStyle);
+		}
+		return rowNum;
+	}
+	
 	private void setColumnsWidth(XSSFSheet sheet) {
 		sheet.autoSizeColumn(0);
 		
@@ -239,7 +283,7 @@ public class SupplementaryHomicideReportExporter {
 	}
 
 
-	private int createNegligenceTitleRow(XSSFSheet sheet, int rowNum) {
+	private int createNegligentTitleRow(XSSFSheet sheet, int rowNum) {
 		Row row = sheet.createRow(rowNum++);
     	row.setHeightInPoints((2*sheet.getDefaultRowHeightInPoints()));
 		Cell cell = row.createCell(0);
@@ -248,29 +292,29 @@ public class SupplementaryHomicideReportExporter {
 		XSSFRichTextString s1 = new XSSFRichTextString("SUPPLEMENTARY HOMICIDE REPORT");
 		s1.applyFont(boldFont);
 		cell.setCellValue(s1);
-		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 15));
 		
 		row = sheet.createRow(rowNum++);
-    	row.setHeightInPoints((6*sheet.getDefaultRowHeightInPoints()));
+    	row.setHeightInPoints((4*sheet.getDefaultRowHeightInPoints()));
 		cell = row.createCell(0);
-		cell.setCellStyle(wrappedStyle);
+		cell.setCellStyle(vTopWrappedStyle);
 		
 		XSSFRichTextString s2 = new XSSFRichTextString("1b. Manslaughter by Negligence \n");
 		s2.applyFont(normalWeightFont);
 		s2.append("      Do not list traffic fatalities, accidental deaths, or death due to the negligence of the victim. "
 				+ "List below all other negligent manslaughters, regardless of prosecutive action taken.", normalWeightFont);
 		cell.setCellValue(s2);
-		sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 5));
+		sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 15));
 		
 		return rowNum;
 	}
     
 	private int createMurderAndNonNegligentTitleRow(XSSFSheet sheet, int rowNum) {
 		Row row = sheet.createRow(rowNum++);
-		row.setHeightInPoints((9*sheet.getDefaultRowHeightInPoints()));
+		row.setHeightInPoints((10*sheet.getDefaultRowHeightInPoints()));
 		Cell cell = row.createCell(0);
-		cell.setCellStyle(wrappedStyle);
-		
+		cell.setCellStyle(vTopWrappedStyle);
+
 		XSSFRichTextString s2 = new XSSFRichTextString("This report is authorized by law Title 28, Section 534, U.S. Code. "
 				+ "Your cooperation in using this form to list data pertaining to all homicides reported on your " 
 				+ "Return A will assist the FBI in compiling comprehensive, accurate data regarding this important classification "
@@ -292,9 +336,9 @@ public class SupplementaryHomicideReportExporter {
 		return rowNum;
 	}
 	
-	private int createSupplementaryHomicideReportHeaderRow(XSSFSheet sheet, int rowNum) {
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum + 6, 0, 0));
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum + 6, 1, 1));
+	private int createSupplementaryHomicideReportHeaderRow(XSSFSheet sheet, int rowNum, boolean nonNegligent) {
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum + 5, 0, 0));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum + 5, 1, 1));
 
         Row row = sheet.createRow(rowNum++);
         Cell cell = row.createCell(0);
@@ -320,31 +364,41 @@ public class SupplementaryHomicideReportExporter {
 		cell4.setCellStyle(centeredWrappedBorderedStyle);
 		cell4.setCellValue("Data Code");
 		
-		sheet.addMergedRegion(new CellRangeAddress(rowNum-1, rowNum-1 + 6,13,13));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum-1, rowNum-1 + 5,13,13));
 		Cell cell5 = row.createCell(13);
 		cell5.setCellStyle(centeredWrappedBorderedStyle);
-		cell5.setCellValue("Weapon Used\n (Handgun, Rifle, Shotgun,\n Club, Poison, etc.)");
+		if (nonNegligent) {
+			cell5.setCellValue("Weapon Used\n (Handgun, Rifle, Shotgun,\n Club, Poison, etc.)");
+		}
+		else {
+			cell5.setCellValue("Weapon Used\n (Handgun, Rifle, Shotgun,\n Knife, etc.)");
+		}
 		
-		sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum-1 + 6,14,14));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum-1 + 5,14,14));
 		Cell cell6 = row.createCell(14);
 		cell6.setCellStyle(centeredWrappedBorderedStyle);
 		cell6.setCellValue("Relationship of Victim\n to Offender\n (Husband, Wife, Son,\n Father, Acquaintance,\n Neighbor, Stranger, etc.)");
 		
-		sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum-1 + 6,15,15));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum-1 + 5,15,15));
 		Cell cell7 = row.createCell(15);
 		cell7.setCellStyle(centeredWrappedBorderedStyle);
-		cell7.setCellValue("Circumstances\n(Victim shot by robber, robbery victim\n shot robber, killed by patron during\n barroom brawl, etc.)");
+		if (nonNegligent) {
+			cell7.setCellValue("Circumstances\n(Victim shot by robber, robbery victim\n shot robber, killed by patron during\n barroom brawl, etc.)");
+		}
+		else {
+			cell7.setCellValue("Circumstances\n(Victim shot in hunting accident, gun-\ncleaning, children playing with gun, etc.)");
+		}
 		
 		row = sheet.createRow(rowNum++);
 		List<String> demographics = Arrays.asList("Age", "Sex", "Race", "Ethnicity"); 
 		for (int i=2, j=0;  j <demographics.size(); i++, j++) {
-			sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum + 4,i,i));
+			sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum + 3,i,i));
 			cell2 = row.createCell(i);
 			cell2.setCellStyle(rotateStyle);
 			cell2.setCellValue(demographics.get(j));
 		}
 		for (int i=6, j=0;  j <demographics.size(); i++, j++) {
-			sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum + 4,i,i));
+			sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum + 3,i,i));
 			cell2 = row.createCell(i);
 			cell2.setCellStyle(rotateStyle);
 			cell2.setCellValue(demographics.get(j));
@@ -352,7 +406,9 @@ public class SupplementaryHomicideReportExporter {
 
 		cell = row.createCell(10);
 		cell.setCellValue("Do Not Write\n In These Spaces");
-		sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum + 4,10,12));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum-1,rowNum + 3,10,12));
+		
+		rowNum += 4; 
 		return rowNum;
 	}
 
@@ -410,13 +466,13 @@ public class SupplementaryHomicideReportExporter {
 		cell.setCellStyle(wrappedBorderedStyle);
 	}
     
-    private void setBordersToMergedCells(XSSFSheet sheet) {
+    private void setBordersToMergedCells(XSSFSheet sheet, int minRowNum, int maxRowNum) {
         int numMerged = sheet.getNumMergedRegions();
         for (int i = 0; i < numMerged; i++) {
             CellRangeAddress mergedRegions = sheet.getMergedRegion(i);
 
             System.out.println("CellRangeAddress:" + mergedRegions);
-            if (mergedRegions.getFirstRow() != 0) {
+            if (mergedRegions.getFirstRow() > minRowNum && mergedRegions.getFirstRow() < maxRowNum) {
             	System.out.println("Add borders");
 	            RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), mergedRegions, sheet);
 	            RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), mergedRegions, sheet);
