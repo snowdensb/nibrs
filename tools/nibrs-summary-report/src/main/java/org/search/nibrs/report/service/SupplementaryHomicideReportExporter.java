@@ -39,9 +39,9 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingFormRow;
-import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingRowName;
+import org.search.nibrs.model.reports.supplementaryhomicide.Person;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
+import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReportRow;
 import org.search.nibrs.report.AppProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -141,15 +141,21 @@ public class SupplementaryHomicideReportExporter {
         log.info("Write to the excel file");
 
     	rowNum = createMurderAndNonNegligentTitleRow(sheet, rowNum);
+    	
+    	rowNum += 2;
 		rowNum = createSupplementaryHomicideReportHeaderRow(sheet, rowNum);
+		rowNum ++ ; 
+//		rowNum = addAdministrativeInformation(sheet, rowNum); 
+		
+        for (SupplementaryHomicideReportRow supplementaryHomicideReportRow: supplementaryHomicideReport.getMurderAndNonNegligenceManslaughter()){
+        	writeSupplementaryHomicideReportRow(sheet, supplementaryHomicideReportRow, rowNum++);
+        }
 		
 		setBordersToMergedCells(sheet);
-//		rowNum = addAdministrativeInformation(sheet, rowNum); 
+		setColumnsWidth(sheet);
+	}
 
-//        for (HumanTraffickingRowName rowName: HumanTraffickingRowName.values()){
-//        	writeHumanTraffickingRow(sheet, rowName, supplementaryHomicideReport.getRows()[rowName.ordinal()], rowNum++);
-//        }
-
+	private void setColumnsWidth(XSSFSheet sheet) {
 		sheet.autoSizeColumn(0);
 		
 		for (int i = 1; i < 10; i++) {
@@ -350,65 +356,58 @@ public class SupplementaryHomicideReportExporter {
 		return rowNum;
 	}
 
-    private void writeHumanTraffickingRow(XSSFSheet sheet, HumanTraffickingRowName rowName, HumanTraffickingFormRow returnAFormRow, int rowNum) {
+    private void writeSupplementaryHomicideReportRow(XSSFSheet sheet, SupplementaryHomicideReportRow supplementaryHomicideReportRow, int rowNum) {
     	Row row = sheet.createRow(rowNum);
     	int colNum = 0;
     	Cell cell = row.createCell(colNum++);
     	cell.setCellStyle(wrappedBorderedStyle);
-        
-        if (rowName == HumanTraffickingRowName.GRAND_TOTAL) {
-            XSSFRichTextString allBoldString = new XSSFRichTextString(rowName.getLabel());
-            allBoldString.applyFont(boldFont);
-            cell.setCellValue(allBoldString);
-        }
-        else {
-    		cell.setCellValue(rowName.getLabel());
-    	}
-        CellStyle yellowForeGround = sheet.getWorkbook().createCellStyle();
-        yellowForeGround.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
-        yellowForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        yellowForeGround.setBorderBottom(BorderStyle.THIN);
-        yellowForeGround.setBorderTop(BorderStyle.THIN);
-        yellowForeGround.setBorderLeft(BorderStyle.THIN);
-        yellowForeGround.setBorderRight(BorderStyle.THIN);
-
-		cell = row.createCell(colNum++);
-		cell.setCellValue((Integer) returnAFormRow.getReportedOffenses());
-		if (rowName != HumanTraffickingRowName.GRAND_TOTAL) {
-			cell.setCellStyle(yellowForeGround);
-		}
-		else {
-			cell.setCellStyle(wrappedBorderedStyle);
-		}
-		cell = row.createCell(colNum++);
-		cell.setCellValue((Integer) returnAFormRow.getUnfoundedOffenses());
-		if (rowName != HumanTraffickingRowName.GRAND_TOTAL) {
-			cell.setCellStyle(yellowForeGround);
-		}
-		else {
-			cell.setCellStyle(wrappedBorderedStyle);
-		}
+    	cell.setCellValue(supplementaryHomicideReportRow.getIncidentNumber());
+    	
 		cell = row.createCell(colNum++);
 		cell.setCellStyle(wrappedBorderedStyle);
-		cell.setCellValue((Integer) returnAFormRow.getActualOffenses());
-		cell = row.createCell(colNum++);
-		cell.setCellValue((Integer) returnAFormRow.getClearedOffenses());
-		if (rowName != HumanTraffickingRowName.GRAND_TOTAL) {
-			cell.setCellStyle(yellowForeGround);
-		}
-		else {
+		cell.setCellValue(supplementaryHomicideReportRow.getHomicideSituation().code);
+
+		addPersonCells(row, colNum, supplementaryHomicideReportRow.getVictim());
+		colNum += 4; 
+		addPersonCells(row, colNum, supplementaryHomicideReportRow.getOffender());
+		
+		colNum += 4; 
+		
+		for ( int  j = 0; j< 3; j++) {
+			cell = row.createCell(colNum++);
 			cell.setCellStyle(wrappedBorderedStyle);
 		}
+		
 		cell = row.createCell(colNum++);
-		cell.setCellValue((Integer) returnAFormRow.getClearanceInvolvingOnlyJuvenile());
-		if (rowName != HumanTraffickingRowName.GRAND_TOTAL) {
-			cell.setCellStyle(yellowForeGround);
-		}
-		else {
-			cell.setCellStyle(wrappedBorderedStyle);
+		cell.setCellStyle(wrappedBorderedStyle);
+		cell.setCellValue(StringUtils.join(supplementaryHomicideReportRow.getWeaponUsed(), ','));
 
-		}
+		cell = row.createCell(colNum++);
+		cell.setCellStyle(wrappedBorderedStyle);
+		cell.setCellValue(supplementaryHomicideReportRow.getRelationshipOfVictimToOffender());
+		
+		cell = row.createCell(colNum++);
+		cell.setCellStyle(wrappedBorderedStyle);
+		cell.setCellValue(StringUtils.join(supplementaryHomicideReportRow.getCircumstances(), ','));
+	}
 
+	private void addPersonCells(Row row, int colNum, Person person) {
+		Cell cell;
+		cell = row.createCell(colNum++);
+		cell.setCellValue(person.getAge());
+		cell.setCellStyle(wrappedBorderedStyle);
+		
+		cell = row.createCell(colNum++);
+		cell.setCellValue(person.getSex());
+		cell.setCellStyle(wrappedBorderedStyle);
+		
+		cell = row.createCell(colNum++);
+		cell.setCellValue(person.getRace());
+		cell.setCellStyle(wrappedBorderedStyle);
+		
+		cell = row.createCell(colNum++);
+		cell.setCellValue(person.getEthnicity());
+		cell.setCellStyle(wrappedBorderedStyle);
 	}
     
     private void setBordersToMergedCells(XSSFSheet sheet) {
