@@ -176,7 +176,6 @@ public class SupplementaryHomicideReportExporter {
 		rowNum = createNegligentTitleRow(sheet, rowNum);
 		
 		rowNum = createSupplementaryHomicideReportHeaderRow(sheet, rowNum, false);
-//		rowNum = addAdministrativeInformation(sheet, rowNum); 
 		
 		for (SupplementaryHomicideReportRow supplementaryHomicideReportRow: supplementaryHomicideReport.getManslaughterByNegligence()){
 			writeSupplementaryHomicideReportRow(sheet, supplementaryHomicideReportRow, rowNum++);
@@ -185,9 +184,96 @@ public class SupplementaryHomicideReportExporter {
 		if (supplementaryHomicideReport.getManslaughterByNegligence().size() == 0) {
 	    	rowNum = createEmptyRow(sheet, rowNum);
 		}
-		
+
 		setBordersToMergedCells(sheet, 1, rowNum);
+		
+		rowNum = addAsteriskInformation(sheet, rowNum);
+		
 		setColumnsWidth(sheet);
+	}
+
+	private int addAsteriskInformation(XSSFSheet sheet, int rowNum) {
+		rowNum +=2;
+		Row row = sheet.createRow(rowNum);
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+        Cell cell = row.createCell(0);
+        cell.setCellValue("* - Situations");
+        
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 13));
+        cell = row.createCell(2);
+        cell.setCellValue("A - SingleVictim/SingleOffender");
+        
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 14, 15));
+        cell = row.createCell(14);
+        cell.setCellValue("D - MultipleVictims/SingleOffender");
+        
+        rowNum++; 
+		row = sheet.createRow(rowNum);
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 13));
+        cell = row.createCell(2);
+        cell.setCellValue("B - SingleVictim/UnknownOffenderorOffenders");
+        
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 14, 15));
+        cell = row.createCell(14);
+        cell.setCellValue("E - MultipleVictims/MultipleOffenders");
+        
+        rowNum++;
+		row = sheet.createRow(rowNum);
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 13));
+        cell = row.createCell(2);
+        cell.setCellValue("C - SingleVictim/MultipleOffenders");
+        
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 14, 15));
+        cell = row.createCell(14);
+        cell.setCellValue("F - MultipleVictims/UnknownOffenderorOffenders");
+
+        rowNum += 2;
+		row = sheet.createRow(rowNum);
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 15));
+        cell = row.createCell(0);
+        cell.setCellValue("Use only one victim/offender situation code per set of information. "
+        		+ "The utilization of a new code will signify the beginning of a new murder situation.");
+        
+		rowNum += 2;
+		row = sheet.createRow(rowNum);
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+        cell = row.createCell(0);
+        cell.setCellValue("** - Age");
+        
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 15));
+        cell = row.createCell(2);
+        cell.setCellValue("- 01 to 99. If 100 or older use 99. New born up to one week old use NB. If over one week, but less than one year old use BB. Use two characters only in age column.");
+        
+        rowNum ++;
+        row = sheet.createRow(rowNum);
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+        cell = row.createCell(0);
+        cell.setCellValue("     Sex");
+        
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 15));
+        cell = row.createCell(2);
+        cell.setCellValue("- M for Male and F for Female. Use one character only.");
+        
+        rowNum ++;
+        row = sheet.createRow(rowNum);
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+        cell = row.createCell(0);
+        cell.setCellValue("     Race");
+        
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 15));
+        cell = row.createCell(2);
+        cell.setCellValue("- White - W, Black - B, American Indian or Alaskan Native - I, Asian - A, Pacific Islander - P, Unknown - U. Use only these as race designations.");
+        
+        rowNum ++;
+        row = sheet.createRow(rowNum);
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+        cell = row.createCell(0);
+        cell.setCellValue("     Ethnicity");
+        
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 15));
+        cell = row.createCell(2);
+        cell.setCellValue("- Hispanic Origin - H, Not of Hispanic Origin - N, Unknown - U.");
+		return rowNum;
 	}
 
 	private int createEmptyRow(XSSFSheet sheet, int rowNum) {
