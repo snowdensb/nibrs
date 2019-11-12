@@ -1,0 +1,101 @@
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/header :: header-css">
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div id="mainContent">
+	 	<div id="content" class="container">
+	 		<div class="jumbotron">
+				<p>There are some NIBRS rules that the NIBRS PCT cannot enforce because the validation relies on access to previously submitted incidents or specific FBI information on the submitting agency. There are other differences between the NIBRS PCT Report and FBI Error Data Set (EDS) due to different interpretations of the rules. These are being addressed with the FBI and the NIBRS PCT will be updated to be consistent with the FBI Report. </p>
+				<p><strong>GROUP A INCIDENT REPORT</strong></p>
+				<ul>
+					<li>
+					Structure Check Errors
+						<ul>
+							<li>930: Invalid ORI – ORI marked for historical reference</li>
+							<li>931: Invalid ORI – ORI marked for historical reference</li>
+							<li>932: Invalid ORI – ORI information is duplicated</li>
+							<li>933: Invalid ORI – ORI not found in reference data</li>
+							<li>934: Invalid ORI – ORI is covered by another agency</li>
+							<li>952: Invalid ORI – ORI is not in UCR file</li>
+						</ul>
+					</li>
+					<li>
+						Administrative Segment Errors – Level 1
+						<ul>
+							<li>118: Date cannot be on or after the inactive date of the ORI</li>
+							<li>173: Incident date cannot be before date ORI went IBR</li>
+						</ul>
+					</li>
+					<li>
+						Offense Segment Errors – Level 2 
+						<ul>
+							<li>All errors are validated</li>
+						</ul>
+					</li>
+					<li>
+						Property Segment Errors – Level 3
+						<ul>
+							<li>All errors are validated</li>
+						</ul>
+					</li>
+					<li>
+						Victim Segment Errors – Level 4
+						<ul>
+							<li>All errors are validated</li>
+						</ul>
+					</li>
+					<li>
+						Offender Segment Errors – Level 5
+						<ul>
+							<li>All errors are validated</li>
+						</ul>
+					</li>
+					<li>
+						Arrest Segment Errors – Level 6
+						<ul>
+							<li>618: Arrest date cannot on or after the inactive date of the ORI</li>
+						</ul>
+					</li>
+				</ul>
+				
+				<p><strong>GROUP B ARREST REPORTS</strong></p>
+				<ul>
+					<li>718: Arrest date cannot be on or after the inactive date of the ORI</li>
+					<li>759: Duplicate Group B arrest report segment on file</li>
+					<li>798: Missing arrest date for delete, duplicate match</li>
+					<li>799: Missing arrest date for delete, multiple matches</li>
+				</ul>
+				
+				<p><strong>ZERO REPORTS</strong></p>
+				<ul>
+					<li>028: Cannot add zero report – Group A incident report on file for this month</li>
+					<li>029: Cannot add zero report – Group B Arrest report on file for this month</li>
+					<li>093: Zero report month/year is prior to agency conversion to NIBRS</li>
+					<li>096: Zero report month/year cannot be on or after date agency is placed on covered-by status</li>
+				</ul>
+				
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>	
+</body>
+</html>

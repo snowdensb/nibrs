@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -54,4 +55,11 @@ public class GroupAIncidentReportController {
 		groupAIncidentService.deleteGroupAIncidentReport(incidentNumber);
 	}
 
+	@RequestMapping(value="/groupAIncidentReports/{ori}/{yearOfTape}/{monthOfTape}", method=RequestMethod.DELETE)
+	public @ResponseBody String deleteReportBySubmissionDate(@PathVariable("ori") String ori, @PathVariable("yearOfTape") String yearOfTape, @PathVariable("monthOfTape") String monthOfTape){
+		Integer count = groupAIncidentService.deleteGroupAIncidentReports(ori, yearOfTape, monthOfTape);
+		
+		return String.valueOf(count) + " records are deleted";
+	}
+	
 }

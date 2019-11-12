@@ -1,0 +1,1400 @@
+00881I012016    MNBCA0000OCT23F76322 20141213 05N                                      N
+00632I012016    MNBCA0000OCT23F76322 23FCN  06               83
+03073I012016    MNBCA0000OCT23F76322 720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCT23F76322 00123F                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCT23F76322 0135  MW
+01106I012016    MNBCA0000OCT23F76322 01OCT23F79951 20150114TC23F13A   35  MW U                                
+00871I012016    MNBCA0000OCT720OFFINC20141213 05N                                      
+00632I012016    MNBCA0000OCT720OFFINC720CN  06   A           83
+01294I012016    MNBCA0000OCT720OFFINC001720                           S                                                          
+00455I012016    MNBCA0000OCT720OFFINC0135  MW
+01106I012016    MNBCA0000OCT720OFFINC01OCT720ARRINC20150114TC10013A   35  MW U                                
+
+00871I012016    MN0500200OCTEBLDDRG0120151021 17N                                      
+00712I012016    MN0500200OCTEBLDDRG0135ACACD07   BCD         1112131415
+00632I012016    MN0500200OCTEBLDDRG0135BCA  07   C           11
+03073I012016    MN0500200OCTEBLDDRG01610                 11000000100                                                                                                                                                                    E000000000001LBE000000000001OZX                                            
+01294I012016    MN0500200OCTEBLDDRG0100135A35B                        S                                                          
+00465I012016    MN0500200OCTEBLDDRG010118  MBN
+01106I012016    MN0500200OCTEBLDDRG0101OCTEBLD6582120151025SC23A15A   18  MBNN                                
+
+00871I012016    MNBCA0000OCTEXTRA01  20151006 08N                                      
+00632I012016    MNBCA0000OCTEXTRA01  200CN  20               12
+03073I012016    MNBCA0000OCTEXTRA01  229000150000        17000035000        72000026699        08000025000        16000005698        15000003500                                                                                                                                                                   
+01294I012016    MNBCA0000OCTEXTRA01  001200                           I38  MBNU                                                  
+00455I012016    MNBCA0000OCTEXTRA01  00      
+00871I012016    MNBCA0000OCTEXTRA02  20151006 08N                                      
+00632I012016    MNBCA0000OCTEXTRA02  200AN  20               12
+03073I012016    MNBCA0000OCTEXTRA02  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA02  001200                           I51  FBNR                                                  
+00455I012016    MNBCA0000OCTEXTRA02  00      
+01106I012016    MNBCA0000OCTEXTRA02  012566666     20151021SC20012 14 28  FPHN                                
+00871I012016    MNBCA0000OCTEXTRA03  20151006 11A20151006                              
+00632I012016    MNBCA0000OCTEXTRA03  13ACA  13   N  12       88
+01294I012016    MNBCA0000OCTEXTRA03  00113A                           I52  FA  10   I    01AQ                                    
+00465I012016    MNBCA0000OCTEXTRA03  0124  MWH
+00871I012016    MNBCA0000OCTEXTRA04  20151016 17N                                      
+00632I012016    MNBCA0000OCTEXTRA04  13BCD  13   N  40       88
+01294I012016    MNBCA0000OCTEXTRA04  00113B                           I21  FWNR     M    01AQ                                    
+00465I012016    MNBCA0000OCTEXTRA04  0130  MBH
+00871I012016    MNBCA0000OCTEXTRA05  20151012 17N                                      
+00632I012016    MNBCA0000OCTEXTRA05  13CCA  13   N           32
+01294I012016    MNBCA0000OCTEXTRA05  00113C                           I21  FWNR          01AQ                                    
+00465I012016    MNBCA0000OCTEXTRA05  0130  MWH
+01106I012016    MNBCA0000OCTEXTRA05  01258555      20151012OM13C11 12 30  MWHN                                
+00871I012016    MNBCA0000OCTEXTRA06  20151030 12N                                      
+00632I012016    MNBCA0000OCTEXTRA06  720CN  39   A           88
+01294I012016    MNBCA0000OCTEXTRA06  001720                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA06  0145  MIN
+01106I012016    MNBCA0000OCTEXTRA06  01369963      20151030TC72011 12 45  MINR                                
+00871I012016    MNBCA0000OCTEXTRA07  20151029 12D20151029                              
+00632I012016    MNBCA0000OCTEXTRA07  720AN  39   A           88
+01294I012016    MNBCA0000OCTEXTRA07  001720                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA07  0145  MIN
+00881I012016    MNBCA0000OCTEXTRA08  20151026 14A20151026                              N
+00632I012016    MNBCA0000OCTEXTRA08  510CN  47               88
+03073I012016    MNBCA0000OCTEXTRA08  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA08  001510                           I47  MINR                                                  
+00465I012016    MNBCA0000OCTEXTRA08  0147  MIN
+00465I012016    MNBCA0000OCTEXTRA08  0233  MWN
+00881I012016    MNBCA0000OCTEXTRA09  20151015 14N                                      N
+00632I012016    MNBCA0000OCTEXTRA09  510AN  47               88
+03073I012016    MNBCA0000OCTEXTRA09  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA09  001510                           I47  MWNR                                                  
+00465I012016    MNBCA0000OCTEXTRA09  0147  MWN
+00465I012016    MNBCA0000OCTEXTRA09  0233  MWN
+01106I012016    MNBCA0000OCTEXTRA09  01123258      20151015SM51012 13 33  MWNR                                
+00881I012016    MNBCA0000OCTEXTRA10  20151019 05A20151019                              N
+00632I012016    MNBCA0000OCTEXTRA10  220CN  1440F            99
+03073I012016    MNBCA0000OCTEXTRA10  707000001500        26000001350        17000000500        27000000350        23000000150                                                                                                                                                                                      
+03073I012016    MNBCA0000OCTEXTRA10  507000001500201510192600000135020151019170000005002015101927000000350201510192300000015020151019                                                                                                                                                                              
+01294I012016    MNBCA0000OCTEXTRA10  001220                           I45  MWNR                                                  
+00465I012016    MNBCA0000OCTEXTRA10  0120  FAN
+00881I012016    MNBCA0000OCTEXTRA11  20151023 05D20151023                              N
+00632I012016    MNBCA0000OCTEXTRA11  220CN  1420F            99
+03073I012016    MNBCA0000OCTEXTRA11  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA11  001220                           I45  UBHR                                                  
+00465I012016    MNBCA0000OCTEXTRA11  0120  MWN
+00871I012016    MNBCA0000OCTEXTRA12  20151026 13E20151026                              
+00632I012016    MNBCA0000OCTEXTRA12  250CN  20   C           99
+03073I012016    MNBCA0000OCTEXTRA12  52500000025020151026                                                                                                                                                                                                                                                          
+03073I012016    MNBCA0000OCTEXTRA12  325000001000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTEXTRA12  001250                           B                                                          
+00465I012016    MNBCA0000OCTEXTRA12  0123  MPN
+00871I012016    MNBCA0000OCTEXTRA13  20151026 13E20151026                              
+00712I012016    MNBCA0000OCTEXTRA13  250AN  20   C           3233      
+03073I012016    MNBCA0000OCTEXTRA13  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA13  001250                           B                                                          
+00465I012016    MNBCA0000OCTEXTRA13  0132  FBH
+00871I012016    MNBCA0000OCTEXTRA14  20151022 05N                                      
+00632I012016    MNBCA0000OCTEXTRA14  290CN  20               11
+03073I012016    MNBCA0000OCTEXTRA14  407000004565        78000001500                                                                                                                                                                                                                                               
+01294I012016    MNBCA0000OCTEXTRA14  001290                           I45  MWNR                                                  
+00465I012016    MNBCA0000OCTEXTRA14  0131  MAN
+01106I012016    MNBCA0000OCTEXTRA14  0145112397AE  20151022ON29012 11 31  MANR                                
+00871I012016    MNBCA0000OCTEXTRA15  20151022 05N                                      
+00632I012016    MNBCA0000OCTEXTRA15  290AN  20               11
+03073I012016    MNBCA0000OCTEXTRA15  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA15  001290                           I45  MWNR                                                  
+00465I012016    MNBCA0000OCTEXTRA15  0120  MWN
+01106I012016    MNBCA0000OCTEXTRA15  014511239712  20151022TC29012 11 20  MWNR                                
+00871I012016    MNBCA0000OCTEXTRA16  20151021 17N                                      
+00712I012016    MNBCA0000OCTEXTRA16  35ACACD07   BCD         1112131415
+03073I012016    MNBCA0000OCTEXTRA16  610                                                                                                                                                                                                D000000001200FO                                                            
+01294I012016    MNBCA0000OCTEXTRA16  00135A                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA16  0129  MBN
+01106I012016    MNBCA0000OCTEXTRA16  0126566555E   20151025SC23A15A14 29  MBNN                                
+00871I012016    MNBCA0000OCTEXTRA17  20151021 17N                                      
+00712I012016    MNBCA0000OCTEXTRA17  35AAACD07   BCD         1112131415
+03073I012016    MNBCA0000OCTEXTRA17  1                                                                                                                                                                                                  D                                                                          
+01294I012016    MNBCA0000OCTEXTRA17  00135A                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA17  0132  MPN
+01106I012016    MNBCA0000OCTEXTRA17  0126566555E   20151025SM23A15A12 32  MPNN                                
+00871I012016    MNBCA0000OCTEXTRA18  20151021 17N                                      
+00632I012016    MNBCA0000OCTEXTRA18  35BAACD07   BCD         12
+03073I012016    MNBCA0000OCTEXTRA18  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA18  00135B                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA18  0141  FPH
+01106I012016    MNBCA0000OCTEXTRA18  0126566555EA  20151025SM23A15A12 41  FPHN                                
+00871I012016    MNBCA0000OCTEXTRA19  20151021 17N                                      
+00632I012016    MNBCA0000OCTEXTRA19  35BAACD07   BCD         12
+03073I012016    MNBCA0000OCTEXTRA19  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA19  00135B                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA19  0131  MPH
+01106I012016    MNBCA0000OCTEXTRA19  0126566555E   20151025SN23A15A16 31  MPHN                                
+00881I012016    MNBCA0000OCTEXTRA20  20151021 17N                                      N
+00632I012016    MNBCA0000OCTEXTRA20  270CACD07               12
+03073I012016    MNBCA0000OCTEXTRA20  708000015698        17000002365        04000002000        36000000458                                                                                                                                                                                                         
+01294I012016    MNBCA0000OCTEXTRA20  001270                           G                                                          
+00465I012016    MNBCA0000OCTEXTRA20  0124  MAH
+01106I012016    MNBCA0000OCTEXTRA20  0126566555EA  20151028SM23A15A13 24  MAHR                                
+00881I012016    MNBCA0000OCTEXTRA21  20151021 18N                                      N
+00632I012016    MNBCA0000OCTEXTRA21  270AACD02               88
+03073I012016    MNBCA0000OCTEXTRA21  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA21  001270                           I80  FWNR                                                  
+00465I012016    MNBCA0000OCTEXTRA21  0142  FPH
+01106I012016    MNBCA0000OCTEXTRA21  01845961239E  20151021ON27012 14 80  FWNR                                
+00881I012016    MNBCA0000OCTEXTRA22  20151006 17N                                      N
+00632I012016    MNBCA0000OCTEXTRA22  210CC  02      99       88
+03073I012016    MNBCA0000OCTEXTRA22  721000008000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTEXTRA22  52100000800020151006                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTEXTRA22  001210                           I23  FWHR     N                                            
+00465I012016    MNBCA0000OCTEXTRA22  0147  MWN
+01106I012016    MNBCA0000OCTEXTRA22  015658        20151006SC27011 15 23  FWHR                                
+00871I012016    MNBCA0000OCTEXTRA23  20151021 17N                                      
+00712I012016    MNBCA0000OCTEXTRA23  11AAACD07   J  14 15    1112131415
+01294I012016    MNBCA0000OCTEXTRA23  00111A                           I68  FI N     L    01ER                                    
+00465I012016    MNBCA0000OCTEXTRA23  0153  MBN
+01106I012016    MNBCA0000OCTEXTRA23  0126566555E   20151021SM23A15A12 53  MBNN                                
+00881I012016    MNBCA0000OCTEXTRA24  20151022 17N                                      Y
+00632I012016    MNBCA0000OCTEXTRA24  26ACACD07               11
+03073I012016    MNBCA0000OCTEXTRA24  717000800000        64000450000        12000250006        14000100000        16000045000        46000040000        74000035000        45000025000        47000002500        07000001000                                                                                       
+03073I012016    MNBCA0000OCTEXTRA24  5640000125882015102247000000200201510224600000002520151022                                                                                                                                                                                                                    
+01294I012016    MNBCA0000OCTEXTRA24  00126A                           I86  MINR                                                  
+00465I012016    MNBCA0000OCTEXTRA24  0171  MAN
+00465I012016    MNBCA0000OCTEXTRA24  0256  MIU
+01106I012016    MNBCA0000OCTEXTRA24  012317E       20151022TN39A13 11 86  MINR                                
+00881I012016    MNBCA0000OCTEXTRA25  20151022 17N                                      N
+00712I012016    MNBCA0000OCTEXTRA25  26AAACD07               111213    
+03073I012016    MNBCA0000OCTEXTRA25  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA25  00126A                           I35  FANN                                                  
+00465I012016    MNBCA0000OCTEXTRA25  0171  MAN
+00465I012016    MNBCA0000OCTEXTRA25  0256  MAH
+01106I012016    MNBCA0000OCTEXTRA25  012317E       20151022TN39A13    35  FANN                                
+00881I012016    MNBCA0000OCTEXTRA26  20151022 17N                                      Y
+00632I012016    MNBCA0000OCTEXTRA26  26BCACD07               11
+03073I012016    MNBCA0000OCTEXTRA26  714000002569        20000000250                                                                                                                                                                                                                                               
+01294I012016    MNBCA0000OCTEXTRA26  00126B                           I71  MWHR                                                  
+00465I012016    MNBCA0000OCTEXTRA26  0171  MAN
+00465I012016    MNBCA0000OCTEXTRA26  0256  MIU
+01106I012016    MNBCA0000OCTEXTRA26  012317EE      20151022TN39A13    71  MWHR                                
+00881I012016    MNBCA0000OCTEXTRA27  20151022 17N                                      Y
+00632I012016    MNBCA0000OCTEXTRA27  26BAACD07               11
+03073I012016    MNBCA0000OCTEXTRA27  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA27  00126B                           I86  FAHN                                                  
+00465I012016    MNBCA0000OCTEXTRA27  0171  MAN
+00465I012016    MNBCA0000OCTEXTRA27  0256  MIU
+01106I012016    MNBCA0000OCTEXTRA27  012317EA      20151022TC39A13 11 86  FAHN                                
+00881I012016    MNBCA0000OCTEXTRA28  20151018 17N                                      N
+00632I012016    MNBCA0000OCTEXTRA28  26CCACD07               11
+03073I012016    MNBCA0000OCTEXTRA28  716000000258                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTEXTRA28  00126C                           I86  MINR                                                  
+00465I012016    MNBCA0000OCTEXTRA28  0171  MAN
+00465I012016    MNBCA0000OCTEXTRA28  027   MAN
+00465I012016    MNBCA0000OCTEXTRA28  0356  MIU
+01106I012016    MNBCA0000OCTEXTRA28  0123177E      20151018TC39A13 11 86  MINR                                
+00881I012016    MNBCA0000OCTEXTRA29  20151018 17N                                      N
+00632I012016    MNBCA0000OCTEXTRA29  26CAACD07               11
+03073I012016    MNBCA0000OCTEXTRA29  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA29  00126C                           I86  MINR                                                  
+00465I012016    MNBCA0000OCTEXTRA29  0161  FPH
+00465I012016    MNBCA0000OCTEXTRA29  0225  FIN
+00465I012016    MNBCA0000OCTEXTRA29  0356  MIU
+01106I012016    MNBCA0000OCTEXTRA29  012317EE      20151018TC39A13 12 86  MINR                                
+00881I012016    MNBCA0000OCTEXTRA30  20151015 14N                                      N
+00632I012016    MNBCA0000OCTEXTRA30  510AN  47               88
+03073I012016    MNBCA0000OCTEXTRA30  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA30  001510                           I47  MWNR                                                  
+00465I012016    MNBCA0000OCTEXTRA30  0147  MWN
+00465I012016    MNBCA0000OCTEXTRA30  0233  MWN
+01106I012016    MNBCA0000OCTEXTRA30  01123258      20151015SM51012 13 33  MWNR                                
+00871I012016    MNBCA0000OCTEXTRA31  20151022 17N                                      
+00712I012016    MNBCA0000OCTEXTRA31  26DCACD07               1112      
+03073I012016    MNBCA0000OCTEXTRA31  712000250000        13000002658                                                                                                                                                                                                                                               
+01294I012016    MNBCA0000OCTEXTRA31  00126D                           I16  MINR                                                  
+01294I012016    MNBCA0000OCTEXTRA31  00226D                           I32  MBUU                                                  
+00465I012016    MNBCA0000OCTEXTRA31  0171  MAN
+00465I012016    MNBCA0000OCTEXTRA31  024044FBN
+00465I012016    MNBCA0000OCTEXTRA31  0356  MIU
+01106I012016    MNBCA0000OCTEXTRA31  012317        20151022TN39A13 15 16  MINRH                               
+01106I012016    MNBCA0000OCTEXTRA31  0225552       20151022ON23C15    29  MIUN                                
+00871I012016    MNBCA0000OCTEXTRA32  20151022 17N                                      
+00712I012016    MNBCA0000OCTEXTRA32  26DAACD07               1112      
+03073I012016    MNBCA0000OCTEXTRA32  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA32  00126D                           I86  MINR                                                  
+01294I012016    MNBCA0000OCTEXTRA32  00226D                           I32  MBUU                                                  
+00465I012016    MNBCA0000OCTEXTRA32  0171  MAN
+00465I012016    MNBCA0000OCTEXTRA32  024044FBN
+00465I012016    MNBCA0000OCTEXTRA32  0356  MIU
+01106I012016    MNBCA0000OCTEXTRA32  012317        20151022TN39A13    86  MINR                                
+01106I012016    MNBCA0000OCTEXTRA32  0225552EE     20151022ON23C15 11 29  MIUN                                
+00881I012016    MNBCA0000OCTEXTRA33  20151015 17N                                      N
+00632I012016    MNBCA0000OCTEXTRA33  26ECACD07               11
+03073I012016    MNBCA0000OCTEXTRA33  747000250000        08000025893                                                                                                                                                                                                                                               
+01294I012016    MNBCA0000OCTEXTRA33  00126E                           I14  MINR                                                  
+01294I012016    MNBCA0000OCTEXTRA33  00226E                           I32  MBUU                                                  
+00465I012016    MNBCA0000OCTEXTRA33  0171  MAN
+00465I012016    MNBCA0000OCTEXTRA33  024044FBN
+00465I012016    MNBCA0000OCTEXTRA33  0356  MIU
+01106I012016    MNBCA0000OCTEXTRA33  012317AB      20151015TM39A13    14  MINRH                               
+01106I012016    MNBCA0000OCTEXTRA33  0225552A      20151015ON23C15 16 29  MIUN                                
+00881I012016    MNBCA0000OCTEXTRA34  20151015 17N                                      N
+00632I012016    MNBCA0000OCTEXTRA34  26EAACD07               11
+03073I012016    MNBCA0000OCTEXTRA34  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA34  00126E                           I86  MINR                                                  
+01294I012016    MNBCA0000OCTEXTRA34  00226E                           I32  MBUU                                                  
+00465I012016    MNBCA0000OCTEXTRA34  0171  MAN
+00465I012016    MNBCA0000OCTEXTRA34  024044FBN
+00465I012016    MNBCA0000OCTEXTRA34  0356  MIU
+01106I012016    MNBCA0000OCTEXTRA34  01231789      20151015OM39A13 11 86  MINR                                
+01106I012016    MNBCA0000OCTEXTRA34  0225552AE     20151015ON23C15 16 15  FIHRH                               
+00871I012016    MNBCA0000OCTEXTRA35  20151105 17N                                      
+00712I012016    MNBCA0000OCTEXTRA35  26FCACD02               111213    
+03073I012016    MNBCA0000OCTEXTRA35  765                                                                                                                                                                                                                                                                           
+01294I012016    MNBCA0000OCTEXTRA35  00126F                           I78  MWNR                                                  
+00455I012016    MNBCA0000OCTEXTRA35  0122  FB
+01106I012016    MNBCA0000OCTEXTRA35  01258852      20151105OC26F11A13A22  FB                                  
+00871I012016    MNBCA0000OCTEXTRA36  20151105 17N                                      
+00712I012016    MNBCA0000OCTEXTRA36  26FAC  02               111213    
+03073I012016    MNBCA0000OCTEXTRA36  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA36  00126F                           I78  MWNR                                                  
+00455I012016    MNBCA0000OCTEXTRA36  0122  FB
+01106I012016    MNBCA0000OCTEXTRA36  012456963A    20151105SM26F12A11A22  FB                                  
+00871I012016    MNBCA0000OCTEXTRA37  20151029 18N                                      
+00632I012016    MNBCA0000OCTEXTRA37  26GCC  58               88
+03073I012016    MNBCA0000OCTEXTRA37  720000550000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTEXTRA37  52000055000020151029                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTEXTRA37  00126G                           I78  MWNR                                                  
+00455I012016    MNBCA0000OCTEXTRA37  0154  MA
+01106I012016    MNBCA0000OCTEXTRA37  019430K0809A  20151030OC26G12A11 54  MA N                                
+00871I012016    MNBCA0000OCTEXTRA38  20151029 18N                                      
+00632I012016    MNBCA0000OCTEXTRA38  26GAC  58               88
+03073I012016    MNBCA0000OCTEXTRA38  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA38  00126G                           I78  MWNR                                                  
+00455I012016    MNBCA0000OCTEXTRA38  0122  FW
+01106I012016    MNBCA0000OCTEXTRA38  019430K0AB    20151029OM26G12A15 22  FW R                                
+00871I012016    MNBCA0000OCTEXTRA39  20151002 17N                                      
+00712I012016    MNBCA0000OCTEXTRA39  39ACACD07               1321838485
+03073I012016    MNBCA0000OCTEXTRA39  614000025000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTEXTRA39  00139A                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA39  0130  MAN
+01106I012016    MNBCA0000OCTEXTRA39  0123178988    20151002TC39A13 11 12  MIHNH                               
+00871I012016    MNBCA0000OCTEXTRA40  20150905 17N                                      
+00712I012016    MNBCA0000OCTEXTRA40  39AAACD07               1321838485
+03073I012016    MNBCA0000OCTEXTRA40  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA40  00139A                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA40  0130  MAN
+01106I012016    MNBCA0000OCTEXTRA40  012317999     20150905TM39A13A11 13  MINRH                               
+00871I012016    MNBCA0000OCTEXTRA41  20150905 17N                                      
+00712I012016    MNBCA0000OCTEXTRA41  39AAACD07               1321838485
+03073I012016    MNBCA0000OCTEXTRA41  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA41  00139A                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA41  0130  MAN
+01106I012016    MNBCA0000OCTEXTRA41  012317        20150905TM39A13    39  MBNN                                
+00871I012016    MNBCA0000OCTEXTRA42  20150905 17N                                      
+00712I012016    MNBCA0000OCTEXTRA42  39AAACD07               1321838485
+03073I012016    MNBCA0000OCTEXTRA42  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTEXTRA42  00139A                           S                                                          
+00465I012016    MNBCA0000OCTEXTRA42  0122  FIH
+01106I012016    MNBCA0000OCTEXTRA42  012317        20150905TM39A13    38  FIHN                                
+00871I012016    MNBCA0000OCTL1L2DRG0120141213 05N                                      
+00632I012016    MNBCA0000OCTL1L2DRG0135ACN  06   B           83
+03073I012016    MNBCA0000OCTL1L2DRG01620000005000                                                                                                                                                                                       L000000000030OZ                                                            
+01294I012016    MNBCA0000OCTL1L2DRG0100135A                           S                                                          
+00455I012016    MNBCA0000OCTL1L2DRG010135  MW
+01106I012016    MNBCA0000OCTL1L2DRG0101OCTL1L27892520150114TC35A13A   35  MW U                                
+00881I012016    MNBCA0000OCTMULTI000120141213 05N                                      Y
+00632I012016    MNBCA0000OCTMULTI000123ACN  06               83
+00632I012016    MNBCA0000OCTMULTI000123BCN  06               83
+00632I012016    MNBCA0000OCTMULTI000123CCN  06               83
+00632I012016    MNBCA0000OCTMULTI000123DCN  06               83
+00632I012016    MNBCA0000OCTMULTI000123ECN  06               83
+00632I012016    MNBCA0000OCTMULTI000123FCN  06               83
+03073I012016    MNBCA0000OCTMULTI0001721000005000        19000005000        18000005000        17000005000        16000005000        06000005000                                                                                                                                                                   
+01294I012016    MNBCA0000OCTMULTI000100123A23B23C23D23E23F            I45  FWHU                                                  
+00455I012016    MNBCA0000OCTMULTI00010135  MW
+01106I012016    MNBCA0000OCTMULTI000101OCTMULTI999920150114TC23F13A   35  MW U                                
+00881I012016    MNBCA0000OCTMULTI000220141213 05N                                      Y
+00632I012016    MNBCA0000OCTMULTI000209ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000223BCN  06               83
+00632I012016    MNBCA0000OCTMULTI000223CCN  06               83
+00632I012016    MNBCA0000OCTMULTI000223DCN  06               83
+00632I012016    MNBCA0000OCTMULTI000223ECN  06               83
+00632I012016    MNBCA0000OCTMULTI000223FCN  06               83
+03073I012016    MNBCA0000OCTMULTI0002721000005000        19000005000        18000005000        17000005000        16000005000        06000005000                                                                                                                                                                   
+01294I012016    MNBCA0000OCTMULTI000200109A23B23C23D23E23F            I45  FWHU01        01BG                                    
+00455I012016    MNBCA0000OCTMULTI00020135  MW
+01106I012016    MNBCA0000OCTMULTI000201OCTMULTI999820150114TC23F13A   35  MW U                                
+00881I012016    MNBCA0000OCTMULTI000320141213 05N                                      Y
+00632I012016    MNBCA0000OCTMULTI000309ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000311CCN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000323CCN  06               83
+00632I012016    MNBCA0000OCTMULTI000323DCN  06               83
+00632I012016    MNBCA0000OCTMULTI000323ECN  06               83
+00632I012016    MNBCA0000OCTMULTI000323FCN  06               83
+03073I012016    MNBCA0000OCTMULTI0003721000005000        19000005000        18000005000        17000005000        16000005000        06000005000                                                                                                                                                                   
+01294I012016    MNBCA0000OCTMULTI000300109A11C23C23D23E23F            I45  FWHU01   O    01BG                                    
+00455I012016    MNBCA0000OCTMULTI00030135  MW
+01106I012016    MNBCA0000OCTMULTI000301OCTMULTI999720150114TC23F13A   35  MW U                                
+00881I012016    MNBCA0000OCTMULTI000420141213 05N                                      Y
+00632I012016    MNBCA0000OCTMULTI000409ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000411CCN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000423CCN  06               83
+00632I012016    MNBCA0000OCTMULTI000423DCN  06               83
+03073I012016    MNBCA0000OCTMULTI0004718000005000        17000005000        16000005000        06000005000                                                                                                                                                                                                         
+01294I012016    MNBCA0000OCTMULTI000400109A11C23C23D                  I45  FWHU01   O    01BG                                    
+00455I012016    MNBCA0000OCTMULTI00040135  MW
+01106I012016    MNBCA0000OCTMULTI000401OCTMULTI999620150114TC23F13A   35  MW U                                
+00881I012016    MNBCA0000OCTMULTI000520141213 05N                                      Y
+00632I012016    MNBCA0000OCTMULTI000509ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000511CCN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000523CCN  06               83
+00632I012016    MNBCA0000OCTMULTI000523DCN  06               83
+03073I012016    MNBCA0000OCTMULTI0005718000005000        17000005000        16000005000        06000005000                                                                                                                                                                                                         
+01294I012016    MNBCA0000OCTMULTI000500109A11C23C23D                  I45  FWHU01   O    01BG02BG03BG                            
+00455I012016    MNBCA0000OCTMULTI00050135  MW
+00455I012016    MNBCA0000OCTMULTI00050235  MW
+00455I012016    MNBCA0000OCTMULTI00050335  MW
+01106I012016    MNBCA0000OCTMULTI000501OCTMULTI999520150114TC23F13A   35  MW U                                
+01106I012016    MNBCA0000OCTMULTI000502OCTMULTI889520150114TC23F13A   35  MW U                                
+01106I012016    MNBCA0000OCTMULTI000503OCTMULTI779520150114TC23F13A   35  MW U                                
+00881I012016    MNBCA0000OCTMULTI000620141213 05N                                      Y
+00632I012016    MNBCA0000OCTMULTI000609ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000611CCN  06      11       83
+00632I012016    MNBCA0000OCTMULTI0006200CN  06               83
+00632I012016    MNBCA0000OCTMULTI000623DCN  06               83
+03073I012016    MNBCA0000OCTMULTI0006718000005000        17000005000        16000005000        06000005000                                                                                                                                                                                                         
+01294I012016    MNBCA0000OCTMULTI000600109A11C20023D                  I45  FWHU01   O    01BG02BG03BG                            
+00455I012016    MNBCA0000OCTMULTI00060135  MW
+00455I012016    MNBCA0000OCTMULTI00060235  MW
+00455I012016    MNBCA0000OCTMULTI00060335  MW
+01106I012016    MNBCA0000OCTMULTI000601OCTMULTI999420150114TC23F13A   35  MW U                                
+01106I012016    MNBCA0000OCTMULTI000602OCTMULTI889420150114TC23F13A   35  MW U                                
+
+00871I012016    MNBCA0000OCTMULTI000720141213 05N                                      
+00632I012016    MNBCA0000OCTMULTI000709ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000711CCN  06      11       83
+00632I012016    MNBCA0000OCTMULTI0007200CN  06               83
+00632I012016    MNBCA0000OCTMULTI000713ACN  06      11       83
+03073I012016    MNBCA0000OCTMULTI0007718000005000        17000005000        16000005000        06000005000                                                                                                                                                                                                         
+01294I012016    MNBCA0000OCTMULTI000700109A11C200                     I45  FWHU01   O    01BG03BG                                
+01294I012016    MNBCA0000OCTMULTI000700213A                           I45  FWHU01   O    02BG                                    
+00455I012016    MNBCA0000OCTMULTI00070135  MW
+00455I012016    MNBCA0000OCTMULTI00070235  MW
+00455I012016    MNBCA0000OCTMULTI00070335  MW
+01106I012016    MNBCA0000OCTMULTI000701OCTMULTI999320150114TC23F13A   35  MW U                                
+01106I012016    MNBCA0000OCTMULTI000702OCTMULTI889320150114TC23F13A   35  MW U                                
+
+
+00881I012016    MNBCA0000OCTMULTI000820141213 05N                                      N
+00632I012016    MNBCA0000OCTMULTI000809ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000811CCN  06      11       83
+00632I012016    MNBCA0000OCTMULTI0008200CN  06               83
+00632I012016    MNBCA0000OCTMULTI000811BCN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000811ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI0008220CN  06  F            83
+00632I012016    MNBCA0000OCTMULTI0008240CN  06               83
+00632I012016    MNBCA0000OCTMULTI0008270CN  06               83
+03073I012016    MNBCA0000OCTMULTI0008718000005000        17000005000        16000005000        06000005000                                                                                                                                                                                                         
+01294I012016    MNBCA0000OCTMULTI000800109A11A11B11C200220240270      I45  FWHU01   O    01BG03BG                                
+00455I012016    MNBCA0000OCTMULTI00080135  MW
+00455I012016    MNBCA0000OCTMULTI00080335  MW
+01106I012016    MNBCA0000OCTMULTI000801OCTMULTI999220150114TC23F13A   35  MW U                                
+01106I012016    MNBCA0000OCTMULTI000802OCTMULTI889220150114TC23F13A   35  MW U                                
+00881I012016    MNBCA0000OCTMULTI000920141213 05N                                      Y
+00632I012016    MNBCA0000OCTMULTI000909ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000911CCN  06      11       83
+00632I012016    MNBCA0000OCTMULTI0009200CN  06               83
+00632I012016    MNBCA0000OCTMULTI000911BCN  06      11       83
+00632I012016    MNBCA0000OCTMULTI000911ACN  06      11       83
+00632I012016    MNBCA0000OCTMULTI0009220CN  06  F            83
+00632I012016    MNBCA0000OCTMULTI0009240CN  06               83
+00632I012016    MNBCA0000OCTMULTI0009270CN  06               83
+03073I012016    MNBCA0000OCTMULTI0009718000005000        17000005000        16000005000        06000005000                                                                                                                                                                                                         
+01294I012016    MNBCA0000OCTMULTI000900109A11A11B11C200220240270      I45  FWHU01   O    01BG03BG                                
+00455I012016    MNBCA0000OCTMULTI00090135  MW
+00455I012016    MNBCA0000OCTMULTI00090335  MW
+01106I012016    MNBCA0000OCTMULTI000901OCTMULTI999120150114TC23F13A   35  MW U                                
+01106I012016    MNBCA0000OCTMULTI000902OCTMULTI889120150114TC23F13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0001  20150113 05N                                      
+00632I012016    MNBCA0000OCTNOV0001  09ACN  06   N  11       83
+01294I012016    MNBCA0000OCTNOV0001  00109A                           I45  FWHU01        01BG                                    
+00455I012016    MNBCA0000OCTNOV0001  0135  MW
+01106I012016    MNBCA0000OCTNOV0001  01OCTNOV001ARR20150114TC09A13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0002  20150113 05N                                      
+00632I012016    MNBCA0000OCTNOV0002  09BCN  06   N  11       83
+01294I012016    MNBCA0000OCTNOV0002  00109B                           I45  FWHU30        01BG                                    
+00455I012016    MNBCA0000OCTNOV0002  0135  MW
+01106I012016    MNBCA0000OCTNOV0002  01OCTNOV002ARR20150114TC09B13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0003  20150113 05N                                      
+00632I012016    MNBCA0000OCTNOV0003  09CCN  06      11       88
+01294I012016    MNBCA0000OCTNOV0003  00109C                           I45  FWHU20  A     01BG                                    
+00455I012016    MNBCA0000OCTNOV0003  0135  MW
+00871I012016    MNBCA0000OCTNOV0004  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0004  100CN  06   N  99       83
+03073I012016    MNBCA0000OCTNOV0004  731000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0004  001100                           I45  FWHU     O    01BG                                    
+00455I012016    MNBCA0000OCTNOV0004  0135  MW
+01106I012016    MNBCA0000OCTNOV0004  01OCT10051496 20150114TC10013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0005  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0005  11ACN  06   N  99       83
+01294I012016    MNBCA0000OCTNOV0005  00111A                           I45  FWHU     O    01BG                                    
+00455I012016    MNBCA0000OCTNOV0005  0135  MW
+01106I012016    MNBCA0000OCTNOV0005  01OCT11A20065 20150114TC11A13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0006  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0006  11BCN  06   N  99       83
+01294I012016    MNBCA0000OCTNOV0006  00111B                           I45  FWHU     O    01BG                                    
+00455I012016    MNBCA0000OCTNOV0006  0135  MW
+01106I012016    MNBCA0000OCTNOV0006  01OCT11B6142  20150114TC11B13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0007  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0007  11CCN  06   N  99       83
+01294I012016    MNBCA0000OCTNOV0007  00111C                           I45  FWHU     O    01BG                                    
+00455I012016    MNBCA0000OCTNOV0007  0135  MW
+01106I012016    MNBCA0000OCTNOV0007  01OCT11C42023 20150114TC11C13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0008  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0008  11DCN  06   N  99       83
+01294I012016    MNBCA0000OCTNOV0008  00111D                           I45  FWHU     O    01BG                                    
+00455I012016    MNBCA0000OCTNOV0008  0135  MW
+01106I012016    MNBCA0000OCTNOV0008  01OCT11D5958  20150114TC11D13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0009  20141213 05A20141213                              N
+00632I012016    MNBCA0000OCTNOV0009  120CN  06   N  99       83
+03073I012016    MNBCA0000OCTNOV0009  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0009  001120                           I45  FWHU     T    01BG                                    
+00455I012016    MNBCA0000OCTNOV0009  0135  MW
+00881I012016    MNBCA0000OCTNOV0010  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0010  120CN  06   N  99       83
+03073I012016    MNBCA0000OCTNOV0010  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0010  001120                           I45  FWHU     T    01BG                                    
+00455I012016    MNBCA0000OCTNOV0010  0135  MW
+01106I012016    MNBCA0000OCTNOV0010  01OCT12090742 20150114TC12013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0011  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0011  13ACN  06   N  11       83
+01294I012016    MNBCA0000OCTNOV0011  00113A                           I45  FWHU01   T    01BG                                    
+00455I012016    MNBCA0000OCTNOV0011  0135  MW
+01106I012016    MNBCA0000OCTNOV0011  01OCT13A70692 20150114TC13A13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0012  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0012  13BCN  06   N  99       83
+01294I012016    MNBCA0000OCTNOV0012  00113B                           I45  FWHU     M    01BG                                    
+00455I012016    MNBCA0000OCTNOV0012  0135  MW
+01106I012016    MNBCA0000OCTNOV0012  01OCT13B99262 20150114TC13B13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0013  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0013  13CCN  06   N           83
+01294I012016    MNBCA0000OCTNOV0013  00113C                           I45  FWHU          01BG                                    
+00455I012016    MNBCA0000OCTNOV0013  0135  MW
+01106I012016    MNBCA0000OCTNOV0013  01OCT13C49694 20150114TC13C13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0014  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0014  200CN  06               83
+03073I012016    MNBCA0000OCTNOV0014  220000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0014  001200                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0014  0135  MW
+01106I012016    MNBCA0000OCTNOV0014  01OCT20013495 20150114TC20013A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0015  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0015  210CN  06      99       83
+03073I012016    MNBCA0000OCTNOV0015  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0015  001210                           I45  FWHU     O                                            
+00455I012016    MNBCA0000OCTNOV0015  0135  MW
+01106I012016    MNBCA0000OCTNOV0015  01OCT21031093 20150114TC21013A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0016  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0016  220CN  06  F            83
+03073I012016    MNBCA0000OCTNOV0016  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0016  001220                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0016  0135  MW
+01106I012016    MNBCA0000OCTNOV0016  01OCT22068712 20150114TC22013A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0017  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0017  220CN  06  F            83
+03073I012016    MNBCA0000OCTNOV0017  720000005000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTNOV0017  52000000500020150108                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTNOV0017  001220                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0017  0135  MW
+01106I012016    MNBCA0000OCTNOV0017  01OCT220B2448020150114TC22013A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0018  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0018  220CN  1405F            83
+00632I012016    MNBCA0000OCTNOV0018  23ACN  14               83
+03073I012016    MNBCA0000OCTNOV0018  720000005000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTNOV0018  52000000500020150108                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTNOV0018  001220                           I45  FWHU                                                  
+01294I012016    MNBCA0000OCTNOV0018  00223A                           I35  MW U                                                  
+00455I012016    MNBCA0000OCTNOV0018  0135  MW
+01106I012016    MNBCA0000OCTNOV0018  01OCT23A22039 20150114TC22013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0019  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0019  23ACN  06               83
+03073I012016    MNBCA0000OCTNOV0019  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0019  00123A                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0019  0135  MW
+01106I012016    MNBCA0000OCTNOV0019  01OCT23A20947 20150114TC23A13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0020  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0020  23BCN  06               83
+03073I012016    MNBCA0000OCTNOV0020  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0020  00123B                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0020  0135  MW
+01106I012016    MNBCA0000OCTNOV0020  01OCT23B71868 20150114TC23B13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0021  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0021  23CCN  06               83
+03073I012016    MNBCA0000OCTNOV0021  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0021  00123C                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0021  0135  MW
+01106I012016    MNBCA0000OCTNOV0021  01OCT23C4355  20150114TC23C13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0022  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0022  23DCN  06               83
+03073I012016    MNBCA0000OCTNOV0022  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0022  00123D                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0022  0135  MW
+01106I012016    MNBCA0000OCTNOV0022  01OCT23D84666 20150114TC23D13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0023  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0023  23ECN  06               83
+03073I012016    MNBCA0000OCTNOV0023  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0023  00123E                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0023  0135  MW
+01106I012016    MNBCA0000OCTNOV0023  01OCT23E39695 20150114TC23E13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0024  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0024  23FCN  06               83
+03073I012016    MNBCA0000OCTNOV0024  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0024  00123F                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0024  0135  MW
+01106I012016    MNBCA0000OCTNOV0024  01OCT23F79951 20150114TC23F13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0025  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0025  23GCN  06               83
+03073I012016    MNBCA0000OCTNOV0025  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0025  00123G                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0025  0135  MW
+01106I012016    MNBCA0000OCTNOV0025  01OCT23G84473 20150114TC23G13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0026  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0026  23HCN  06               83
+03073I012016    MNBCA0000OCTNOV0026  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0026  00123H                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0026  0135  MW
+01106I012016    MNBCA0000OCTNOV0026  01OCT23H87202 20150114TC23H13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0027  20141213 05N                                      Y
+00632I012016    MNBCA0000OCTNOV0027  23ACN  06               83
+00632I012016    MNBCA0000OCTNOV0027  23BCN  06               83
+00632I012016    MNBCA0000OCTNOV0027  23CCN  06               83
+00632I012016    MNBCA0000OCTNOV0027  23DCN  06               83
+00632I012016    MNBCA0000OCTNOV0027  23ECN  06               83
+00632I012016    MNBCA0000OCTNOV0027  23FCN  06               83
+03073I012016    MNBCA0000OCTNOV0027  708000030000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0027  00123A23B23C23D23E23F            I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0027  0135  MW
+01106I012016    MNBCA0000OCTNOV0027  01OCT23AH3917 20150114TC23F13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0028  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0028  240CN  06               83
+03073I012016    MNBCA0000OCTNOV0028  703000005000                                                                                                                                                                                   05                                                                             
+01294I012016    MNBCA0000OCTNOV0028  001240                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0028  0135  MW
+01106I012016    MNBCA0000OCTNOV0028  01OCT24087382 20150114TC24013A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0029  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0029  240CN  06               83
+03073I012016    MNBCA0000OCTNOV0029  703000005000                                                                                                                                                                                   05                                                                             
+03073I012016    MNBCA0000OCTNOV0029  50300000300020150108                                                                                                                                                                             03                                                                           
+01294I012016    MNBCA0000OCTNOV0029  001240                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0029  0135  MW
+01106I012016    MNBCA0000OCTNOV0029  01OCT240B9630320150114TC24013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0030  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0030  250CN  06   B           83
+03073I012016    MNBCA0000OCTNOV0030  320000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0030  001250                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0030  0135  MW
+01106I012016    MNBCA0000OCTNOV0030  01OCT25094442 20150114TC25013A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0031  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0031  26ACN  06               83
+03073I012016    MNBCA0000OCTNOV0031  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0031  00126A                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0031  0135  MW
+01106I012016    MNBCA0000OCTNOV0031  01OCT26A50796 20150114TC26A13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0032  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0032  26BCN  06               83
+03073I012016    MNBCA0000OCTNOV0032  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0032  00126B                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0032  0135  MW
+01106I012016    MNBCA0000OCTNOV0032  01OCT26B14122 20150114TC26B13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0033  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0033  26CCN  06               83
+03073I012016    MNBCA0000OCTNOV0033  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0033  00126C                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0033  0135  MW
+01106I012016    MNBCA0000OCTNOV0033  01OCT26C66960 20150114TC26C13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0034  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0034  26DCN  06               83
+03073I012016    MNBCA0000OCTNOV0034  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0034  00126D                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0034  0135  MW
+01106I012016    MNBCA0000OCTNOV0034  01OCT26D90304 20150114TC26D13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0035  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0035  26ECN  06               83
+03073I012016    MNBCA0000OCTNOV0035  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0035  00126E                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0035  0135  MW
+01106I012016    MNBCA0000OCTNOV0035  01OCT26E62416 20150114TC26E13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0036  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0036  270CN  06               83
+03073I012016    MNBCA0000OCTNOV0036  720000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0036  001270                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0036  0135  MW
+01106I012016    MNBCA0000OCTNOV0036  01OCT27079327 20150114TC27013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0037  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0037  280CN  06   B           83
+03073I012016    MNBCA0000OCTNOV0037  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTNOV0037  001280                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0037  0135  MW
+01106I012016    MNBCA0000OCTNOV0037  01OCT28083173 20150114TC28013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0038  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0038  290CN  06               83
+03073I012016    MNBCA0000OCTNOV0038  420000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0038  001290                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0038  0135  MW
+01106I012016    MNBCA0000OCTNOV0038  01OCT29063494 20150114TC29013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0039  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0039  35ACN  06   B           83
+03073I012016    MNBCA0000OCTNOV0039  1                                                                                                                                                                                                  A                                                                          
+01294I012016    MNBCA0000OCTNOV0039  00135A                           S                                                          
+00455I012016    MNBCA0000OCTNOV0039  0135  MW
+01106I012016    MNBCA0000OCTNOV0039  01OCT35A9713  20150114TC35A13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0040  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0040  35BCN  06   B           83
+03073I012016    MNBCA0000OCTNOV0040  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTNOV0040  00135B                           S                                                          
+00455I012016    MNBCA0000OCTNOV0040  0135  MW
+01106I012016    MNBCA0000OCTNOV0040  01OCT35B26408 20150114TC35B13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0041  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0041  36ACN  06               83
+01294I012016    MNBCA0000OCTNOV0041  00136A                           I45  FWHU          01BG                                    
+00455I012016    MNBCA0000OCTNOV0041  0135  MW
+01106I012016    MNBCA0000OCTNOV0041  01OCT36A21188 20150114TC36A13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0042  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0042  36BCN  06               83
+01294I012016    MNBCA0000OCTNOV0042  00136B                           I17  FWHU          01BG                                    
+00455I012016    MNBCA0000OCTNOV0042  0135  MW
+01106I012016    MNBCA0000OCTNOV0042  01OCT36B64849 20150114TC36B13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0043  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0043  370CN  06   B           83
+01294I012016    MNBCA0000OCTNOV0043  001370                           S                                                          
+00455I012016    MNBCA0000OCTNOV0043  0135  MW
+01106I012016    MNBCA0000OCTNOV0043  01OCT37039927 20150114TC37013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0044  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0044  39ACN  06               83
+03073I012016    MNBCA0000OCTNOV0044  620000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0044  00139A                           S                                                          
+00455I012016    MNBCA0000OCTNOV0044  0135  MW
+01106I012016    MNBCA0000OCTNOV0044  01OCT39A4552  20150114TC39A13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0045  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0045  39BCN  06               83
+03073I012016    MNBCA0000OCTNOV0045  620000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0045  00139B                           S                                                          
+00455I012016    MNBCA0000OCTNOV0045  0135  MW
+01106I012016    MNBCA0000OCTNOV0045  01OCT39B28958 20150114TC39B13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0046  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0046  39CCN  06   B           83
+03073I012016    MNBCA0000OCTNOV0046  620000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0046  00139C                           S                                                          
+00455I012016    MNBCA0000OCTNOV0046  0135  MW
+01106I012016    MNBCA0000OCTNOV0046  01OCT39C20572 20150114TC39C13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0047  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0047  39DCN  06               83
+03073I012016    MNBCA0000OCTNOV0047  620000005000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTNOV0047  00139D                           S                                                          
+00455I012016    MNBCA0000OCTNOV0047  0135  MW
+01106I012016    MNBCA0000OCTNOV0047  01OCT39D56351 20150114TC39D13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0048  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0048  40ACN  06               83
+01294I012016    MNBCA0000OCTNOV0048  00140A                           S                                                          
+00455I012016    MNBCA0000OCTNOV0048  0135  MW
+01106I012016    MNBCA0000OCTNOV0048  01OCT40A36818 20150114TC40A13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0049  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0049  40BCN  06               83
+01294I012016    MNBCA0000OCTNOV0049  00140B                           S                                                          
+00455I012016    MNBCA0000OCTNOV0049  0135  MW
+01106I012016    MNBCA0000OCTNOV0049  01OCT40B71927 20150114TC40B13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0050  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0050  40CCN  06               83
+01294I012016    MNBCA0000OCTNOV0050  00140C                           S                                                          
+00455I012016    MNBCA0000OCTNOV0050  0135  MW
+01106I012016    MNBCA0000OCTNOV0050  01OCT40C93937 20150114TC40C13A   35  MW U                                
+00881I012016    MNBCA0000OCTNOV0051  20141213 05N                                      N
+00632I012016    MNBCA0000OCTNOV0051  510CN  06               83
+03073I012016    MNBCA0000OCTNOV0051  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTNOV0051  001510                           I45  FWHU                                                  
+00455I012016    MNBCA0000OCTNOV0051  0135  MW
+01106I012016    MNBCA0000OCTNOV0051  01OCT51064243 20150114TC51013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0052  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0052  520CN  06   B  99       83
+01294I012016    MNBCA0000OCTNOV0052  001520                           S                                                          
+00455I012016    MNBCA0000OCTNOV0052  0135  MW
+01106I012016    MNBCA0000OCTNOV0052  01OCT52029843 20150114TC52013A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0053  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0053  64ACN  06      99       83
+01294I012016    MNBCA0000OCTNOV0053  00164A                           I45  FWHU     I    01BG                                    
+00455I012016    MNBCA0000OCTNOV0053  0135  MW
+01106I012016    MNBCA0000OCTNOV0053  01OCT64A78758 20150114TC64A13A   35  MW U                                
+00871I012016    MNBCA0000OCTNOV0054  20141213 05N                                      
+00632I012016    MNBCA0000OCTNOV0054  64BCN  06      99       83
+01294I012016    MNBCA0000OCTNOV0054  00164B                           I45  FWHU     O    01BG                                    
+00455I012016    MNBCA0000OCTNOV0054  0135  MW
+01106I012016    MNBCA0000OCTNOV0054  01OCT64B13038 20150114TC64B13A   35  MW U                                
+00871I012016    MNBCA0000OCTTARUN01  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN01  35ACACD07   BCD         1112131415
+03073I012016    MNBCA0000OCTTARUN01  610                                                                                                                                                                                                D000000001200FO                                                            
+01294I012016    MNBCA0000OCTTARUN01  00135A                           S                                                          
+00465I012016    MNBCA0000OCTTARUN01  0118  MBN
+01106I012016    MNBCA0000OCTTARUN01  0126566555    20151025SC23A15A   18  MBNN                                
+00871I012016    MNBCA0000OCTTARUN02  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN02  35AAACD07   BCD         1112131415
+03073I012016    MNBCA0000OCTTARUN02  1                                                                                                                                                                                                  D                                                                          
+01294I012016    MNBCA0000OCTTARUN02  00135A                           S                                                          
+00465I012016    MNBCA0000OCTTARUN02  0118  MBN
+01106I012016    MNBCA0000OCTTARUN02  0126566555    20151025SC23A15A   18  MBNN                                
+00871I012016    MNBCA0000OCTTARUN03  20151021 17N                                      
+00632I012016    MNBCA0000OCTTARUN03  35BAACD07   BCD         12
+03073I012016    MNBCA0000OCTTARUN03  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN03  00135B                           S                                                          
+00465I012016    MNBCA0000OCTTARUN03  0141  MAH
+01106I012016    MNBCA0000OCTTARUN03  0126566555E   20151025SC23A15A   41  MAHN                                
+00871I012016    MNBCA0000OCTTARUN04  20151021 17N                                      
+00632I012016    MNBCA0000OCTTARUN04  35BAACD07   BCD         12
+03073I012016    MNBCA0000OCTTARUN04  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN04  00135B                           S                                                          
+00465I012016    MNBCA0000OCTTARUN04  0118  MBN
+01106I012016    MNBCA0000OCTTARUN04  0126566555    20151025SC23A15A   18  MBNN                                
+00881I012016    MNBCA0000OCTTARUN05  20151021 17N                                      N
+00632I012016    MNBCA0000OCTTARUN05  270CACD07               12
+03073I012016    MNBCA0000OCTTARUN05  704000002000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN05  001270                           G                                                          
+00465I012016    MNBCA0000OCTTARUN05  0124  MAH
+01106I012016    MNBCA0000OCTTARUN05  0126566555E   20151025SM23A15A13 24  MAHR                                
+00871I012016    MNBCA0000OCTTARUN06  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN06  23ACACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN06  720000025000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN06  00123A                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN06  0153  MBN
+01106I012016    MNBCA0000OCTTARUN06  0126566555    20151025SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN07  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN07  23AAACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN07  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN07  00123A                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN07  0153  MBN
+01106I012016    MNBCA0000OCTTARUN07  0126566555    20151022SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN08  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN08  23BCACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN08  720000025000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTTARUN08  52000001585020151022                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN08  00123B                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN08  0153  MBN
+01106I012016    MNBCA0000OCTTARUN08  0126566555    20151022SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN09  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN09  23BAACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN09  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN09  00123B                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN09  0153  MBN
+01106I012016    MNBCA0000OCTTARUN09  0126566555    20151022SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN10  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN10  23CCACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN10  720000025000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTTARUN10  52000001585020151021                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN10  00123C                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN10  0153  MBN
+01106I012016    MNBCA0000OCTTARUN10  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN100 20151006 11N                                      
+00632I012016    MNBCA0000OCTTARUN100 13ACA  13   N  12       88
+01294I012016    MNBCA0000OCTTARUN100 00113A                           I52  FW  10   I    01AQ                                    
+00465I012016    MNBCA0000OCTTARUN100 0124  MWH
+00871I012016    MNBCA0000OCTTARUN101 20151016 17N                                      
+00632I012016    MNBCA0000OCTTARUN101 13BCN  13   N  40       88
+01294I012016    MNBCA0000OCTTARUN101 00113B                           I21  FWNR     M    01AQ                                    
+00465I012016    MNBCA0000OCTTARUN101 0130  MWH
+00871I012016    MNBCA0000OCTTARUN102 20151012 17N                                      
+00632I012016    MNBCA0000OCTTARUN102 13CCA  13   N           32
+01294I012016    MNBCA0000OCTTARUN102 00113C                           I21  FWNR          01AQ                                    
+00465I012016    MNBCA0000OCTTARUN102 0130  MWH
+00871I012016    MNBCA0000OCTTARUN103 20151030 12N                                      
+00632I012016    MNBCA0000OCTTARUN103 720CN  39   A           88
+01294I012016    MNBCA0000OCTTARUN103 001720                           S                                                          
+00465I012016    MNBCA0000OCTTARUN103 0145  MIN
+00871I012016    MNBCA0000OCTTARUN104 20151029 12N                                      
+00632I012016    MNBCA0000OCTTARUN104 720AN  39   A           88
+01294I012016    MNBCA0000OCTTARUN104 001720                           S                                                          
+00465I012016    MNBCA0000OCTTARUN104 0145  MIN
+00871I012016    MNBCA0000OCTTARUN105 20151105 17N                                      
+00632I012016    MNBCA0000OCTTARUN105 26FCC  02               88
+03073I012016    MNBCA0000OCTTARUN105 765                                                                                                                                                                                                                                                                           
+01294I012016    MNBCA0000OCTTARUN105 00126F                           I78  MWNR                                                  
+00455I012016    MNBCA0000OCTTARUN105 0122  FB
+00871I012016    MNBCA0000OCTTARUN106 20151105 17N                                      
+00632I012016    MNBCA0000OCTTARUN106 26FAC  02               88
+03073I012016    MNBCA0000OCTTARUN106 1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN106 00126F                           I78  MWNR                                                  
+00455I012016    MNBCA0000OCTTARUN106 0122  FB
+00871I012016    MNBCA0000OCTTARUN107 20151029 18N                                      
+00632I012016    MNBCA0000OCTTARUN107 26GCC  58               88
+03073I012016    MNBCA0000OCTTARUN107 720000550000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTTARUN107 52000055000020151029                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN107 00126G                           I78  MWNR                                                  
+00455I012016    MNBCA0000OCTTARUN107 0122  FB
+01106I012016    MNBCA0000OCTTARUN107 019430K0809   20151029TC26G12A   22  FB                                  
+00871I012016    MNBCA0000OCTTARUN108 20151029 18N                                      
+00632I012016    MNBCA0000OCTTARUN108 26GAC  58               88
+03073I012016    MNBCA0000OCTTARUN108 1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN108 00126G                           I78  MWNR                                                  
+00455I012016    MNBCA0000OCTTARUN108 0122  FB
+01106I012016    MNBCA0000OCTTARUN108 019430K0809   20151029TC26G12A   22  FB                                  
+00881I012016    MN0500200OCTTARUN109 20151021 17N                                      Y
+00712I012016    MN0500200OCTTARUN109 23AAACD07               1112131415
+00632I012016    MN0500200OCTTARUN109 23BCC  07               12
+00632I012016    MN0500200OCTTARUN109 23CAC  07               12
+00632I012016    MN0500200OCTTARUN109 23DCA  07               14
+00632I012016    MN0500200OCTTARUN109 23EAC  07               11
+00632I012016    MN0500200OCTTARUN109 23GCC  07               14
+00632I012016    MN0500200OCTTARUN109 23HAA  07               11
+00632I012016    MN0500200OCTTARUN109 23FAA  07               12
+03073I012016    MN0500200OCTTARUN109 717000010000        16000005800        64000000096                                                                                                                                                                                                                            
+03073I012016    MN0500200OCTTARUN109 1                                                                                                                                                                                                                                                                             
+01294I012016    MN0500200OCTTARUN109 00123A23B23C23D23E23F23G23H      I68  FI N                                                  
+00465I012016    MN0500200OCTTARUN109 0153  MBN
+01106I012016    MN0500200OCTTARUN109 0126566555    20151025SC23A15A   53  MBNN                                
+00871I012016    MN0500200OCTTARUN11  20151021 17N                                      
+00712I012016    MN0500200OCTTARUN11  23CAACD07               1112131415
+03073I012016    MN0500200OCTTARUN11  8                                                                                                                                                                                                                                                                             
+01294I012016    MN0500200OCTTARUN11  00123C                           I68  FINN                                                  
+00465I012016    MN0500200OCTTARUN11  0153  MBN
+01106I012016    MN0500200OCTTARUN11  0126566555    20151022SC23A15A   53  MBNN                                
+00881I012016    MN0500200OCTTARUN110 20151021 17N                                      Y
+00712I012016    MN0500200OCTTARUN110 23AAACD07               1112131415
+00632I012016    MN0500200OCTTARUN110 23BCC  07               12
+00632I012016    MN0500200OCTTARUN110 23CAC  07               12
+00632I012016    MN0500200OCTTARUN110 23DCA  07               14
+00632I012016    MN0500200OCTTARUN110 23EAC  07               11
+00632I012016    MN0500200OCTTARUN110 23GCC  07               14
+00632I012016    MN0500200OCTTARUN110 23HAA  07               11
+00632I012016    MN0500200OCTTARUN110 23FAA  07               12
+03073I012016    MN0500200OCTTARUN110 8                                                                                                                                                                                                                                                                             
+03073I012016    MN0500200OCTTARUN110 717000010000        16000005800        64000000096                                                                                                                                                                                                                            
+03073I012016    MN0500200OCTTARUN110 1                                                                                                                                                                                                                                                                             
+01294I012016    MN0500200OCTTARUN110 00123A23B23C23D23E23F23G23H      I68  FI N                                                  
+00465I012016    MN0500200OCTTARUN110 0153  MBN
+01106I012016    MN0500200OCTTARUN110 0126566555    20151025SC23A15A   53  MBNN                                
+00871I012016    MN0500200OCTTARUN111 20150901 17N                                      
+00712I012016    MN0500200OCTTARUN111 09ACA  08      15       1112131415
+00712I012016    MN0500200OCTTARUN111 11ACC  04   N  30       121314    
+00632I012016    MN0500200OCTTARUN111 13ACA  04      12       11
+01294I012016    MN0500200OCTTARUN111 00109A11A                        I20  MBNR01   B    01ER02AQ03SP                            
+01294I012016    MN0500200OCTTARUN111 00213A                           I25  MINR01   I    01AQ                                    
+01294I012016    MN0500200OCTTARUN111 00309A11A                        I30  FUNR01   BI   01FR                                    
+01294I012016    MN0500200OCTTARUN111 00413A                           I35  MANR03   BI   01FR                                    
+01414I012016    MN0500200OCTTARUN111 00509A                           L35  FIUR01        01FR                                    01GMNBCA0000
+01294I012016    MN0500200OCTTARUN111 00609A                           I40  FBNN01        01AQ                                    
+01294I012016    MN0500200OCTTARUN111 00709A                           I45  MINR01        01FR                                    
+01294I012016    MN0500200OCTTARUN111 00813A                           I50  FBNR01   BIL  01FR                                    
+01294I012016    MN0500200OCTTARUN111 00911A                           I5055MANR     BIL  01FR                                    
+01294I012016    MN0500200OCTTARUN111 01009A                           I5560MINR01        01FR                                    
+00465I012016    MN0500200OCTTARUN111 0160  UWN
+00465I012016    MN0500200OCTTARUN111 0265  FAN
+00465I012016    MN0500200OCTTARUN111 0370  MAH
+00871I012016    MN0500200OCTTARUN112 20151021 17N                                      
+00632I012016    MN0500200OCTTARUN112 100CC  01   J  20       13
+00632I012016    MN0500200OCTTARUN112 23AAA  01               28
+00632I012016    MN0500200OCTTARUN112 250CA  01   B           13
+03073I012016    MN0500200OCTTARUN112 707000001000                                                                                                                                                                                                                                                                  
+03073I012016    MN0500200OCTTARUN112 306000004000                                                                                                                                                                                                                                                                  
+03073I012016    MN0500200OCTTARUN112 1                                                                                                                                                                                                                                                                             
+01294I012016    MN0500200OCTTARUN112 00110023A250                     I37  FIHN     N    01FR                                    
+00465I012016    MN0500200OCTTARUN112 0134  MAN
+00871I012016    MN0500200OCTTARUN113 20150727 17N                                      
+00632I012016    MN0500200OCTTARUN113 09ACA  13   N  12       12
+00712I012016    MN0500200OCTTARUN113 64ACA  13      30       12131415  
+00712I012016    MN0500200OCTTARUN113 64BCA  13      35       121314    
+00632I012016    MN0500200OCTTARUN113 11AAC  13      14       11
+01414I012016    MN0500200OCTTARUN113 00109A11A64A64B                  LBB  FWNR01   I    01FR02AQ03BG04EE05ER06IL07NE08OF09ST10ST02IMNBCA0000
+01414I012016    MN0500200OCTTARUN113 00209A                           LNB  FBNR02        01FR02AQ03BG04EE05ER06IL07NE08OF09CH10ST03FWI0500200
+01294I012016    MN0500200OCTTARUN113 00309A                           I32  FBUR01        01FR02AQ03BG04EE05ER06IL07NE08OF09ST10ST
+01294I012016    MN0500200OCTTARUN113 00409A                           I20  FPNR01        01FR02AQ03BG04EE05ER06IL07NE08OF09ST10ST
+01294I012016    MN0500200OCTTARUN113 00509A                           INN  FPNN01        01FR02AQ03BG04EE05ER06IL07NE08OF09ST10ST
+01294I012016    MN0500200OCTTARUN113 00609A                           I11  FBNR01        01FR02AQ03BG04EE05ER06IL07NE08OF09ST10ST
+01294I012016    MN0500200OCTTARUN113 00709A                           I32  FINR01        01FR02AQ03BG04EE05ER06IL07NE08OF09ST10ST
+01294I012016    MN0500200OCTTARUN113 00809A                           I4045MPHR01        01FR02AQ03HR04EE05ER06IL07NE08OF09ST10ST
+01294I012016    MN0500200OCTTARUN113 00909A                           I99  FBNR01        01FR02AQ03BG04EE05ER06IL07NE08OF09ST10ST
+01294I012016    MN0500200OCTTARUN113 01009A                           I55  FIHR01        01FR02AQ03BG04EE05ER06IL07NE08OF09ST10ST
+00465I012016    MN0500200OCTTARUN113 0120  MPH
+00465I012016    MN0500200OCTTARUN113 0249  MIN
+00465I012016    MN0500200OCTTARUN113 0348  MIH
+00465I012016    MN0500200OCTTARUN113 0438  MBH
+00465I012016    MN0500200OCTTARUN113 0549  FAH
+00465I012016    MN0500200OCTTARUN113 0642  MIN
+00465I012016    MN0500200OCTTARUN113 0794  MPN
+00465I012016    MN0500200OCTTARUN113 084050FIU
+00465I012016    MN0500200OCTTARUN113 0966  MBN
+00465I012016    MN0500200OCTTARUN113 1074  MPU
+00881I012016    MNBCA0000OCTTARUN12  20151021 17N                                      N
+00712I012016    MNBCA0000OCTTARUN12  23DCACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN12  706000001525        09                 77000789456        36000159863        19000078546        20000025000        17000000589                                                                                                                                                
+03073I012016    MNBCA0000OCTTARUN12  52000001585020151021                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN12  00123D                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN12  0153  MBN
+01106I012016    MNBCA0000OCTTARUN12  0126566555    20151021SC23A15A   53  MBNN                                
+00881I012016    MNBCA0000OCTTARUN13  20151021 17N                                      N
+00712I012016    MNBCA0000OCTTARUN13  23DAACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN13  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN13  00123D                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN13  0153  MBN
+01106I012016    MNBCA0000OCTTARUN13  0126566555    20151022SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN14  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN14  23ECACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN14  706000001525        09                 77000789456        36000159863        19000078546        20000025000        17000000589                                                                                                                                                
+03073I012016    MNBCA0000OCTTARUN14  52000001585020151022                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN14  00123E                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN14  0153  MBN
+01106I012016    MNBCA0000OCTTARUN14  0126566555    20151022SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN15  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN15  23EAACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN15  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN15  00123E                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN15  0153  MBN
+01106I012016    MNBCA0000OCTTARUN15  0126566555    20151022SC23A15A   53  MBNN                                
+00881I012016    MNBCA0000OCTTARUN16  20151021 17N                                      N
+00712I012016    MNBCA0000OCTTARUN16  23FCACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN16  706000001525        09                 77000789456        36000159863        19000078546        20000025000        17000000589                                                                                                                                                
+03073I012016    MNBCA0000OCTTARUN16  52000001585020151022                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN16  00123F                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN16  0153  MBN
+01106I012016    MNBCA0000OCTTARUN16  0126566555    20151025SC23A15A   53  MBNN                                
+00881I012016    MNBCA0000OCTTARUN17  20151021 17N                                      N
+00712I012016    MNBCA0000OCTTARUN17  23FAACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN17  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN17  00123F                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN17  0153  MBN
+01106I012016    MNBCA0000OCTTARUN17  0126566555    20151022SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN18  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN18  23GCACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN18  706000001525        09                 77000789456        36000159863        19000078546        20000025000        17000000589                                                                                                                                                
+03073I012016    MNBCA0000OCTTARUN18  52000001585020151022                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN18  00123G                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN18  0153  MBN
+01106I012016    MNBCA0000OCTTARUN18  0126566555    20151022SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN19  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN19  23GAACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN19  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN19  00123G                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN19  0153  MBN
+01106I012016    MNBCA0000OCTTARUN19  0126566555    20151022SC23A15A   53  MBNN                                
+00881I012016    MNBCA0000OCTTARUN20  20151021 17N                                      Y
+00712I012016    MNBCA0000OCTTARUN20  120CACD07   J  15       1112131415
+03073I012016    MNBCA0000OCTTARUN20  708000030000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTTARUN20  50800003000020151022                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN20  001120                           I68  FI N     L    01ER                                    
+00465I012016    MNBCA0000OCTTARUN20  0153  MBN
+01106I012016    MNBCA0000OCTTARUN20  0126566555    20151022SC23A15A   53  MBNN                                
+00881I012016    MNBCA0000OCTTARUN21  20151021 17N                                      Y
+00712I012016    MNBCA0000OCTTARUN21  23HAACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN21  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN21  00123H                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN21  0153  MBN
+01106I012016    MNBCA0000OCTTARUN21  0126566555    20151022SC23A15A   53  MBNN                                
+00881I012016    MNBCA0000OCTTARUN22  20151021 17N                                      Y
+00712I012016    MNBCA0000OCTTARUN22  240CACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN22  703000025000                                                                                                                                                                                   01                                                                             
+03073I012016    MNBCA0000OCTTARUN22  50300000250020151022                                                                                                                                                                             01                                                                           
+01294I012016    MNBCA0000OCTTARUN22  001240                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN22  0153  MBN
+01106I012016    MNBCA0000OCTTARUN22  0126566555    20151022SC23A15A   53  MBNN                                
+00881I012016    MNBCA0000OCTTARUN23  20151021R  N                                      Y
+00712I012016    MNBCA0000OCTTARUN23  240AACD07               1112131415
+03073I012016    MNBCA0000OCTTARUN23  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN23  001240                           I68  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN23  0153  MBN
+01106I012016    MNBCA0000OCTTARUN23  0126566555    20151022SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN24  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN24  370CACD07   B           1112131415
+01294I012016    MNBCA0000OCTTARUN24  001370                           S                                                          
+00465I012016    MNBCA0000OCTTARUN24  0153  MBN
+01106I012016    MNBCA0000OCTTARUN24  0126566555    20151022SC23A15A   68  FI N                                
+00871I012016    MNBCA0000OCTTARUN25  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN25  370AACD07   B           1112131415
+01294I012016    MNBCA0000OCTTARUN25  001370                           S                                                          
+00465I012016    MNBCA0000OCTTARUN25  0153  MBN
+01106I012016    MNBCA0000OCTTARUN25  0126566555    20151022SC23A15A   68  FI N                                
+00871I012016    MNBCA0000OCTTARUN26  20151010 05N                                      
+00712I012016    MNBCA0000OCTTARUN26  40ACC  06               1213      
+01294I012016    MNBCA0000OCTTARUN26  00140A                           S                                                          
+00465I012016    MNBCA0000OCTTARUN26  0154  UIH
+00465I012016    MNBCA0000OCTTARUN26  0239  FBH
+01106I012016    MNBCA0000OCTTARUN26  0125000003    20151018OC64A10    2560FBUR                                
+00871I012016    MNBCA0000OCTTARUN27  20151015 05N                                      
+00712I012016    MNBCA0000OCTTARUN27  40AAC  06               1213      
+01294I012016    MNBCA0000OCTTARUN27  00140A                           S                                                          
+00465I012016    MNBCA0000OCTTARUN27  0154  UIH
+00465I012016    MNBCA0000OCTTARUN27  0239  FBH
+01106I012016    MNBCA0000OCTTARUN27  0125000003    20151016OC64A10    2560FBUR                                
+00871I012016    MNBCA0000OCTTARUN28  20151019 05N                                      
+00632I012016    MNBCA0000OCTTARUN28  40BCC  06               12
+01294I012016    MNBCA0000OCTTARUN28  00140B                           S                                                          
+00465I012016    MNBCA0000OCTTARUN28  0154  UIH
+00465I012016    MNBCA0000OCTTARUN28  0230  MIH
+00465I012016    MNBCA0000OCTTARUN28  0339  FBH
+01106I012016    MNBCA0000OCTTARUN28  0125000003    20151023OC64A10    2560FBUR                                
+00871I012016    MNBCA0000OCTTARUN29  20151026 05N                                      
+00712I012016    MNBCA0000OCTTARUN29  40BAC  06               1213      
+01294I012016    MNBCA0000OCTTARUN29  00140B                           S                                                          
+00465I012016    MNBCA0000OCTTARUN29  0154  UIH
+00465I012016    MNBCA0000OCTTARUN29  0239  FBH
+01106I012016    MNBCA0000OCTTARUN29  0125000003    20151028OC64A10    2560FBUR                                
+00871I012016    MNBCA0000OCTTARUN30  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN30  40CCACD07               1112131415
+01294I012016    MNBCA0000OCTTARUN30  00140C                           S                                                          
+00465I012016    MNBCA0000OCTTARUN30  0153  MBN
+00455I012016    MNBCA0000OCTTARUN30  0268  FI
+01106I012016    MNBCA0000OCTTARUN30  0126566555    20151023SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN31  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN31  40CAACD07               1112131415
+01294I012016    MNBCA0000OCTTARUN31  00140C                           S                                                          
+00465I012016    MNBCA0000OCTTARUN31  0153  MBN
+00455I012016    MNBCA0000OCTTARUN31  0268  FI
+01106I012016    MNBCA0000OCTTARUN31  0126566555    20151025SC23A15A   53  MBNN                                
+01106I012016    MNBCA0000OCTTARUN31  0225          20151025SC40C11    68  FI N                                
+00881I012016    MNBCA0000OCTTARUN32  20151021 17N                                      Y
+00712I012016    MNBCA0000OCTTARUN32  120CACD07   J  15       1112131415
+03073I012016    MNBCA0000OCTTARUN32  708000030000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTTARUN32  50800003000020151025                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN32  001120                           I68  FI N     L    01ER                                    
+00465I012016    MNBCA0000OCTTARUN32  0153  MBN
+01106I012016    MNBCA0000OCTTARUN32  0126566555    20151025SC23A15A   53  MBNN                                
+00881I012016    MNBCA0000OCTTARUN33  20151026 17N                                      Y
+00632I012016    MNBCA0000OCTTARUN33  120AA  07      11       12
+03073I012016    MNBCA0000OCTTARUN33  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN33  001120                           I68  FI N     B    01AQ                                    
+00465I012016    MNBCA0000OCTTARUN33  0153  MBN
+01106I012016    MNBCA0000OCTTARUN33  0126566555    20151026SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN34  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN34  11ACACD07   J  15       1112131415
+01294I012016    MNBCA0000OCTTARUN34  00111A                           I68  FI N     L    01ER                                    
+00465I012016    MNBCA0000OCTTARUN34  0153  MBN
+01106I012016    MNBCA0000OCTTARUN34  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN35  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN35  11AAACD07   J  15       1112131415
+01294I012016    MNBCA0000OCTTARUN35  00111A                           I68  FI N     L    01ER                                    
+00465I012016    MNBCA0000OCTTARUN35  0153  MBN
+01106I012016    MNBCA0000OCTTARUN35  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN36  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN36  11BCACD07   J  15       1112131415
+01294I012016    MNBCA0000OCTTARUN36  00111B                           I68  FI N     L    01ER                                    
+00465I012016    MNBCA0000OCTTARUN36  0153  MBN
+01106I012016    MNBCA0000OCTTARUN36  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN37  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN37  11BAACD07   J  15       1112131415
+01294I012016    MNBCA0000OCTTARUN37  00111B                           I68  FI N     L    01ER                                    
+00465I012016    MNBCA0000OCTTARUN37  0153  MBN
+01106I012016    MNBCA0000OCTTARUN37  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN38  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN38  11CCACD07   J  15       1112131415
+01294I012016    MNBCA0000OCTTARUN38  00111C                           I68  FI N     L    01ER                                    
+00465I012016    MNBCA0000OCTTARUN38  0153  MBN
+01106I012016    MNBCA0000OCTTARUN38  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN39  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN39  11CAN  07   J  15       11121314  
+01294I012016    MNBCA0000OCTTARUN39  00111C                           I68  FI N     I    01OK                                    
+00465I012016    MNBCA0000OCTTARUN39  0153  MBN
+01106I012016    MNBCA0000OCTTARUN39  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MN0500200OCTTARUN40  20151021 17N                                      
+00712I012016    MN0500200OCTTARUN40  11DCN  07   J  15       11121314  
+01294I012016    MN0500200OCTTARUN40  00111D                           I68  FI N     I    01OK                                    
+00465I012016    MN0500200OCTTARUN40  0153  MBN
+01106I012016    MN0500200OCTTARUN40  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN41  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN41  11DAN  07   J  15 65    11121314  
+01294I012016    MNBCA0000OCTTARUN41  00111D                           I68  FI N     I    01CS                                    
+00465I012016    MNBCA0000OCTTARUN41  0153  MBN
+01106I012016    MNBCA0000OCTTARUN41  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN42  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN42  36ACN  07               11121314  
+01294I012016    MNBCA0000OCTTARUN42  00136A                           I68  FI N          01CS                                    
+00465I012016    MNBCA0000OCTTARUN42  0153  MBN
+01106I012016    MNBCA0000OCTTARUN42  0126566555    20151021SC23A15A   53  MBNN                                
+00871I012016    MNBCA0000OCTTARUN43  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN43  36AAN  07               11121314  
+01294I012016    MNBCA0000OCTTARUN43  00136A                           I68  FI N          01CS                                    
+00465I012016    MNBCA0000OCTTARUN43  0153  MBN
+00455I012016    MNBCA0000OCTTARUN43  0268  FI
+01106I012016    MNBCA0000OCTTARUN43  0126566555    20151021SC23A15A   53  MBNN                                
+01106I012016    MNBCA0000OCTTARUN43  0225636       20151021OM11D10    68  FI N                                
+00871I012016    MNBCA0000OCTTARUN44  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN44  36BCACD07               1112131415
+01294I012016    MNBCA0000OCTTARUN44  00136B                           I12  FI N          01ER                                    
+00465I012016    MNBCA0000OCTTARUN44  0118  MBN
+01106I012016    MNBCA0000OCTTARUN44  0126566555    20151021SC23A15A   18  MBNN                                
+00871I012016    MNBCA0000OCTTARUN45  20151008 17N                                      
+00712I012016    MNBCA0000OCTTARUN45  36BAACD07               1112131415
+01294I012016    MNBCA0000OCTTARUN45  00136B                           INN  FI N          01ER                                    
+00465I012016    MNBCA0000OCTTARUN45  0118  MBN
+01106I012016    MNBCA0000OCTTARUN45  0126566555    20151008SC23A15A   18  MBNN                                
+00871I012016    MNBCA0000OCTTARUN46  20151001 17N                                      
+00712I012016    MNBCA0000OCTTARUN46  280CACD07   B           1112131415
+03073I012016    MNBCA0000OCTTARUN46  50600000025020151001                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN46  001280                           INN  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN46  0118  MBN
+01106I012016    MNBCA0000OCTTARUN46  0126566555    20151001SC23A15A   18  MBNN                                
+
+00871I012016    MN0500200OCTTARUN47  20151014 17N                                      
+00712I012016    MN0500200OCTTARUN47  280AACD07   B           1112131415
+03073I012016    MN0500200OCTTARUN47  1                                                                                                                                                                                                                                                                             
+01294I012016    MN0500200OCTTARUN47  001280                           INN  FI N                                                  
+00465I012016    MN0500200OCTTARUN47  0118  MBN
+01106I012016    MN0500200OCTTARUN47  0126566555    20151014SC23A15A   18  MBNN                                
+00871I012016    MNBCA0000OCTTARUN47  20151014 17N                                      
+00712I012016    MNBCA0000OCTTARUN47  280AACD07   B           1112131415
+03073I012016    MNBCA0000OCTTARUN47  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN47  001280                           INN  FI N                                                  
+00465I012016    MNBCA0000OCTTARUN47  0118  MBN
+01106I012016    MNBCA0000OCTTARUN47  0126566555    20151014SC23A15A   18  MBNN                                
+
+00871I012016    MNBCA0000OCTTARUN48  20151021 17N                                      
+00712I012016    MNBCA0000OCTTARUN48  520CACD07   BCD13       1112131415
+01294I012016    MNBCA0000OCTTARUN48  001520                           S                                                          
+00465I012016    MNBCA0000OCTTARUN48  0118  MBN
+01106I012016    MNBCA0000OCTTARUN48  0126566555    20151021SC23A15A   18  MBNN                                
+00871I012016    MNBCA0000OCTTARUN49  20151018 17N                                      
+00712I012016    MNBCA0000OCTTARUN49  520AACD07   BCD13       1112131415
+01294I012016    MNBCA0000OCTTARUN49  001520                           S                                                          
+00465I012016    MNBCA0000OCTTARUN49  0118  MBN
+01106I012016    MNBCA0000OCTTARUN49  0126566555    20151018SC23A15A   18  MBNN                                
+00871I012016    MNBCA0000OCTTARUN50  20151001 17N                                      
+00712I012016    MNBCA0000OCTTARUN50  64ACD  06      14       61627172  
+01294I012016    MNBCA0000OCTTARUN50  00164A                           I39  FBHR     I    01AQ                                    
+00465I012016    MNBCA0000OCTTARUN50  0154  UIH
+01106I012016    MNBCA0000OCTTARUN50  0125000003    20151001OC64A10    2560FBUR                                
+00871I012016    MNBCA0000OCTTARUN51  20151006 17N                                      
+00712I012016    MNBCA0000OCTTARUN51  64AAD  06      14       61627172  
+01294I012016    MNBCA0000OCTTARUN51  00164A                           I39  FBHR     B    01AQ                                    
+00465I012016    MNBCA0000OCTTARUN51  0154  UIH
+01106I012016    MNBCA0000OCTTARUN51  0125000003    20151006OC64A10    2560FBUR                                
+00871I012016    MNBCA0000OCTTARUN52  20151003 17N                                      
+00712I012016    MNBCA0000OCTTARUN52  64BCD  06      14 35    61627172  
+01294I012016    MNBCA0000OCTTARUN52  00164B                           I39  FBHR     I    01AQ                                    
+00465I012016    MNBCA0000OCTTARUN52  0154  UIH
+01106I012016    MNBCA0000OCTTARUN52  0125000003    20151003OC64A10    2560FBUR                                
+00871I012016    MNBCA0000OCTTARUN53  20151001 17N                                      
+00632I012016    MNBCA0000OCTTARUN53  64BAD  06      14 35    12
+01294I012016    MNBCA0000OCTTARUN53  00164B                           I39  FBHR     L    01AQ                                    
+00465I012016    MNBCA0000OCTTARUN53  0154  UIH
+01106I012016    MNBCA0000OCTTARUN53  0125000003    20151001OC64A10    2560FBUR                                
+00871I012016    MNBCA0000OCTTARUN54  20151002 17N                                      
+00712I012016    MNBCA0000OCTTARUN54  39ACACD07               1321838485
+03073I012016    MNBCA0000OCTTARUN54  614000025000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN54  00139A                           S                                                          
+00465I012016    MNBCA0000OCTTARUN54  0130  MAN
+01106I012016    MNBCA0000OCTTARUN54  012317        20151002TC39A13    52  MINR                                
+00871I012016    MNBCA0000OCTTARUN55  20150905 17N                                      
+00712I012016    MNBCA0000OCTTARUN55  39AAACD07               1321838485
+03073I012016    MNBCA0000OCTTARUN55  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN55  00139A                           S                                                          
+00465I012016    MNBCA0000OCTTARUN55  0130  MAN
+01106I012016    MNBCA0000OCTTARUN55  012317        20150905TM39A13    52  MINR                                
+00871I012016    MNBCA0000OCTTARUN56  20150905 17N                                      
+00712I012016    MNBCA0000OCTTARUN56  39BCACD07               1321838485
+03073I012016    MNBCA0000OCTTARUN56  614000025000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN56  00139B                           S                                                          
+00465I012016    MNBCA0000OCTTARUN56  0140  MAN
+01106I012016    MNBCA0000OCTTARUN56  012317        20150905TM39A13    59  MINR                                
+00871I012016    MNBCA0000OCTTARUN57  20151009 17N                                      
+00712I012016    MNBCA0000OCTTARUN57  39BAACD07               1321838485
+03073I012016    MNBCA0000OCTTARUN57  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN57  00139B                           S                                                          
+00465I012016    MNBCA0000OCTTARUN57  0139  MAN
+01106I012016    MNBCA0000OCTTARUN57  012317        20151009TM39A13    17  MINRH                               
+00871I012016    MNBCA0000OCTTARUN58  20151006 17N                                      
+00712I012016    MNBCA0000OCTTARUN58  39CCACD07   B           1321838485
+03073I012016    MNBCA0000OCTTARUN58  614000028000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN58  00139C                           S                                                          
+00465I012016    MNBCA0000OCTTARUN58  0129  MAN
+01106I012016    MNBCA0000OCTTARUN58  012317        20151006TM39A13    17  MINRH                               
+00871I012016    MNBCA0000OCTTARUN59  20151008 17N                                      
+00712I012016    MNBCA0000OCTTARUN59  39CAACD07   B           1321838485
+03073I012016    MNBCA0000OCTTARUN59  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN59  00139C                           S                                                          
+00465I012016    MNBCA0000OCTTARUN59  0129  MAN
+01106I012016    MNBCA0000OCTTARUN59  012317        20151008TM39A13    17  MINRH                               
+00871I012016    MNBCA0000OCTTARUN60  20151022 17N                                      
+00712I012016    MNBCA0000OCTTARUN60  39DCACD07               1321838485
+03073I012016    MNBCA0000OCTTARUN60  614000028000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN60  00139D                           S                                                          
+00465I012016    MNBCA0000OCTTARUN60  0171  MAN
+01106I012016    MNBCA0000OCTTARUN60  012317        20151022TN39A13    86  MINR                                
+00871I012016    MNBCA0000OCTTARUN61  20151022 17N                                      
+00712I012016    MNBCA0000OCTTARUN61  39DAACD07               1321838485
+03073I012016    MNBCA0000OCTTARUN61  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN61  00139D                           S                                                          
+00465I012016    MNBCA0000OCTTARUN61  0171  MAN
+01106I012016    MNBCA0000OCTTARUN61  012317        20151022TN39A13    86  MINR                                
+00881I012016    MNBCA0000OCTTARUN62  20151022 17N                                      Y
+00632I012016    MNBCA0000OCTTARUN62  26ACACD07               11
+03073I012016    MNBCA0000OCTTARUN62  717000800000        64000450000        12000250006        14000100000        16000045000        46000040000        74000035000        45000025000        47000002500        07000001000                                                                                       
+03073I012016    MNBCA0000OCTTARUN62  547000000200201510224600000002520151022                                                                                                                                                                                                                                       
+01294I012016    MNBCA0000OCTTARUN62  00126A                           I86  MINR                                                  
+00465I012016    MNBCA0000OCTTARUN62  0171  MAN
+00465I012016    MNBCA0000OCTTARUN62  0256  MIU
+01106I012016    MNBCA0000OCTTARUN62  012317E       20151022TN39A13 11 86  MINR                                
+00881I012016    MNBCA0000OCTTARUN63  20151022 17N                                      N
+00712I012016    MNBCA0000OCTTARUN63  26AAACD07               111213    
+03073I012016    MNBCA0000OCTTARUN63  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN63  00126A                           I76  MBHR                                                  
+00465I012016    MNBCA0000OCTTARUN63  0171  MAN
+00465I012016    MNBCA0000OCTTARUN63  0256  MIU
+01106I012016    MNBCA0000OCTTARUN63  012317E       20151022TN39A13    76  MBHR                                
+00881I012016    MNBCA0000OCTTARUN64  20151022 17N                                      Y
+00632I012016    MNBCA0000OCTTARUN64  26BCACD07               11
+03073I012016    MNBCA0000OCTTARUN64  714000002569                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN64  00126B                           I86  MINR                                                  
+00465I012016    MNBCA0000OCTTARUN64  0171  MAN
+00465I012016    MNBCA0000OCTTARUN64  0256  MIU
+01106I012016    MNBCA0000OCTTARUN64  012317        20151022TN39A13    86  MINR                                
+00881I012016    MNBCA0000OCTTARUN65  20151022 17N                                      Y
+00632I012016    MNBCA0000OCTTARUN65  26BAACD07               11
+03073I012016    MNBCA0000OCTTARUN65  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN65  00126B                           I86  MINR                                                  
+00465I012016    MNBCA0000OCTTARUN65  0171  MAN
+00465I012016    MNBCA0000OCTTARUN65  0256  MIU
+01106I012016    MNBCA0000OCTTARUN65  012317        20151022TN39A13    86  MINR                                
+00881I012016    MNBCA0000OCTTARUN66  20151018 17N                                      N
+00632I012016    MNBCA0000OCTTARUN66  26CCACD07               11
+03073I012016    MNBCA0000OCTTARUN66  714000000258                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN66  00126C                           I86  MINR                                                  
+00465I012016    MNBCA0000OCTTARUN66  0171  MAN
+00465I012016    MNBCA0000OCTTARUN66  027   FIN
+00465I012016    MNBCA0000OCTTARUN66  0356  MIU
+01106I012016    MNBCA0000OCTTARUN66  012317        20151018TM39A13    86  MINR                                
+00881I012016    MNBCA0000OCTTARUN67  20151018 17N                                      N
+00632I012016    MNBCA0000OCTTARUN67  26CAACD07               11
+03073I012016    MNBCA0000OCTTARUN67  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN67  00126C                           I86  MINR                                                  
+00465I012016    MNBCA0000OCTTARUN67  0171  MAN
+00465I012016    MNBCA0000OCTTARUN67  027   FIN
+00465I012016    MNBCA0000OCTTARUN67  0356  MIU
+01106I012016    MNBCA0000OCTTARUN67  012317        20151018TM39A13    86  MINR                                
+00871I012016    MNBCA0000OCTTARUN68  20151022 17N                                      
+00712I012016    MNBCA0000OCTTARUN68  26DCACD07               1112      
+03073I012016    MNBCA0000OCTTARUN68  712000250000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN68  00126D                           I86  MINR                                                  
+01294I012016    MNBCA0000OCTTARUN68  00226D                           I32  MBUU                                                  
+00465I012016    MNBCA0000OCTTARUN68  0171  MAN
+00465I012016    MNBCA0000OCTTARUN68  024044FBN
+00465I012016    MNBCA0000OCTTARUN68  0356  MIU
+01106I012016    MNBCA0000OCTTARUN68  012317        20151022TN39A13    86  MINR                                
+01106I012016    MNBCA0000OCTTARUN68  0225552       20151022ON23C15    29  MIUN                                
+00871I012016    MNBCA0000OCTTARUN69  20151022 17N                                      
+00712I012016    MNBCA0000OCTTARUN69  26DAACD07               1112      
+03073I012016    MNBCA0000OCTTARUN69  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN69  00126D                           I86  MINR                                                  
+01294I012016    MNBCA0000OCTTARUN69  00226D                           I32  MBUU                                                  
+00465I012016    MNBCA0000OCTTARUN69  0171  MAN
+00465I012016    MNBCA0000OCTTARUN69  024044FBN
+00465I012016    MNBCA0000OCTTARUN69  0356  MIU
+01106I012016    MNBCA0000OCTTARUN69  012317        20151022TN39A13    86  MINR                                
+01106I012016    MNBCA0000OCTTARUN69  0225552       20151022ON23C15    29  MIUN                                
+00881I012016    MNBCA0000OCTTARUN70  20151015 17N                                      N
+00632I012016    MNBCA0000OCTTARUN70  26ECACD07               11
+03073I012016    MNBCA0000OCTTARUN70  747000250000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN70  00126E                           I86  MINR                                                  
+01294I012016    MNBCA0000OCTTARUN70  00226E                           I32  MBUU                                                  
+00465I012016    MNBCA0000OCTTARUN70  0171  MAN
+00465I012016    MNBCA0000OCTTARUN70  024044FBN
+00465I012016    MNBCA0000OCTTARUN70  0356  MIU
+01106I012016    MNBCA0000OCTTARUN70  012317        20151015TM39A13    86  MINR                                
+01106I012016    MNBCA0000OCTTARUN70  0225552       20151015ON23C15    29  MIUN                                
+00881I012016    MNBCA0000OCTTARUN71  20151015 17N                                      N
+00632I012016    MNBCA0000OCTTARUN71  26EAACD07               11
+03073I012016    MNBCA0000OCTTARUN71  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN71  00126E                           I86  MINR                                                  
+01294I012016    MNBCA0000OCTTARUN71  00226E                           I32  MBUU                                                  
+00465I012016    MNBCA0000OCTTARUN71  0171  MAN
+00465I012016    MNBCA0000OCTTARUN71  024044FBN
+00465I012016    MNBCA0000OCTTARUN71  0356  MIU
+01106I012016    MNBCA0000OCTTARUN71  012317        20151015TM39A13    86  MINR                                
+01106I012016    MNBCA0000OCTTARUN71  0225552       20151015ON23C15    29  MIUN                                
+00881I012016    MNBCA0000OCTTARUN73  20151021 18N                                      N
+00632I012016    MNBCA0000OCTTARUN73  270AC  02               88
+03073I012016    MNBCA0000OCTTARUN73  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN73  001270                           I80  FWNR                                                  
+00465I012016    MNBCA0000OCTTARUN73  0147  MWN
+01106I012016    MNBCA0000OCTTARUN73  01845961239   20151021ON27010    80  FWNR                                
+00881I012016    MNBCA0000OCTTARUN74  20151006 17N                                      N
+00632I012016    MNBCA0000OCTTARUN74  210CC  02      99       88
+03073I012016    MNBCA0000OCTTARUN74  721000008000                                                                                                                                                                                                                                                                  
+03073I012016    MNBCA0000OCTTARUN74  52100000800020151006                                                                                                                                                                                                                                                          
+01294I012016    MNBCA0000OCTTARUN74  001210                           I23  FWHR     N                                            
+00465I012016    MNBCA0000OCTTARUN74  0147  MWN
+00881I012016    MNBCA0000OCTTARUN75  20151008 17N                                      N
+00632I012016    MNBCA0000OCTTARUN75  210AN  02      99       88
+03073I012016    MNBCA0000OCTTARUN75  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN75  001210                           I23  FWHR     N                                            
+00465I012016    MNBCA0000OCTTARUN75  0147  MWN
+00871I012016    MNBCA0000OCTTARUN76  20151022 17N                                      
+00632I012016    MNBCA0000OCTTARUN76  09ACN  13      12       88
+01294I012016    MNBCA0000OCTTARUN76  00109A                           I3035MWUU01        01RU                                    
+00465I012016    MNBCA0000OCTTARUN76  0124  FWU
+00871I012016    MNBCA0000OCTTARUN77  20151021 11N                                      
+00632I012016    MNBCA0000OCTTARUN77  09BCN  10   N  13       88
+01294I012016    MNBCA0000OCTTARUN77  00109B                           I21  MWNR32        01AQ                                    
+00465I012016    MNBCA0000OCTTARUN77  0124  FWU
+00871I012016    MNBCA0000OCTTARUN78  20151022 17N                                      
+00632I012016    MNBCA0000OCTTARUN78  100CN  20   N  95       88
+03073I012016    MNBCA0000OCTTARUN78  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN78  001100                           I8   FWNR     N                                            
+00455I012016    MNBCA0000OCTTARUN78  00      
+00871I012016    MNBCA0000OCTTARUN79  20151001 17N                                      
+00632I012016    MNBCA0000OCTTARUN79  100AN  20   N  95       88
+03073I012016    MNBCA0000OCTTARUN79  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN79  001100                           I8   FWNR     N    01ST                                    
+00455I012016    MNBCA0000OCTTARUN79  014045MW
+00881I012016    MNBCA0000OCTTARUN90  20151019 05A20151019                              N
+00632I012016    MNBCA0000OCTTARUN90  220CN  1440F            99
+03073I012016    MNBCA0000OCTTARUN90  707000001500        26000001350        17000000500        27000000350        23000000150                                                                                                                                                                                      
+03073I012016    MNBCA0000OCTTARUN90  507000001500201510192600000135020151019170000005002015101927000000350201510192300000015020151019                                                                                                                                                                              
+01294I012016    MNBCA0000OCTTARUN90  001220                           I45  MWNR                                                  
+00465I012016    MNBCA0000OCTTARUN90  0120  MWN
+00881I012016    MNBCA0000OCTTARUN91  20151015 14N                                      N
+00632I012016    MNBCA0000OCTTARUN91  510AN  47               88
+03073I012016    MNBCA0000OCTTARUN91  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN91  001510                           I47  MWNR                                                  
+00465I012016    MNBCA0000OCTTARUN91  0147  MWN
+00465I012016    MNBCA0000OCTTARUN91  0233  MWN
+01106I012016    MNBCA0000OCTTARUN91  01123258      20151015SM51012 13 33  MWNR                                
+00881I012016    MNBCA0000OCTTARUN92  20151026 14C20151026                              N
+00632I012016    MNBCA0000OCTTARUN92  510CN  47               88
+03073I012016    MNBCA0000OCTTARUN92  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN92  001510                           I47  MWNR                                                  
+00465I012016    MNBCA0000OCTTARUN92  0147  MWN
+00465I012016    MNBCA0000OCTTARUN92  0233  MWN
+00881I012016    MNBCA0000OCTTARUN93  20151023 05D20151023                              N
+00632I012016    MNBCA0000OCTTARUN93  220CN  1420F            99
+03073I012016    MNBCA0000OCTTARUN93  8                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN93  001220                           I45  MWNR                                                  
+00465I012016    MNBCA0000OCTTARUN93  0120  MWN
+00871I012016    MNBCA0000OCTTARUN94  20151026 13E20151026                              
+00632I012016    MNBCA0000OCTTARUN94  250CN  20   D           99
+03073I012016    MNBCA0000OCTTARUN94  52500000025020151026                                                                                                                                                                                                                                                          
+03073I012016    MNBCA0000OCTTARUN94  325000001000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN94  001250                           B                                                          
+00465I012016    MNBCA0000OCTTARUN94  0123  MPN
+00871I012016    MNBCA0000OCTTARUN95  20151026 13E20151026                              
+00712I012016    MNBCA0000OCTTARUN95  250AN  20   C           3233      
+03073I012016    MNBCA0000OCTTARUN95  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN95  001250                           B                                                          
+00465I012016    MNBCA0000OCTTARUN95  0123  MPN
+00871I012016    MNBCA0000OCTTARUN96  20151022 05N                                      
+00632I012016    MNBCA0000OCTTARUN96  290CN  20               11
+03073I012016    MNBCA0000OCTTARUN96  407000004565        78000001500                                                                                                                                                                                                                                               
+01294I012016    MNBCA0000OCTTARUN96  001290                           I45  MWNR                                                  
+00465I012016    MNBCA0000OCTTARUN96  0120  MWN
+01106I012016    MNBCA0000OCTTARUN96  0145112397    20151022TN29010    20  MWNR                                
+00871I012016    MNBCA0000OCTTARUN97  20151022 05N                                      
+00632I012016    MNBCA0000OCTTARUN97  290AN  20               11
+03073I012016    MNBCA0000OCTTARUN97  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN97  001290                           I45  MWNR                                                  
+00465I012016    MNBCA0000OCTTARUN97  0120  MWN
+01106I012016    MNBCA0000OCTTARUN97  0145112397    20151022TN29010    20  MWNR                                
+00871I012016    MNBCA0000OCTTARUN98  20151006 08N                                      
+00632I012016    MNBCA0000OCTTARUN98  200CN  20               12
+03073I012016    MNBCA0000OCTTARUN98  229000150000                                                                                                                                                                                                                                                                  
+01294I012016    MNBCA0000OCTTARUN98  001200                           I51  FBNR                                                  
+00455I012016    MNBCA0000OCTTARUN98  00      
+00871I012016    MNBCA0000OCTTARUN99  20151006 08N                                      
+00632I012016    MNBCA0000OCTTARUN99  200AN  20               12
+03073I012016    MNBCA0000OCTTARUN99  1                                                                                                                                                                                                                                                                             
+01294I012016    MNBCA0000OCTTARUN99  001200                           I51  FBNR                                                  
+00455I012016    MNBCA0000OCTTARUN99  00      
+00667A012016    MNBCA0000OCTNOV055ARR0120150114T90A13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV056ARR0120150114T90B13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV057ARR0120150114T90C13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV058ARR0120150114T90D13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV059ARR0120150114T90E13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV060ARR0120150114T90F13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV061ARR0120150114T90G13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV062ARR0120150114T90H13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV063ARR0120150114T90I13A   17  MW UH
+00667A012016    MNBCA0000OCTNOV064ARR0120150114T90J13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV065ARR0120150114T90Z13A   35  MW U 
+00667A012016    MNBCA0000OCTNOV066ARR0120150114T90E17 13A16  MW UH

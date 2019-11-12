@@ -75,4 +75,13 @@ public class ArrestReportSegmentRepositoryTest {
 		
 	}
 	
+	@Test
+	@DirtiesContext
+	public void testCountByOriListAndSubmissionDateRange() {
+		long count = arrestReportSegmentRepository
+				.countByOriListAndSubmissionDateRange(null, null, null, null);
+		
+		assertThat(count, equalTo(1l));
+	}
+	
 }

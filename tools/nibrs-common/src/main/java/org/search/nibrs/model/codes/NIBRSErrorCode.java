@@ -509,14 +509,14 @@ public enum NIBRSErrorCode {
 	 * 952 cannot be implemented
 	 */
 	private String code;
-	public String type;
+	private String type;
 	public String message;
 	public String description;
 	
 	
 	private NIBRSErrorCode(String code, String type, String message, String description) {
 		this.setCode(code);
-		this.type = type;
+		this.setType(type);
 		this.message = message;
 		this.description = description;
 	}
@@ -529,6 +529,16 @@ public enum NIBRSErrorCode {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

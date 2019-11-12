@@ -15,9 +15,8 @@
  */
 package org.search.nibrs.stagingdata.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.HashSet;
 
 import org.search.nibrs.stagingdata.model.Agency;
@@ -76,7 +75,7 @@ public class ArrestReportSegmentFactory {
 		ArrestReportSegment arrestReportSegment = new ArrestReportSegment();
 		arrestReportSegment.setAgeOfArresteeMax(25);
 		arrestReportSegment.setAgeOfArresteeMin(22);
-		arrestReportSegment.setArrestDate(Date.from(LocalDateTime.of(2016, 6, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant()));
+		arrestReportSegment.setArrestDate(LocalDate.of(2016, 6, 12));
 		
 		DateType arrestDateType = dateTypeRepository.findFirstByDateMMDDYYYY("06122016");
 		arrestReportSegment.setArrestDateType(arrestDateType);

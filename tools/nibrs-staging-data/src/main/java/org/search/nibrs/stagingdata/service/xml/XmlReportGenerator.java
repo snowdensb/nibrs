@@ -26,6 +26,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -115,11 +116,15 @@ public class XmlReportGenerator {
 		long groupAIncidentCount = administrativeSegmentRepository
 				.countByOriListAndSubmissionDateRange(submissionTrigger.getOris(), 
 						submissionTrigger.getStartDate(), 
-						submissionTrigger.getEndDate());
+						submissionTrigger.getEndDate(), 
+						submissionTrigger.getAgencyIds());
+		log.info("groupAIncidentCount: " + groupAIncidentCount);
 		long groubBArrestReportCount = arrestReportSegmentRepository
 				.countByOriListAndSubmissionDateRange(submissionTrigger.getOris(), 
 						submissionTrigger.getStartDate(), 
-						submissionTrigger.getEndDate());
+						submissionTrigger.getEndDate(),
+						submissionTrigger.getAgencyIds());
+		log.info("groubBArrestReportCount: " + groubBArrestReportCount);
 		return groupAIncidentCount + groubBArrestReportCount; 
 	}
 
@@ -131,8 +136,8 @@ public class XmlReportGenerator {
 	    	directorty.mkdirs(); 
 	    }
 
-	    writeGroupAIncidentReports(submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate());
-	    writeGroupBIncidentReports(submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate());
+	    writeGroupAIncidentReports(submissionTrigger);
+	    writeGroupBIncidentReports(submissionTrigger);
 	}
 	
 	@Async
@@ -146,9 +151,10 @@ public class XmlReportGenerator {
 		writeGroupAIncidentReport(administrativeSegmentId);
 	}
 	
-	private void writeGroupAIncidentReports(List<String> oris, java.sql.Date startDate, java.sql.Date endDate) {
+	private void writeGroupAIncidentReports(SubmissionTrigger submissionTrigger) {
 		
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriListAndSubmissionDateRange(oris, startDate, endDate);
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriListAndSubmissionDateRange(
+				submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate(), submissionTrigger.getAgencyIds());
 		
 		for (Integer administrativeSegmentId : ids) {
 			writeGroupAIncidentReport(administrativeSegmentId);
@@ -171,9 +177,10 @@ public class XmlReportGenerator {
 		}
 	}
 	
-	public void writeGroupBIncidentReports(List<String> oris, java.sql.Date startDate, java.sql.Date endDate){
+	public void writeGroupBIncidentReports(SubmissionTrigger submissionTrigger){
 		
-		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriListAndSubmissionDateRange(oris, startDate, endDate);
+		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriListAndSubmissionDateRange(
+				submissionTrigger.getOris(), submissionTrigger.getStartDate(), submissionTrigger.getEndDate(), submissionTrigger.getAgencyIds());
 		
 		for (Integer arrestReportSegmentId : ids) {
 			log.info("Generating arrest report for pkId " + arrestReportSegmentId);
@@ -198,7 +205,7 @@ public class XmlReportGenerator {
 		Document document = XmlUtils.createNewDocument();
 		Element submissionElement = XmlUtils.appendChildElement(document, NIBRS, "Submission");
 		
-		addMessageMetadataElement("GroupAIncident"+ administrativeSegment.getAdministrativeSegmentId(), submissionElement);
+		addMessageMetadataElement(administrativeSegment.getAdministrativeSegmentId(), submissionElement);
 		
 		Element reportElement = XmlUtils.appendChildElement(submissionElement, NIBRS, "Report"); 
 		addReportHeaderElement(administrativeSegment, reportElement);
@@ -227,7 +234,7 @@ public class XmlReportGenerator {
 		Document document = XmlUtils.createNewDocument();
 		Element submissionElement = XmlUtils.appendChildElement(document, NIBRS, "Submission");
 		
-		addMessageMetadataElement("GroupBArrest" + arrestReportSegment.getArrestReportSegmentId(), submissionElement);
+		addMessageMetadataElement(arrestReportSegment.getArrestReportSegmentId(), submissionElement);
 		
 		Element reportElement = XmlUtils.appendChildElement(submissionElement, NIBRS, "Report"); 
 		addReportHeaderElement(arrestReportSegment, reportElement);
@@ -282,7 +289,7 @@ public class XmlReportGenerator {
 		
 		appendIdentificationIdElement(incidentElement, NC, "ActivityIdentification", administrativeSegment.getIncidentNumber());
 		
-		Date incidentDate = administrativeSegment.getIncidentDate();
+		LocalDate incidentDate = administrativeSegment.getIncidentDate();
 		String incidentHour = administrativeSegment.getIncidentHour(); 
 		if (incidentDate != null) {
 			Element activityDate = XmlUtils.appendChildElement(incidentElement, Namespace.NC, "ActivityDate");
@@ -290,11 +297,11 @@ public class XmlReportGenerator {
 			if (StringUtils.isNotBlank(incidentHour)){
 				String incidentHourString = "T" + StringUtils.leftPad(incidentHour, 2, '0') + ":00:00"; 
 				Element element = XmlUtils.appendChildElement(activityDate, Namespace.NC, "DateTime");
-				element.setTextContent(DATE_FORMAT.format(incidentDate) + incidentHourString);
+				element.setTextContent(incidentDate + incidentHourString);
 			}
 			else {
 				Element e = XmlUtils.appendChildElement(activityDate, Namespace.NC, "Date");
-				e.setTextContent(DATE_FORMAT.format(incidentDate));
+				e.setTextContent(incidentDate.toString());
 			}
 		}
 		
@@ -313,12 +320,12 @@ public class XmlReportGenerator {
 		}
 	}
 
-	private void addMessageMetadataElement(String messageId, Element submissionElement) {
+	private void addMessageMetadataElement(Integer messageId, Element submissionElement) {
 		Element messageMetadata = XmlUtils.appendChildElement(submissionElement, CJIS, "MessageMetadata");
 		Element messageDateTime = XmlUtils.appendChildElement(messageMetadata, CJIS, "MessageDateTime");
 		messageDateTime.setTextContent(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss")));
 
-		appendIdentificationIdElement(messageMetadata, CJIS, "MessageIdentification", messageId);
+		appendIdentificationIdElement(messageMetadata, CJIS, "MessageIdentification", messageId.toString());
 		
 		Element messageImplementationVersion = XmlUtils.appendChildElement(messageMetadata, CJIS, "MessageImplementationVersion"); 
 		messageImplementationVersion.setTextContent("4.2");
@@ -812,14 +819,14 @@ public class XmlReportGenerator {
 	}
 
 	private void addArrestElement(Element reportElement, Integer arresteeSequenceNumber, String arrestTransactionNumber, 
-			Date arrestDate, UcrOffenseCodeType ucrOffenseCodeType, TypeOfArrestType typeOfArrestType) {
+			LocalDate arrestDate, UcrOffenseCodeType ucrOffenseCodeType, TypeOfArrestType typeOfArrestType) {
 		Element arrestElement = XmlUtils.appendChildElement(reportElement, Namespace.J, "Arrest");
 		XmlUtils.addAttribute(arrestElement, Namespace.S, "id", "Arrest-" + arresteeSequenceNumber);
 		appendIdentificationIdElement(arrestElement, NC, "ActivityIdentification", arrestTransactionNumber);
 		
 		if (arrestDate != null) {
 			Element activityDate = XmlUtils.appendChildElement(arrestElement, Namespace.NC, "ActivityDate");
-			XmlUtils.appendElementAndValue(activityDate, NC, "Date", DATE_FORMAT.format(arrestDate));
+			XmlUtils.appendElementAndValue(activityDate, NC, "Date", arrestDate.toString());
 		}
 		
 		Element arrestCharge = XmlUtils.appendChildElement(arrestElement, Namespace.J, "ArrestCharge");

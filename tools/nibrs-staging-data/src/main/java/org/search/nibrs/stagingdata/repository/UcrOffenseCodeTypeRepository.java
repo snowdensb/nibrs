@@ -16,8 +16,8 @@
 package org.search.nibrs.stagingdata.repository;
 
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UcrOffenseCodeTypeRepository extends CrudRepository<UcrOffenseCodeType, Integer>{
+public interface UcrOffenseCodeTypeRepository extends JpaRepository<UcrOffenseCodeType, Integer>{
 	public UcrOffenseCodeType findFirstByStateCode( String stateCode );
 }
