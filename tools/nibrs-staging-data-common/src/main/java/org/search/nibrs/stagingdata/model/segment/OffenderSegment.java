@@ -189,4 +189,16 @@ public class OffenderSegment {
 		this.nonNumericAge = nonNumericAge;
 	}
 
+	public String getAgeString() {
+		String ageString = StringUtils.EMPTY;
+		
+		Integer averageAge = getAverageAge();
+		if (averageAge != null) {
+			ageString = StringUtils.leftPad(averageAge.toString(), 2, '0'); 
+		}
+		else if (nonNumericAge != null) {
+			ageString = nonNumericAge;
+		}
+		return ageString;
+	}
 }

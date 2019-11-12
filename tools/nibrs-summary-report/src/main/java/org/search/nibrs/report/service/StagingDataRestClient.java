@@ -26,6 +26,7 @@ import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
+import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.report.AppProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -90,6 +91,17 @@ public class StagingDataRestClient {
 		HumanTraffickingForm humanTraffickingForm = restTemplate.getForObject( url, HumanTraffickingForm.class);
 		log.info("humanTraffickingForm: " + humanTraffickingForm);
 		return humanTraffickingForm;
+	}
+	
+	public SupplementaryHomicideReport getSupplementaryHomicideReport(String ori, String year, String month) {
+		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
+				"shrReports", ori, year, month); 
+		String url = StringUtils.join(urlParts, '/');
+		log.info("Getting the SupplementaryHomicideReport object from the url " + url);
+		
+		SupplementaryHomicideReport supplementaryHomicideReport = restTemplate.getForObject( url, SupplementaryHomicideReport.class);
+		log.info("supplementaryHomicideReport: " + supplementaryHomicideReport);
+		return supplementaryHomicideReport;
 	}
 	
 	private List<HttpMessageConverter<?>> getMessageConverters() {

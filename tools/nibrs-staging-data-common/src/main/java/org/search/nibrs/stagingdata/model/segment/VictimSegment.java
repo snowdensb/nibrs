@@ -435,5 +435,31 @@ public class VictimSegment implements Serializable{
 				.map(offenseSegment->offenseSegment.getUcrOffenseCodeType().getNibrsCode())
 				.collect(Collectors.toList());
 	}
+	
+	@Transient
+	public Integer getAverageAge() {
+		Integer ret = null;
+		if (getAgeOfVictimMin() != null && getAgeOfVictimMax() != null) {
+			double min = getAgeOfVictimMin().doubleValue();
+			double max = getAgeOfVictimMax().doubleValue();
+			double average = (min + max) / 2.0;
+			ret = new Integer((int) average);
+		}
+		return ret;
+	}
+	
+	@Transient
+	public String getAgeString() {
+		String ageString = StringUtils.EMPTY;
+		
+		Integer averageAge = getAverageAge();
+		if (averageAge != null) {
+			ageString = StringUtils.leftPad(averageAge.toString(), 2, '0'); 
+		}
+		else if (nonNumericAge != null) {
+			ageString = nonNumericAge;
+		}
+		return ageString;
+	}
 
 }
