@@ -167,7 +167,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.search.nibrs</groupId>
-			<artifactId>nibrs-summary-report</artifactId>
+			<artifactId>nibrs-summary-report-common</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
