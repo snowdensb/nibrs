@@ -27,7 +27,7 @@ import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
-import org.search.nibrs.report.AppProperties;
+import org.search.nibrs.report.SummaryReportProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -41,7 +41,7 @@ public class StagingDataRestClient {
 
 	private RestTemplate restTemplate;
 	@Autowired
-	private AppProperties appProperties;
+	private SummaryReportProperties appProperties;
 
 	public StagingDataRestClient() {
 		super();

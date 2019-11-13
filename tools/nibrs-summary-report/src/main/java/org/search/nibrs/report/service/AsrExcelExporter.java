@@ -44,7 +44,7 @@ import org.search.nibrs.model.reports.asr.AsrAdultRowName;
 import org.search.nibrs.model.reports.asr.AsrJuvenileRow;
 import org.search.nibrs.model.reports.asr.AsrJuvenileRowName;
 import org.search.nibrs.model.reports.asr.AsrReports;
-import org.search.nibrs.report.AppProperties;
+import org.search.nibrs.report.SummaryReportProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +53,7 @@ public class AsrExcelExporter {
 	private static final Log log = LogFactory.getLog(AsrExcelExporter.class);
 	
 	@Autowired
-	private AppProperties appProperties;
+	private SummaryReportProperties appProperties;
 
     public void exportAsrAdultForm(AsrReports asrAdult){
         XSSFWorkbook workbook = new XSSFWorkbook();

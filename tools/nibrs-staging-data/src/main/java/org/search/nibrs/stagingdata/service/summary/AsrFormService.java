@@ -411,7 +411,6 @@ public class AsrFormService {
 		return victimGender;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void countToEthnicityGroups(AsrRow[] asrRows, String ethnicityCode,
 			String asrRowName, Class asrRowEnum) {
 		if (StringUtils.isNotBlank(ethnicityCode) && !"U".equals(ethnicityCode)){
@@ -446,7 +445,6 @@ public class AsrFormService {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void countToRaceGroups(AsrRow[] asrRows, String raceCode,
 			String asrRowName, Class asrRowEnumClass) {
 		if (StringUtils.isNotBlank(raceCode) && !"U".equals(raceCode)){

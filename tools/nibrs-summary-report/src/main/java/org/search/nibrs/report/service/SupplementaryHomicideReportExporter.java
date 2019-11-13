@@ -42,7 +42,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.search.nibrs.model.reports.supplementaryhomicide.Person;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReportRow;
-import org.search.nibrs.report.AppProperties;
+import org.search.nibrs.report.SummaryReportProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +51,7 @@ public class SupplementaryHomicideReportExporter {
 	private static final Log log = LogFactory.getLog(SupplementaryHomicideReportExporter.class);
 	
 	@Autowired
-	private AppProperties appProperties;
+	private SummaryReportProperties appProperties;
 	
 	XSSFFont boldFont; 
 	XSSFFont italicFont; 

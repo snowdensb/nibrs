@@ -49,7 +49,7 @@ import org.search.nibrs.model.reports.PropertyTypeValueRowName;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.ReturnAFormRow;
 import org.search.nibrs.model.reports.ReturnARowName;
-import org.search.nibrs.report.AppProperties;
+import org.search.nibrs.report.SummaryReportProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +59,7 @@ public class ReturnAFormExporter {
 	private static final Log log = LogFactory.getLog(ReturnAFormExporter.class);
 	
 	@Autowired
-	private AppProperties appProperties;
+	private SummaryReportProperties appProperties;
 
     public void exportReturnASupplement(ReturnAForm returnAForm){
         XSSFWorkbook workbook = createReturnASupplementWorkBook(returnAForm);
@@ -702,7 +702,25 @@ public class ReturnAFormExporter {
 	}
 	
 	public void exportReturnAForm(ReturnAForm returnAForm){
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFWorkbook workbook = createReturnAWorkbook(returnAForm);
+		
+        try {
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
+            FileOutputStream outputStream = new FileOutputStream(fileName);
+            workbook.write(outputStream);
+            workbook.close();
+            System.out.println("The return A form is writen to fileName: " + fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Done");
+    }
+
+	public XSSFWorkbook createReturnAWorkbook(ReturnAForm returnAForm) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
         
         XSSFSheet sheet = workbook.createSheet("Return A Form");
     	
@@ -933,21 +951,8 @@ public class ReturnAFormExporter {
 		}
 		
 		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(31, 42, 5, 5), sheet);
-		
-        try {
-        	String fileName = appProperties.getSummaryReportOutputPath() + "/ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
-            FileOutputStream outputStream = new FileOutputStream(fileName);
-            workbook.write(outputStream);
-            workbook.close();
-            System.out.println("The return A form is writen to fileName: " + fileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Done");
-    }
+		return workbook;
+	}
 
 	private void addInitialTableRow(XSSFSheet sheet, int rowNum, String label, Row row) {
 		XSSFCellStyle rightAligned = sheet.getWorkbook().createCellStyle(); 

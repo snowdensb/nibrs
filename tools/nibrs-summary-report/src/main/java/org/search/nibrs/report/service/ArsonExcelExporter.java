@@ -45,7 +45,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.arson.ArsonRow;
 import org.search.nibrs.model.reports.arson.ArsonRowName;
-import org.search.nibrs.report.AppProperties;
+import org.search.nibrs.report.SummaryReportProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +54,7 @@ public class ArsonExcelExporter {
 	private static final Log log = LogFactory.getLog(ArsonExcelExporter.class);
 	
 	@Autowired
-	private AppProperties appProperties;
+	private SummaryReportProperties appProperties;
 
     public void exportArsonReport(ArsonReport arsonReport){
         XSSFWorkbook workbook = new XSSFWorkbook();
