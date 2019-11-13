@@ -122,7 +122,7 @@ public class HumanTraffickingExporter {
 		sheet.autoSizeColumn(6);
 		
         try {
-        	String fileName = appProperties.getReturnAFormOutputPath() + "/HumanTrafficking-" + humanTraffickingForm.getOri() + "-" + humanTraffickingForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(humanTraffickingForm.getMonth()), 2, '0') + ".xlsx"; 
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/HumanTrafficking-" + humanTraffickingForm.getOri() + "-" + humanTraffickingForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(humanTraffickingForm.getMonth()), 2, '0') + ".xlsx"; 
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class AppProperties {
 
 	private String stagingDataRestServiceBaseUrl = "http://localhost:9080";
-	private String returnAFormOutputPath = ".";
+	private String summaryReportOutputPath = ".";
 	
 	public String getStagingDataRestServiceBaseUrl() {
 		return stagingDataRestServiceBaseUrl;
@@ -33,18 +33,18 @@ public class AppProperties {
 		this.stagingDataRestServiceBaseUrl = stagingDataRestServiceBaseUrl;
 	}
 
-	public String getReturnAFormOutputPath() {
-		return returnAFormOutputPath;
+	public String getSummaryReportOutputPath() {
+		return summaryReportOutputPath;
 	}
 
-	public void setReturnAFormOutputPath(String returnAFormOutputPath) {
-		this.returnAFormOutputPath = returnAFormOutputPath;
+	public void setSummaryReportOutputPath(String summaryReportOutputPath) {
+		this.summaryReportOutputPath = summaryReportOutputPath;
 	}
 
 	@Override
 	public String toString() {
 		return "AppProperties [stagingDataRestServiceBaseUrl=" + stagingDataRestServiceBaseUrl
-				+ ", returnAFormOutputPath=" + returnAFormOutputPath + "]";
+				+ ", summaryReportOutputPath=" + summaryReportOutputPath + "]";
 	}
 
 }

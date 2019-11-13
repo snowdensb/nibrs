@@ -62,7 +62,25 @@ public class ExcelExporter {
 	private AppProperties appProperties;
 
     public void exportReturnASupplement(ReturnAForm returnAForm){
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFWorkbook workbook = createReturnASupplementWorkBook(returnAForm);
+		
+        try {
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/ReturnASupplement-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
+            FileOutputStream outputStream = new FileOutputStream(fileName);
+            workbook.write(outputStream);
+            workbook.close();
+            System.out.println("The return A form is writen to fileName: " + fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+    
+	public XSSFWorkbook createReturnASupplementWorkBook(ReturnAForm returnAForm) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
         
         XSSFSheet sheet = workbook.createSheet("Return A Supplement");
     	
@@ -88,21 +106,8 @@ public class ExcelExporter {
     	createReturnASupplementTextSheet(sheet, rowNum, boldFont, normalWeightFont);
         createPropertyByTypeAndValueSheet(returnAForm, workbook, wrappedStyle, centeredStyle, boldFont, normalWeightFont);
         createPropertyStolenByClassificationSheet(returnAForm, workbook, wrappedStyle, centeredStyle, boldFont, normalWeightFont);
-		
-        try {
-        	String fileName = appProperties.getReturnAFormOutputPath() + "/ReturnASupplement-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
-            FileOutputStream outputStream = new FileOutputStream(fileName);
-            workbook.write(outputStream);
-            workbook.close();
-            System.out.println("The return A form is writen to fileName: " + fileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
+		return workbook;
+	}
 	private void createPropertyStolenByClassificationSheet(ReturnAForm returnAForm, XSSFWorkbook workbook,
 			CellStyle wrappedStyle, CellStyle centeredStyle, Font boldFont, XSSFFont normalWeightFont) {
 		int rowNum = 0;
@@ -930,7 +935,7 @@ public class ExcelExporter {
 		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(31, 42, 5, 5), sheet);
 		
         try {
-        	String fileName = appProperties.getReturnAFormOutputPath() + "/ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx"; 
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();

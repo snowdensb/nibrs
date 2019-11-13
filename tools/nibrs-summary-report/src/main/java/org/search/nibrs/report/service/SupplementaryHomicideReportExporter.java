@@ -121,7 +121,7 @@ public class SupplementaryHomicideReportExporter {
         createNegligentSheet(supplementaryHomicideReport, workbook);
         
         try {
-        	String fileName = appProperties.getReturnAFormOutputPath() + "/SupplementaryHomicideReport-" + supplementaryHomicideReport.getOri() + "-" + supplementaryHomicideReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(supplementaryHomicideReport.getMonth()), 2, '0') + ".xlsx"; 
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/SupplementaryHomicideReport-" + supplementaryHomicideReport.getOri() + "-" + supplementaryHomicideReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(supplementaryHomicideReport.getMonth()), 2, '0') + ".xlsx"; 
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();

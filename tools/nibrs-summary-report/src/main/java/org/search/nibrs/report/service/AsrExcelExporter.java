@@ -61,7 +61,7 @@ public class AsrExcelExporter {
         createSheet(asrAdult, workbook);
 		
         try {
-        	String fileName = appProperties.getReturnAFormOutputPath() + "/ASR-ADULT-" + asrAdult.getOri() + "-" + asrAdult.getYear() + "-" + StringUtils.leftPad(String.valueOf(asrAdult.getMonth()), 2, '0') + ".xlsx"; 
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/ASR-ADULT-" + asrAdult.getOri() + "-" + asrAdult.getYear() + "-" + StringUtils.leftPad(String.valueOf(asrAdult.getMonth()), 2, '0') + ".xlsx"; 
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();
@@ -79,7 +79,7 @@ public class AsrExcelExporter {
     	createJuvenileSheet(asrReports.getJuvenileRows(), workbook);
     	
     	try {
-    		String fileName = appProperties.getReturnAFormOutputPath() + "/ASR-Juvenile-" + asrReports.getOri() + "-" + asrReports.getYear() + "-" + StringUtils.leftPad(String.valueOf(asrReports.getMonth()), 2, '0') + ".xlsx"; 
+    		String fileName = appProperties.getSummaryReportOutputPath() + "/ASR-Juvenile-" + asrReports.getOri() + "-" + asrReports.getYear() + "-" + StringUtils.leftPad(String.valueOf(asrReports.getMonth()), 2, '0') + ".xlsx"; 
     		FileOutputStream outputStream = new FileOutputStream(fileName);
     		workbook.write(outputStream);
     		workbook.close();

@@ -62,7 +62,7 @@ public class ArsonExcelExporter {
         createSheet(arsonReport, workbook);
 		
         try {
-        	String fileName = appProperties.getReturnAFormOutputPath() + "/ARSON-Report-" 
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/ARSON-Report-" 
         			+ arsonReport.getOri() + "-" + arsonReport.getYear() + "-" 
         			+ StringUtils.leftPad(String.valueOf(arsonReport.getMonth()), 2, '0') 
         			+ ".xlsx"; 

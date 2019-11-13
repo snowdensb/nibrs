@@ -17,7 +17,6 @@ package org.search.nibrs.report;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.report.service.ArsonExcelExporter;
 import org.search.nibrs.report.service.AsrExcelExporter;
