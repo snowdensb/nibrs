@@ -54,9 +54,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ExcelExporter {
+public class ReturnAFormExporter {
 	private static final String CRIMINAL_HOMICIDE = "CRIMINAL HOMICIDE";
-	private static final Log log = LogFactory.getLog(ExcelExporter.class);
+	private static final Log log = LogFactory.getLog(ReturnAFormExporter.class);
 	
 	@Autowired
 	private AppProperties appProperties;
@@ -1187,7 +1187,7 @@ public class ExcelExporter {
         returnAForm.setStateName("Hawaii");
         returnAForm.setStateCode("HI");
         
-        ExcelExporter exporter = new ExcelExporter(); 
+        ReturnAFormExporter exporter = new ReturnAFormExporter(); 
         exporter.exportReturnAForm(returnAForm);
         
     }
