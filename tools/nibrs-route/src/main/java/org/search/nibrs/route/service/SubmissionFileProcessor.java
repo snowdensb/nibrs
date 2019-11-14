@@ -37,6 +37,7 @@ import org.search.nibrs.flatfile.errorexport.ErrorExporter;
 import org.search.nibrs.importer.ReportListener;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.validate.common.SubmissionFileValidator;
+import org.search.nibrs.validate.common.ValidationResults;
 import org.search.nibrs.validation.SubmissionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;

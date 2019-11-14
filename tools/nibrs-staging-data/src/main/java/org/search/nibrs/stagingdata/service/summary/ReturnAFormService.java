@@ -576,7 +576,7 @@ public class ReturnAFormService {
 		for (PropertySegment propertySegment: administrativeSegment.getPropertySegments()){
 			List<PropertyType> propertyTypes = propertySegment.getPropertyTypes()
 					.stream()
-					.filter(propertyType -> propertyType.getValueOfProperty()!= null && propertyType.getValueOfProperty() > 0)
+					.filter(propertyType -> propertyType.getValueOfProperty() != null &&  propertyType.getValueOfProperty()> 0)
 					.collect(Collectors.toList()); 
 			
 			if (propertyTypes.size() > 0){

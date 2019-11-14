@@ -17,12 +17,12 @@ package org.search.nibrs.report;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
+import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.report.service.ArsonExcelExporter;
 import org.search.nibrs.report.service.AsrExcelExporter;
-import org.search.nibrs.report.service.ExcelExporter;
 import org.search.nibrs.report.service.HumanTraffickingExporter;
+import org.search.nibrs.report.service.ReturnAFormExporter;
 import org.search.nibrs.report.service.StagingDataRestClient;
 import org.search.nibrs.report.service.SupplementaryHomicideReportExporter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class NibrsSummaryReportApplication implements CommandLineRunner{
 	@Autowired 
 	public StagingDataRestClient restClient; 
 	@Autowired 
-	public ExcelExporter excelExporter;
+	public ReturnAFormExporter excelExporter;
 	@Autowired 
 	public AsrExcelExporter asrExcelExporter;
 	@Autowired 

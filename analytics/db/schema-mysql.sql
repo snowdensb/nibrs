@@ -23,18 +23,28 @@ CREATE schema search_nibrs_staging;
 use search_nibrs_staging;
 
 
+CREATE TABLE NibrsErrorCodeType (
+                NibrsErrorCodeTypeId INT AUTO_INCREMENT NOT NULL,
+                Code VARCHAR(3) NOT NULL,
+                Type VARCHAR(30) NOT NULL,
+                Message VARCHAR(300) NOT NULL,
+                Description VARCHAR(4000) NOT NULL,
+                PRIMARY KEY (NibrsErrorCodeTypeId)
+);
 
 
 CREATE TABLE Submission (
                 SubmissionID INT AUTO_INCREMENT NOT NULL,
                 IncidentIdentifier VARCHAR(50) NOT NULL,
+                MessageIdentifier INT NOT NULL,
                 RequestFilePath VARCHAR(300) NOT NULL,
                 ResponseFilePath VARCHAR(300),
                 AcceptedIndicator BOOLEAN DEFAULT false NOT NULL,
                 ResponseTimestamp timestamp,
                 FaultCode VARCHAR(100),
                 FaultDescription VARCHAR(500),
-                SubmissionTimestamp TIMESTAMP NOT NULL,
+                NIBRSReportCategoryCode VARCHAR(30) NOT NULL,
+                SubmissionTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (SubmissionID)
 );
 
@@ -43,7 +53,9 @@ CREATE TABLE Violation (
                 ViolationID INT AUTO_INCREMENT NOT NULL,
                 SubmissionID INT NOT NULL,
                 ViolationCode VARCHAR(3) NOT NULL,
+                ViolationDescription VARCHAR(200) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
+                NibrsErrorCodeTypeId INT,
                 ViolationTimestamp TIMESTAMP NOT NULL,
                 PRIMARY KEY (ViolationID)
 );
@@ -52,9 +64,9 @@ CREATE TABLE Violation (
 CREATE TABLE CargoTheftIndicatorType (
                 CargoTheftIndicatorTypeID INT AUTO_INCREMENT NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
-                StateDescription VARCHAR(7) NOT NULL,
+                StateDescription VARCHAR(50) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
-                NIBRSDescription VARCHAR(7) NOT NULL,
+                NIBRSDescription VARCHAR(50) NOT NULL,
                 PRIMARY KEY (CargoTheftIndicatorTypeID)
 );
 
@@ -322,9 +334,9 @@ CREATE TABLE TypeOfCriminalActivityType (
 CREATE TABLE OffenderSuspectedOfUsingType (
                 OffenderSuspectedOfUsingTypeID INT AUTO_INCREMENT NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
-                StateDescription VARCHAR(20) NOT NULL,
+                StateDescription VARCHAR(50) NOT NULL,
                 NIBRSCode VARCHAR(1) NOT NULL,
-                NIBRSDescription VARCHAR(20) NOT NULL,
+                NIBRSDescription VARCHAR(50) NOT NULL,
                 PRIMARY KEY (OffenderSuspectedOfUsingTypeID)
 );
 
@@ -336,6 +348,23 @@ CREATE TABLE SegmentActionTypeType (
                 NIBRSCode VARCHAR(1) NOT NULL,
                 NIBRSDescription VARCHAR(25) NOT NULL,
                 PRIMARY KEY (SegmentActionTypeTypeID)
+);
+
+
+CREATE TABLE PreCertificationError (
+                PreCertificationErrorId INT AUTO_INCREMENT NOT NULL,
+                MonthOfTape VARCHAR(2),
+                YearOfTape VARCHAR(4),
+                ORI VARCHAR(9),
+                AgencyID INT NOT NULL,
+                NibrsErrorCodeTypeId INT NOT NULL,
+                SegmentActionTypeTypeID INT NOT NULL,
+                SourceLocation VARCHAR(15),
+                IncidentIdentifier VARCHAR(50),
+                DataElement VARCHAR(4),
+                RejectedValue VARCHAR(50),
+                PreCertificationErrorTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                PRIMARY KEY (PreCertificationErrorId)
 );
 
 
@@ -406,6 +435,7 @@ CREATE TABLE ArrestReportSegment (
                 ResidentStatusOfPersonTypeID INT NOT NULL,
                 DispositionOfArresteeUnder18TypeID INT NOT NULL,
                 UCROffenseCodeTypeID INT NOT NULL,
+                SubmissionID INT,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (ArrestReportSegmentID)
 );
@@ -438,6 +468,7 @@ CREATE TABLE AdministrativeSegment (
                 ExceptionalClearanceDate DATE,
                 ExceptionalClearanceDateID INT NOT NULL,
                 CargoTheftIndicatorTypeID INT NOT NULL,
+                SubmissionID INT,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (AdministrativeSegmentID)
 );
@@ -661,7 +692,31 @@ CREATE TABLE LEOKASegment (
 );
 
 
+ALTER TABLE PreCertificationError ADD CONSTRAINT nibrserrorcodetype_PreCertificationErrorid_fk
+FOREIGN KEY (NibrsErrorCodeTypeId)
+REFERENCES NibrsErrorCodeType (NibrsErrorCodeTypeId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE Violation ADD CONSTRAINT nibrserrorcodetype_violation_fk
+FOREIGN KEY (NibrsErrorCodeTypeId)
+REFERENCES NibrsErrorCodeType (NibrsErrorCodeTypeId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
 ALTER TABLE Violation ADD CONSTRAINT submission_violation_fk
+FOREIGN KEY (SubmissionID)
+REFERENCES Submission (SubmissionID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE AdministrativeSegment ADD CONSTRAINT submission_administrativesegment_fk
+FOREIGN KEY (SubmissionID)
+REFERENCES Submission (SubmissionID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE ArrestReportSegment ADD CONSTRAINT submission_arrestreportsegment_fk
 FOREIGN KEY (SubmissionID)
 REFERENCES Submission (SubmissionID)
 ON DELETE NO ACTION
@@ -722,6 +777,12 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE ArrestReportSegment ADD CONSTRAINT agency_arrestreportsegment_fk
+FOREIGN KEY (AgencyID)
+REFERENCES Agency (AgencyID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE PreCertificationError ADD CONSTRAINT agency_PreCertificationErrorid_fk
 FOREIGN KEY (AgencyID)
 REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION
@@ -986,6 +1047,12 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE ArrestReportSegment ADD CONSTRAINT segmentactiontype_arrestreportsegment_fk
+FOREIGN KEY (SegmentActionTypeTypeID)
+REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE PreCertificationError ADD CONSTRAINT segmentactiontypetype_PreCertificationErrorid_fk
 FOREIGN KEY (SegmentActionTypeTypeID)
 REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
 ON DELETE NO ACTION

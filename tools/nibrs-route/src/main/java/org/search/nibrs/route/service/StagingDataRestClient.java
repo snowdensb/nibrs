@@ -30,6 +30,7 @@ import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.GroupBArrestReport;
 import org.search.nibrs.route.AppProperties;
+import org.search.nibrs.validate.common.ValidationResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;

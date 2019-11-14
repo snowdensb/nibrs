@@ -28,6 +28,8 @@ import org.w3c.dom.Document;
 @RestController
 public class SampleResponseController {
 	private final Log log = LogFactory.getLog(SampleResponseController.class);
+	
+	private Integer count = 0; 
 
 	@RequestMapping(value = "/response/accepted")
 	@ResponseBody
@@ -56,6 +58,27 @@ public class SampleResponseController {
 	public String getSampleFaultResponse() throws Exception{
 		Document document = XmlUtils.parseFileToDocument(new File("src/main/resources/xmlInstances/NIBRS-Fault-Response.xml"));
 		return XmlUtils.nodeToString(document);
+	}
+	
+	@RequestMapping(value="/response" )
+	@ResponseBody
+	public String getSampleResponse() throws Exception{
+		String document = null;
+		if (count % 40 == 0 ) {
+			document = getSampleFaultResponse();
+		}
+		else if (count % 30 == 0) {
+			document = getSampleWarningResponse();
+		}
+		else if (count % 20 == 0) {
+			document = getSampleErrorResponse();
+		}
+		else {
+			document = getSampleAcceptedResponse();
+		}
+		
+		count ++; 
+		return document;
 	}
 	
 }
