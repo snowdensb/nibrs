@@ -88,6 +88,13 @@ public class SummaryReportController {
 	    return "/summaryReports/searchForm::summaryReportForm";
 	}
 	
+	@GetMapping("/summaryReports/searchForm/reset")
+	public String resetSearchForm(Map<String, Object> model) throws IOException {
+		SummaryReportRequest summaryReportRequest = new SummaryReportRequest();;
+		model.put("summaryReportRequest", summaryReportRequest);
+	    return "/summaryReports/searchForm::summaryReportForm";
+	}
+	
 	@GetMapping("/returnAForm/{ori}/{year}/{month}")
 	public void getReturnAForm(@PathVariable String ori, @PathVariable String year, @PathVariable String month, 
 			HttpServletResponse response) throws IOException{

@@ -55,6 +55,7 @@
 					<label class="col-2 col-form-label font-weight-bold text-right">Agency</label>
 					<div class="col-sm-3">
 						<select th:field="*{ori}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="Please select all that apply...">
+							<option value=''>Please select ...</option>
 							<option th:each="item: ${oriMapping}" th:value="${item.key}" th:text="${item.value}" />
 						</select>
 					</div>
@@ -67,7 +68,7 @@
 					</div>
 			   </div>
      
-				<script th:inline="javascript">
+			   <script th:inline="javascript">
 				 $(function(){
 				   $(".chosen-select").chosen();  
 				   $('[data-toggle="popover"]').popover(); 
@@ -83,7 +84,7 @@
 				   $('#submit').click (function(){
 				     var formData = $('#searchForm').serialize();
 				     var request = new XMLHttpRequest();
-				      request.onreadystatechange = function() {
+				     request.onreadystatechange = function() {
 				    	  if(this.readyState === 4){
 						    $("#loadingAjaxPane").hide();                
 				    	  }
@@ -96,7 +97,7 @@
 							
 							$("#loadingAjaxPane").show();
 				    	  }
-				      };
+				     };
 				     request.open('POST', context + "summaryReports/returnAForm", true);
 				     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 				     request.responseType = 'blob';
@@ -105,12 +106,12 @@
 				         if (this.status === 200) {
 				             var blob = this.response;
 					    	 var fileName = ""
-						    	 var disposition = request.getResponseHeader('Content-Disposition');
-						         if (disposition && disposition.indexOf('attachment') !== -1) {
-						             var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-						             var matches = filenameRegex.exec(disposition);
-						             if (matches != null && matches[1]) fileName = matches[1].replace(/['"]/g, '');
-					         }
+					    	 var disposition = request.getResponseHeader('Content-Disposition');
+					         if (disposition && disposition.indexOf('attachment') !== -1) {
+					             var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+					             var matches = filenameRegex.exec(disposition);
+					             if (matches != null && matches[1]) fileName = matches[1].replace(/['"]/g, '');
+				         	 }
 				             if(window.navigator.msSaveOrOpenBlob) {
 				                 window.navigator.msSaveBlob(blob, fileName);
 				             }
@@ -122,15 +123,16 @@
 				                 document.body.appendChild(downloadLink);
 				                 downloadLink.click();
 				                 document.body.removeChild(downloadLink);
-				                }
-				            }
-				        };
+			                }
+				        }
+				      }
 				      request.send(formData);				      
 				   });
 				   
 				   $('#reset').click (function(){
-				     xhr = $.get(context + "summaryReport/searchForm/reset", function(data) {
-				       $('#searchForm').replaceWith(data); 
+				     xhr = $.get(context + "summaryReports/searchForm/reset", function(data) {
+				    	 $('#portalContent').html(data);
+				    	 $('.chosen-select').chosen();
 				     }).fail(ojbc.displayFailMessage);
 				   });
 				
