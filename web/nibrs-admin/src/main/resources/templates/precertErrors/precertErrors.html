@@ -26,40 +26,40 @@
 	</head>
 	<body>
 	   <!-- Begin page content -->
-	   <div th:fragment="resultsPage" class="container">
-	      <nav aria-label="breadcrumb">
-	           <ol class="breadcrumb">
-	           <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
-	           <li class="breadcrumb-item active" aria-current="page">Pre-Certificate Error Search Results</li>
-	         </ol>
-	      </nav>
-	      <form th:replace="precertErrors/precertErrorSearchForm.html :: precertErrorSearchFormContent" th:object="${precertErrorSearchRequest}">
-	      </form>
-	      <hr/>
+		<div th:fragment="resultsPage" class="container">
+			<nav aria-label="breadcrumb">
+			     <ol class="breadcrumb">
+			     <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+			     <li class="breadcrumb-item active" aria-current="page">Pre-Certificate Error Search Results</li>
+			   </ol>
+			</nav>
+			<form th:replace="precertErrors/precertErrorSearchForm.html :: precertErrorSearchFormContent" th:object="${precertErrorSearchRequest}">
+			</form>
+			<hr/>
 	       
-	      <div id="searchResultsList" th:fragment="resultsList" >
-		      <div class="alert alert-secondary" role="alert"
-		        th:if="${precertErrorSearchResult != null && precertErrorSearchResult.totalCount != precertErrorSearchResult.returnedCount}"
-            th:text=" 'The latest ' + ${precertErrorSearchResult.returnedCount} + ' of the ' + ${precertErrorSearchResult.totalCount} + 
-             ' records are shown in the table'">
-          </div>
+			<div id="searchResultsList" th:fragment="resultsList" >
+				<div class="alert alert-secondary" role="alert"
+					th:if="${precertErrorSearchResult != null && precertErrorSearchResult.totalCount != precertErrorSearchResult.returnedCount}"
+					  th:text=" 'The latest ' + ${precertErrorSearchResult.returnedCount} + ' of the ' + ${precertErrorSearchResult.totalCount} + 
+					   ' records are shown in the table'">
+				</div>
 	        
-					<table id="searchResultsTable" class="table table-striped table-bordered dt-responsive display responsive" style="width: 100%; border-spacing: 0;" th:if="${precertErrorSearchResult != null}">
-						<thead>
-							<tr>
-		            <th>Submission Date</th>
-		            <th>Source Location</th>
-		            <th>Action Type</th>
-		            <th>ORI</th>
-		            <th>Incident Number</th>
-		            <th>Data Element</th>
-		            <th>Error Code</th>
-		            <th>Rejected Value</th>
-		            <th>Error Message</th>
-							</tr>
-						</thead>
-					</table>
-	      </div>
+				<table id="searchResultsTable" class="table table-striped table-bordered dt-responsive display responsive" style="width: 100%; border-spacing: 0;" th:if="${precertErrorSearchResult != null}">
+					<thead>
+						<tr>
+				         <th>Submission Date</th>
+				         <th>Source Location</th>
+				         <th>Action Type</th>
+				         <th>ORI</th>
+				         <th>Incident Number</th>
+				         <th>Data Element</th>
+				         <th>Error Code</th>
+				         <th>Rejected Value</th>
+				         <th>Error Message</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
 	
 	 		<script th:inline="javascript">
 	       /*<![CDATA[*/

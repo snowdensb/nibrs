@@ -59,6 +59,15 @@ public class CodeTableController {
 		return agencyMap;
 	}
 	
+	@GetMapping("/oris")
+	public Map<String, String> oris(){
+		Map<String, String> agencyMap = StreamSupport.stream(agencyRepository.findAll(new Sort(Sort.Direction.ASC, "agencyName")).spliterator(), false)
+				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
+				.collect(Collectors.toMap(Agency::getAgencyOri, Agency::getAgencyName, (u, v) -> u,
+						LinkedHashMap::new));
+		return agencyMap;
+	}
+	
 	@GetMapping("/offenseCodes")
 	public Map<Integer, String> offenseCodes(){
 		Map<Integer, String> offenseCodeMap = StreamSupport.stream(ucrOffenseCodeTypeRepository.findAll(new Sort(Sort.Direction.ASC,"stateDescription")).spliterator(), false)
