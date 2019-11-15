@@ -27,50 +27,57 @@
    
    $('#submit').click (function(){
      var formData = $('#searchForm').serialize();
-     var request = new XMLHttpRequest();
-     request.onreadystatechange = function() {
-    	  if(this.readyState === 4){
-		    $("#loadingAjaxPane").hide();                
-    	  }
-    	  else{
-			var loadingDiv =  $("#loadingAjaxPane");
-			var portalContentDiv = $("#portalContent");
-			
-			loadingDiv.height(portalContentDiv.height());
-			loadingDiv.width(portalContentDiv.width());
-			
-			$("#loadingAjaxPane").show();
-    	  }
-     };
-     request.open('POST', context + "summaryReports/returnAForm", true);
-     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-     request.responseType = 'blob';
-
-     request.onload = function(e) {
-         if (this.status === 200) {
-             var blob = this.response;
-	    	 var fileName = ""
-	    	 var disposition = request.getResponseHeader('Content-Disposition');
-	         if (disposition && disposition.indexOf('attachment') !== -1) {
-	             var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-	             var matches = filenameRegex.exec(disposition);
-	             if (matches != null && matches[1]) fileName = matches[1].replace(/['"]/g, '');
-         	 }
-             if(window.navigator.msSaveOrOpenBlob) {
-                 window.navigator.msSaveBlob(blob, fileName);
-             }
-             else{
-                 var downloadLink = window.document.createElement('a');
-                 var contentTypeHeader = request.getResponseHeader("Content-Type");
-                 downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: contentTypeHeader }));
-                 downloadLink.download = fileName;
-                 document.body.appendChild(downloadLink);
-                 downloadLink.click();
-                 document.body.removeChild(downloadLink);
-            }
-        }
-      }
-      request.send(formData);				      
+     
+     var form = document.getElementById('searchForm'); 
+     
+     var isValidForm = form.checkValidity(); 
+     form.classList.add('was-validated'); 
+     if ( isValidForm === true){
+	     var request = new XMLHttpRequest();
+	     request.onreadystatechange = function() {
+	    	  if(this.readyState === 4){
+			    $("#loadingAjaxPane").hide();                
+	    	  }
+	    	  else{
+				var loadingDiv =  $("#loadingAjaxPane");
+				var portalContentDiv = $("#portalContent");
+				
+				loadingDiv.height(portalContentDiv.height());
+				loadingDiv.width(portalContentDiv.width());
+				
+				$("#loadingAjaxPane").show();
+	    	  }
+	     };
+	     request.open('POST', context + "summaryReports/returnAForm", true);
+	     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	     request.responseType = 'blob';
+	
+	     request.onload = function(e) {
+	         if (this.status === 200) {
+	             var blob = this.response;
+		    	 var fileName = ""
+		    	 var disposition = request.getResponseHeader('Content-Disposition');
+		         if (disposition && disposition.indexOf('attachment') !== -1) {
+		             var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+		             var matches = filenameRegex.exec(disposition);
+		             if (matches != null && matches[1]) fileName = matches[1].replace(/['"]/g, '');
+	         	 }
+	             if(window.navigator.msSaveOrOpenBlob) {
+	                 window.navigator.msSaveBlob(blob, fileName);
+	             }
+	             else{
+	                 var downloadLink = window.document.createElement('a');
+	                 var contentTypeHeader = request.getResponseHeader("Content-Type");
+	                 downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: contentTypeHeader }));
+	                 downloadLink.download = fileName;
+	                 document.body.appendChild(downloadLink);
+	                 downloadLink.click();
+	                 document.body.removeChild(downloadLink);
+	            }
+	        }
+	      }
+	      request.send(formData);
+     }
    });
    
    $('#reset').click (function(){
@@ -79,5 +86,6 @@
     	 $('.chosen-select').chosen();
      }).fail(ojbc.displayFailMessage);
    });
+   
 
  });
