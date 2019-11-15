@@ -39,7 +39,7 @@
 	<!-- this is the image header -->
     <!-- this is navbar header -->
 	<nav class="navbar navbar-default" th:fragment="header">
-		<div class="container-fluid">
+		<div class="container-fluid" th:fragment="headerIamge">
 			<div class="row">
 			  <div class="col-sm-2"><img th:src="@{/images/search.png}" height="60px"/></div>
 			  <div class="col-sm-8" align="center">
@@ -66,7 +66,7 @@
 		 <hr/>
 		 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-			  <li><a th:href="@{/}">Home</a></li>
+			  <li><a th:href="@{/home}">Home</a></li>
 			  <li><a th:href="@{/resources}">Resources</a></li>
 			  <li><a th:href="@{/toolLimitations}">Tool Limitations</a></li>
 			  <li><a th:href="@{/testFiles}">Test Files</a></li>

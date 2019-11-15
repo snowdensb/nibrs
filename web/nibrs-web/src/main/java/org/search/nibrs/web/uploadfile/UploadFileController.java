@@ -84,6 +84,12 @@ public class UploadFileController {
 	    return "index";
 	}
 	
+	@GetMapping("/home")
+	public String getFrontPage(Model model) throws IOException {
+		
+		return "home";
+	}
+	
 	@GetMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
