@@ -16,7 +16,7 @@
  $(function(){
    $(".chosen-select").chosen();  
    $('[data-toggle="popover"]').popover(); 
-   $('.date').mask('99/99/9999');
+   $('.incidentYear').mask('9999');
    
    $('#searchForm input').keypress(function (e) {
      if (e.which == 13) {
