@@ -123,8 +123,9 @@ public class SummaryReportController {
 	}
 	
 	@PostMapping("/summaryReports/returnAForm")
-	public void getReturnAFormByRequest(SummaryReportRequest summaryReportRequest, 
+	public void getReturnAFormByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response) throws IOException{
+
 		downloadReturnAForm(summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), response);
 	}
 	
