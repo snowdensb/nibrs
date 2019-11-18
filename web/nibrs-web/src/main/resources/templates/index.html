@@ -22,25 +22,37 @@
 <body>
 	<nav class="navbar navbar-default" th:include="fragments/header ::headerIamge">
 	</nav>
+		<div align="center">
+ 			<p>
+ 				<h2><strong>Welcome to the NIBRS Pre-Certification Tool (PCT)</strong></h2>
+ 			</p>
+	 	 </div>
 	<div id="mainContent">
 	 	<div id="content" class="container">
  	 		<div style="padding: 5px;">
- 	 			<p>The <strong>NIBRS Pre-Certification Tool (PCT)</strong> provides law enforcement agencies, responsible for submitting Incident-Based Reports (IBR) data to State Uniform Crime Reporting (UCR) programs, the ability to test their submissions in advance of its formal delivery. State UCR programs may also use the NIBRS PCT to test their IBR submissions before beginning the NIBRS certification process with the FBI. 
-				The NIBRS PCT exercises the NIBRS data edit and validation rules and provides formatted output of errors, so that submitters may correct their data submissions and, ultimately, speed the FBI CJIS and/or state IBR certification process.  Through this tool, users can validate NIBRS submissions in "flat file" or XML formats.  
-				</p>
-				<p><strong>Important notes:</strong></p>
+ 	 			 <p>If you are responsible for producing, reporting, validating or playing with Incident-Based Reporting (data) in any way, you’ve come to the right place!</p>  
+				<p>The <strong>NIBRS PCT</strong> allows you to automatically validate NIBRS data against the <a href="https://www.fbi.gov/file-repository/ucr/ucr-2019-1-nibrs-technical-specification.pdf/view">FBI’s 2019.1 NIBRS rules</a>. The primary objective of this tool is to help you identify errors in NIBRS submissions either as part of system development or in support of regular submissions to State UCR/IBR programs or to the FBI. </p>  
+				<p>The tool accepts NIBRS data in "flat file" or XML formats. Subsequent to validation, this tool will present you with a detailed list of errors.  You can then save the list of errors in Excel, CSV, or PDF format, making it easy to share this information as needed.</p>
+				<p>Not to worry...we do not store any IBR data that you submit to this tool. The PCT holds onto your submission just long enough to run the validation rules and then forgets all about it. </p>
+				<p><strong>Some important things to remember:</strong></p>
 				<div>
 					<ul>
 						<li>The validation rules implemented by the NIBRS PCT only reflect the FBI’s NIBRS rules and do not include state-specific data elements and rules. Likewise, the NIBRS PCT cannot validate some NIBRS rules specific to the submitting agency or rules that pertain to data that the FBI may already have on file. See <a th:href="@{/toolLimitations}">Tool Limitations</a> for specific details</li>
 						<li>The NIBRS PCT is intended to assist the user in understanding how well its data aligns with the <a href="https://www.fbi.gov/file-repository/ucr/ucr-2019-1-nibrs-technical-specification.pdf/view">FBI NIBRS standard version 2019.1</a>. It is not intended to substitute for FBI NIBRS or State certification.</li>
 					</ul>
 				</div>
-				<p>The NIBRS PCT is licensed under the open source <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2.0 </a>.  The source code is available <a href="https://goo.gl/9my95o">here</a>.</p>
-				<p>To log in to the NIBRS PCT, click <a th:href="@{/home}">here</a></p>
+				<p>We require users of the NIBRS PCT to create an account in order to access the tool. There is no charge for creating an account, and we will not share any information regarding your account with any third parties. We simply need to know how the tool is being used and to be able to reach out to users when updates and changes are being made to the tool. In addition, we may ask you for information on the utility and value of the tool, from time to time, but this will not become burdensome.</p>
+				<p><strong>To log in to the NIBRS PCT, click <a th:href="@{/home}">here.</a> Have lots of fun!</strong></p>
 			</div>
+			<p/>
+			<p/>
+			<p/>
+			<p/>
 			<div align="center" style="padding:2px 10px;">
-				Have questions? Ask SEARCH at <a href="mailto:nibrs@search.org?Subject=NIBRS%20PCT%20Question">nibrs@search.org</a>
+				<p>The NIBRS PCT is licensed under the open source <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2.0 </a>.  The source code is available <a href="https://goo.gl/9my95o">here</a> and we welcome contributions to the codebase!</p>
+				<p>Do you have questions or just want to talk about NIBRS? Contact SEARCH at <a href="mailto:nibrs@search.org?Subject=NIBRS%20PCT%20Question">nibrs@search.org</a></p>
 			</div>
+			
 		</div>
 	</div>
 	<div th:replace="fragments/footer :: footer"></div>	
