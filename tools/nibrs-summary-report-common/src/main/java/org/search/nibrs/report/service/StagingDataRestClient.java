@@ -25,6 +25,7 @@ import org.apache.tomcat.util.buf.StringUtils;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
+import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
 import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.report.SummaryReportProperties;
@@ -102,6 +103,17 @@ public class StagingDataRestClient {
 		SupplementaryHomicideReport supplementaryHomicideReport = restTemplate.getForObject( url, SupplementaryHomicideReport.class);
 		log.info("supplementaryHomicideReport: " + supplementaryHomicideReport);
 		return supplementaryHomicideReport;
+	}
+	
+	public CargoTheftReport getCargoTheftReport(String ori, String year, String month) {
+		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
+				"cargoTheftReport", ori, year, month); 
+		String url = StringUtils.join(urlParts, '/');
+		log.info("Getting the CargoTheftReport object from the url " + url);
+		
+		CargoTheftReport cargoTheftReport = restTemplate.getForObject( url, CargoTheftReport.class);
+		log.info("cargoTheftReport: " + cargoTheftReport);
+		return cargoTheftReport;
 	}
 	
 	private List<HttpMessageConverter<?>> getMessageConverters() {
