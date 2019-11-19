@@ -18,10 +18,12 @@ package org.search.nibrs.stagingdata.controller;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
+import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
 import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.stagingdata.service.summary.ArsonFormService;
 import org.search.nibrs.stagingdata.service.summary.AsrFormService;
+import org.search.nibrs.stagingdata.service.summary.CargoTheftReportService;
 import org.search.nibrs.stagingdata.service.summary.HumanTraffickingFormService;
 import org.search.nibrs.stagingdata.service.summary.ReturnAFormService;
 import org.search.nibrs.stagingdata.service.summary.SupplementaryHomicideReportService;
@@ -48,6 +50,9 @@ public class SummaryFormController {
 	@Autowired
 	private SupplementaryHomicideReportService supplementaryHomicideReportService;
 	
+	@Autowired
+	private CargoTheftReportService cargoTheftReportService;
+	
 	@RequestMapping("/returnAForm/{ori}/{year}/{month}")
 	public ReturnAForm getReturnAForm(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
 		return returnAFormService.createReturnASummaryReport(ori, year, month);
@@ -70,6 +75,11 @@ public class SummaryFormController {
 	@RequestMapping("/shrReports/{ori}/{arrestYear}/{arrestMonth}")
 	public SupplementaryHomicideReport getSupplementaryHomicideReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
 		return supplementaryHomicideReportService.createSupplementaryHomicideReport(ori, arrestYear, arrestMonth);
+	}
+	
+	@RequestMapping("/cargoTheftReport/{ori}/{incidentYear}/{incidentMonth}")
+	public CargoTheftReport getCargoTheftReport(@PathVariable String ori, @PathVariable Integer incidentYear, @PathVariable Integer incidentMonth){
+		return cargoTheftReportService.createCargoTheftReport(ori, incidentYear, incidentMonth);
 	}
 	
 }

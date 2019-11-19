@@ -31,6 +31,7 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
+import org.search.nibrs.model.reports.cargotheft.CargoTheftFormRow;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
@@ -259,6 +260,22 @@ public class AdministrativeSegmentService {
 				.stream().distinct().collect(Collectors.toList());
 		
 		return administrativeSegments; 
+	}
+
+	public List<CargoTheftFormRow> findCargoTheftRowsByOriAndIncidentDate(String ori, Integer year,
+			Integer month) {
+		if ("StateWide".equalsIgnoreCase(ori)){
+			ori = null;
+		}
+		List<Integer> ids = administrativeSegmentRepository.findCargoTheftIdsByOriAndIncidentDate(ori, year, month);
+		
+		log.info("ids:" + ids);
+		
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAllById(ids);
+		List<CargoTheftFormRow> cargoTheftFormRows = administrativeSegments.stream()
+				.map(item-> new CargoTheftFormRow(item.getIncidentNumber(), item.getIncidentDate(), item.getSegmentActionType().getNibrsDescription()))
+				.collect(Collectors.toList());
+		return cargoTheftFormRows;
 	}
 	
 }

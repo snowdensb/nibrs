@@ -125,7 +125,8 @@ public interface AdministrativeSegmentRepository
 			+ "		(?1 = null OR a.ori = ?1) AND "
 			+ "		((year(a.exceptionalClearanceDate) = ?2 AND ( ?3 = 0 OR month(a.exceptionalClearanceDate) = ?3)) "
 			+ "			OR ( year(aa.arrestDate) = ?2 AND ( ?3 = 0 OR month(aa.arrestDate) = ?3 ))) "
-			+ "GROUP BY a.incidentNumber ")
+			+ "GROUP BY a.incidentNumber "
+			+ "order by a.incidentNumber")
 	List<Integer> findArsonIdsByOriAndClearanceDate(String ori, Integer year, Integer month);
 
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
@@ -137,5 +138,13 @@ public interface AdministrativeSegmentRepository
 			+ "			OR ( year(aa.arrestDate) = ?2 AND ( ?3 = 0 OR month(aa.arrestDate) = ?3 ))) "
 			+ "GROUP BY a.incidentNumber ")
 	List<Integer> findIdsByOriAndClearanceDateAndOffenses(String ori, Integer year, Integer month, List<String> offenseCodes);
+
+	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+			+ "WHERE a.cargoTheftIndicatorType.cargoTheftIndicatorTypeId = 1 AND "
+			+ "		(?1 = null OR a.ori = ?1) AND "
+			+ "		(year(a.incidentDate) = ?2 AND "
+			+ "		( ?3 = 0 OR month(a.incidentDate) = ?3)) "
+			+ "GROUP BY a.incidentNumber ")
+	List<Integer> findCargoTheftIdsByOriAndIncidentDate(String ori, Integer year, Integer month);
 	
 }
