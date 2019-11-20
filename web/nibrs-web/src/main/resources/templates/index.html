@@ -22,6 +22,9 @@
 <body>
 	<nav class="navbar navbar-default" th:include="fragments/header ::headerIamge">
 	</nav>
+<!-- 		<div align="right" style="margin-right: 125px;"> -->
+<!-- 			<a th:href="@{/home}" class="btn btn-primary btn-small">Login</a> -->
+<!-- 		</div> -->
 		<div align="center">
  			<p>
  				<h2><strong>Welcome to the NIBRS Pre-Certification Tool (PCT)</strong></h2>
@@ -41,8 +44,12 @@
 						<li>The NIBRS PCT is intended to assist the user in understanding how well its data aligns with the <a href="https://www.fbi.gov/file-repository/ucr/ucr-2019-1-nibrs-technical-specification.pdf/view">FBI NIBRS standard version 2019.1</a>. It is not intended to substitute for FBI NIBRS or State certification.</li>
 					</ul>
 				</div>
-				<p>We require users of the NIBRS PCT to create an account in order to access the tool. There is no charge for creating an account, and we will not share any information regarding your account with any third parties. We simply need to know how the tool is being used and to be able to reach out to users when updates and changes are being made to the tool. In addition, we may ask you for information on the utility and value of the tool, from time to time, but this will not become burdensome.</p>
-				<p><strong>To log in to the NIBRS PCT, click <a th:href="@{/home}">here.</a> Have lots of fun!</strong></p>
+				<p>We require users of the NIBRS PCT to create an account in order to access the tool. There is no charge for creating an account, and we will not share any information regarding your account with any third parties. We simply need to know how the tool is being used and to be able to contact you when we make updates and changes to the tool. In addition, we may ask you for information on the utility and value of the tool, from time to time, but promise this will not become burdensome.</p>
+				<!--<p><strong>To log in to the NIBRS PCT, click <a th:href="@{/home}">here.</a> Have lots of fun!</strong></p>-->
+			</div>
+			
+			<div align="center">
+				<p><a th:href="@{/home}" class="btn btn-warning btn-small">Log In to the NIBRS PCT</a></p>
 			</div>
 			<p/>
 			<p/>
