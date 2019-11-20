@@ -3,9 +3,6 @@ library(dplyr)
 library(lubridate)
 library(tibble)
 
-# Set session working directory
-setwd("~/git/nibrs/analytics/R/nibrs-flatfile/r-analysis")
-
 #Merge all "txt" nibrs files in the /data directory into file nibrs.txt used by this script 
 system("cd ./data;cat ./*.txt > ./nibrs/nibrs.txt")
 
