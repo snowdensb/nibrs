@@ -141,8 +141,9 @@ public class ReturnAFormService {
 	}
 
 	private void processOffenseClearances(String ori, Integer year, Integer month, ReturnAForm returnAForm) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findByOriAndClearanceDate(ori, year, month);
-		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentService.findByOriAndClearanceDateAndOffenses(ori, year, month, new ArrayList<>(partIOffensesMap.keySet()));
+
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue;
 			
@@ -356,8 +357,9 @@ public class ReturnAFormService {
 	}
 
 	private void processReportedOffenses(String ori, Integer year, Integer month, ReturnAForm returnAForm) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findByOriAndIncidentDate(ori, year, month);
-
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentService.findByOriAndIncidentDateAndOffenses(ori, year, month, new ArrayList(partIOffensesMap.keySet()));
+		
 		PropertyStolenByClassification[] stolenProperties = returnAForm.getPropertyStolenByClassifications();
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue; 

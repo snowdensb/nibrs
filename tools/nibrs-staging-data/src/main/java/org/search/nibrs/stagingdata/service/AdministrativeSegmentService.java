@@ -170,6 +170,20 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
+	public List<AdministrativeSegment> findByOriAndIncidentDateAndOffenses(String ori, Integer year, Integer month, List<String> offenseCodes){
+		
+		if ("StateWide".equalsIgnoreCase(ori)){
+			ori = null;
+		}
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, offenseCodes);
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		return administrativeSegments; 
+	}
+	
 	public List<AdministrativeSegment> findArsonIncidentByOriAndIncidentDate(String ori, Integer year, Integer month){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
@@ -190,7 +204,6 @@ public class AdministrativeSegmentService {
 			ori = null;
 		}
 		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"));
-//		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"));
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)
@@ -276,6 +289,20 @@ public class AdministrativeSegmentService {
 				.map(item-> new CargoTheftFormRow(item.getIncidentNumber(), item.getIncidentDate(), item.getSegmentActionType().getNibrsDescription()))
 				.collect(Collectors.toList());
 		return cargoTheftFormRows;
+	}
+
+	public List<AdministrativeSegment> findByOriAndClearanceDateAndOffenses(String ori, Integer year, Integer month,
+			ArrayList<String> offenseCodes) {
+		if ("StateWide".equalsIgnoreCase(ori)){
+			ori = null;
+		}
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, offenseCodes);
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		return administrativeSegments; 
 	}
 	
 }
