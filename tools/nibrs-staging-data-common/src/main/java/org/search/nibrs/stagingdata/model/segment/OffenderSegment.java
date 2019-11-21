@@ -189,6 +189,7 @@ public class OffenderSegment {
 		this.nonNumericAge = nonNumericAge;
 	}
 
+	@JsonIgnore
 	public String getAgeString() {
 		String ageString = StringUtils.EMPTY;
 		
