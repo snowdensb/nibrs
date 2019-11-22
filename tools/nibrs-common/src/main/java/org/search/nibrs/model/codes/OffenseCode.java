@@ -246,6 +246,9 @@ public enum OffenseCode {
 	public static final boolean isGamblingOffenseCode(String code) {
 		return codeMatchesRegex(code, "39[ABCD]");
 	}
+	public static final boolean isReturnARapeCode(String code) {
+		return codeMatchesRegex(code, "11[ABC]");
+	}
 
 	private static boolean codeMatchesRegex(String code, String regex) {
 		return code!= null && Pattern.compile(regex).matcher(code).matches();
