@@ -2,29 +2,26 @@ library(tidyverse)
 library(xml2)
 library(purrr)
 library(openssl)
+library(lubridate)
 
 #load xml files in this directory
 nibrsFiles <- list.files('data/', pattern = "\\.xml$", full.names=TRUE)
 
 x <-read_xml(nibrsFiles)
 
-#nibrsDF <- map_df(nibrsFiles, function(f) {
-#  x <- read_xml(f)
-
 ## LEVEL 1 - ADMINISTRATIVE SEGMENT
 incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   
-  #incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report[normalize-space(nibrs:ReportHeader/nibrs:NIBRSReportCategoryCode)="GROUP A INCIDENT REPORT"]')
   incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   incident <- map2_df(incidentNodes, seq(incidentNodes), function(incidentNode, reportNodeNumber) {
     
     tibble(
-      IncidentNumber=incidentNode %>% xml_find_first('nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
-      ReportCategory=incidentNode %>% xml_find_first('nibrs:ReportHeader/nibrs:NIBRSReportCategoryCode') %>% xml_text(),
+      SegmentLevel="1",
       SegmentActionType=incidentNode %>% xml_find_first('nibrs:ReportHeader/nibrs:ReportActionCategoryCode') %>% xml_text(),
-      ReportDate=incidentNode %>% xml_find_first('nibrs:ReportHeader/nibrs:ReportDate/nc:YearMonthDate') %>% xml_text(),
+      ORI=incidentNode %>% xml_find_first('nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification/nc:IdentificationID') %>% xml_text(),
+      IncidentNumber=incidentNode %>% xml_find_first('nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
+      # Check with Diane on how to handle
       ReportDateIndicator=incidentNode %>% xml_find_first('nc:Incident/cjis:IncidentAugmentation/cjis:IncidentReportDateIndicator') %>% xml_text(),
-      ReportingORI=incidentNode %>% xml_find_first('nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification') %>% xml_text(),
       IncidentDate=incidentNode %>% xml_find_first('nc:Incident/nc:ActivityDate/nc:DateTime') %>% xml_text() %>% substr(1,10),
       IncidentHour=incidentNode %>% xml_find_first('nc:Incident/nc:ActivityDate/nc:DateTime') %>% xml_text() %>% substr(12,13),
       CargoTheftIndicator=incidentNode %>% xml_find_first('nc:Incident/cjis:IncidentAugmentation/j:OffenseCargoTheftIndicator') %>% xml_text(),
@@ -38,6 +35,9 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   offenseNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Offense')
   offense <- map2_df(offenseNodes, seq(offenseNodes), function(offenseNode, withinFileIndex) {
     tibble(
+      SegmentLevel="2",
+      SegmentActionType=offenseNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportActionCategoryCode') %>% xml_text(),
+      ORI=offenseNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification/nc:IdentificationID') %>% xml_text(),
       OffenseID=offenseNode %>% xml_find_first('@s:id') %>% xml_text(),
       IncidentNumber=offenseNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
       UCROffenseCode=offenseNode %>% xml_find_first('nibrs:OffenseUCRCode') %>% xml_text(),
@@ -48,8 +48,8 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
       MethodOfEntry=offenseNode %>% xml_find_first('j:OffenseEntryPoint/j:PassagePointMethodCode') %>% xml_text(),
       TypeCriminalActivityGangInformation=offenseNode %>% xml_find_all('nibrs:CriminalActivityCategoryCode') %>% xml_text(),
       TypeOfWeaponForceInvolved=offenseNode %>% xml_find_all('j:OffenseForce/j:ForceCategoryCode') %>% xml_text(),
+      AutomaticWeaponIndicator="",
       BiasMotivation=offenseNode %>% xml_find_all('j:OffenseFactorBiasMotivationCode') %>% xml_text()
-      
     )
   })
   
@@ -65,13 +65,17 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   propertyNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/nc:Item | /nibrs:Submission/nibrs:Report/nc:Substance')
   property <- map2_df(propertyNodes, seq(propertyNodes), function(propertyNode, withinFileIndex) {
     tibble(
+      SegmentLevel="3",
+      SegmentActionType=propertyNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportActionCategoryCode') %>% xml_text(),
+      ORI=propertyNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification/nc:IdentificationID') %>% xml_text(),
       IncidentNumber=propertyNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
       TypePropertyLoss=propertyNode %>% xml_find_first('nc:ItemStatus/cjis:ItemStatusCode') %>% xml_text(),
       PropertyDescription=propertyNode %>% xml_find_first('j:ItemCategoryNIBRSPropertyCategoryCode') %>% xml_text(),
       ValueOfProperty=propertyNode %>% xml_find_first('nc:ItemValue/nc:ItemValueAmount/nc:Amount') %>% xml_text(),       
       DateRecovered=propertyNode %>% xml_find_first('nc:ItemValue/nc:ItemValueDate/nc:Date') %>% xml_text(),
-      # NumberOfStolenMotorVehicles
-      # NumberOfRecoveredMotorVehicles
+      NumberOfStolenMotorVehicles="",
+      NumberOfRecoveredMotorVehicles="",
+      ItemQuantity=propertyNode %>% xml_find_first('nc:ItemQuantity') %>% xml_text(),
       SuspectedDrugType=propertyNode %>% xml_find_first('j:DrugCategoryCode') %>% xml_text(),
       EstimatedDrugQuantity=propertyNode %>% xml_find_first('nc:SubstanceQuantityMeasure/nc:MeasureDecimalValue') %>% xml_text(),
       TypeDrugMeasurement=propertyNode %>% xml_find_first('nc:SubstanceQuantityMeasure/j:SubstanceUnitCode') %>% xml_text(),
@@ -84,9 +88,10 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   victimNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Victim')
   victim <- map2_df(victimNodes, seq(victimNodes), function(victimNode, withinFileIndex) {
     tibble(
+      SegmentLevel="4",
+      SegmentActionType=victimNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportActionCategoryCode') %>% xml_text(),
+      ORI=victimNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification/nc:IdentificationID') %>% xml_text(),
       VictimID=victimNode %>% xml_find_first('@s:id') %>% xml_text(),
-      # VictimConnectedToUCROffense  
-
       VictimSequenceNumber=victimNode %>% xml_find_first('j:VictimSequenceNumberText') %>% xml_text(),
       TypeOfVictim=victimNode %>% xml_find_first('j:VictimCategoryCode') %>% xml_text(),     
       VictimAggravatedAssaultHomicideCircumstance=victimNode %>% xml_find_all('j:VictimAggravatedAssaultHomicideFactorCode') %>% xml_text(),      
@@ -96,8 +101,21 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   
     )
   })
- 
+
+  victimOffenseNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:OffenseVictimAssociation')
+  victimOffense <- map2_df(victimOffenseNodes, seq(victimOffenseNodes), function(victimOffenseNode, withinFileIndex) {
+    tibble(
+      IncidentNumber=victimOffenseNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
+      VictimID=victimOffenseNode %>% xml_find_first('j:Victim/@s:ref') %>% xml_text(),
+      OffenseID=victimOffenseNode %>% xml_find_first('j:Offense/@s:ref') %>% xml_text()
+    )
+  }) 
   
+  
+  
+  
+  
+    
   victimPersonNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/nc:Person')
   victimPerson <- map2_df(victimPersonNodes, seq(victimPersonNodes), function(victimPersonNode, withinFileIndex) {
     tibble(
@@ -134,8 +152,11 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   roleOfOffenderNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Subject')
   roleOfOffender <- map2_df(roleOfOffenderNodes, seq(roleOfOffenderNodes), function(roleOfOffenderNode, withinFileIndex) {
     tibble(
-      OffenderID=roleOfOffenderNode %>% xml_find_first('@s:id') %>% xml_text(),
+      SegmentLevel="5",
+      SegmentActionType=roleOfOffenderNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportActionCategoryCode') %>% xml_text(),
+      ORI=roleOfOffenderNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification/nc:IdentificationID') %>% xml_text(),
       IncidentNumber=roleOfOffenderNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
+      OffenderID=roleOfOffenderNode %>% xml_find_first('@s:id') %>% xml_text(),
       RoleOfOffenderID=roleOfOffenderNode %>% xml_find_first('nc:RoleOfPerson/@s:ref') %>% xml_text(),
       OffenderSequenceNumber=roleOfOffenderNode %>% xml_find_first('j:SubjectSequenceNumberText') %>% xml_text()
     )
@@ -156,13 +177,16 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   arrestNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Arrest')
   arrest <- map2_df(arrestNodes, seq(arrestNodes), function(arrestNode, withinFileIndex) {
     tibble(
-      ArrestID=arrestNode %>% xml_find_first('@s:id') %>% xml_text(),
+      SegmentLevel="6",
+      SegmentActionType=arrestNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportActionCategoryCode') %>% xml_text(),
+      ORI=arrestNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification/nc:IdentificationID') %>% xml_text(),
       IncidentNumber=arrestNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
+      ArrestID=arrestNode %>% xml_find_first('@s:id') %>% xml_text(),
       ArrestTransactionNumber=arrestNode %>% xml_find_all('nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
       ArrestDate=arrestNode %>% xml_find_all('nc:ActivityDate/nc:Date') %>% xml_text(),
       TypeOfArrest=arrestNode %>% xml_find_all('j:ArrestCategoryCode') %>% xml_text(),
       UCRArrestOffenseCode=arrestNode %>% xml_find_all('j:ArrestCharge/nibrs:ChargeUCRCode') %>% xml_text()
- 
+      
     )
   })
   
@@ -203,6 +227,7 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   victimOffenseNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:OffenseVictimAssociation')
   victimOffense <- map2_df(victimOffenseNodes, seq(victimOffenseNodes), function(victimOffenseNode, withinFileIndex) {
     tibble(
+      IncidentNumber=victimOffenseNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
       VictimID=victimOffenseNode %>% xml_find_first('j:Victim/@s:ref') %>% xml_text(),
       OffenseID=victimOffenseNode %>% xml_find_first('j:Offense/@s:ref') %>% xml_text()
     )
@@ -221,48 +246,137 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
     tibble(
       VictimID=subjectVictimNode %>% xml_find_first('j:Victim/@s:ref') %>% xml_text(),
       OffenderID=subjectVictimNode %>% xml_find_first('j:Subject/@s:ref') %>% xml_text(),
+      VictimConnectedToUCROffense=subjectVictimNode %>% xml_find_all('../j:Offense[@s:id=//j:OffenseVictimAssociation[j:Victim/@s:ref= //j:Victim/@s:id]//j:Offense/@s:ref]/nibrs:OffenseUCRCode') %>% xml_text(),
+      OffenderNumberToBeRelated=subjectVictimNode %>% xml_find_first('../j:Subject/j:SubjectSequenceNumberText') %>% xml_text(),	  
       RelationshipOfVictimToOffender=subjectVictimNode %>% xml_find_first('nibrs:VictimToSubjectRelationshipCode') %>% xml_text() 
       
     )
   })    
-
   
 
-    
-    
-    
-    
-  
-NIBRS  <- incident %>% 
-#  incident %>% 
-    
-  left_join(offense, by="IncidentNumber") %>% 
+NIBRS <- setNames(data.frame(matrix(ncol =68, nrow = 0)),
+ c("Segment Length",
+            "SegmentLevel",
+            "SegmentActionType",
+            "MonthOfSubmission",
+            "YearOfSubmission",
+            "CityIndicator",
+            "ORI",
+            "IncidentNumber",
+            "IncidentDate",
+            "ReportDateIndicator",
+            "IncidentHour",
+            "ExceptionalClearanceCode",
+            "ExceptionalClearanceDate",
+            "CargoTheftIndicator",
+            "UCROffenseCode",
+            "OffenseAttemptedIndicator",
+            "OffenderSuspectedOfUsingCode",
+            "LocationType",
+            "NumberOfPremisesEntered",
+            "MethodOfEntry",
+            "TypeCriminalActivityGangInformation", 
+            "TypeOfWeaponForceInvolved",
+            "AutomaticWeaponIndicator",
+            "BiasMotivation",
+            "TypePropertyLoss",
+            "PropertyDescription",
+            "ValueOfProperty",
+            "DateRecovered",
+            "NumberOfStolenMotorVehicles",
+            "NumberOfRecoveredMotorVehicles",                                               
+            "SuspectedDrugType",
+            "EstimatedDrugQuantity",
+            "TypeDrugMeasurement",                                       
+            "VictimSequenceNumber",
+            "VictimConnectedToUCROffense",
+            "TypeOfVictim",                                              
+            "AgeOfVictim",
+            "SexOfVictim",
+            "RaceOfVictim",
+            "EthnicityOfVictim", 
+            "ResidentStatusOfVictim",
+            "VictimAggravatedAssaultHomicideCircumstance",
+            "VictimJustifiableHomicideCircumstance",                                                   
+            "VictimInjuryType",
+            "OffenderNumberToBeRelated",                  
+            "RelationshipOfVictimToOffender",
+            "TypeOfOfficerActivity",
+            "OfficerAssignmentType",
+            "OfficerORIOtherJurisdiction",
+            "OffenderSequenceNumber",
+            "AgeOfOffender",
+            "SexOfOffender",
+            "RaceOfOffender", 
+            "EthnicityOfOffender",
+            "ArresteeSequenceNumber",
+            "ArrestTransactionNumber",
+            "ArrestDate",
+            "TypeOfArrest",
+            "MultipleArresteeSegmentsIndicator",
+            "UCRArrestOffenseCode",
+            "ArresteeArmedWithCode",
+            "AutomaticWeaponIndicator",
+            "AgeOfArrestee",
+            "SexOfArrestee",
+            "RaceOfArrestee",
+            "EthnicityOfArrestee",
+            "ResidentStatusOfArrestee",  
+            "DispositionOfArresteeUnder18"
+   ))
+
+INCIDENT  <- incident %>%
+  mutate(`CargoTheftIndicator`=case_when(
+    `CargoTheftIndicator` == "false" ~ 'NA',
+    `CargoTheftIndicator` == "true"  ~ 'Y'))
+
+OFFENSE  <- offense %>% 
   left_join(offenseLocation, by="OffenseID") %>% 
-  left_join(location, by="LocationID") %>% 
+  left_join(location, by="LocationID") %>%
+mutate(`OffenseAttemptedIndicator`=case_when(
+  `OffenseAttemptedIndicator` == "false" ~ 'C',
+  `OffenseAttemptedIndicator` == "true"  ~ 'A')) %>%
+mutate(.,AutomaticWeaponIndicator = with(.,case_when(
+    (str_detect(TypeOfWeaponForceInvolved, "A")) ~ "A"
+  )))
 
-  left_join(property, by="IncidentNumber") %>% 
+PROPERTY  <- property %>%
+  mutate(.,NumberOfStolenMotorVehicles = with(.,case_when(
+    (str_detect(TypePropertyLoss, "STOLEN")) ~ ItemQuantity
+  ))) %>%
 
-  left_join(victimOffense, by="OffenseID") %>% 
+  mutate(.,NumberOfRecoveredMotorVehicles = with(.,case_when(
+  (str_detect(TypePropertyLoss, "RECOVERED")) ~ ItemQuantity
+  ))) %>%
+
+  select (-c(ItemQuantity))
+
+
+VICTIM  <- victimOffense %>% 
   left_join(victim, by="VictimID") %>%
   left_join(roleOfVictim, by="VictimID") %>% 
   left_join(victimPerson, by="RoleOfVictimID") %>% 
-  left_join(subjectVictim, by="VictimID", "OffenderID") %>%
-  left_join(victimLEO, by="RoleOfVictimID") %>%
+  left_join(subjectVictim, by="VictimID", "OffenderID")
+# How to handle when df is empty (e.g., no "enforcement", no "arrest", etc)
+#  left_join(victimLEO, by="RoleOfVictimID")
 
-  left_join(roleOfOffender, by="IncidentNumber") %>% 
-  left_join(offenderPerson, by="RoleOfOffenderID") %>% 
 
-#Need to determine how to handle no Arrest Segment
-  left_join(arrest, by="IncidentNumber") %>%
+OFFENDER <- roleOfOffender %>% 
+  left_join(offenderPerson, by="RoleOfOffenderID")
+  
+ARREST <- arrest %>% 
   left_join(arrestSubject, by="ArrestID") %>% 
   left_join(arrestee, by="ArresteeID") %>%
   left_join(arresteePerson, by="RoleOfArresteeID")
-  
-#  select (-c(LocationID, OffenseID, OffenderID, VictimID, ArresteeID, ArrestID, RoleOfVictimID, RoleOfOffenderID, RoleOfArresteeID))
 
-  
+INCIDENT$IncidentDate <- str_remove_all(INCIDENT$IncidentDate, "-")
+INCIDENT$ExceptionalClearanceDate <- str_remove_all(INCIDENT$ExceptionalClearanceDate, "-")
+PROPERTY$DateRecovered <- str_remove_all(PROPERTY$DateRecovered, "-")
+ARREST$ArrestDate <- str_remove_all(ARREST$ArrestDate, "-")
 
+NIBRS <-bind_rows (NIBRS, INCIDENT, OFFENSE, PROPERTY, VICTIM, OFFENDER, ARREST) %>%
+  select (-c(LocationID, OffenseID, OffenderID, VictimID, ArresteeID, ArrestID, RoleOfVictimID, RoleOfOffenderID, RoleOfArresteeID)) %>%
+  mutate_all(na_if,"")
 
-
-
+write_csv(NIBRS, "NIBRS.csv")
 
