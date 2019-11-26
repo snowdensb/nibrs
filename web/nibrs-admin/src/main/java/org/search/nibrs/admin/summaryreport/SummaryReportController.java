@@ -31,10 +31,12 @@ import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
+import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
 import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.report.service.ArsonExcelExporter;
 import org.search.nibrs.report.service.AsrExcelExporter;
+import org.search.nibrs.report.service.CargoTheftReportExporter;
 import org.search.nibrs.report.service.HumanTraffickingExporter;
 import org.search.nibrs.report.service.ReturnAFormExporter;
 import org.search.nibrs.report.service.StagingDataRestClient;
@@ -69,6 +71,8 @@ public class SummaryReportController {
 	public HumanTraffickingExporter humanTraffickingExporter;
 	@Autowired 
 	public SupplementaryHomicideReportExporter supplementaryHomicideReportExporter;
+	@Autowired 
+	public CargoTheftReportExporter cargoTheftReportExporter;
 	
     @ModelAttribute
     public void addModelAttributes(Model model) {
@@ -152,7 +156,7 @@ public class SummaryReportController {
 	@PostMapping("/summaryReports/humanTraffickingReport")
 	public void getHumanTraffickingReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response) throws IOException{
-		log.info("get arson report");
+		log.info("get humanTraffickingReport");
 		HumanTraffickingForm humanTraffickingForm = restClient.getHumanTraffickingForm(
 				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
 		XSSFWorkbook workbook = humanTraffickingExporter.createWorkbook(humanTraffickingForm);
@@ -164,7 +168,7 @@ public class SummaryReportController {
 	@PostMapping("/summaryReports/asrReports")
 	public void getAsrReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response) throws IOException{
-		log.info("get arson report");
+		log.info("get asrReports");
 		AsrReports asrReports = restClient.getAsrReports(
 				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
 		XSSFWorkbook workbook = asrExcelExporter.createWorkbook(asrReports);
@@ -175,12 +179,24 @@ public class SummaryReportController {
 	@PostMapping("/summaryReports/shrReports")
 	public void getSupplementaryHomicideReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response) throws IOException{
-		log.info("get arson report");
+		log.info("get shrReports");
 		SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReport(
 				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
 		XSSFWorkbook workbook = supplementaryHomicideReportExporter.createWorkbook(supplementaryHomicideReport);
 		String fileName = "SupplementaryHomicideReport-" + supplementaryHomicideReport.getOri() + "-" + supplementaryHomicideReport.getYear() + 
 				"-" + StringUtils.leftPad(String.valueOf(supplementaryHomicideReport.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/cargoTheftReport")
+	public void getCargoTheftReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get cargo theft report");
+        CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(
+        		summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = cargoTheftReportExporter.createWorkbook(cargoTheftReport);
+		String fileName = "CargoTheftReport-" + cargoTheftReport.getOri() + "-" + cargoTheftReport.getYear() + 
+				"-" + StringUtils.leftPad(String.valueOf(cargoTheftReport.getMonth()), 2, '0') + ".xlsx";
 		downloadReport(response, workbook, fileName);
 	}
 	
