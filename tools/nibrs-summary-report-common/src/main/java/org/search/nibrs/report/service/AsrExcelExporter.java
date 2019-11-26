@@ -73,6 +73,14 @@ public class AsrExcelExporter {
         }
     }
     
+    public XSSFWorkbook createWorkbook(AsrReports asrReports) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        createSheet(asrReports, workbook);
+        createJuvenileSheet(asrReports.getJuvenileRows(), workbook);
+    	return workbook;
+    }
+    
     public void exportAsrJuvenileForm(AsrReports asrReports){
     	XSSFWorkbook workbook = new XSSFWorkbook();
     	

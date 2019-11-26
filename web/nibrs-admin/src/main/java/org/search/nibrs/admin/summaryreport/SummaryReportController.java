@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +30,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.arson.ArsonReport;
+import org.search.nibrs.model.reports.asr.AsrReports;
+import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
+import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.report.service.ArsonExcelExporter;
 import org.search.nibrs.report.service.AsrExcelExporter;
 import org.search.nibrs.report.service.HumanTraffickingExporter;
@@ -145,19 +149,58 @@ public class SummaryReportController {
 		downloadReport(response, workbook, fileName);
 	}
 	
+	@PostMapping("/summaryReports/humanTraffickingReport")
+	public void getHumanTraffickingReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get arson report");
+		HumanTraffickingForm humanTraffickingForm = restClient.getHumanTraffickingForm(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = humanTraffickingExporter.createWorkbook(humanTraffickingForm);
+		String fileName = "HumanTrafficking-" + humanTraffickingForm.getOri() + "-" + humanTraffickingForm.getYear() + 
+				"-" + StringUtils.leftPad(String.valueOf(humanTraffickingForm.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/asrReports")
+	public void getAsrReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get arson report");
+		AsrReports asrReports = restClient.getAsrReports(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = asrExcelExporter.createWorkbook(asrReports);
+		String fileName = "ASR-REPORTS-" + asrReports.getOri() + "-" + asrReports.getYear() + "-" + StringUtils.leftPad(String.valueOf(asrReports.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/shrReports")
+	public void getSupplementaryHomicideReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get arson report");
+		SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReport(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = supplementaryHomicideReportExporter.createWorkbook(supplementaryHomicideReport);
+		String fileName = "SupplementaryHomicideReport-" + supplementaryHomicideReport.getOri() + "-" + supplementaryHomicideReport.getYear() + 
+				"-" + StringUtils.leftPad(String.valueOf(supplementaryHomicideReport.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+	
 	@RequestMapping("/arsonReport/{ori}/{year}/{month}")
 	public void getArsonReport(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
+		throw new NotImplementedException();
 	}
 	@RequestMapping("/humanTraffickingReport/{ori}/{year}/{month}")
 	public void getHumanTraffickingReport(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
+		throw new NotImplementedException();
 	}
 	
 	@RequestMapping("/asrReports/{ori}/{arrestYear}/{arrestMonth}")
 	public void getAsrReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
+		throw new NotImplementedException();
 	}
 	
 	@RequestMapping("/shrReports/{ori}/{arrestYear}/{arrestMonth}")
 	public void getSupplementaryHomicideReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
+		throw new NotImplementedException();
 	}
 	
 }
