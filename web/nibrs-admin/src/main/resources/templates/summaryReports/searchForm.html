@@ -33,11 +33,16 @@
 			     <li class="breadcrumb-item active" aria-current="page">Get Summary Report</li>
 			   </ol>
 			</nav>
-			<form class="needs-validation" action="#" th:action="@{/precertErrors/search}" th:object="${summaryReportRequest}" id="searchForm" method="post" novalidate>
+			<form class="needs-validation" action="#" th:object="${summaryReportRequest}" id="searchForm" method="post" novalidate>
 				<div class="form-row">
 					<label class="col-2 col-form-label font-weight-bold text-right">Report Type</label>
-					<div class="col-sm-3">
-						<input class="form-control form-control-sm" type="text" readonly="readonly" value="Return A"/>
+					<div class="col-sm-3 form-group">
+						<select name="reportType" id="reportType" class="form-control form-control-sm chosen-select custom-select" data-placeholder="Please select all that apply..." 
+							multiple required>
+						    <option th:each="summaryReportType : ${T(org.search.nibrs.admin.summaryreport.SummaryReportType).values()}"
+						        th:value="${summaryReportType}" th:text="${summaryReportType.description}"></option>
+						</select>
+						<div class="invalid-feedback">report type required</div>
 					</div>
 				</div>
 				<div class="form-row align-text-center">
@@ -46,18 +51,18 @@
 				  	<input class="form-control form-control-sm" type="text" th:field="*{incidentMonth}" width="2" maxlength="2" placeholder="month" th:errorclass="is-invalid" required/>
 				 	<div th:if="${#fields.hasErrors('incidentMonth')}" th:errors="*{incidentMonth}" class="invalid-feedback">Incident Month error message</div>
 				    <div class="invalid-feedback">
-				        require valid month
+				        a valid month required
 				    </div>
       			  </div>
 				  <div class="col-sm-2">
 				  	<input class="form-control form-control-sm" type="text" th:field="*{incidentYear}" width="4" placeholder="year" maxlength="4" th:errorclass="is-invalid" required/>
-			 	      <div class="invalid-feedback">required a 4 digit year</div>
+			 	      <div class="invalid-feedback">a 4-digit year required</div>
 				  </div>
 				</div>
 				<div class="form-row">
 					<label class="col-2 col-form-label font-weight-bold text-right">Agency</label>
 					<div class="col-sm-3 form-group">
-						<select th:field="*{ori}" class="form-control form-control-sm chosen-select custom-select" th:errorclass="is-invalid" data-placeholder="Please select one" required>
+						<select th:field="*{ori}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="Please select one" required>
 							<option value=''>Please select ...</option>
 							<option th:each="item: ${oriMapping}" th:value="${item.key}" th:text="${item.value}" />
 						</select>
