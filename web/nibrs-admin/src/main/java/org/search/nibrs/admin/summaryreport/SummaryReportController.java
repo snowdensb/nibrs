@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.model.reports.ReturnAForm;
+import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.report.service.ArsonExcelExporter;
 import org.search.nibrs.report.service.AsrExcelExporter;
 import org.search.nibrs.report.service.HumanTraffickingExporter;
@@ -98,22 +99,22 @@ public class SummaryReportController {
 	@GetMapping("/returnAForm/{ori}/{year}/{month}")
 	public void getReturnAForm(@PathVariable String ori, @PathVariable String year, @PathVariable String month, 
 			HttpServletResponse response) throws IOException{
-		downloadReturnAForm(ori, year, month, response);
-	}
-
-	private void downloadReturnAForm(String ori, String year, String month, HttpServletResponse response) throws IOException {
 		ReturnAForm returnAForm = restClient.getReturnAForm(ori, year, month);
 		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
+		String fileName = "ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+
+	private void downloadReport(HttpServletResponse response, XSSFWorkbook workbook, String fileName) throws IOException {
 		String mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 		// set content attributes for the response
 		response.setContentType(mimeType);
 		
-		String filename = "ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
 //		response.setContentLength();
 		
 		// set headers for the response
 		String headerKey = "Content-Disposition";
-		String headerValue = String.format("attachment; filename=\"%s\"", filename);
+		String headerValue = String.format("attachment; filename=\"%s\"", fileName);
 		response.setHeader(headerKey, headerValue);
 		
 		// get output stream of the response
@@ -125,8 +126,23 @@ public class SummaryReportController {
 	@PostMapping("/summaryReports/returnAForm")
 	public void getReturnAFormByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response) throws IOException{
+		ReturnAForm returnAForm = restClient.getReturnAForm(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
+		String fileName = "ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
 
-		downloadReturnAForm(summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), response);
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/arsonReport")
+	public void getArsonReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get arson report");
+		ArsonReport arsonReport = restClient.getArsonReport(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = arsonExcelExporter.createWorkBook(arsonReport);
+		String fileName = "ARSON-Report-" + arsonReport.getOri() + "-" + arsonReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(arsonReport.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
 	}
 	
 	@RequestMapping("/arsonReport/{ori}/{year}/{month}")

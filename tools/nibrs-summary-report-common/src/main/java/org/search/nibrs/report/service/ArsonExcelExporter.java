@@ -57,9 +57,7 @@ public class ArsonExcelExporter {
 	private SummaryReportProperties appProperties;
 
     public void exportArsonReport(ArsonReport arsonReport){
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        
-        createSheet(arsonReport, workbook);
+        XSSFWorkbook workbook = createWorkBook(arsonReport);
 		
         try {
         	String fileName = appProperties.getSummaryReportOutputPath() + "/ARSON-Report-" 
@@ -77,7 +75,8 @@ public class ArsonExcelExporter {
         }
     }
     
-	private void createSheet(ArsonReport arsonReport, XSSFWorkbook workbook ) {
+	public XSSFWorkbook createWorkBook(ArsonReport arsonReport) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
         int rowNum = 0;
         log.info("Write to the excel file");
         CellStyle wrappedStyle = workbook.createCellStyle();
@@ -132,6 +131,7 @@ public class ArsonExcelExporter {
 		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(14, 14, 0, 8), sheet);
 		RegionUtil.setBorderLeft(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 14, 4, 4), sheet);
 		RegionUtil.setBorderRight(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 14, 8, 8), sheet);
+		return workbook;
 
 	}
 

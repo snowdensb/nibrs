@@ -34,12 +34,19 @@
      form.classList.add('was-validated'); 
      if ( isValidForm === true){
     	 var reportTypes = $('#reportType').val();
-    	 for(var i=0, len=reportTypes.length; i < len; i++){
+    	 var xhr = [], i, j=0;
+    	 var len=reportTypes.length;
+    	 for( i=0; i < len; i++){
     		 var reportType = reportTypes[i];
-		     var request = new XMLHttpRequest();
-		     request.onreadystatechange = function() {
-		    	  if(this.readyState === 4){
-				    $("#loadingAjaxPane").hide();                
+    		 console.log("reportType: " + reportType);
+    		 xhr[i] = new XMLHttpRequest();
+    		 xhr[i].onreadystatechange = function() {
+    			 console.log("i:" + i); 
+    			 console.log("len -1 :" + (len -1)); 
+		    	  if( this.readyState === 4){
+		    		if (++j === len ){
+		    			$("#loadingAjaxPane").hide();
+		    		}
 		    	  }
 		    	  else{
 					var loadingDiv =  $("#loadingAjaxPane");
@@ -51,15 +58,16 @@
 					$("#loadingAjaxPane").show();
 		    	  }
 		     };
-		     request.open('POST', context + "summaryReports/"+reportType, true);
-		     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-		     request.responseType = 'blob';
+		     xhr[i].open('POST', context + "summaryReports/"+reportType, true);
+		     xhr[i].setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+		     xhr[i].responseType = 'blob';
+	    	 console.log("xhr[i]: " + xhr[i]); 
 		
-		     request.onload = function(e) {
+		     xhr[i].onload = function(e) {
 		         if (this.status === 200) {
 		             var blob = this.response;
-			    	 var fileName = ""
-			    	 var disposition = request.getResponseHeader('Content-Disposition');
+			    	 var fileName = "";
+			    	 var disposition = this.getResponseHeader('Content-Disposition');
 			         if (disposition && disposition.indexOf('attachment') !== -1) {
 			             var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
 			             var matches = filenameRegex.exec(disposition);
@@ -70,7 +78,7 @@
 		             }
 		             else{
 		                 var downloadLink = window.document.createElement('a');
-		                 var contentTypeHeader = request.getResponseHeader("Content-Type");
+		                 var contentTypeHeader = this.getResponseHeader("Content-Type");
 		                 downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: contentTypeHeader }));
 		                 downloadLink.download = fileName;
 		                 document.body.appendChild(downloadLink);
@@ -79,7 +87,7 @@
 		            }
 		        }
 		      }
-		      request.send(formData);
+		     xhr[i].send(formData);
     	 }
      }
    });
