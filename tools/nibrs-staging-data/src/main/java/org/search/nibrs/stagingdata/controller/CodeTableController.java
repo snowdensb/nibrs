@@ -59,9 +59,9 @@ public class CodeTableController {
 		return agencyMap;
 	}
 	
-	@GetMapping("/oris")
+	@GetMapping("/agenciesHavingData")
 	public Map<String, String> oris(){
-		Map<String, String> agencyMap = StreamSupport.stream(agencyRepository.findAll(new Sort(Sort.Direction.ASC, "agencyName")).spliterator(), false)
+		Map<String, String> agencyMap = StreamSupport.stream(agencyRepository.findAllHavingData().spliterator(), false)
 				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
 				.collect(Collectors.toMap(Agency::getAgencyOri, Agency::getAgencyName, (u, v) -> u,
 						LinkedHashMap::new));

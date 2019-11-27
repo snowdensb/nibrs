@@ -45,20 +45,6 @@
 						<div class="invalid-feedback">report type required</div>
 					</div>
 				</div>
-				<div class="form-row align-text-center">
-				  <label class="col-2 col-form-label font-weight-bold text-right" for="incidentMonth">Incident Date</label>
-				  <div class="col-sm-2">
-				  	<input class="form-control form-control-sm" type="text" th:field="*{incidentMonth}" width="2" maxlength="2" placeholder="month" th:errorclass="is-invalid" required/>
-				 	<div th:if="${#fields.hasErrors('incidentMonth')}" th:errors="*{incidentMonth}" class="invalid-feedback">Incident Month error message</div>
-				    <div class="invalid-feedback">
-				        a valid month required
-				    </div>
-      			  </div>
-				  <div class="col-sm-2">
-				  	<input class="form-control form-control-sm" type="text" th:field="*{incidentYear}" width="4" placeholder="year" maxlength="4" th:errorclass="is-invalid" required/>
-			 	      <div class="invalid-feedback">a 4-digit year required</div>
-				  </div>
-				</div>
 				<div class="form-row">
 					<label class="col-2 col-form-label font-weight-bold text-right">Agency</label>
 					<div class="col-sm-3 form-group">
@@ -68,6 +54,21 @@
 						</select>
 						<div class="invalid-feedback">Please select one agency</div>
 					</div>
+				</div>
+				<div class="form-row align-text-center">
+				  <label class="col-2 col-form-label font-weight-bold text-right" for="incidentMonth">Incident Date</label>
+				  <div class="col-sm-2">
+				  	<input class="form-control form-control-sm" type="text" th:field="*{incidentYear}" width="4" placeholder="year" maxlength="4" th:errorclass="is-invalid" required/>
+			 	      <div class="invalid-feedback">a 4-digit year required</div>
+				  </div>
+				  <div class="col-sm-2">
+				  	<input class="form-control form-control-sm" type="number" th:field="*{incidentMonth}" 
+				  		width="2" maxlength="2" placeholder="month" th:errorclass="is-invalid" min="1" max="12" required/>
+				 	<div th:if="${#fields.hasErrors('incidentMonth')}" th:errors="*{incidentMonth}" class="invalid-feedback">Incident Month error message</div>
+				    <div class="invalid-feedback">
+				        a valid month required
+				    </div>
+      			  </div>
 				</div>
 				<div class="form-row mt-2">
 					<div class="col-2"></div>

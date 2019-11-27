@@ -65,7 +65,7 @@ public class RestService{
 	}
 	
 	public Map<String, String> getOris() {
-		return this.webClient.get().uri("/codeTables/oris")
+		return this.webClient.get().uri("/codeTables/agenciesHavingData")
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<String, String>>() {})
 				.block();
