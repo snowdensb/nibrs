@@ -190,7 +190,7 @@ public class SummaryReportController {
 		downloadReport(response, workbook, fileName);
 	}
 	
-	@GetMapping("/summaryReports/cargoTheftReport")
+	@PostMapping("/summaryReports/cargoTheftReport")
 	public void getCargoTheftReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response) throws IOException{
 		log.info("get cargo theft report");
