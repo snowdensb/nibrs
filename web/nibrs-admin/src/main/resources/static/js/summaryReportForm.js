@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
  $(function(){
    $(".chosen-select").chosen();  
    $('[data-toggle="popover"]').popover(); 
@@ -25,7 +26,36 @@
      }
    });
    
-   $('#submit').click (function(){
+   $('#portalContent').on('change', '#searchForm #ori', function(){
+	   ori = $('#ori').val(); 
+	   if (ori){
+		   xhr = $.get( context +"years/" + ori, function(data) {
+			   $('#incidentYear').empty();
+			   $('#incidentYear').append('<option value="">Please select ...</option>');
+			   data.forEach( function(item, index) {
+                   $('#incidentYear').append($('<option></option>').attr('value', item).text(item));
+               });
+			   $('#incidentYear').trigger("chosen:updated");
+	       }).fail(ojbc.displayFailMessage);
+	   }
+   });
+   
+   $('#portalContent').on('change', '#searchForm #incidentYear', function(){
+	   ori = $('#ori').val(); 
+	   incidentYear = $('#incidentYear').val();
+	   if (ori && incidentYear){
+		   xhr = $.get( context +"months/" + incidentYear + "/" + ori, function(data) {
+			   $('#incidentMonth').empty();
+			   $('#incidentMonth').append('<option value="">Please select ...</option>');
+			   data.forEach( function(item, index) {
+				   $('#incidentMonth').append($('<option></option>').attr('value', item).text(item));
+			   });
+			   $('#incidentMonth').trigger("chosen:updated");
+		   }).fail(ojbc.displayFailMessage);
+	   }
+   });
+   
+   $('#portalContent').on('click', '#submit', function(){
      var formData = $('#searchForm').serialize();
      
      var form = document.getElementById('searchForm'); 

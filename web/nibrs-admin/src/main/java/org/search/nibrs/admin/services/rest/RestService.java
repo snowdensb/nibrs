@@ -71,6 +71,20 @@ public class RestService{
 				.block();
 	}
 	
+	public List<Integer> getYears(String ori) {
+		return this.webClient.get().uri("/codeTables/years/" + ori)
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
+				.block();
+	}
+	
+	public List<Integer> getMonths(String ori, Integer year) {
+		return this.webClient.get().uri("/codeTables/months/" + year + "/" + ori)
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
+				.block();
+	}
+	
 	public Map<Integer, String> getOffenseCodes() {
 		return this.webClient.get().uri("/codeTables/offenseCodes")
 				.retrieve()

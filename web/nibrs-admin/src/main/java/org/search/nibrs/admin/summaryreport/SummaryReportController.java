@@ -17,6 +17,7 @@ package org.search.nibrs.admin.summaryreport;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -49,6 +50,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
@@ -188,7 +190,7 @@ public class SummaryReportController {
 		downloadReport(response, workbook, fileName);
 	}
 	
-	@PostMapping("/summaryReports/cargoTheftReport")
+	@GetMapping("/summaryReports/cargoTheftReport")
 	public void getCargoTheftReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response) throws IOException{
 		log.info("get cargo theft report");
@@ -198,6 +200,16 @@ public class SummaryReportController {
 		String fileName = "CargoTheftReport-" + cargoTheftReport.getOri() + "-" + cargoTheftReport.getYear() + 
 				"-" + StringUtils.leftPad(String.valueOf(cargoTheftReport.getMonth()), 2, '0') + ".xlsx";
 		downloadReport(response, workbook, fileName);
+	}
+	
+	@GetMapping("/years/{ori}")
+	public @ResponseBody List<Integer> getDistinctYears(@PathVariable String ori) throws IOException{
+		return restService.getYears(ori);
+	}
+	
+	@GetMapping("/months/{year}/{ori}")
+	public @ResponseBody List<Integer> getDistinctMonths(@PathVariable String ori, @PathVariable Integer year) throws IOException{
+		return restService.getMonths(ori, year);
 	}
 	
 	@RequestMapping("/arsonReport/{ori}/{year}/{month}")
