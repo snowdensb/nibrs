@@ -80,87 +80,87 @@
 			    </div>
 	      </div>
 	
-	 		<script th:inline="javascript">
-	       /*<![CDATA[*/
-	          var context = [[@{/}]];
-            var offenseCodeMapping = [[${offenseCodeMapping}]]; 
-	        /*]]>*/
+ 		  <script th:inline="javascript">
+		       /*<![CDATA[*/
+		          var context = [[@{/}]];
+	              var offenseCodeMapping = [[${offenseCodeMapping}]]; 
+		        /*]]>*/
 	
-	       $(function(){
-		            
-	          $.fn.dataTable.moment( 'MM/YYYY' );
-	        
-	          var table = $('#searchResultsTable').DataTable({
-              ajax: context +"incidents/pointers",
-              rowId: "primaryKey",
-              columns: [
-                  { "data": "incidentIdentifier" },
-                  { "data": "agencyName" },
-                  { "data": "incidentDate" },
-                  { "data": "submissionDateString" },
-                  { "data": "ucrOffenseCodeTypeId" },
-                  { "data": "reportType" },
-                  { "data": "fbiStatus" }, 
-                  { "data": "primaryKey", "visible":false}
-              ], 
-              deferRender: true,
-	            responsive: true, 
-	            fixedHeader: { header: true },
-							columnDefs: [ 
-							    {
-							         "targets": [4],
-							         "render": function ( data, type, row, meta ) {
-							             if (offenseCodeMapping.hasOwnProperty(data)){
-							               return offenseCodeMapping[data];
-							             }
-							             else{
-							               return data;
-							             }
-							         }
-							    },
-							    {
-							         "targets": [5],
-							         "render": function ( data, type, row, meta ) {
-							             if (data === 'GroupA'){
-							               return 'Group A';
-							             }
-							             else if (data === 'GroupB' ){
-							               return 'Group B';
-							             }
-							             else {
-							            	 return data;
-							             }
-							         }
-							    }
-							]
-	          });
-	          
-	          $('[data-toggle="tooltip"]').tooltip({
-	              trigger : 'hover'
-	          });   
-	
-	                  
-	          $('#searchResultsTable tbody').on('click', 'tr',function() {
-	            table.$('tr.selected').removeClass('selected');
-	            $(this).addClass('selected');  
-	
-	            var rowData = table.row(this).data();
-	            var reportType = rowData.reportType; 
-	            xhr = $.get( context +"incidents/" + reportType + "/" + $(this).attr("id"), function(data) {
-	              $('#reportDetailModal .modal-body').html(data);
-	              
-	              if (reportType === "A"){
-	                $('#reportDetailModal .modal-title').html("Group A Incident");
-	              }
-	              else if (reportType === "B"){
-	                $('#reportDetailModal .modal-title').html("Group B Arrest");
-	              }
-	              $('#reportDetailModal').modal('show');
-	            }).fail(ojbc.displayFailMessage);
-	          });
-	        }); 
+		       $(function(){
+			            
+		          $.fn.dataTable.moment( 'MM/YYYY' );
+		        
+		          var table = $('#searchResultsTable').DataTable({
+	              ajax: context +"incidents/pointers",
+	              rowId: "primaryKey",
+	              columns: [
+	                  { "data": "incidentIdentifier" },
+	                  { "data": "agencyName" },
+	                  { "data": "incidentDate" },
+	                  { "data": "submissionDateString" },
+	                  { "data": "ucrOffenseCodeTypeId" },
+	                  { "data": "reportType" },
+	                  { "data": "fbiStatus" }, 
+	                  { "data": "primaryKey", "visible":false}
+	              ], 
+	              deferRender: true,
+		            responsive: true, 
+		            fixedHeader: { header: true },
+								columnDefs: [ 
+								    {
+								         "targets": [4],
+								         "render": function ( data, type, row, meta ) {
+								             if (offenseCodeMapping.hasOwnProperty(data)){
+								               return offenseCodeMapping[data];
+								             }
+								             else{
+								               return data;
+								             }
+								         }
+								    },
+								    {
+								         "targets": [5],
+								         "render": function ( data, type, row, meta ) {
+								             if (data === 'GroupA'){
+								               return 'Group A';
+								             }
+								             else if (data === 'GroupB' ){
+								               return 'Group B';
+								             }
+								             else {
+								            	 return data;
+								             }
+								         }
+								    }
+								]
+		          });
+		          
+		          $('[data-toggle="tooltip"]').tooltip({
+		              trigger : 'hover'
+		          });   
 		
-      </script>
+		                  
+		          $('#searchResultsTable tbody').on('click', 'tr',function() {
+		            table.$('tr.selected').removeClass('selected');
+		            $(this).addClass('selected');  
+		
+		            var rowData = table.row(this).data();
+		            var reportType = rowData.reportType; 
+		            xhr = $.get( context +"incidents/" + reportType + "/" + $(this).attr("id"), function(data) {
+		              $('#reportDetailModal .modal-body').html(data);
+		              
+		              if (reportType === "A"){
+		                $('#reportDetailModal .modal-title').html("Group A Incident");
+		              }
+		              else if (reportType === "B"){
+		                $('#reportDetailModal .modal-title').html("Group B Arrest");
+		              }
+		              $('#reportDetailModal').modal('show');
+		            }).fail(ojbc.displayFailMessage);
+		          });
+		        }); 
+		
+      	</script>
 	  </div>
 	
 	</body>
