@@ -144,6 +144,17 @@ public class SummaryReportController {
 		downloadReport(response, workbook, fileName);
 	}
 	
+	@PostMapping("/summaryReports/returnASupplement")
+	public void getReturnASupplementByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		ReturnAForm returnAForm = restClient.getReturnAForm(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = returnAFormExporter.createReturnASupplementWorkBook(returnAForm);
+		String fileName = "ReturnASupplement-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
+		
+		downloadReport(response, workbook, fileName);
+	}
+	
 	@PostMapping("/summaryReports/arsonReport")
 	public void getArsonReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response) throws IOException{
