@@ -2,9 +2,10 @@ library(tidyverse)
 library(dplyr)
 library(lubridate)
 library(tibble)
+library(data.table)
 
 #Merge all "txt" nibrs files in the /data directory into file nibrs.txt used by this script 
-system("cd ./data;cat ./*.txt > ./nibrs/nibrs.txt")
+system("./flatfile.sh")
 
 # Vector of segment number for each row in the flatfile
 segments <- read_fwf("./data/nibrs/nibrs.txt", 
@@ -134,11 +135,14 @@ nibrs_segment_2_modified <- rbind(nibrs,
                                   biasMotivation5)
 
 nibrs_segment_2_modified <- nibrs_segment_2_modified[-c(12,13,18,19,22,23,24,25,27,28,29,30)] %>%
-  rename("OffenderSuspectedOfUsingCode"="OffenderSuspectedOfUsingCode #1") %>%
-  rename("TypeCriminalActivityGangInformation"="TypeCriminalActivityGangInformation #1") %>%
-  rename("TypeOfWeaponForceInvolved"="TypeOfWeaponForceInvolved #1") %>%
-  rename("AutomaticWeaponIndicator"="AutomaticWeaponIndicator #1") %>%
-  rename("BiasMotivation"="BiasMotivation #1")
+  
+  rename(
+    OffenderSuspectedOfUsingCode = "OffenderSuspectedOfUsingCode #1",
+    TypeCriminalActivityGangInformation = "TypeCriminalActivityGangInformation #1",
+    TypeOfWeaponForceInvolved = "TypeOfWeaponForceInvolved #1",
+    AutomaticWeaponIndicator = "AutomaticWeaponIndicator #1",
+    BiasMotivation = "BiasMotivation #1",
+  )  
 
 ####
 #### NIBRS Segment 3 - PROPERTY
@@ -294,12 +298,15 @@ nibrs_segment_3_modified <- rbind(nibrs,
                                   drug3)
 
 nibrs_segment_3_modified <- nibrs_segment_3_modified[-c(13:39,45:50)] %>%
-  rename("PropertyDescription"="PropertyDescription #1") %>%
-  rename("ValueOfProperty"="ValueOfProperty #1") %>%
-  rename("DateRecovered"="DateRecovered #1") %>%
-  rename("SuspectedDrugType"="SuspectedDrugType #1") %>%
-  rename("EstimatedDrugQuantity"="EstimatedDrugQuantity #1") %>%
-  rename("TypeDrugMeasurement"="TypeDrugMeasurement #1")
+  
+  rename(
+    PropertyDescription = "PropertyDescription #1",
+    ValueOfProperty = "ValueOfProperty #1",
+    DateRecovered = "DateRecovered #1",
+    SuspectedDrugType = "SuspectedDrugType #1",
+    EstimatedDrugQuantity = "EstimatedDrugQuantity #1",
+    TypeDrugMeasurement = "TypeDrugMeasurement #1",
+  )   
 
 ####
 #### NIBRS Segment 4 - VICTIM
@@ -516,11 +523,15 @@ nibrs_segment_4_modified <- rbind(nibrs,
                                   relationship10)
 
 nibrs_segment_4_modified <- nibrs_segment_4_modified[-c(11:19,27,30:33,36:53)] %>%
-  rename("VictimConnectedToUCROffense"="VictimConnectedToUCROffense #1") %>%
-  rename("VictimAggravatedAssaultHomicideCircumstance"="VictimAggravatedAssaultHomicideCircumstance #1") %>%
-  rename("VictimInjuryType"="VictimInjuryType #1") %>%
-  rename("OffenderNumberToBeRelated"="OffenderNumberToBeRelated #1") %>%
-  rename("RelationshipOfVictimToOffender"="RelationshipOfVictimToOffender #1")
+
+  rename(
+    VictimConnectedToUCROffense = "VictimConnectedToUCROffense #1",
+    VictimInjuryType = "VictimInjuryType #1",
+    VictimAggravatedAssaultHomicideCircumstance = "VictimAggravatedAssaultHomicideCircumstance #1",
+    OffenderNumberToBeRelated = "OffenderNumberToBeRelated #1",
+    RelationshipOfVictimToOffender = "RelationshipOfVictimToOffender #1"
+  )   
+  
 
 ####
 #### NIBRS Segment 5 - OFFENDER
@@ -585,25 +596,34 @@ nibrs_segment_6_modified <- rbind(nibrs,
                                   armed2)
 
 nibrs_segment_6_modified <- nibrs_segment_6_modified[-c(17:18)] %>%
-  rename("ArresteeArmedWithCode"="ArresteeArmedWithCode #1") %>%
-  rename("AutomaticWeaponIndicator6"="AutomaticWeaponIndicator #1") %>%
-
+  
+  rename(
+    ArresteeArmedWithCode = "ArresteeArmedWithCode #1",
+    AutomaticWeaponIndicator6 = "AutomaticWeaponIndicator #1"
+  )  
+  
 mutate(`TypeOfArrest`=case_when(
   `TypeOfArrest` == "FALSE" ~ 'F',
   `TypeOfArrest` == "TRUE"  ~ 'T'))
 
 
-####
+##
 #Entire nibrs flatfile df
+## NEED TO FIX
+#if (dim(nibrs_segment_3_modified)[1] == 0) {nibrs_segment_3_modified[1,1] <- 0}
+#if (dim(nibrs_segment_4_modified)[1] == 0) {nibrs_segment_4_modified[1,1] <- 0}
+#if (dim(original_nibrs_segment_5)[1] == 0) {original_nibrs_segment_5[1,1] <- 0}
+#if (dim(nibrs_segment_6_modified)[1] == 0) {nibrs_segment_6_modified[1, ] <- "NA"}
+
+
+## NEED TO ADD SEGMENT 6
 original_nibrs <- list(
   original_nibrs_segment_1,
   nibrs_segment_2_modified,
   nibrs_segment_3_modified,
   nibrs_segment_4_modified,
-  original_nibrs_segment_5,
-  nibrs_segment_6_modified
-  ) %>% reduce(full_join)
-
+  original_nibrs_segment_5) %>% 
+  reduce(full_join)
 
 #}
 
@@ -615,8 +635,4 @@ original_nibrs <- list(
 write.csv(original_nibrs, "original_nibrs.csv")
 
 
-
-
-
-
-
+## TESTING

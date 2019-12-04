@@ -105,7 +105,7 @@
 		<nc:Substance>
 			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
 			<nc:ItemStatus>
-				<cjis:ItemStatusCode>6</cjis:ItemStatusCode>
+				<cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
 			</nc:ItemStatus>
 			<!-- Element 16, Value of Property in US Dollars -->
 			<nc:ItemValue>
@@ -121,7 +121,7 @@
 			<j:ItemCategoryNIBRSPropertyCategoryCode>25</j:ItemCategoryNIBRSPropertyCategoryCode>
 			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
 			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
-			<nc:ItemQuantity></nc:ItemQuantity>
+			<nc:ItemQuantity>0</nc:ItemQuantity>
 			<!-- Element 20, Suspected Involved Drug Type -->
 			<j:DrugCategoryCode>L</j:DrugCategoryCode>
 			<nc:SubstanceQuantityMeasure>
@@ -133,7 +133,7 @@
 		<nc:Substance>
 			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
 			<nc:ItemStatus>
-				<cjis:ItemStatusCode>6</cjis:ItemStatusCode>
+				<cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
 			</nc:ItemStatus>
 			<!-- Element 16, Value of Property in US Dollars -->
 			<nc:ItemValue>
@@ -149,7 +149,7 @@
 			<j:ItemCategoryNIBRSPropertyCategoryCode>10</j:ItemCategoryNIBRSPropertyCategoryCode>
 			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
 			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
-			<nc:ItemQuantity></nc:ItemQuantity>
+			<nc:ItemQuantity>0</nc:ItemQuantity>
 			<!-- Element 20, Suspected Involved Drug Type -->
 			<j:DrugCategoryCode>L</j:DrugCategoryCode>
 			<nc:SubstanceQuantityMeasure>
@@ -161,7 +161,7 @@
 		<nc:Substance>
 			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
 			<nc:ItemStatus>
-				<cjis:ItemStatusCode>6</cjis:ItemStatusCode>
+				<cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
 			</nc:ItemStatus>
 			<!-- Element 16, Value of Property in US Dollars -->
 			<nc:ItemValue>
@@ -177,7 +177,7 @@
 			<j:ItemCategoryNIBRSPropertyCategoryCode>20</j:ItemCategoryNIBRSPropertyCategoryCode>
 			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
 			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
-			<nc:ItemQuantity></nc:ItemQuantity>
+			<nc:ItemQuantity>0</nc:ItemQuantity>
 			<!-- Element 20, Suspected Involved Drug Type -->
 			<j:DrugCategoryCode>L</j:DrugCategoryCode>
 			<nc:SubstanceQuantityMeasure>
@@ -189,7 +189,7 @@
 		<nc:Substance>
 			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
 			<nc:ItemStatus>
-				<cjis:ItemStatusCode>6</cjis:ItemStatusCode>
+				<cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
 			</nc:ItemStatus>
 			<!-- Element 16, Value of Property in US Dollars -->
 			<nc:ItemValue>
@@ -205,7 +205,7 @@
 			<j:ItemCategoryNIBRSPropertyCategoryCode>77</j:ItemCategoryNIBRSPropertyCategoryCode>
 			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
 			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
-			<nc:ItemQuantity></nc:ItemQuantity>
+			<nc:ItemQuantity>0</nc:ItemQuantity>
 			<!-- Element 20, Suspected Involved Drug Type -->
 			<j:DrugCategoryCode>L</j:DrugCategoryCode>
 			<nc:SubstanceQuantityMeasure>
@@ -217,7 +217,7 @@
 		<nc:Substance>
 			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
 			<nc:ItemStatus>
-				<cjis:ItemStatusCode>6</cjis:ItemStatusCode>
+				<cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
 			</nc:ItemStatus>
 			<!-- Element 16, Value of Property in US Dollars -->
 			<nc:ItemValue>
@@ -233,7 +233,7 @@
 			<j:ItemCategoryNIBRSPropertyCategoryCode>6</j:ItemCategoryNIBRSPropertyCategoryCode>
 			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
 			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
-			<nc:ItemQuantity></nc:ItemQuantity>
+			<nc:ItemQuantity>0</nc:ItemQuantity>
 			<!-- Element 20, Suspected Involved Drug Type -->
 			<j:DrugCategoryCode>L</j:DrugCategoryCode>
 			<nc:SubstanceQuantityMeasure>

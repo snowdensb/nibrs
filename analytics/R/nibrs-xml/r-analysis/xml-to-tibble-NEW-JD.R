@@ -4,9 +4,8 @@ library(purrr)
 library(openssl)
 library(lubridate)
 
-#load xml files in this directory
+#load xml files in this directory - Use this to see ALL df's
 nibrsFiles <- list.files('data/', pattern = "\\.xml$", full.names=TRUE)
-
 x <-read_xml(nibrsFiles)
 
 ## LEVEL 1 - ADMINISTRATIVE SEGMENT
@@ -40,8 +39,8 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
       ORI=offenseNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification/nc:IdentificationID') %>% xml_text(),
       OffenseID=offenseNode %>% xml_find_first('@s:id') %>% xml_text(),
       IncidentNumber=offenseNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
-      UCROffenseCode=offenseNode %>% xml_find_first('nibrs:OffenseUCRCode') %>% xml_text(),
-#      UCROffenseCode=offenseNode %>% xml_find_first('moibrs:OffenseUCRCode | nibrs:OffenseUCRCode') %>% xml_text(),
+#      UCROffenseCode=offenseNode %>% xml_find_first('nibrs:OffenseUCRCode') %>% xml_text(),
+      UCROffenseCode=offenseNode %>% xml_find_first('moibrs:OffenseUCRCode | nibrs:OffenseUCRCode') %>% xml_text(),
       OffenseAttemptedIndicator=offenseNode %>% xml_find_first('j:OffenseAttemptedIndicator') %>% xml_text(),
       OffenderSuspectedOfUsingCode=offenseNode %>% xml_find_all('j:OffenseFactor/j:OffenseFactorCode') %>% xml_text(),
       NumberOfPremisesEntered=offenseNode %>% xml_find_first('j:OffenseStructuresEnteredQuantity') %>% xml_text(),
@@ -111,11 +110,7 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
     )
   }) 
   
-  
-  
-  
-  
-    
+
   victimPersonNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/nc:Person')
   victimPerson <- map2_df(victimPersonNodes, seq(victimPersonNodes), function(victimPersonNode, withinFileIndex) {
     tibble(
@@ -349,6 +344,16 @@ PROPERTY  <- property %>%
   (str_detect(TypePropertyLoss, "RECOVERED")) ~ ItemQuantity
   ))) %>%
 
+  mutate(`TypePropertyLoss`=case_when(
+    `TypePropertyLoss` == "BURNED" ~ '2',
+    `TypePropertyLoss` == "COUNTERFEITED"  ~ '3',
+    `TypePropertyLoss` == "DESTROYED_DAMAGED_VANDALIZED"  ~ '4',
+    `TypePropertyLoss` == "NONE"  ~ '1',
+    `TypePropertyLoss` == "RECOVERED"  ~ '5',
+    `TypePropertyLoss` == "SEIZED"  ~ '6',
+    `TypePropertyLoss` == "STOLEN"  ~ '7',
+    `TypePropertyLoss` == "UNKNOWN"  ~ '8')) %>%
+  
   select (-c(ItemQuantity))
 
 
@@ -374,8 +379,13 @@ INCIDENT$ExceptionalClearanceDate <- str_remove_all(INCIDENT$ExceptionalClearanc
 PROPERTY$DateRecovered <- str_remove_all(PROPERTY$DateRecovered, "-")
 ARREST$ArrestDate <- str_remove_all(ARREST$ArrestDate, "-")
 
-NIBRS <-bind_rows (NIBRS, INCIDENT, OFFENSE, PROPERTY, VICTIM, OFFENDER, ARREST) %>%
-  select (-c(LocationID, OffenseID, OffenderID, VictimID, ArresteeID, ArrestID, RoleOfVictimID, RoleOfOffenderID, RoleOfArresteeID)) %>%
+## NEED TO UPDATE WHEN THE ARREST OR OTHER SEGMENT DOES NOT EXIST
+#NIBRS <-bind_rows (NIBRS, INCIDENT, OFFENSE, PROPERTY, VICTIM, OFFENDER, ARREST) %>%
+#  select (-c(LocationID, OffenseID, OffenderID, VictimID, ArresteeID, ArrestID, RoleOfVictimID, RoleOfOffenderID, RoleOfArresteeID)) %>%
+#  mutate_all(na_if,"")
+
+NIBRS <-bind_rows (NIBRS, INCIDENT, OFFENSE, PROPERTY, VICTIM, OFFENDER) %>%
+  select (-c(LocationID, OffenseID, OffenderID, VictimID, RoleOfVictimID, RoleOfOffenderID)) %>%
   mutate_all(na_if,"")
 
 write_csv(NIBRS, "NIBRS.csv")

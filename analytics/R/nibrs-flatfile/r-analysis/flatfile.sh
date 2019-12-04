@@ -1,0 +1,1 @@
+cd ./data; rm ./nibrs/nibrs.txt; for f in *.txt; do printf '%s\n' "$(cat < "$f")"; done > ./nibrs/nibrs.txt
