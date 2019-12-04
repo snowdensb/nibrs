@@ -914,20 +914,25 @@ public class ReturnAFormService {
 			OffenseSegment offense) {
 		
 		ReturnARowName returnARowName = null;
+		boolean containsCompletedRapeOffense = administrativeSegment.getOffenseSegments()
+				.stream()
+				.filter(item -> OffenseCode.isReturnARapeCode(item.getUcrOffenseCodeType().getNibrsCode()))
+				.anyMatch(item->"C".equals(item.getOffenseAttemptedCompleted()));
+		boolean containsAttemptedRapeOffense = administrativeSegment.getOffenseSegments()
+				.stream()
+				.filter(item -> OffenseCode.isReturnARapeCode(item.getUcrOffenseCodeType().getNibrsCode()))
+				.anyMatch(item->"A".equals(item.getOffenseAttemptedCompleted()));
 		List<VictimSegment> victimSegments = administrativeSegment.getVictimSegments()
-			.stream().filter(victim->victim.getOffenseSegments().contains(offense))
+			.stream().filter(victim->CollectionUtils.containsAny(victim.getConnectedOffenseCodes(), Arrays.asList("11A", "11B", "11C")))
 			.filter(victim->Arrays.asList("F", "M").contains(victim.getSexOfPersonType().getNibrsCode()))
 			.collect(Collectors.toList());
 		if (victimSegments.size() > 0){
-			switch (offense.getOffenseAttemptedCompleted()){
-			case "C": 
+			if (containsCompletedRapeOffense){
 				returnARowName = ReturnARowName.RAPE_BY_FORCE;
-				break; 
-			case "A": 
-				returnARowName = ReturnARowName.ATTEMPTS_TO_COMMIT_FORCIBLE_RAPE;
-				break; 
-			default: 
 			}
+			else if (containsAttemptedRapeOffense){
+				returnARowName = ReturnARowName.ATTEMPTS_TO_COMMIT_FORCIBLE_RAPE;
+			} 
 		}
 		
 		return returnARowName;

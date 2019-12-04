@@ -30,9 +30,11 @@ import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.repository.NibrsErrorCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
+import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,6 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CodeTableController {
 	@Autowired
 	private AgencyRepository agencyRepository;
+	@Autowired
+	private AdministrativeSegmentRepository administrativeSegmentRepository;
 	@Autowired
 	private UcrOffenseCodeTypeRepository ucrOffenseCodeTypeRepository;
 	@Autowired
@@ -59,13 +63,23 @@ public class CodeTableController {
 		return agencyMap;
 	}
 	
-	@GetMapping("/oris")
-	public Map<String, String> oris(){
-		Map<String, String> agencyMap = StreamSupport.stream(agencyRepository.findAll(new Sort(Sort.Direction.ASC, "agencyName")).spliterator(), false)
+	@GetMapping("/agenciesHavingData")
+	public Map<String, String> getAgenciesHavingData(){
+		Map<String, String> agencyMap = StreamSupport.stream(agencyRepository.findAllHavingData().spliterator(), false)
 				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
 				.collect(Collectors.toMap(Agency::getAgencyOri, Agency::getAgencyName, (u, v) -> u,
 						LinkedHashMap::new));
 		return agencyMap;
+	}
+	
+	@GetMapping("/years/{ori}") 
+	public List<Integer> getYears(@PathVariable String ori){
+		return administrativeSegmentRepository.findDistinctYears(ori);
+	}
+	
+	@GetMapping("/months/{year}/{ori}") 
+	public List<Integer> getMonths(@PathVariable String ori, @PathVariable Integer year){
+		return administrativeSegmentRepository.findDistinctMonths(ori, year);
 	}
 	
 	@GetMapping("/offenseCodes")

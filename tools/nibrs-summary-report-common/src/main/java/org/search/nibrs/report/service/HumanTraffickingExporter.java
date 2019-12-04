@@ -61,7 +61,25 @@ public class HumanTraffickingExporter {
 	CellStyle greyForeGround;
 
 	public void exportHumanTraffickingReport(HumanTraffickingForm humanTraffickingForm){
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFWorkbook workbook = createWorkbook(humanTraffickingForm);
+		
+        try {
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/HumanTrafficking-" + humanTraffickingForm.getOri() + "-" + humanTraffickingForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(humanTraffickingForm.getMonth()), 2, '0') + ".xlsx"; 
+            FileOutputStream outputStream = new FileOutputStream(fileName);
+            workbook.write(outputStream);
+            workbook.close();
+            System.out.println("The Human Trafficking form is writen to fileName: " + fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Done");
+    }
+
+	public XSSFWorkbook createWorkbook(HumanTraffickingForm humanTraffickingForm) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
         
         XSSFSheet sheet = workbook.createSheet("HumanTraffickingOffenses");
 		sheet.setFitToPage(true);
@@ -120,21 +138,8 @@ public class HumanTraffickingExporter {
 		sheet.autoSizeColumn(4);
 		sheet.autoSizeColumn(5);
 		sheet.autoSizeColumn(6);
-		
-        try {
-        	String fileName = appProperties.getSummaryReportOutputPath() + "/HumanTrafficking-" + humanTraffickingForm.getOri() + "-" + humanTraffickingForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(humanTraffickingForm.getMonth()), 2, '0') + ".xlsx"; 
-            FileOutputStream outputStream = new FileOutputStream(fileName);
-            workbook.write(outputStream);
-            workbook.close();
-            System.out.println("The Human Trafficking form is writen to fileName: " + fileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Done");
-    }
+		return workbook;
+	}
 
 	private int addAdministrativeInformation(XSSFSheet sheet, int rowNum) {
 		

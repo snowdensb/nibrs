@@ -17,19 +17,27 @@ package org.search.nibrs.admin.summaryreport;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.model.reports.ReturnAForm;
+import org.search.nibrs.model.reports.arson.ArsonReport;
+import org.search.nibrs.model.reports.asr.AsrReports;
+import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
+import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
+import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.report.service.ArsonExcelExporter;
 import org.search.nibrs.report.service.AsrExcelExporter;
+import org.search.nibrs.report.service.CargoTheftReportExporter;
 import org.search.nibrs.report.service.HumanTraffickingExporter;
 import org.search.nibrs.report.service.ReturnAFormExporter;
 import org.search.nibrs.report.service.StagingDataRestClient;
@@ -42,6 +50,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
@@ -64,6 +73,8 @@ public class SummaryReportController {
 	public HumanTraffickingExporter humanTraffickingExporter;
 	@Autowired 
 	public SupplementaryHomicideReportExporter supplementaryHomicideReportExporter;
+	@Autowired 
+	public CargoTheftReportExporter cargoTheftReportExporter;
 	
     @ModelAttribute
     public void addModelAttributes(Model model) {
@@ -98,22 +109,22 @@ public class SummaryReportController {
 	@GetMapping("/returnAForm/{ori}/{year}/{month}")
 	public void getReturnAForm(@PathVariable String ori, @PathVariable String year, @PathVariable String month, 
 			HttpServletResponse response) throws IOException{
-		downloadReturnAForm(ori, year, month, response);
-	}
-
-	private void downloadReturnAForm(String ori, String year, String month, HttpServletResponse response) throws IOException {
 		ReturnAForm returnAForm = restClient.getReturnAForm(ori, year, month);
 		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
+		String fileName = "ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+
+	private void downloadReport(HttpServletResponse response, XSSFWorkbook workbook, String fileName) throws IOException {
 		String mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 		// set content attributes for the response
 		response.setContentType(mimeType);
 		
-		String filename = "ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
 //		response.setContentLength();
 		
 		// set headers for the response
 		String headerKey = "Content-Disposition";
-		String headerValue = String.format("attachment; filename=\"%s\"", filename);
+		String headerValue = String.format("attachment; filename=\"%s\"", fileName);
 		response.setHeader(headerKey, headerValue);
 		
 		// get output stream of the response
@@ -125,23 +136,110 @@ public class SummaryReportController {
 	@PostMapping("/summaryReports/returnAForm")
 	public void getReturnAFormByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response) throws IOException{
+		ReturnAForm returnAForm = restClient.getReturnAForm(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
+		String fileName = "ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
 
-		downloadReturnAForm(summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), response);
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/returnASupplement")
+	public void getReturnASupplementByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		ReturnAForm returnAForm = restClient.getReturnAForm(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = returnAFormExporter.createReturnASupplementWorkBook(returnAForm);
+		String fileName = "ReturnASupplement-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
+		
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/arsonReport")
+	public void getArsonReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get arson report");
+		ArsonReport arsonReport = restClient.getArsonReport(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = arsonExcelExporter.createWorkBook(arsonReport);
+		String fileName = "ARSON-Report-" + arsonReport.getOri() + "-" + arsonReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(arsonReport.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/humanTraffickingReport")
+	public void getHumanTraffickingReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get humanTraffickingReport");
+		HumanTraffickingForm humanTraffickingForm = restClient.getHumanTraffickingForm(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = humanTraffickingExporter.createWorkbook(humanTraffickingForm);
+		String fileName = "HumanTrafficking-" + humanTraffickingForm.getOri() + "-" + humanTraffickingForm.getYear() + 
+				"-" + StringUtils.leftPad(String.valueOf(humanTraffickingForm.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/asrReports")
+	public void getAsrReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get asrReports");
+		AsrReports asrReports = restClient.getAsrReports(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = asrExcelExporter.createWorkbook(asrReports);
+		String fileName = "ASR-REPORTS-" + asrReports.getOri() + "-" + asrReports.getYear() + "-" + StringUtils.leftPad(String.valueOf(asrReports.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/shrReports")
+	public void getSupplementaryHomicideReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get shrReports");
+		SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReport(
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = supplementaryHomicideReportExporter.createWorkbook(supplementaryHomicideReport);
+		String fileName = "SupplementaryHomicideReport-" + supplementaryHomicideReport.getOri() + "-" + supplementaryHomicideReport.getYear() + 
+				"-" + StringUtils.leftPad(String.valueOf(supplementaryHomicideReport.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@PostMapping("/summaryReports/cargoTheftReport")
+	public void getCargoTheftReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response) throws IOException{
+		log.info("get cargo theft report");
+        CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(
+        		summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+		XSSFWorkbook workbook = cargoTheftReportExporter.createWorkbook(cargoTheftReport);
+		String fileName = "CargoTheftReport-" + cargoTheftReport.getOri() + "-" + cargoTheftReport.getYear() + 
+				"-" + StringUtils.leftPad(String.valueOf(cargoTheftReport.getMonth()), 2, '0') + ".xlsx";
+		downloadReport(response, workbook, fileName);
+	}
+	
+	@GetMapping("/years/{ori}")
+	public @ResponseBody List<Integer> getDistinctYears(@PathVariable String ori) throws IOException{
+		return restService.getYears(ori);
+	}
+	
+	@GetMapping("/months/{year}/{ori}")
+	public @ResponseBody List<Integer> getDistinctMonths(@PathVariable String ori, @PathVariable Integer year) throws IOException{
+		return restService.getMonths(ori, year);
 	}
 	
 	@RequestMapping("/arsonReport/{ori}/{year}/{month}")
 	public void getArsonReport(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
+		throw new NotImplementedException();
 	}
 	@RequestMapping("/humanTraffickingReport/{ori}/{year}/{month}")
 	public void getHumanTraffickingReport(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
+		throw new NotImplementedException();
 	}
 	
 	@RequestMapping("/asrReports/{ori}/{arrestYear}/{arrestMonth}")
 	public void getAsrReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
+		throw new NotImplementedException();
 	}
 	
 	@RequestMapping("/shrReports/{ori}/{arrestYear}/{arrestMonth}")
 	public void getSupplementaryHomicideReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
+		throw new NotImplementedException();
 	}
 	
 }

@@ -66,7 +66,25 @@ public class SupplementaryHomicideReportExporter {
 	CellStyle rotateStyle; 
 
 	public void exportSupplementaryHomicideReport(SupplementaryHomicideReport supplementaryHomicideReport){
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFWorkbook workbook = createWorkbook(supplementaryHomicideReport);
+        
+        try {
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/SupplementaryHomicideReport-" + supplementaryHomicideReport.getOri() + "-" + supplementaryHomicideReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(supplementaryHomicideReport.getMonth()), 2, '0') + ".xlsx"; 
+            FileOutputStream outputStream = new FileOutputStream(fileName);
+            workbook.write(outputStream);
+            workbook.close();
+            System.out.println("The Supplementary Homicide Report is writen to fileName: " + fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Done");
+    }
+
+	public XSSFWorkbook createWorkbook(SupplementaryHomicideReport supplementaryHomicideReport) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
         
         wrappedStyle = workbook.createCellStyle();
         wrappedStyle.setWrapText(true);
@@ -119,21 +137,8 @@ public class SupplementaryHomicideReportExporter {
         
         createNonNegligentSheet(supplementaryHomicideReport, workbook);
         createNegligentSheet(supplementaryHomicideReport, workbook);
-        
-        try {
-        	String fileName = appProperties.getSummaryReportOutputPath() + "/SupplementaryHomicideReport-" + supplementaryHomicideReport.getOri() + "-" + supplementaryHomicideReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(supplementaryHomicideReport.getMonth()), 2, '0') + ".xlsx"; 
-            FileOutputStream outputStream = new FileOutputStream(fileName);
-            workbook.write(outputStream);
-            workbook.close();
-            System.out.println("The Supplementary Homicide Report is writen to fileName: " + fileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Done");
-    }
+		return workbook;
+	}
 
 	private void createNonNegligentSheet(SupplementaryHomicideReport supplementaryHomicideReport, XSSFWorkbook workbook) {
 		XSSFSheet sheet = workbook.createSheet("SHR-non-negligent");

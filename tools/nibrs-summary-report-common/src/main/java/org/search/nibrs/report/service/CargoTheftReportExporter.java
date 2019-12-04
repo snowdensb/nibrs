@@ -60,7 +60,25 @@ public class CargoTheftReportExporter {
 	CellStyle yellowForeGround;
 
 	public void exportCargoTheftReport(CargoTheftReport cargoTheftReport){
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFWorkbook workbook = createWorkbook(cargoTheftReport);
+        
+        try {
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/CargoTheftReport-" + cargoTheftReport.getOri() + "-" + cargoTheftReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(cargoTheftReport.getMonth()), 2, '0') + ".xlsx"; 
+            FileOutputStream outputStream = new FileOutputStream(fileName);
+            workbook.write(outputStream);
+            workbook.close();
+            System.out.println("The Supplementary Homicide Report is writen to fileName: " + fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Done");
+    }
+
+	public XSSFWorkbook createWorkbook(CargoTheftReport cargoTheftReport) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
         
         wrappedStyle = workbook.createCellStyle();
         wrappedStyle.setWrapText(true);
@@ -96,21 +114,8 @@ public class CargoTheftReportExporter {
         yellowForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         createWorkSheet(cargoTheftReport, workbook);
-        
-        try {
-        	String fileName = appProperties.getSummaryReportOutputPath() + "/CargoTheftReport-" + cargoTheftReport.getOri() + "-" + cargoTheftReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(cargoTheftReport.getMonth()), 2, '0') + ".xlsx"; 
-            FileOutputStream outputStream = new FileOutputStream(fileName);
-            workbook.write(outputStream);
-            workbook.close();
-            System.out.println("The Supplementary Homicide Report is writen to fileName: " + fileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Done");
-    }
+		return workbook;
+	}
 
 	private void createWorkSheet(CargoTheftReport cargoTheftReport, XSSFWorkbook workbook) {
 		XSSFSheet sheet = workbook.createSheet("Cargo Theft Incident Reports");

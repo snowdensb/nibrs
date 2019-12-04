@@ -51,12 +51,12 @@
             </div>
           </div>
           <div class="form-row">
-						<label class="col-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
-						<div class="col-sm-3">
-		     			    <select th:field="*{agencyIds}" class="form-control form-control-sm chosen-select" multiple th:errorclass="is-invalid" data-placeholder="Please select all that apply...">
-							  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
-							</select>
-						</div>
+			<label class="col-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
+			<div class="col-sm-3">
+    			    <select th:field="*{agencyIds}" class="form-control form-control-sm chosen-select" multiple th:errorclass="is-invalid" data-placeholder="Please select all that apply...">
+				  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
+				</select>
+			</div>
           </div>
           <div class="form-row mt-2">
              <div class="col-2"></div>

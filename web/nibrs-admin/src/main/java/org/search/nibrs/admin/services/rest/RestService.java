@@ -65,9 +65,23 @@ public class RestService{
 	}
 	
 	public Map<String, String> getOris() {
-		return this.webClient.get().uri("/codeTables/oris")
+		return this.webClient.get().uri("/codeTables/agenciesHavingData")
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<String, String>>() {})
+				.block();
+	}
+	
+	public List<Integer> getYears(String ori) {
+		return this.webClient.get().uri("/codeTables/years/" + ori)
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
+				.block();
+	}
+	
+	public List<Integer> getMonths(String ori, Integer year) {
+		return this.webClient.get().uri("/codeTables/months/" + year + "/" + ori)
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
 				.block();
 	}
 	

@@ -76,6 +76,16 @@ public interface AdministrativeSegmentRepository
 			+ "ORDER BY a.administrativeSegmentId asc ")
 	List<Integer> findIdsByOriListAndSubmissionDateRange(List<String> oris, Date startDate, Date endDate, List<Integer> agencyIds);
 	
+	@Query("SELECT DISTINCT year(a.incidentDate) as incidentYear from AdministrativeSegment a "
+			+ "WHERE a.ori = ?1 "
+			+ "ORDER BY incidentYear ")
+	List<Integer> findDistinctYears(String ori);
+	
+	@Query("SELECT DISTINCT month(a.incidentDate) as incidentMonth from AdministrativeSegment a "
+			+ "WHERE a.ori = ?1 AND year(a.incidentDate) = ?2 "
+			+ "ORDER BY incidentMonth ")
+	List<Integer> findDistinctMonths(String ori, Integer Year);
+	
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "LEFT JOIN a.arresteeSegments aa "
 			+ "WHERE (?1 = null OR a.ori = ?1 ) AND "
