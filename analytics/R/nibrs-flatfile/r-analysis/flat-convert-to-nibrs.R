@@ -18,10 +18,11 @@ NIBRS <- read_fwf("./data/nibrs/nibrs.txt",
                     c(300),
                     col_names = c("NIBRS") ))
 
+## BUILD THE FUNCTION BEFORE RUNNING THIS COMMAND
+nibrsFlat <- FlatfileToNIBRS (segments, NIBRS)
 
-#NIBRSFromFlatfile <- FlatfileToNIBRS (segments, NIBRS)
-
-#FlatfileToNIBRS <- function(segments, NIBRS) {
+# Convert NIBRS Flatfile to R DF FUNCTION
+FlatfileToNIBRS <- function(segments, NIBRS) {
 
 # Define variable for the number of rows in the nibrs flatfile
 rows <- nrow(NIBRS)
@@ -45,6 +46,7 @@ original_nibrs_segment_1 <- read_fwf("data/temp/segment_1.txt", skip = 1,
                                                      "YearOfSubmission","CityIndicator","ORI","IncidentNumber","IncidentDate",
                                                      "ReportDateIndicator","IncidentHour","ExceptionalClearanceCode",
                                                      "ExceptionalClearanceDate", "CargoTheftIndicator") ))
+
 ####
 #### NIBRS Segment 2 - OFFENSE
 segment_2 <- emptydf
@@ -600,7 +602,7 @@ nibrs_segment_6_modified <- nibrs_segment_6_modified[-c(17:18)] %>%
   rename(
     ArresteeArmedWithCode = "ArresteeArmedWithCode #1",
     AutomaticWeaponIndicator6 = "AutomaticWeaponIndicator #1"
-  )  
+  )  %>%
   
 mutate(`TypeOfArrest`=case_when(
   `TypeOfArrest` == "FALSE" ~ 'F',
@@ -608,31 +610,32 @@ mutate(`TypeOfArrest`=case_when(
 
 
 ##
-#Entire nibrs flatfile df
-## NEED TO FIX
-#if (dim(nibrs_segment_3_modified)[1] == 0) {nibrs_segment_3_modified[1,1] <- 0}
-#if (dim(nibrs_segment_4_modified)[1] == 0) {nibrs_segment_4_modified[1,1] <- 0}
-#if (dim(original_nibrs_segment_5)[1] == 0) {original_nibrs_segment_5[1,1] <- 0}
-#if (dim(nibrs_segment_6_modified)[1] == 0) {nibrs_segment_6_modified[1, ] <- "NA"}
+#Identify Null Segments
+null_segment <- data.frame("SegmentLength"= as.character())
+
+if (dim(nibrs_segment_3_modified)[1] == 0) {nibrs_segment_3_modified <- null_segment}
+if (dim(nibrs_segment_4_modified)[1] == 0) {nibrs_segment_4_modified <- null_segment}
+if (dim(original_nibrs_segment_5)[1] == 0) {original_nibrs_segment_5 <- null_segment}
+if (dim(nibrs_segment_6_modified)[1] == 0) {nibrs_segment_6_modified <- null_segment}
 
 
-## NEED TO ADD SEGMENT 6
-original_nibrs <- list(
+## Create R NIBRS DF
+nibrsFlat <- list(
   original_nibrs_segment_1,
   nibrs_segment_2_modified,
   nibrs_segment_3_modified,
   nibrs_segment_4_modified,
-  original_nibrs_segment_5) %>% 
+  original_nibrs_segment_5,
+  nibrs_segment_6_modified) %>% 
   reduce(full_join)
 
-#}
+write.csv(nibrsFlat, "nibrsFlat.csv")
 
-#write.csv(original_nibrs, "original_nibrs.csv")
-#NOTES:
+return(nibrsFlat)
 
-# All segments had to be parsed and written to txt files to be able to do a read_fwf
-
-write.csv(original_nibrs, "original_nibrs.csv")
+}
 
 
-## TESTING
+
+
+

@@ -8,6 +8,12 @@ library(lubridate)
 nibrsFiles <- list.files('data/', pattern = "\\.xml$", full.names=TRUE)
 x <-read_xml(nibrsFiles)
 
+## BUILD THE FUNCTION BEFORE RUNNING THIS COMMAND
+nibrsXML <- XMLToNIBRS (x)
+
+# Convert NIBRS XML to R DF FUNCTION
+XMLToNIBRS <- function(x) {
+
 ## LEVEL 1 - ADMINISTRATIVE SEGMENT
 incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   
@@ -335,6 +341,11 @@ mutate(.,AutomaticWeaponIndicator = with(.,case_when(
     (str_detect(TypeOfWeaponForceInvolved, "A")) ~ "A"
   )))
 
+if (dim(property)[1] == 0) {
+  PROPERTY <- data.frame(matrix(ncol = 1, nrow = 0))
+  col <- c("SegmentLength")
+  colnames(PROPERTY) <- col
+} else {
 PROPERTY  <- property %>%
   mutate(.,NumberOfStolenMotorVehicles = with(.,case_when(
     (str_detect(TypePropertyLoss, "STOLEN")) ~ ItemQuantity
@@ -355,7 +366,7 @@ PROPERTY  <- property %>%
     `TypePropertyLoss` == "UNKNOWN"  ~ '8')) %>%
   
   select (-c(ItemQuantity))
-
+}
 
 VICTIM  <- victimOffense %>% 
   left_join(victim, by="VictimID") %>%
@@ -369,10 +380,17 @@ VICTIM  <- victimOffense %>%
 OFFENDER <- roleOfOffender %>% 
   left_join(offenderPerson, by="RoleOfOffenderID")
   
-ARREST <- arrest %>% 
+
+if (dim(arrest)[1] == 0) {
+  ARREST <- data.frame(matrix(ncol = 3, nrow = 0))
+  col <- c("ArresteeID", "ArrestID", "RoleOfArresteeID")
+  colnames(ARREST) <- col
+  } else {
+    ARREST <- arrest %>% 
   left_join(arrestSubject, by="ArrestID") %>% 
   left_join(arrestee, by="ArresteeID") %>%
-  left_join(arresteePerson, by="RoleOfArresteeID")
+  left_join(arresteePerson, by="RoleOfArresteeID")}
+
 
 INCIDENT$IncidentDate <- str_remove_all(INCIDENT$IncidentDate, "-")
 INCIDENT$ExceptionalClearanceDate <- str_remove_all(INCIDENT$ExceptionalClearanceDate, "-")
@@ -380,13 +398,11 @@ PROPERTY$DateRecovered <- str_remove_all(PROPERTY$DateRecovered, "-")
 ARREST$ArrestDate <- str_remove_all(ARREST$ArrestDate, "-")
 
 ## NEED TO UPDATE WHEN THE ARREST OR OTHER SEGMENT DOES NOT EXIST
-#NIBRS <-bind_rows (NIBRS, INCIDENT, OFFENSE, PROPERTY, VICTIM, OFFENDER, ARREST) %>%
-#  select (-c(LocationID, OffenseID, OffenderID, VictimID, ArresteeID, ArrestID, RoleOfVictimID, RoleOfOffenderID, RoleOfArresteeID)) %>%
-#  mutate_all(na_if,"")
-
-NIBRS <-bind_rows (NIBRS, INCIDENT, OFFENSE, PROPERTY, VICTIM, OFFENDER) %>%
-  select (-c(LocationID, OffenseID, OffenderID, VictimID, RoleOfVictimID, RoleOfOffenderID)) %>%
+nibrsXML <-bind_rows (NIBRS, INCIDENT, OFFENSE, PROPERTY, VICTIM, OFFENDER, ARREST) %>%
+  select (-c(LocationID, OffenseID, OffenderID, VictimID, ArresteeID, ArrestID, RoleOfVictimID, RoleOfOffenderID, RoleOfArresteeID)) %>%
   mutate_all(na_if,"")
 
-write_csv(NIBRS, "NIBRS.csv")
+write_csv(nibrsXML, "nibrsXML.csv")
 
+return (nibrsXML)
+}
