@@ -45,8 +45,8 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
       ORI=offenseNode %>% xml_find_first('../nibrs:ReportHeader/nibrs:ReportingAgency/j:OrganizationAugmentation/j:OrganizationORIIdentification/nc:IdentificationID') %>% xml_text(),
       OffenseID=offenseNode %>% xml_find_first('@s:id') %>% xml_text(),
       IncidentNumber=offenseNode %>% xml_find_first('../nc:Incident/nc:ActivityIdentification/nc:IdentificationID') %>% xml_text(),
-#      UCROffenseCode=offenseNode %>% xml_find_first('nibrs:OffenseUCRCode') %>% xml_text(),
-      UCROffenseCode=offenseNode %>% xml_find_first('moibrs:OffenseUCRCode | nibrs:OffenseUCRCode') %>% xml_text(),
+      UCROffenseCode=offenseNode %>% xml_find_first('nibrs:OffenseUCRCode') %>% xml_text(),
+#      UCROffenseCode=offenseNode %>% xml_find_first('moibrs:OffenseUCRCode | nibrs:OffenseUCRCode') %>% xml_text(),
       OffenseAttemptedIndicator=offenseNode %>% xml_find_first('j:OffenseAttemptedIndicator') %>% xml_text(),
       OffenderSuspectedOfUsingCode=offenseNode %>% xml_find_all('j:OffenseFactor/j:OffenseFactorCode') %>% xml_text(),
       NumberOfPremisesEntered=offenseNode %>% xml_find_first('j:OffenseStructuresEnteredQuantity') %>% xml_text(),
@@ -107,6 +107,7 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
     )
   })
 
+  
   victimOffenseNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:OffenseVictimAssociation')
   victimOffense <- map2_df(victimOffenseNodes, seq(victimOffenseNodes), function(victimOffenseNode, withinFileIndex) {
     tibble(
@@ -406,3 +407,20 @@ write_csv(nibrsXML, "nibrsXML.csv")
 
 return (nibrsXML)
 }
+
+
+### The following nodes must ne in the NIBRS XML
+#OffenderSuspectedOfUsingCode
+#TypeCriminalActivityGangInformation
+#TypeOfWeaponForceInvolved
+#BiasMotivation
+#VictimAggravatedAssaultHomicideCircumstance
+#VictimInjuryType
+#VictimConnectedToUCROffense
+
+### The following nodes must ne in the NIBRS XML - If the Arrest segment exists
+#ArrestTransactionNumber
+#ArrestDate
+#TypeOfArrest
+#UCRArrestOffenseCode
+#ArresteeArmedWithCode
