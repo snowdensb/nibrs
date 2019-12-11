@@ -2,9 +2,10 @@ library(tidyverse)
 library(dplyr)
 library(lubridate)
 library(tibble)
+library(data.table)
 
 #Merge all "txt" nibrs files in the /data directory into file nibrs.txt used by this script 
-system("cd ./data;cat ./*.txt > ./nibrs/nibrs.txt")
+system("./flatfile.sh")
 
 # Vector of segment number for each row in the flatfile
 segments <- read_fwf("./data/nibrs/nibrs.txt", 
@@ -17,10 +18,11 @@ NIBRS <- read_fwf("./data/nibrs/nibrs.txt",
                     c(300),
                     col_names = c("NIBRS") ))
 
+## BUILD THE FUNCTION BEFORE RUNNING THIS COMMAND
+nibrsFlat <- FlatfileToNIBRS (segments, NIBRS)
 
-#NIBRSFromFlatfile <- FlatfileToNIBRS (segments, NIBRS)
-
-#FlatfileToNIBRS <- function(segments, NIBRS) {
+# Convert NIBRS Flatfile to R DF FUNCTION
+FlatfileToNIBRS <- function(segments, NIBRS) {
 
 # Define variable for the number of rows in the nibrs flatfile
 rows <- nrow(NIBRS)
@@ -44,6 +46,7 @@ original_nibrs_segment_1 <- read_fwf("data/temp/segment_1.txt", skip = 1,
                                                      "YearOfSubmission","CityIndicator","ORI","IncidentNumber","IncidentDate",
                                                      "ReportDateIndicator","IncidentHour","ExceptionalClearanceCode",
                                                      "ExceptionalClearanceDate", "CargoTheftIndicator") ))
+
 ####
 #### NIBRS Segment 2 - OFFENSE
 segment_2 <- emptydf
@@ -134,11 +137,14 @@ nibrs_segment_2_modified <- rbind(nibrs,
                                   biasMotivation5)
 
 nibrs_segment_2_modified <- nibrs_segment_2_modified[-c(12,13,18,19,22,23,24,25,27,28,29,30)] %>%
-  rename("OffenderSuspectedOfUsingCode"="OffenderSuspectedOfUsingCode #1") %>%
-  rename("TypeCriminalActivityGangInformation"="TypeCriminalActivityGangInformation #1") %>%
-  rename("TypeOfWeaponForceInvolved"="TypeOfWeaponForceInvolved #1") %>%
-  rename("AutomaticWeaponIndicator"="AutomaticWeaponIndicator #1") %>%
-  rename("BiasMotivation"="BiasMotivation #1")
+  
+  rename(
+    OffenderSuspectedOfUsingCode = "OffenderSuspectedOfUsingCode #1",
+    TypeCriminalActivityGangInformation = "TypeCriminalActivityGangInformation #1",
+    TypeOfWeaponForceInvolved = "TypeOfWeaponForceInvolved #1",
+    AutomaticWeaponIndicator = "AutomaticWeaponIndicator #1",
+    BiasMotivation = "BiasMotivation #1",
+  )  
 
 ####
 #### NIBRS Segment 3 - PROPERTY
@@ -294,12 +300,15 @@ nibrs_segment_3_modified <- rbind(nibrs,
                                   drug3)
 
 nibrs_segment_3_modified <- nibrs_segment_3_modified[-c(13:39,45:50)] %>%
-  rename("PropertyDescription"="PropertyDescription #1") %>%
-  rename("ValueOfProperty"="ValueOfProperty #1") %>%
-  rename("DateRecovered"="DateRecovered #1") %>%
-  rename("SuspectedDrugType"="SuspectedDrugType #1") %>%
-  rename("EstimatedDrugQuantity"="EstimatedDrugQuantity #1") %>%
-  rename("TypeDrugMeasurement"="TypeDrugMeasurement #1")
+  
+  rename(
+    PropertyDescription = "PropertyDescription #1",
+    ValueOfProperty = "ValueOfProperty #1",
+    DateRecovered = "DateRecovered #1",
+    SuspectedDrugType = "SuspectedDrugType #1",
+    EstimatedDrugQuantity = "EstimatedDrugQuantity #1",
+    TypeDrugMeasurement = "TypeDrugMeasurement #1",
+  )   
 
 ####
 #### NIBRS Segment 4 - VICTIM
@@ -516,11 +525,15 @@ nibrs_segment_4_modified <- rbind(nibrs,
                                   relationship10)
 
 nibrs_segment_4_modified <- nibrs_segment_4_modified[-c(11:19,27,30:33,36:53)] %>%
-  rename("VictimConnectedToUCROffense"="VictimConnectedToUCROffense #1") %>%
-  rename("VictimAggravatedAssaultHomicideCircumstance"="VictimAggravatedAssaultHomicideCircumstance #1") %>%
-  rename("VictimInjuryType"="VictimInjuryType #1") %>%
-  rename("OffenderNumberToBeRelated"="OffenderNumberToBeRelated #1") %>%
-  rename("RelationshipOfVictimToOffender"="RelationshipOfVictimToOffender #1")
+
+  rename(
+    VictimConnectedToUCROffense = "VictimConnectedToUCROffense #1",
+    VictimInjuryType = "VictimInjuryType #1",
+    VictimAggravatedAssaultHomicideCircumstance = "VictimAggravatedAssaultHomicideCircumstance #1",
+    OffenderNumberToBeRelated = "OffenderNumberToBeRelated #1",
+    RelationshipOfVictimToOffender = "RelationshipOfVictimToOffender #1"
+  )   
+  
 
 ####
 #### NIBRS Segment 5 - OFFENDER
@@ -585,36 +598,42 @@ nibrs_segment_6_modified <- rbind(nibrs,
                                   armed2)
 
 nibrs_segment_6_modified <- nibrs_segment_6_modified[-c(17:18)] %>%
-  rename("ArresteeArmedWithCode"="ArresteeArmedWithCode #1") %>%
-  rename("AutomaticWeaponIndicator6"="AutomaticWeaponIndicator #1") %>%
-
+  
+  rename(
+    ArresteeArmedWithCode = "ArresteeArmedWithCode #1",
+    AutomaticWeaponIndicator6 = "AutomaticWeaponIndicator #1"
+  )  %>%
+  
 mutate(`TypeOfArrest`=case_when(
   `TypeOfArrest` == "FALSE" ~ 'F',
   `TypeOfArrest` == "TRUE"  ~ 'T'))
 
 
-####
-#Entire nibrs flatfile df
-original_nibrs <- list(
+##
+#Identify Null Segments
+null_segment <- data.frame("SegmentLength"= as.character())
+
+if (dim(nibrs_segment_3_modified)[1] == 0) {nibrs_segment_3_modified <- null_segment}
+if (dim(nibrs_segment_4_modified)[1] == 0) {nibrs_segment_4_modified <- null_segment}
+if (dim(original_nibrs_segment_5)[1] == 0) {original_nibrs_segment_5 <- null_segment}
+if (dim(nibrs_segment_6_modified)[1] == 0) {nibrs_segment_6_modified <- null_segment}
+
+
+## Create R NIBRS DF
+nibrsFlat <- list(
   original_nibrs_segment_1,
   nibrs_segment_2_modified,
   nibrs_segment_3_modified,
   nibrs_segment_4_modified,
   original_nibrs_segment_5,
-  nibrs_segment_6_modified
-  ) %>% reduce(full_join)
+  nibrs_segment_6_modified) %>% 
+  reduce(full_join)
 
+write.csv(nibrsFlat, "nibrsFlat.csv")
 
-#}
+return(nibrsFlat)
 
-#write.csv(original_nibrs, "original_nibrs.csv")
-#NOTES:
-
-# All segments had to be parsed and written to txt files to be able to do a read_fwf
-
-write.csv(original_nibrs, "original_nibrs.csv")
-
-
+}
 
 
 
