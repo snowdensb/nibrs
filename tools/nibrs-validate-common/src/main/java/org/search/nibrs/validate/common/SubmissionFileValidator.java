@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 @Component
-@Scope("prototype")
+@Scope("singleton")
 public class SubmissionFileValidator {
 	private static final Log log = LogFactory.getLog(SubmissionFileValidator.class);
 	@Autowired

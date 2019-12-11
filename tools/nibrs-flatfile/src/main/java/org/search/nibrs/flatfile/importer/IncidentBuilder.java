@@ -47,6 +47,7 @@ import org.search.nibrs.model.VictimSegment;
 import org.search.nibrs.model.ZeroReport;
 import org.search.nibrs.model.codes.NIBRSErrorCode;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 /**
@@ -59,7 +60,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
-@Scope("prototype")
+@Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class IncidentBuilder extends AbstractIncidentBuilder {
 	
 	private static final Log log = LogFactory.getLog(IncidentBuilder.class);;

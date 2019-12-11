@@ -64,6 +64,8 @@ import org.search.nibrs.model.codes.TypeOfPropertyLossCode;
 import org.search.nibrs.xml.XmlUtils;
 import org.search.nibrs.xmlfile.NibrsXmlFileProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -83,6 +85,7 @@ import org.xml.sax.SAXException;
  * 
  */
 @Component
+@Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 	private static final Log log = LogFactory.getLog(XmlIncidentBuilder.class);
 	
