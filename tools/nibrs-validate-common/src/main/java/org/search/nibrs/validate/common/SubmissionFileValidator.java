@@ -33,12 +33,10 @@ import org.search.nibrs.importer.ReportListener;
 import org.search.nibrs.util.NibrsFileUtils;
 import org.search.nibrs.xmlfile.importer.XmlIncidentBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 @Component
-@Scope("singleton")
 public class SubmissionFileValidator {
 	private static final Log log = LogFactory.getLog(SubmissionFileValidator.class);
 	@Autowired
