@@ -60,7 +60,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
-@Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(scopeName = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class IncidentBuilder extends AbstractIncidentBuilder {
 	
 	private static final Log log = LogFactory.getLog(IncidentBuilder.class);;

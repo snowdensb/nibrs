@@ -85,7 +85,7 @@ import org.xml.sax.SAXException;
  * 
  */
 @Component
-@Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(scopeName = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 	private static final Log log = LogFactory.getLog(XmlIncidentBuilder.class);
 	
