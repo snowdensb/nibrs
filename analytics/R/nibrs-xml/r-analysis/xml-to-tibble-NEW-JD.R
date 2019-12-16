@@ -38,6 +38,19 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
 
 ## LEVEL 2 - OFFENSE SEGMENT   
   offenseNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Offense')
+  
+  ifelse(is.na(offenseNodes %>% xml_find_first('j:OffenseFactor/j:OffenseFactorCode') %>% xml_text),
+         xml_add_child(offenseNodes, "j:OffenseFactor") %>% xml_add_child("j:OffenseFactorCode"),"")
+  
+  ifelse(is.na(offenseNodes %>% xml_find_first('nibrs:CriminalActivityCategoryCode') %>% xml_text),
+         xml_add_child(offenseNodes, "nibrs:CriminalActivityCategoryCode"),"")
+  
+  ifelse(is.na(offenseNodes %>% xml_find_first('j:OffenseForce/j:ForceCategoryCode') %>% xml_text),
+         xml_add_child(offenseNodes, "j:OffenseForce") %>% xml_add_child("j:ForceCategoryCode"),"")
+  
+  ifelse(is.na(offenseNodes %>% xml_find_first('j:OffenseFactorBiasMotivationCode') %>% xml_text),
+         xml_add_child(offenseNodes, "j:OffenseFactorBiasMotivationCode"),"")
+  
   offense <- map2_df(offenseNodes, seq(offenseNodes), function(offenseNode, withinFileIndex) {
     tibble(
       SegmentLevel="2",
@@ -91,6 +104,13 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   
 ## LEVEL 4 - VICTIM SEGMENT  
   victimNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Victim')
+  
+  ifelse(is.na(victimNodes %>% xml_find_first('j:VictimAggravatedAssaultHomicideFactorCode') %>% xml_text),
+         xml_add_child(victimNodes, "j:VictimAggravatedAssaultHomicideFactorCode"),"")  
+  
+  ifelse(is.na(victimNodes %>% xml_find_first('j:VictimInjury/j:InjuryCategoryCode') %>% xml_text),
+         xml_add_child(victimNodes, "j:VictimInjury") %>% xml_add_child("j:InjuryCategoryCode"),"")
+  
   victim <- map2_df(victimNodes, seq(victimNodes), function(victimNode, withinFileIndex) {
     tibble(
       SegmentLevel="4",
@@ -177,6 +197,20 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   
 ## LEVEL 6 - ARREST SEGMENT   
   arrestNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Arrest')
+
+  ifelse(is.na(arrestNodes %>% xml_find_first('nc:ActivityIdentification/nc:IdentificationID') %>% xml_text),
+         xml_add_child(arrestNodes, "nc:ActivityIdentification") %>% xml_add_child("nc:IdentificationID"),"")    
+    
+  ifelse(is.na(arrestNodes %>% xml_find_first('nc:ActivityDate/nc:Date') %>% xml_text),
+         xml_add_child(arrestNodes, "nc:ActivityDate") %>% xml_add_child("nc:Date"),"")
+  
+  ifelse(is.na(arrestNodes %>% xml_find_first('j:ArrestCategoryCode') %>% xml_text),
+         xml_add_child(arrestNodes, "j:ArrestCategoryCode"),"")
+  
+  ifelse(is.na(arrestNodes %>% xml_find_first('j:ArrestCharge/nibrs:ChargeUCRCode') %>% xml_text),
+         xml_add_child(arrestNodes, "j:ArrestCharge") %>% xml_add_child("nibrs:ChargeUCRCode"),"") 
+  
+  
   arrest <- map2_df(arrestNodes, seq(arrestNodes), function(arrestNode, withinFileIndex) {
     tibble(
       SegmentLevel="6",
@@ -193,6 +227,10 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   })
   
   arresteeNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:Arrestee')
+  
+  ifelse(is.na(arresteeNodes %>% xml_find_first('j:ArresteeArmedWithCode') %>% xml_text),
+         xml_add_child(arresteeNodes, "j:ArresteeArmedWithCode"),"")
+  
   arrestee <- map2_df(arresteeNodes, seq(arresteeNodes), function(arresteeNode, withinFileIndex) {
     tibble(
       ArresteeID=arresteeNode %>% xml_find_first('@s:id') %>% xml_text(),
@@ -244,6 +282,7 @@ incidentNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report')
   }) 
   
   subjectVictimNodes <- x %>% xml_find_all('/nibrs:Submission/nibrs:Report/j:SubjectVictimAssociation')
+
   subjectVictim <- map2_df(subjectVictimNodes, seq(subjectVictimNodes), function(subjectVictimNode, withinFileIndex) {
     tibble(
       VictimID=subjectVictimNode %>% xml_find_first('j:Victim/@s:ref') %>% xml_text(),
@@ -408,19 +447,3 @@ write_csv(nibrsXML, "nibrsXML.csv")
 return (nibrsXML)
 }
 
-
-### The following nodes must ne in the NIBRS XML
-#OffenderSuspectedOfUsingCode
-#TypeCriminalActivityGangInformation
-#TypeOfWeaponForceInvolved
-#BiasMotivation
-#VictimAggravatedAssaultHomicideCircumstance
-#VictimInjuryType
-#VictimConnectedToUCROffense
-
-### The following nodes must ne in the NIBRS XML - If the Arrest segment exists
-#ArrestTransactionNumber
-#ArrestDate
-#TypeOfArrest
-#UCRArrestOffenseCode
-#ArresteeArmedWithCode
