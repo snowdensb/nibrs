@@ -26,21 +26,18 @@
      }
    });
    
+   refreshIncidentYearDropDown();
+   refreshIncidentMonthDropDown();
+   
    $('#portalContent').on('change', '#searchForm #ori', function(){
-	   ori = $('#ori').val(); 
-	   if (ori){
-		   xhr = $.get( context +"years/" + ori, function(data) {
-			   $('#incidentYear').empty();
-			   $('#incidentYear').append('<option value="">Please select ...</option>');
-			   data.forEach( function(item, index) {
-                   $('#incidentYear').append($('<option></option>').attr('value', item).text(item));
-               });
-			   $('#incidentYear').trigger("chosen:updated");
-	       }).fail(ojbc.displayFailMessage);
-	   }
+	   refreshIncidentYearDropDown();
    });
    
    $('#portalContent').on('change', '#searchForm #incidentYear', function(){
+	   refreshIncidentMonthDropDown()
+   });
+
+   function refreshIncidentMonthDropDown(){
 	   ori = $('#ori').val(); 
 	   incidentYear = $('#incidentYear').val();
 	   if (ori && incidentYear){
@@ -53,7 +50,20 @@
 			   $('#incidentMonth').trigger("chosen:updated");
 		   }).fail(ojbc.displayFailMessage);
 	   }
-   });
+   }
+   function refreshIncidentYearDropDown(){
+	   ori = $('#ori').val(); 
+	   if (ori){
+		   xhr = $.get( context +"years/" + ori, function(data) {
+			   $('#incidentYear').empty();
+			   $('#incidentYear').append('<option value="">Please select ...</option>');
+			   data.forEach( function(item, index) {
+                   $('#incidentYear').append($('<option></option>').attr('value', item).text(item));
+               });
+			   $('#incidentYear').trigger("chosen:updated");
+	       }).fail(ojbc.displayFailMessage);
+	   }
+   }
    
    $('#portalContent').on('click', '#submit', function(){
      var formData = $('#searchForm').serialize();
