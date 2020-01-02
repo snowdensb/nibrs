@@ -45,7 +45,7 @@
 				<j:OrganizationAugmentation>
 					<j:OrganizationORIIdentification>
 						<!-- Element 1, ORI Code, Owning Agency ORI -->
-						<nc:IdentificationID>WVNDX0100</nc:IdentificationID>
+						<nc:IdentificationID>HI0020000</nc:IdentificationID>
 					</j:OrganizationORIIdentification>
 				</j:OrganizationAugmentation>
 			</nibrs:ReportingAgency>
@@ -58,9 +58,9 @@
 			<nc:ActivityDate>
 				<nc:YearMonthDate>2019-07</nc:YearMonthDate>
 				<!-- Element 3, Incident Date and Hour -->
-				<nc:DateTime>2019-09-19T02:00:00</nc:DateTime>
+				<nc:DateTime>2019-07-13T14:00:00</nc:DateTime>
 				<!-- Element 3, Incident Date if Hour is Unknown -->
-				<nc:Date>2019-07-19</nc:Date>
+				<nc:Date>2019-07-13</nc:Date>
 			</nc:ActivityDate>
 			<cjis:IncidentAugmentation>
 				<!-- Element 3, IncidentReportDateIndicator is true to designate that the ActivityDate is the Report Date rather than the Incident 
@@ -85,9 +85,13 @@
 			<j:OffenseFactor>
 				<j:OffenseFactorCode>N</j:OffenseFactorCode>
 			</j:OffenseFactor>
+			<!-- Element 11, Method Of Entry -->
+			<j:OffenseEntryPoint>
+				<j:PassagePointMethodCode>F</j:PassagePointMethodCode>
+			</j:OffenseEntryPoint>			
 			<!-- Element 13, Type Weapon/Force Involved -->
 			<!-- Element 7, Attempted/Completed -->
-			<j:OffenseAttemptedIndicator>true</j:OffenseAttemptedIndicator>
+			<j:OffenseAttemptedIndicator>false</j:OffenseAttemptedIndicator>
 		</j:Offense>
 		<!-- Begin Property -->
 		<!-- Element 9, Location Type -->
