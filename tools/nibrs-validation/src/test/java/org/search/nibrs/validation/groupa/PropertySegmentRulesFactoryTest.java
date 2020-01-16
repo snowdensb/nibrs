@@ -668,13 +668,16 @@ public class PropertySegmentRulesFactoryTest {
 		
 		p.setPropertyDescription(0, PropertyDescriptionCode._01.code);
 		e = rule.apply(p);
-		assertNull(e);
-		setAllNull(p.getPropertyDescription());
+		assertNotNull(e);
+		assertThat(e.getDataElementIdentifier(), is("14"));
+		assertThat(e.getValue(), is(TypeOfPropertyLossCode._7.code));
+		assertThat(e.getNIBRSErrorCode(), is(NIBRSErrorCode._372));
 		
 		p.setValueOfProperty(0, new ParsedObject<Integer>(30));
 		e = rule.apply(p);
 		assertNull(e);
 		setAllNull(p.getValueOfProperty());
+		setAllNull(p.getPropertyDescription());
 		
 		p.setDateRecovered(0, new ParsedObject<LocalDate>(LocalDate.now()));
 		e = rule.apply(p);

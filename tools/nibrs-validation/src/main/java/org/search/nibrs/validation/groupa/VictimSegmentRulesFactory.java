@@ -65,6 +65,7 @@ public class VictimSegmentRulesFactory {
 
 	private List<Rule<VictimSegment>> rulesList__2_1;
 	private List<Rule<VictimSegment>> rulesList__3_1;
+	private List<Rule<VictimSegment>> rulesList__2019;
 	private PersonSegmentRulesFactory<VictimSegment> personSegmentRulesFactory;
 	
 	public static VictimSegmentRulesFactory instance(ValidatorProperties validatorProperties) {
@@ -203,6 +204,10 @@ public class VictimSegmentRulesFactory {
 		rulesList__3_1.remove(rule450);
 		rulesList__3_1.add(getRule450ForAgeOfVictim__3_1());
 		
+		rulesList__2019 = new ArrayList<Rule<VictimSegment>>();
+		rulesList__2019.addAll(rulesList__3_1);
+		rulesList__2019.remove(getRule459ForOffenderNumberToBeRelated());
+		
 	}
 		
 	public List<Rule<VictimSegment>> getRulesList() {
@@ -214,6 +219,8 @@ public class VictimSegmentRulesFactory {
 			return rulesList__2_1;
 		} else if (ValidationConstants.SPEC__3_1.equals(specVersion)) {
 			return rulesList__3_1;
+		} else if (ValidationConstants.SPEC__2019.contentEquals(specVersion)) {
+			return rulesList__2019;
 		}
 		throw new IllegalArgumentException("Invalid spec version: " + specVersion);
 	}	
