@@ -20,6 +20,8 @@ NIBRS <- read_fwf("./data/nibrs/nibrs.txt",
 
 ## BUILD THE FUNCTION BEFORE RUNNING THIS COMMAND
 nibrsFlat <- FlatfileToNIBRS (segments, NIBRS)
+nibrsFlat <- nibrsFlat[-c(1:6)]
+write.csv(nibrsFlat, "nibrsFlat.csv", row.names=FALSE, quote = FALSE)
 
 # Convert NIBRS Flatfile to R DF FUNCTION
 FlatfileToNIBRS <- function(segments, NIBRS) {
@@ -628,8 +630,6 @@ nibrsFlat <- list(
   original_nibrs_segment_5,
   nibrs_segment_6_modified) %>% 
   reduce(full_join)
-
-write.csv(nibrsFlat, "nibrsFlat.csv")
 
 return(nibrsFlat)
 
