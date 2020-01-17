@@ -708,8 +708,8 @@ public class PropertySegmentRulesFactory {
 			@Override
 			public NIBRSError apply(PropertySegment subject) {
 				NIBRSError ret = null;
-				String loss = subject.getTypeOfPropertyLoss();
 				
+				String loss = subject.getTypeOfPropertyLoss();
 				boolean violate = false; 
 				if (TypeOfPropertyLossCode.requirePropertyDescriptionValueCodeSet().contains(loss)){
 					if (allNull(subject.getPropertyDescription()) &&
@@ -724,21 +724,14 @@ public class PropertySegmentRulesFactory {
 						violate = true; 
 					}
 					else if (notAllNull(subject.getPropertyDescription())){
-						if (allNull(subject.getValueOfProperty())) {
-							violate = true; 
-						}
-						else if (subject.getPropertyDescription().length != subject.getValueOfProperty().length) {
-							violate = true; 
-						}
-						else {
-							for (int i = 0; i < subject.getPropertyDescription().length; i++) {
-								if (StringUtils.isNotBlank(subject.getPropertyDescription(i))
-										&& subject.getValueOfProperty(i).isMissing()){
-									violate = true; 
-									break; 
-								}
-										
+						for (int i = 0; i < subject.getPropertyDescription().length; i++) {
+							if (StringUtils.isNotBlank(subject.getPropertyDescription(i)) 
+									&& !PropertyDescriptionCode._10.code.equals(subject.getPropertyDescription(i))
+									&& (subject.getValueOfProperty(i) == null || subject.getValueOfProperty(i).isMissing())){
+								violate = true; 
+								break; 
 							}
+									
 						}
 					}
 				}
