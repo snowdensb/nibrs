@@ -20,8 +20,6 @@ import java.time.ZoneId;
 import java.util.Date;
 
 /**
- * @author lillian.kim@mark43.com
- * @since 2/26/18
  *
  * A set of utility methods that deal with Dates.
  */
@@ -30,4 +28,23 @@ public class DateUtils
     public static Date asDate(LocalDate localDate) {
         return localDate == null ? null : Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
+    
+	public static java.sql.Date getStartDate(Integer year, Integer month) {
+		java.sql.Date date = null;
+		if (year != null && year > 0) {
+			LocalDate localDate = LocalDate.of(year, 1, 1);
+			
+			if (isValidMonth(month)) {
+					localDate = LocalDate.of(year, month, 1);
+			}
+			date = java.sql.Date.valueOf(localDate);
+		}
+		
+		return date;
+	}
+	
+	public static boolean isValidMonth(Integer month) {
+		return month != null && month > 0 && month <=12;
+	}
+
 }

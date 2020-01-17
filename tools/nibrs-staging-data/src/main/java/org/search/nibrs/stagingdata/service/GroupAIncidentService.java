@@ -234,16 +234,6 @@ public class GroupAIncidentService {
 			
 			log.info("Persisting GroupAIncident: " + groupAIncidentReport.getIncidentNumber());
 			
-			String reportActionType = String.valueOf(groupAIncidentReport.getReportActionType()).trim();
-			
-			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
-				if (administrativeSegmentRepository
-						.existsByIncidentNumberAndOri(groupAIncidentReport.getIncidentNumber(), groupAIncidentReport.getOri())){
-					reportActionType = "R"; 
-				}
-			}
-			
-			administrativeSegment.setSegmentActionType(segmentActionTypeRepository.findFirstByStateCode(reportActionType));
 			
 			Optional<Integer> monthOfTape = Optional.ofNullable(groupAIncidentReport.getMonthOfTape());
 			monthOfTape.ifPresent( m-> {
@@ -254,10 +244,31 @@ public class GroupAIncidentService {
 				administrativeSegment.setYearOfTape(String.valueOf(groupAIncidentReport.getYearOfTape()));
 			}
 			
-			administrativeSegment.setCityIndicator(groupAIncidentReport.getCityIndicator());
-			administrativeSegment.setStateCode(StringUtils.substring(groupAIncidentReport.getOri(), 0, 2));
 			administrativeSegment.setOri(groupAIncidentReport.getOri());
 			administrativeSegment.setIncidentNumber(groupAIncidentReport.getIncidentNumber());
+			
+			if (groupAIncidentReport.getYearOfTape() != null && groupAIncidentReport.getMonthOfTape() != null) {
+				boolean havingNewerSubmission = administrativeSegmentRepository.existsByIncidentNumberAndOriAndSubmissionDate
+						(administrativeSegment.getIncidentNumber(), administrativeSegment.getOri(), 
+								DateUtils.getStartDate(groupAIncidentReport.getYearOfTape(), groupAIncidentReport.getMonthOfTape()));
+				
+				if (havingNewerSubmission) {
+					continue;
+				}
+			}
+			
+			String reportActionType = String.valueOf(groupAIncidentReport.getReportActionType()).trim();
+			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
+				if (administrativeSegmentRepository
+						.existsByIncidentNumberAndOri(groupAIncidentReport.getIncidentNumber(), groupAIncidentReport.getOri())){
+					reportActionType = "R"; 
+				}
+			}
+			
+			administrativeSegment.setSegmentActionType(segmentActionTypeRepository.findFirstByStateCode(reportActionType));
+			
+			administrativeSegment.setCityIndicator(groupAIncidentReport.getCityIndicator());
+			administrativeSegment.setStateCode(StringUtils.substring(groupAIncidentReport.getOri(), 0, 2));
 			administrativeSegment.setIncidentDate(groupAIncidentReport.getIncidentDate().getValue());
 			administrativeSegment.setIncidentDateType(codeTableService.getDateType(DateUtils.asDate(groupAIncidentReport.getIncidentDate().getValue())));
 			administrativeSegment.setReportDateIndicator(groupAIncidentReport.getReportDateIndicator());

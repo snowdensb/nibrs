@@ -49,6 +49,14 @@ public interface AdministrativeSegmentRepository
 			+ "		AND s.nibrsCode != 'D' ")
 	boolean existsByIncidentNumberAndOri(String incidentNumber, String ori);
 	
+	@Query("SELECT count(*) > 0 from AdministrativeSegment a "
+			+ "LEFT JOIN a.segmentActionType s "
+			+ "WHERE a.administrativeSegmentId = "
+			+ "		(SELECT max(administrativeSegmentId) FROM AdministrativeSegment "
+			+ "			where incidentNumber = ?1 and ori = ?2) "
+			+ "		and cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) > ?3")
+	boolean existsByIncidentNumberAndOriAndSubmissionDate(String incidentNumber, String ori, Date submissionDate);
+	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	List<AdministrativeSegment> findDistinctByOriAndIncidentDateTypeYearNumAndIncidentDateTypeMonthNum(String ori, Integer year,  Integer month);
 		

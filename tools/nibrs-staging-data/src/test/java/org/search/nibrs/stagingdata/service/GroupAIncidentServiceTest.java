@@ -1140,7 +1140,18 @@ public class GroupAIncidentServiceTest {
 
 		groupAIncidentReport.removeProperty(2);
 		
+		groupAIncidentReport.setMonthOfTape(4);
+		groupAIncidentReport.setYearOfTape(2016);
+		
 		Iterable<AdministrativeSegment> saved = groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
+		
+		assertThat(saved.iterator().hasNext(), equalTo(false));
+		
+		groupAIncidentReport.setMonthOfTape(5);
+		groupAIncidentReport.setYearOfTape(2016);
+		
+		saved = groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
+		assertThat(saved.iterator().hasNext(), equalTo(true));
 		
 		AdministrativeSegment updated = 
 				administrativeSegmentRepository.findByAdministrativeSegmentId(saved.iterator().next().getAdministrativeSegmentId());

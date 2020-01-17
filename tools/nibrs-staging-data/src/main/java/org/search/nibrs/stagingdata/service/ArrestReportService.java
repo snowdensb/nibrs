@@ -223,9 +223,19 @@ public class ArrestReportService {
 			
 			arrestReportSegment.setArrestTransactionNumber(groupBArrestReport.getIdentifier());
 			arrestReportSegment.setAgency(agencyRepository.findFirstByAgencyOri(groupBArrestReport.getOri()));
+			arrestReportSegment.setOri(groupBArrestReport.getOri());
+			
+			if (groupBArrestReport.getYearOfTape() != null && groupBArrestReport.getMonthOfTape() != null) {
+				boolean havingNewerSubmission = arrestReportSegmentRepository.existsByArrestTransactionNumberAndOriAndSubmissionDate
+						(arrestReportSegment.getArrestTransactionNumber(), arrestReportSegment.getOri(), 
+								DateUtils.getStartDate(groupBArrestReport.getYearOfTape(), groupBArrestReport.getMonthOfTape()));
+				
+				if (havingNewerSubmission) {
+					continue;
+				}
+			}
 			
 			String reportActionType = String.valueOf(groupBArrestReport.getReportActionType()).trim();
-			
 			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
 				if (arrestReportSegmentRepository
 						.existsByArrestTransactionNumberAndOri(groupBArrestReport.getIdentifier(), groupBArrestReport.getOri())){
@@ -247,7 +257,6 @@ public class ArrestReportService {
 			}
 			
 			arrestReportSegment.setCityIndicator(groupBArrestReport.getCityIndicator());
-			arrestReportSegment.setOri(groupBArrestReport.getOri());
 			arrestReportSegment.setStateCode(StringUtils.substring(groupBArrestReport.getOri(), 0, 2));
 			Agency agency = codeTableService.getCodeTableType(groupBArrestReport.getOri(), 
 					agencyRepository::findFirstByAgencyOri, Agency::new); 
