@@ -23,7 +23,7 @@ downloadCDEData <- function(outputDir, constrainYears=NULL, constrainStates=NULL
 
     if (is.list(state$nibrs))  {
 
-      years <- seq(state$nibrs$`initial-year`, 2017)
+      years <- seq(state$nibrs$`initial-year`, 2018)
       years <- setdiff(years, state$nibrs$`no-data-years`)
 
       if (!is.null(constrainYears)) {
