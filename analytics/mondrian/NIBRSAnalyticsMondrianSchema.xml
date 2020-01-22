@@ -47,6 +47,7 @@
     <Table name="DateType"/>
     <Table name="HourType"/>
     <Table name="CompletionStatusType"/>
+    <Table name="CargoTheftIndicatorType"/>
     <Table name="ClearanceType"/>
     <Table name="LocationTypeType"/>
     <Table name="VictimOffenderRelationshipType"/>
@@ -401,6 +402,17 @@
       </Hierarchy>
     </Hierarchies>
   </Dimension>
+  <Dimension visible="true" name="CargoTheftIndicator" table="CargoTheftIndicatorType" key="CargoTheftIndicatorTypeID" caption="Cargo Theft Status">
+    <Attributes>
+      <Attribute name="CargoTheftIndicatorTypeID" keyColumn="CargoTheftIndicatorTypeID" hasHierarchy="false"/>
+      <Attribute name="CargoTheftIndicatorTypeDescription" keyColumn="StateDescription" hasHierarchy="false"/>
+    </Attributes>
+    <Hierarchies>
+      <Hierarchy name="CargoTheftIndicator" allMemberName="All Statuses" caption="Cargo Theft Status">
+        <Level attribute="CargoTheftIndicatorTypeDescription" caption="Cargo Theft Status"/>
+      </Hierarchy>
+    </Hierarchies>
+  </Dimension>
   <Dimension visible="true" name="CompletionStatus" table="CompletionStatusType" key="CompletionStatusTypeID" caption="Completion Status">
     <Attributes>
       <Attribute name="CompletionStatusTypeID" keyColumn="CompletionStatusTypeID" hasHierarchy="false"/>
@@ -519,6 +531,7 @@
       <Dimension source="ResidentStatusOfPerson" caption="Victim Resident Status"/>
       <Dimension source="AdditionalJustifiableHomicideCircumstances"/>
       <Dimension source="CompletionStatus" caption="Offense Completed?"/>
+      <Dimension source="CargoTheftIndicator" caption="Cargo Theft?"/>
 
       <Dimension visible="true" name="Offenses Per Incident">
         <Attributes>
@@ -641,6 +654,7 @@
           <ForeignKeyLink dimension="ResidentStatusOfPerson" foreignKeyColumn="ResidentStatusOfPersonTypeID"/>
           <ForeignKeyLink dimension="AdditionalJustifiableHomicideCircumstances" foreignKeyColumn="AdditionalJustifiableHomicideCircumstancesTypeID"/>
           <ForeignKeyLink dimension="CompletionStatus" foreignKeyColumn="CompletionStatusIndicator"/>
+          <ForeignKeyLink dimension="CargoTheftIndicator" foreignKeyColumn="CargoTheftIndicatorTypeID"/>
           <FactLink dimension="Offenses Per Incident"/>
           <FactLink dimension="Premises Entered"/>
           <FactLink dimension="Victim Age"/>
