@@ -21,124 +21,122 @@
 		<div id="content" class="container-fluid">
 		  <div id="loadingAjaxPane" ></div>
 		  
-			<script th:inline="javascript">
-          /*<![CDATA[*/
-            var context = [[@{/}]];
-            var persistReportTask = [[${persistReportTask}]]; 
-          /*]]>*/
+		  <script th:inline="javascript">
+        /*<![CDATA[*/
+          var context = [[@{/}]];
+          var persistReportTask = [[${persistReportTask}]]; 
+        /*]]>*/
 
- 				  $(function() {
-					  var table = $('#errorReport').DataTable({
-              responsive: true, 
-              fixedHeader: {header: true}, 
-              language: {
-                  emptyTable: "No errors found in this NIBRS submission"
-              },
-              buttons: [
-                  {
-                      extend: 'excelHtml5',
-                      title:'Error Report',
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  },
-                  {
-                      extend: 'csvHtml5',
-                      title:'Error Report',
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  },
-                  {
-                      extend: 'pdfHtml5',
-                      title:'Error Report',
-                      orientation:'landscape', 
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  },
-                  'colvis'
-              ],
-              "columnDefs": [
-                  { "orderable": false, "targets": 7 },
-                  {
-                      "targets":[6], 
-                      "type":"datetime"
-                  },
-                ]
-            });
+			  $(function() {
+				  var table = $('#errorReport').DataTable({
+            responsive: true, 
+            fixedHeader: {header: true}, 
+            language: {
+                emptyTable: "No errors found in this NIBRS submission"
+            },
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    title:'Error Report',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'csvHtml5',
+                    title:'Error Report',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title:'Error Report',
+                    orientation:'landscape', 
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                'colvis'
+            ],
+            "columnDefs": [
+                { "orderable": false, "targets": 7 },
+                {
+                    "targets":[6], 
+                    "type":"datetime"
+                },
+              ]
+          });
 					  
-            table.buttons().container()
-             .appendTo( '#errorReport_length' ).addClass("mr-5");
-            
-            if (persistReportTask && !persistReportTask.aborted && !persistReportTask.complete && persistReportTask.started){
-                $('#loadIncidents').attr('disabled', true);
-                $('#loadIncidentsAync').attr('disabled', true);
-                $('#progress').css('width', '0px').addClass('progress-bar-animated active');
-                $('#progressDiv').removeClass('d-none');
-            }
-            
-            $('#loadIncidentsAync').click (function(){
-            	var data = table.rows().data();
-            	if (data.length > 0){
-            		  xhr =  $.post(context + "files/preCertificationErrors", function(data, status){  
-            			  $('div#alert').append('<div>' + data + '</div>');
-            		  }).fail(ojbc.displayFailMessage);
-            	}
-            	
-              	xhr = $.post(context + "files/validIncidentsAsync", function(data, status){
-	                $('#loadIncidents').attr('disabled', true);
-	                $('#loadIncidentsAync').attr('disabled', true);
-	                $('#progress').css('width', '0px').addClass('progress-bar-animated active');
-	                $('#progressDiv').removeClass('d-none');
-	                var timerId = setInterval(function() {
-	
-	                    // increment progress bar
-	                  xhr = $.get(context + 'files/uploadStatus', function(data, status) {
-	                	  console.log("data.failedToProcess: " + data.failedToProcess);
-	                    if (status == 'success'){
-	                      $('#progress').css('width', data.progress + '%').attr('aria-valuenow', data.progress);
-	                      $('#progress').html('' + data.processedCount + ' out of ' + data.totalCount + ' are processed ');
-	                    }
-	                    if (status != 'success' || data.progress >= 100 || data.aborted) {
-	                      clearInterval(timerId);
-	                      $('#progress').removeClass('progress-bar-animated active').html('Complete');
-	                      
-	                      var contentArray = [];
-	                      if (status != 'success') {
-	                    	  contentArray.push("The system failed to update the status. Please check back later ");
-	                   	  }
-	                      else if (data.progress>=100){
-	                    	  contentArray.push("All " + data.totalCount + ' reports are processed' );
-	                      }
-	                      else {
-	                    	  contentArray.push('The process is aborted due to error.' );
-	                      }
-	                      
-	                      if (data.failedToProcess.length > 0){
-	                    	  contentArray.push('<br>' + data.failedToProcess.length + ' incidents failed to persist due to error: ');
-	                    	  contentArray.push('<ul>');
-	                    	  for (i=0; i<data.failedToProcess.length; i++ ) {
-	                    		  contentArray.push('<li>' + data.failedToProcess[i] + '</li>');
-	                    		}
-	                        contentArray.push('</ul>');
-	                      }
-	                      
-	                      bootpopup({
-	                          title: "", 
-	                          showclose: false,
-	                          content: contentArray,
-	                          complete:function() { clearInterval(timerId); }
-	                      });
-	                    }
-	                  });
-	                }, 2000);
-	              }).fail(ojbc.displayFailMessage);
-               
-            });
+          table.buttons().container()
+           .appendTo( '#errorReport_length' ).addClass("mr-5");
+          
+          if (persistReportTask && !persistReportTask.aborted && !persistReportTask.complete && persistReportTask.started){
+              $('#loadIncidents').attr('disabled', true);
+              $('#loadIncidentsAync').attr('disabled', true);
+              $('#progress').css('width', '0px').addClass('progress-bar-animated active');
+              $('#progressDiv').removeClass('d-none');
+          }
+          
+          $('#loadIncidentsAync').click (function(){
+          	var data = table.rows().data();
+          	if (data.length > 0){
+          		  xhr =  $.post(context + "files/preCertificationErrors", function(data, status){  
+          			  $('div#alert').append('<div>' + data + '</div>');
+          		  }).fail(ojbc.displayFailMessage);
+          	}
+          	
+            	xhr = $.post(context + "files/validIncidentsAsync", function(data, status){
+               $('#loadIncidents').attr('disabled', true);
+               $('#loadIncidentsAync').attr('disabled', true);
+               $('#progress').css('width', '0px').addClass('progress-bar-animated active');
+               $('#progressDiv').removeClass('d-none');
+               var timerId = setInterval(function() {
 
-	                  
-				  });
+                   // increment progress bar
+                 xhr = $.get(context + 'files/uploadStatus', function(data, status) {
+               	  console.log("data.failedToProcess: " + data.failedToProcess);
+                   if (status == 'success'){
+                     $('#progress').css('width', data.progress + '%').attr('aria-valuenow', data.progress);
+                     $('#progress').html('' + data.processedCount + ' out of ' + data.totalCount + ' are processed ');
+                   }
+                   if (status != 'success' || data.progress >= 100 || data.aborted) {
+                     clearInterval(timerId);
+                     $('#progress').removeClass('progress-bar-animated active').html('Complete');
+                     
+                     var contentArray = [];
+                     if (status != 'success') {
+                   	  contentArray.push("The system failed to update the status. Please check back later ");
+                  	  }
+                     else if (data.progress>=100){
+                   	  contentArray.push("All " + data.totalCount + ' reports are processed' );
+                     }
+                     else {
+                   	  contentArray.push('The process is aborted due to error.' );
+                     }
+                     
+                     if (data.failedToProcess.length > 0){
+                   	  contentArray.push('<br>' + data.failedToProcess.length + ' incidents failed to persist due to error: ');
+                   	  contentArray.push('<ul>');
+                   	  for (i=0; i<data.failedToProcess.length; i++ ) {
+                   		  contentArray.push('<li>' + data.failedToProcess[i] + '</li>');
+                   		}
+                       contentArray.push('</ul>');
+                     }
+                     
+                     bootpopup({
+                         title: "", 
+                         showclose: false,
+                         content: contentArray,
+                         complete:function() { clearInterval(timerId); }
+                     });
+                   }
+                 });
+               }, 2000);
+             }).fail(ojbc.displayFailMessage);
+             
+          });
+		  	});
 
  			</script>
  			<nav aria-label="breadcrumb">
