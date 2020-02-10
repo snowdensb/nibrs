@@ -86,54 +86,54 @@
             		  }).fail(ojbc.displayFailMessage);
             	}
             	
-              xhr = $.post(context + "files/validIncidentsAsync", function(data, status){
-                $('#loadIncidents').attr('disabled', true);
-                $('#loadIncidentsAync').attr('disabled', true);
-                $('#progress').css('width', '0px').addClass('progress-bar-animated active');
-                $('#progressDiv').removeClass('d-none');
-                var timerId = setInterval(function() {
-
-                    // increment progress bar
-                  xhr = $.get(context + 'files/uploadStatus', function(data, status) {
-                	  console.log("data.failedToProcess: " + data.failedToProcess);
-                    if (status == 'success'){
-                      $('#progress').css('width', data.progress + '%').attr('aria-valuenow', data.progress);
-                      $('#progress').html('' + data.processedCount + ' out of ' + data.totalCount + ' are processed ');
-                    }
-                    if (status != 'success' || data.progress >= 100 || data.aborted) {
-                      clearInterval(timerId);
-                      $('#progress').removeClass('progress-bar-animated active').html('Complete');
-                      
-                      var contentArray = [];
-                      if (status != 'success') {
-                    	  contentArray.push("The system failed to update the status. Please check back later ");
-                   	  }
-                      else if (data.progress>=100){
-                    	  contentArray.push("All " + data.totalCount + ' reports are processed' );
-                      }
-                      else {
-                    	  contentArray.push('The process is aborted due to error.' );
-                      }
-                      
-                      if (data.failedToProcess.length > 0){
-                    	  contentArray.push('<br>' + data.failedToProcess.length + ' incidents failed to persist due to error: ');
-                    	  contentArray.push('<ul>');
-                    	  for (i=0; i<data.failedToProcess.length; i++ ) {
-                    		  contentArray.push('<li>' + data.failedToProcess[i] + '</li>');
-                    		}
-                        contentArray.push('</ul>');
-                      }
-                      
-                      bootpopup({
-                          title: "", 
-                          showclose: false,
-                          content: contentArray,
-                          complete:function() { clearInterval(timerId); }
-                      });
-                    }
-                  });
-                }, 2000);
-              }).fail(ojbc.displayFailMessage);
+              	xhr = $.post(context + "files/validIncidentsAsync", function(data, status){
+	                $('#loadIncidents').attr('disabled', true);
+	                $('#loadIncidentsAync').attr('disabled', true);
+	                $('#progress').css('width', '0px').addClass('progress-bar-animated active');
+	                $('#progressDiv').removeClass('d-none');
+	                var timerId = setInterval(function() {
+	
+	                    // increment progress bar
+	                  xhr = $.get(context + 'files/uploadStatus', function(data, status) {
+	                	  console.log("data.failedToProcess: " + data.failedToProcess);
+	                    if (status == 'success'){
+	                      $('#progress').css('width', data.progress + '%').attr('aria-valuenow', data.progress);
+	                      $('#progress').html('' + data.processedCount + ' out of ' + data.totalCount + ' are processed ');
+	                    }
+	                    if (status != 'success' || data.progress >= 100 || data.aborted) {
+	                      clearInterval(timerId);
+	                      $('#progress').removeClass('progress-bar-animated active').html('Complete');
+	                      
+	                      var contentArray = [];
+	                      if (status != 'success') {
+	                    	  contentArray.push("The system failed to update the status. Please check back later ");
+	                   	  }
+	                      else if (data.progress>=100){
+	                    	  contentArray.push("All " + data.totalCount + ' reports are processed' );
+	                      }
+	                      else {
+	                    	  contentArray.push('The process is aborted due to error.' );
+	                      }
+	                      
+	                      if (data.failedToProcess.length > 0){
+	                    	  contentArray.push('<br>' + data.failedToProcess.length + ' incidents failed to persist due to error: ');
+	                    	  contentArray.push('<ul>');
+	                    	  for (i=0; i<data.failedToProcess.length; i++ ) {
+	                    		  contentArray.push('<li>' + data.failedToProcess[i] + '</li>');
+	                    		}
+	                        contentArray.push('</ul>');
+	                      }
+	                      
+	                      bootpopup({
+	                          title: "", 
+	                          showclose: false,
+	                          content: contentArray,
+	                          complete:function() { clearInterval(timerId); }
+	                      });
+	                    }
+	                  });
+	                }, 2000);
+	              }).fail(ojbc.displayFailMessage);
                
             });
 
