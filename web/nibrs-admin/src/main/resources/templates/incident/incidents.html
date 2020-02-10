@@ -103,6 +103,31 @@
 	                  { "data": "fbiStatus" }, 
 	                  { "data": "primaryKey", "visible":false}
 	              ], 
+	              buttons: [
+	                  {
+	                      extend: 'excelHtml5',
+	                      title:'Incidents',
+	                      exportOptions: {
+	                          columns: ':visible'
+	                      }
+	                  },
+	                  {
+	                      extend: 'csvHtml5',
+	                      title:'Incidents',
+	                      exportOptions: {
+	                          columns: ':visible'
+	                      }
+	                  },
+	                  {
+	                      extend: 'pdfHtml5',
+	                      title:'Incidents',
+	                      orientation:'landscape', 
+	                      exportOptions: {
+	                          columns: ':visible'
+	                      }
+	                  },
+	                  'colvis'
+	              ],
 	              deferRender: true,
 		            responsive: true, 
 		            fixedHeader: { header: true },
@@ -132,7 +157,12 @@
 								             }
 								         }
 								    }
-								]
+								],
+	              initComplete: function(settings, json) {
+	                  table.buttons().container()
+	                    .appendTo( '#searchResultsTable_length' ).addClass("mr-4");
+                }
+
 		          });
 		          
 		          $('[data-toggle="tooltip"]').tooltip({

@@ -55,7 +55,6 @@ public class CargoTheftReportExporter {
 	CellStyle vTopWrappedStyle;
 	CellStyle wrappedBorderedStyle;
 	CellStyle centeredWrappedBorderedStyle;
-	CellStyle hCenteredStyle;
 	CellStyle centeredStyle;
 	CellStyle yellowForeGround;
 
@@ -164,6 +163,7 @@ public class CargoTheftReportExporter {
 		Row row = sheet.createRow(rowNum++);
     	row.setHeightInPoints((3*sheet.getDefaultRowHeightInPoints()));
 		Cell cell = row.createCell(0);
+		
 		cell.setCellStyle(centeredStyle);
 		 
 		XSSFRichTextString s1 = new XSSFRichTextString("Cargo Theft Incident Reports");

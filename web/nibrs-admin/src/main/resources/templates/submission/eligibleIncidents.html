@@ -111,6 +111,31 @@
                  { "data": "fbiStatus" }, 
                  { "data": "primaryKey", "visible":false}
              ], 
+             buttons: [
+                 {
+                     extend: 'excelHtml5',
+                     title:'Incidents Eligible To Submitt to FBI',
+                     exportOptions: {
+                         columns: ':visible'
+                     }
+                 },
+                 {
+                     extend: 'csvHtml5',
+                     title:'Incidents Eligible To Submitt to FBI',
+                     exportOptions: {
+                         columns: ':visible'
+                     }
+                 },
+                 {
+                     extend: 'pdfHtml5',
+                     title:'Incidents Eligible To Submitt to FBI',
+                     orientation:'landscape', 
+                     exportOptions: {
+                         columns: ':visible'
+                     }
+                 },
+                 'colvis'
+             ],
              deferRender: true,
 	           columnDefs: [ 
 	               {
@@ -138,7 +163,11 @@
                           }
                       }
                  }
-               ]
+             ],
+             initComplete: function(settings, json) {
+                 table.buttons().container()
+                   .appendTo( '#searchResultsTable_length' ).addClass("mr-4");
+             }
            });
            
            $('[data-toggle="tooltip"]').tooltip({
