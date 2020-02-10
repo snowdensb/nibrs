@@ -65,7 +65,7 @@
 	   }
    }
    
-   $('#portalContent').on('click', '#submit', function(){
+   $('#submit').click( function(){
      var formData = $('#searchForm').serialize();
      
      var form = document.getElementById('searchForm'); 
