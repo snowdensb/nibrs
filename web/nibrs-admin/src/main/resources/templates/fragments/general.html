@@ -58,7 +58,7 @@
 	              <a class="nav-link uploadToValidate" href="#" id="upload">Validate/Upload</a>
 	            </li>
 	            <li class="nav-item">
-	              <a class="nav-link uploadToValidate" href="#" id="errors">Errors</a>
+	              <a class="nav-link" href="#" id="errors">Errors</a>
 	            </li>
 	            <li class="nav-item">
 	              <a class="nav-link" href="#" id="submitToFbi">Submit to FBI</a>
@@ -152,11 +152,10 @@
 					   $('#portalContent').html(data); 
 					 }).fail(ojbc.displayFailMessage);
 					return false; 
-		        });
+        });
 		    	  
 				$('body').on('click', 'a#errors', function() {   
 					$(this).parent().toggleClass('show');
-					
 					xhr = $.get(context + 'precertErrors/searchForm', function(data) {
 					   $('#portalContent').html(data); 
 					 }).fail(ojbc.displayFailMessage);
