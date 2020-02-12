@@ -27,7 +27,7 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
     yearRegex <- '[0-9]{4}'
   }
 
-  pattern <- paste0('^', stateAbbreviationRegex, '-', yearRegex, '\\.zip$')
+  pattern <- paste0('^(', stateAbbreviationRegex, ')\\-(', yearRegex, ')\\.zip$')
 
   files <- list.files(zipDirectory, pattern=pattern, full.names=TRUE)
 
@@ -671,7 +671,8 @@ loadCDEVictimData <- function(tableList, agencyDf, directory, fixFilename, write
     mutate(
       SegmentActionTypeTypeID=99998L,
       SEX_CODE=case_when(is.na(SEX_CODE) ~ ' ', TRUE ~ SEX_CODE),
-      RESIDENT_STATUS_CODE=case_when(is.na(RESIDENT_STATUS_CODE) ~ ' ', TRUE ~ RESIDENT_STATUS_CODE)
+      RESIDENT_STATUS_CODE=case_when(is.na(RESIDENT_STATUS_CODE) ~ ' ', TRUE ~ RESIDENT_STATUS_CODE),
+      AgeOfVictimMin=case_when(is.na(AgeOfVictimMin) ~ AGE_NUM, TRUE ~ AgeOfVictimMin)
     ) %>%
     left_join(raceCt, by='RACE_ID') %>%
     left_join(ethnicityCt, by='ETHNICITY_ID') %>%
@@ -809,6 +810,7 @@ loadCDEOffenderData <- function(tableList, directory, fixFilename, writeProgress
     mutate(
       SegmentActionTypeTypeID=99998L,
       SEX_CODE=case_when(is.na(SEX_CODE) ~ ' ', TRUE ~ SEX_CODE),
+      AgeOfOffenderMin=case_when(is.na(AgeOfOffenderMin) ~ AGE_NUM, TRUE ~ AgeOfOffenderMin)
     ) %>%
     left_join(raceCt, by='RACE_ID') %>%
     left_join(ethnicityCt, by='ETHNICITY_ID') %>%
@@ -866,6 +868,7 @@ loadCDEArresteeData <- function(tableList, directory, state, fixFilename, writeP
       RESIDENT_CODE=case_when(is.na(RESIDENT_CODE) ~ ' ', TRUE ~ RESIDENT_CODE),
       UNDER_18_DISPOSITION_CODE=case_when(is.na(UNDER_18_DISPOSITION_CODE) ~ ' ', TRUE ~ UNDER_18_DISPOSITION_CODE),
       MULTIPLE_INDICATOR=case_when(is.na(MULTIPLE_INDICATOR) ~ ' ', TRUE ~ MULTIPLE_INDICATOR),
+      AgeOfArresteeMin=case_when(is.na(AgeOfArresteeMin) ~ as.integer(AGE_NUM), TRUE ~ AgeOfArresteeMin),
       ArrestDate=convertDate(ARREST_DATE),
       ArrestDateID=createKeyFromDate(ArrestDate)
     ) %>%
@@ -983,7 +986,7 @@ buildEthnicityLookup <- function(tableList, directory, fixFilename) {
 buildAgeCodeLookup <- function(tableList, directory, fixFilename) {
   read_csv(file.path(directory, fixFilename('NIBRS_AGE.csv')), col_types='icc') %>%
     set_names(toupper(colnames(.))) %>%
-    select(AGE_ID, AGE_CODE) %>% filter(AGE_CODE %in% c('NN','NB','BB')) %>%
+    select(AGE_ID, AGE_CODE) %>% filter(AGE_CODE %in% c('NN','NB','BB','00')) %>%
     rename(NonNumericAge=AGE_CODE)
 }
 
