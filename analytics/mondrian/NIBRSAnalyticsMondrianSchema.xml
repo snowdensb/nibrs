@@ -1260,7 +1260,7 @@
         <DimensionLinks>
           <ForeignKeyLink dimension="State" foreignKeyColumn="StateID"/>
           <ForeignKeyLink dimension="Clearance" foreignKeyColumn="ClearanceType"/>
-          <ForeignKeyLink dimension="Agency" foreignKeyColumn="AgencyID"/>
+          <ForeignKeyLink dimension="Agency" foreignKeyColumn="ORI"/>
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>
           <ForeignKeyLink dimension="Date" foreignKeyColumn="IncidentDateID"/>
           <FactLink dimension="Stolen Motor Vehicles"/>
