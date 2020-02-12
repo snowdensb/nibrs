@@ -371,9 +371,9 @@ CREATE TABLE PreCertificationError (
 CREATE TABLE VictimOffenderRelationshipType (
                 VictimOffenderRelationshipTypeID INT AUTO_INCREMENT NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
-                StateDescription VARCHAR(50) NOT NULL,
+                StateDescription VARCHAR(100) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
-                NIBRSDescription VARCHAR(50) NOT NULL,
+                NIBRSDescription VARCHAR(100) NOT NULL,
                 PRIMARY KEY (VictimOffenderRelationshipTypeID)
 );
 
