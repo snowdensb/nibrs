@@ -19,7 +19,7 @@
    $('[data-toggle="popover"]').popover(); 
    $('.incidentYear').mask('9999');
    
-   $('#searchForm input').keypress(function (e) {
+   $('#summaryReportRequestForm input').keypress(function (e) {
      if (e.which == 13) {
        $('#submit').click();
        return false;    
@@ -29,11 +29,11 @@
    refreshIncidentYearDropDown();
    refreshIncidentMonthDropDown();
    
-   $('#portalContent').on('change', '#searchForm #ori', function(){
+   $('#portalContent').on('change', '#summaryReportRequestForm #ori', function(){
 	   refreshIncidentYearDropDown();
    });
    
-   $('#portalContent').on('change', '#searchForm #incidentYear', function(){
+   $('#portalContent').on('change', '#summaryReportRequestForm #incidentYear', function(){
 	   refreshIncidentMonthDropDown()
    });
 
@@ -66,9 +66,10 @@
    }
    
    $('#submit').click( function(){
-     var formData = $('#searchForm').serialize();
+	 $("#loadingText").removeClass("d-none");
+     var formData = $('#summaryReportRequestForm').serialize();
      
-     var form = document.getElementById('searchForm'); 
+     var form = document.getElementById('summaryReportRequestForm'); 
      
      var isValidForm = form.checkValidity(); 
      form.classList.add('was-validated'); 

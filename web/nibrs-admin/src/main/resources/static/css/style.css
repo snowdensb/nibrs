@@ -73,7 +73,8 @@ main{
   overflow-y:hidden;	
 }
 
-#loadingAjaxPane, #modalIframeSpinner, .modalIframeSpinner  { 
+#loadingAjaxPane, 
+#modalIframeSpinner, .modalIframeSpinner  { 
   position: absolute;
   background-color: #7e7e7e;
   opacity: 0.75;
@@ -83,6 +84,21 @@ main{
   background-repeat: no-repeat;
   display:none;
   z-index: 10000;
+}
+
+
+.centered {
+  text-align: center;
+}
+
+.loading-text {
+  width: auto;
+  position: absolute;
+  top: calc(50% + 25px);
+  left: calc(50% - 80px);
+  text-align: center;
+  font-size: normal;
+  color:#1B32A9;
 }
 
 table.dispositionsTable td.dataTables_empty {

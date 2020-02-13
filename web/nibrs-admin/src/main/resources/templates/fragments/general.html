@@ -199,16 +199,18 @@
 								var loadingDiv =  $("#loadingAjaxPane");
 								var portalContentDiv = $("#portalContent");
 								
-								loadingDiv.height(portalContentDiv.height());
+								loadingDiv.height(portalContentDiv.height() + 20);
 								loadingDiv.width(portalContentDiv.width());
-							
+								
 							  $("#loadingAjaxPane").show();           
 						  }        
 	       	  }
 					}).ajaxStop(function() {
-					 $("#loadingAjaxPane").hide();                
-					 $(".modalIframeSpinner").hide();
-					 $("#loadingFileAjaxPane").css({"display": "none"});                
+            $('#loadingText').addClass("d-none");
+						$("#loadingAjaxPane").hide();                
+						$(".modalIframeSpinner").hide();
+						$("#loadingFileAjaxPane").css({"display": "none"});                
+            $("#divSpinner").hide();;           
 					});
 		 	          
 	        $('[data-toggle="popover"]').popover(); 
