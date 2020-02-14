@@ -29,6 +29,7 @@ public class AppProperties {
 	private Boolean demoLawEnforcementEmployerIndicator = true;
 	private Integer ajpPort = 9090; 
 	private Boolean ajpEnabled = true; 
+	private String welcomeHeader="Welcome to the NIBRS Pre-Certification Tool (PCT)";
 	
 	public AppProperties() {
 		super();
@@ -88,6 +89,14 @@ public class AppProperties {
 
 	public void setSecurityEnabled(Boolean securityEnabled) {
 		this.securityEnabled = securityEnabled;
+	}
+
+	public String getWelcomeHeader() {
+		return welcomeHeader;
+	}
+
+	public void setWelcomeHeader(String welcomeHeader) {
+		this.welcomeHeader = welcomeHeader;
 	}
 
 }

@@ -233,17 +233,7 @@ public class GroupAIncidentService {
 			AdministrativeSegment administrativeSegment = new AdministrativeSegment();
 			
 			log.info("Persisting GroupAIncident: " + groupAIncidentReport.getIncidentNumber());
-			administrativeSegment.setAgency(agencyRepository.findFirstByAgencyOri(groupAIncidentReport.getOri()));
 			
-			String reportActionType = String.valueOf(groupAIncidentReport.getReportActionType()).trim();
-			
-			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
-				if (administrativeSegmentRepository.existsByIncidentNumber(groupAIncidentReport.getIncidentNumber())){
-					reportActionType = "R"; 
-				}
-			}
-			
-			administrativeSegment.setSegmentActionType(segmentActionTypeRepository.findFirstByStateCode(reportActionType));
 			
 			Optional<Integer> monthOfTape = Optional.ofNullable(groupAIncidentReport.getMonthOfTape());
 			monthOfTape.ifPresent( m-> {
@@ -254,11 +244,32 @@ public class GroupAIncidentService {
 				administrativeSegment.setYearOfTape(String.valueOf(groupAIncidentReport.getYearOfTape()));
 			}
 			
-			administrativeSegment.setCityIndicator(groupAIncidentReport.getCityIndicator());
-			administrativeSegment.setStateCode(StringUtils.substring(groupAIncidentReport.getOri(), 0, 2));
 			administrativeSegment.setOri(groupAIncidentReport.getOri());
 			administrativeSegment.setIncidentNumber(groupAIncidentReport.getIncidentNumber());
-			administrativeSegment.setIncidentDate(DateUtils.asDate(groupAIncidentReport.getIncidentDate().getValue()));
+			
+			if (groupAIncidentReport.getYearOfTape() != null && groupAIncidentReport.getMonthOfTape() != null) {
+				boolean havingNewerSubmission = administrativeSegmentRepository.existsByIncidentNumberAndOriAndSubmissionDate
+						(administrativeSegment.getIncidentNumber(), administrativeSegment.getOri(), 
+								DateUtils.getStartDate(groupAIncidentReport.getYearOfTape(), groupAIncidentReport.getMonthOfTape()));
+				
+				if (havingNewerSubmission) {
+					continue;
+				}
+			}
+			
+			String reportActionType = String.valueOf(groupAIncidentReport.getReportActionType()).trim();
+			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
+				if (administrativeSegmentRepository
+						.existsByIncidentNumberAndOri(groupAIncidentReport.getIncidentNumber(), groupAIncidentReport.getOri())){
+					reportActionType = "R"; 
+				}
+			}
+			
+			administrativeSegment.setSegmentActionType(segmentActionTypeRepository.findFirstByStateCode(reportActionType));
+			
+			administrativeSegment.setCityIndicator(groupAIncidentReport.getCityIndicator());
+			administrativeSegment.setStateCode(StringUtils.substring(groupAIncidentReport.getOri(), 0, 2));
+			administrativeSegment.setIncidentDate(groupAIncidentReport.getIncidentDate().getValue());
 			administrativeSegment.setIncidentDateType(codeTableService.getDateType(DateUtils.asDate(groupAIncidentReport.getIncidentDate().getValue())));
 			administrativeSegment.setReportDateIndicator(groupAIncidentReport.getReportDateIndicator());
 			administrativeSegment.setReportDateIndicator(groupAIncidentReport.getReportDateIndicator());
@@ -604,7 +615,7 @@ public class GroupAIncidentService {
 				arresteeSegment.setAdministrativeSegment(administrativeSegment);
 				arresteeSegment.setArresteeSequenceNumber(arrestee.getArresteeSequenceNumber().getValue());
 				arresteeSegment.setArrestTransactionNumber(arrestee.getArrestTransactionNumber());
-				arresteeSegment.setArrestDate(DateUtils.asDate(arrestee.getArrestDate().getValue()));
+				arresteeSegment.setArrestDate(arrestee.getArrestDate().getValue());
 				arresteeSegment.setArrestDateType(codeTableService.getDateType(DateUtils.asDate(arrestee.getArrestDate().getValue())));
 				
 				TypeOfArrestType typeOfArrestType = codeTableService.getCodeTableType(
@@ -809,5 +820,10 @@ public class GroupAIncidentService {
 			offenseSegment.setTypeOfWeaponForceInvolveds(typeOfWeaponForceInvolveds);
 		}
 	}
+
+	public Integer deleteGroupAIncidentReports(String ori, String yearOfTape, String monthOfTape) {
+		return administrativeSegmentRepository.deleteByOriAndYearOfTapeAndMonthOfTape(ori, yearOfTape, monthOfTape);
+	}
+	
 
 }

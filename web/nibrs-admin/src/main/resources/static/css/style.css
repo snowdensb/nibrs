@@ -1,0 +1,405 @@
+/**
+ * Unless explicitly acquired and licensed from Licensor under another license, the contents of
+ * this file are subject to the Reciprocal Public License ("RPL") Version 1.5, or subsequent
+ * versions as allowed by the RPL, and You may not copy or use this file in either source code
+ * or executable form, except in compliance with the terms and conditions of the RPL
+ *
+ * All software distributed under the RPL is provided strictly on an "AS IS" basis, WITHOUT
+ * WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND LICENSOR HEREBY DISCLAIMS ALL SUCH
+ * WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE, QUIET ENJOYMENT, OR NON-INFRINGEMENT. See the RPL for specific language
+ * governing rights and limitations under the RPL.
+ *
+ * http://opensource.org/licenses/RPL-1.5
+ *
+ * Copyright 2012-2017 Open Justice Broker Consortium
+ */
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  /* background-color: #f5f5f5; */
+  background-color: #000000;
+  color:white;
+}
+
+.banner{
+  background-image: url('../images/osbi-banner-background.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position:center;
+  height:auto;
+  width:auto;
+  opacity: 1; 
+ }
+ 
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+main{
+	font-size:small;
+}
+
+.hscroll {
+  overflow: scroll; 
+  overflow-x: scroll;
+  overflow-y:hidden;	
+}
+
+#loadingAjaxPane, 
+#modalIframeSpinner, .modalIframeSpinner  { 
+  position: absolute;
+  background-color: #7e7e7e;
+  opacity: 0.75;
+  filter: alpha(opacity=75);
+  background-image: url('../images/loading.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  display:none;
+  z-index: 10000;
+}
+
+
+.centered {
+  text-align: center;
+}
+
+.loading-text {
+  width: auto;
+  position: absolute;
+  top: calc(50% + 25px);
+  left: calc(50% - 140px);
+  text-align: center;
+  font-size: normal;
+  color:#1B32A9;
+}
+
+table.dispositionsTable td.dataTables_empty {
+    text-align: left;    
+}
+
+.auditRequestPayload{
+	display: none;
+}
+
+table.dataTable tbody tr.selected {
+  background-color: #B0BED9;
+}
+
+header span.initials {
+    font-size: 4rem;
+    line-height: 1.3 !important;
+    display: inline-block;
+    font-family: "Arial Black", "Roboto", "Droid Sans", Arial !important;
+    font-weight: bold;
+    text-shadow: 0 4px 3px rgba(0, 0, 0, 0.4), 0 8px 13px rgba(0, 0, 0, 0.1), 0 18px 23px rgba(0, 0, 0, 0.1)
+}
+
+header span.fullname {
+    font-size: .8rem;
+    width: 20em;
+    text-transform: uppercase;
+    display: inline-block;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    margin-top: .7em;
+    letter-spacing: 1px;
+    line-height: 1.1 !important;
+    padding-left: 7px;
+    text-shadow: 0 4px 3px rgba(0, 0, 0, 0.4), 0 8px 13px rgba(0, 0, 0, 0.1), 0 18px 23px rgba(0, 0, 0, 0.1)
+}
+
+.navbar-dark {
+	background-color: #000000 !important;
+}
+
+.navbar-nav .dropdown-menu{
+	background-color: #262626;
+}
+.navbar-nav .dropdown-menu .dropdown-item{
+	color: #bfbfbf;
+}
+
+.navbar-nav .dropdown-item:hover, .dropdown-item:focus {
+  color: white;
+  text-decoration: none;
+  background-color: #808080;
+}
+
+
+/* drop box */
+.dropzone {
+  width: 100%; 
+  height: 100%;
+  border: 2px dashed #ccc;
+  color: darkgray ; 
+  line-height: calc(100vh - 590px);  
+  text-align: center;
+}
+
+.dropzone.dragover {
+  border-color: #000; 
+  color: #000;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputfileLabel {
+  cursor: pointer; /* "hand" cursor */
+  text-decoration: underline;
+}
+
+.inputfileLabel:focus{
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+
+.box.is-uploading .box__input {
+  visibility: none;
+}
+.box.is-uploading .box__uploading {
+  display: block;
+}
+
+.box__dragndrop,
+.box__uploading,
+.box__success,
+.box__error {
+  display: none;
+}
+
+.box.has-advanced-upload {
+  width: 100%; 
+  height: 800px; 
+  background-color: white;
+  outline: 2px dashed black;
+  outline-offset: -10px;
+}
+.box.has-advanced-upload .box__dragndrop {
+  display: inline;
+}
+
+#loadingFileAjaxPane  { 
+  position: absolute;
+  background-color: #7e7e7e;
+  opacity: 0.75;
+  filter: alpha(opacity=75);
+  background-image: url('../images/loading.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  display:none; 
+  top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  z-index: 10000;
+}
+
+#loading-img {
+  background-image: url('../images/loading.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+    display: none;
+    height: 100px; /* for testing purposes */
+    z-index: 12;
+}
+
+/* .navbar {
+  margin-bottom:0px!important;
+}
+ */
+.jumbotron{
+  margin-bottom:0px;
+  margin-top:0px; 
+}
+
+.jumbotron p{
+  font-size:small;  
+}
+
+.error, #errorMsg{
+  color:red; 
+}
+
+#mainContent{
+  font-size:small;
+}
+
+#version-alert{
+  font-size:small;
+  position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    margin:0 auto;
+}
+
+.hint{
+  color:gray; 
+  font-size: small; 
+  font-weight: bold; 
+  padding: 1em;
+}
+
+table.dataTable.display tbody tr.odd > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
+  background-color: rgba(123, 129, 221, 0.13);
+}
+table.dataTable.display tbody tr.even > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_1 {
+  background-color: rgba(228, 230, 255, 0.27);
+}
+table.dataTable.hover tbody tr:hover,
+table.dataTable.display tbody tr:hover {
+  background-color: rgba(255, 182, 0, 0.09);
+}
+/* CSS from Diane*/
+/*  a.fg-button.ui-button.ui-state-default.ui-state-disabled {
+  color: #2d3092;
+  font-weight: 600;
+}
+td:last-of-type {
+  text-transform: lowercase;
+}
+table.dataTable.display tbody tr.odd > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
+  background-color: rgba(123, 129, 221, 0.13);
+}
+table.dataTable.display tbody tr.even > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_1 {
+  background-color: rgba(228, 230, 255, 0.27);
+}
+table.dataTable.hover tbody tr:hover,
+table.dataTable.display tbody tr:hover {
+  background-color: rgba(255, 182, 0, 0.09);
+}
+table.dataTable thead th.ui-state-default,
+table.dataTable tfoot th.ui-state-default {
+  border-left-width: 0;
+  border-right: 1px dotted #ddd;
+}
+div#errorReport_length {
+  padding-right: 2em;
+}
+th.sorting.ui-state-default {
+  color: #7b7a7a;
+  font-weight: 600;
+  letter-spacing: .015em;
+}
+button.dt-button,
+div.dt-button,
+a.dt-button {
+  padding: 0.2em 1em;
+  border: 1px solid #ccc;
+  border-radius: 3em;
+}
+input[type="search"] {
+  border-radius: 3em;
+}
+ */
+/*lose big gray box*/
+.jumbotron {
+  background-color: #fff;
+}
+
+/*dark orange center circle with dashed outline*/
+.dropzone {
+    overflow: visible;
+    padding: 3em 1em;
+    width: 15em;
+    height: 15em;
+    border: 2px dashed #fbb03b;
+    color: #fff;
+    text-align: center;
+    margin: auto;
+    position: relative;
+    border-radius: 50%;
+    background: #f66137;
+    position: relative;
+    z-index: 0;
+    line-height: 1.3em;
+}
+
+/*medium orange ring*/
+.dropzone:before {
+  content: " ";
+  position: absolute;
+  z-index: -1;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  border: 18px solid #f68f20;
+  border-radius: 50%;
+}
+
+/*pale grey outer ring*/
+
+.dropzone:after {
+  content: " ";
+  position: absolute;
+  z-index: -2;
+  top: -30px;
+  left: -30px;
+  right: -30px;
+  bottom: -30px;
+  border: 18px solid #e8e7e6;
+  border-radius: 50%;
+}
+
+
+/*the text placement within the circle will need some small html edits to wrap the text in there in some tags: something like:
+
+<span>The file can be a single NIBRS text file or a zip file containing single NIBRS text file. <i>(drag-and-drop is not currently supported in IE)</i></span>
+
+styles below would be for that*/
+
+.dropzone span {
+    display: inline-block;
+    font-size: .8em;
+    line-height: 1.3em;
+    padding-top: 1em;
+}
+
+
+.dropzone span i {
+    color: #ffce8d;
+    font-size: .9em;
+    line-height: 1.2em;
+    display: inline-block;
+    font-weight: 500;
+}

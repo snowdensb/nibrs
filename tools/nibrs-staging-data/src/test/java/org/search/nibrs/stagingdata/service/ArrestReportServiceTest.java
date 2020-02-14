@@ -18,22 +18,21 @@ package org.search.nibrs.stagingdata.service;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.search.nibrs.model.GroupBArrestReport;
 import org.search.nibrs.stagingdata.model.ArrestReportSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.repository.ArresteeWasArmedWithTypeRepository;
@@ -50,6 +49,7 @@ import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentReposi
 import org.search.nibrs.stagingdata.util.BaselineIncidentFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -87,6 +87,7 @@ public class ArrestReportServiceTest {
 	public ArrestReportSegmentFactory arrestReportSegmentFactory; 
 	
 	@Test
+	@DirtiesContext
 	public void test() {
 		ArrestReportSegment arrestReportSegment = arrestReportSegmentFactory.getBasicArrestReportSegment();
 		arrestReportService.saveArrestReportSegment(arrestReportSegment); 
@@ -95,7 +96,7 @@ public class ArrestReportServiceTest {
 				arrestReportService.findArrestReportSegment(arrestReportSegment.getArrestReportSegmentId());
 		assertThat(persisted.getAgeOfArresteeMax(), equalTo(25));
 		assertThat(persisted.getAgeOfArresteeMin(), equalTo(22));
-		assertTrue(DateUtils.isSameDay(persisted.getArrestDate(), Date.from(LocalDateTime.of(2016, 6, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(persisted.getArrestDate(), equalTo(LocalDate.of(2016, 6, 12)));
 		
 		assertThat(persisted.getArrestDateType().getDateTypeId(), equalTo(2355));
 		assertThat(persisted.getArrestDateType().getDateMMDDYYYY(), equalTo("06122016"));
@@ -150,7 +151,7 @@ public class ArrestReportServiceTest {
 
 		assertThat(updated.getAgeOfArresteeMax(), equalTo(25));
 		assertThat(updated.getAgeOfArresteeMin(), equalTo(20));
-		assertTrue(DateUtils.isSameDay(updated.getArrestDate(), Date.from(LocalDateTime.of(2016, 6, 12, 10, 7, 46).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(updated.getArrestDate(), equalTo(LocalDate.of(2016, 6, 12)));
 		
 		assertThat(updated.getArrestDateType().getDateTypeId(), equalTo(2355));
 		assertThat(updated.getArrestDateType().getDateMMDDYYYY(), equalTo("06122016"));
@@ -200,6 +201,7 @@ public class ArrestReportServiceTest {
 	
 	
 	@Test
+	@DirtiesContext
 	public void processGroupBArrestReportTest(){
 		GroupBArrestReport groupBArrestReport = BaselineIncidentFactory.getBaselineGroupBArrestReport();
 		ArrestReportSegment arrestReportSegment = StreamSupport.stream(arrestReportService.saveGroupBArrestReports(groupBArrestReport).spliterator(), false)
@@ -217,7 +219,7 @@ public class ArrestReportServiceTest {
 		assertThat(persisted.getAgency().getAgencyOri(), equalTo("agencyORI"));
 		assertThat(persisted.getArrestTransactionNumber(), equalTo("12345"));
 		assertThat(persisted.getArresteeSequenceNumber(), equalTo(1));
-		assertTrue(DateUtils.isSameDay(persisted.getArrestDate(), Date.from(LocalDateTime.of(2017, 5, 16, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(persisted.getArrestDate(), equalTo(LocalDate.of(2017, 5, 16)));
 		assertThat(persisted.getArrestDateType().getDateTypeId(), equalTo(2693));
 		assertThat(persisted.getTypeOfArrestType().getStateCode(), equalTo("O"));
 		assertThat(persisted.getUcrOffenseCodeType().getStateCode(), equalTo("90A"));
@@ -268,7 +270,7 @@ public class ArrestReportServiceTest {
 		assertThat(updated.getAgency().getAgencyOri(), equalTo("agencyORI"));
 		assertThat(updated.getArrestTransactionNumber(), equalTo("12345"));
 		assertThat(updated.getArresteeSequenceNumber(), equalTo(1));
-		assertTrue(DateUtils.isSameDay(updated.getArrestDate(), Date.from(LocalDateTime.of(2017, 5, 16, 0, 0, 0).atZone(ZoneId.systemDefault()).toInstant())));
+		assertThat(updated.getArrestDate(), equalTo(LocalDate.of(2017, 5, 16)));
 		assertThat(updated.getArrestDateType().getDateTypeId(), equalTo(2693));
 		assertThat(updated.getTypeOfArrestType().getStateCode(), equalTo("T"));
 		assertThat(updated.getUcrOffenseCodeType().getStateCode(), equalTo("90A"));
@@ -287,5 +289,48 @@ public class ArrestReportServiceTest {
 		assertThat(arrestReportSegmentWasArmedWith.getArresteeWasArmedWithType().getStateCode(), equalTo("11"));
 		assertThat(arrestReportSegmentWasArmedWith.getAutomaticWeaponIndicator(), equalTo("Y"));
 	}
+	
+	@Test
+	@DirtiesContext
+	public void testFindAllByCriteria() {
+		ArrestReportSegment arrestReportSegment = arrestReportSegmentFactory.getBasicArrestReportSegment();
+		arrestReportService.saveArrestReportSegment(arrestReportSegment); 
+		
+		arrestReportSegment = arrestReportSegmentFactory.getBasicArrestReportSegment();
+		arrestReportSegment.setArrestDate(LocalDate.of(2017, 05, 12));
+		arrestReportSegment.setYearOfTape("2017");
+		arrestReportSegment.setMonthOfTape("01");
+		arrestReportService.saveArrestReportSegment(arrestReportSegment); 
+		
+		
+		List<ArrestReportSegment> arrestReportSegments = arrestReportService.findAllArrestReportSegment();
+		assertThat(arrestReportSegments.size(), equalTo(2));
+		
+		IncidentSearchRequest incidentSearchRequest = new IncidentSearchRequest();
+		long count = arrestReportService.countAllByCriteria(incidentSearchRequest); 
+		assertThat(count, equalTo(2L));
+		
+		List<IncidentPointer> incidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
+		assertThat(incidentSearchResults.size(), equalTo(2));
+		
+		incidentSearchRequest.setAgencyIds(Arrays.asList(1));
+		incidentSearchRequest.setIncidentDateRangeStartDate(LocalDate.of(2017, 05, 12));
+		incidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
+		assertThat(incidentSearchResults.size(), equalTo(1));
+		assertThat(incidentSearchResults.get(0).getPrimaryKey(), equalTo(2));
+		assertThat(incidentSearchResults.get(0).getIncidentDate(), equalTo(LocalDate.of(2017, 5, 12)));
+		
+		incidentSearchRequest.setIncidentDateRangeStartDate(null);
+		incidentSearchRequest.setSubmissionStartYear(2016);
+		incidentSearchRequest.setSubmissionEndYear(2016);
+		incidentSearchResults = arrestReportService.findAllByCriteria(incidentSearchRequest);
+		assertThat(incidentSearchResults.size(), equalTo(1));
+		assertThat(incidentSearchResults.get(0).getPrimaryKey(), equalTo(1));
+		assertThat(incidentSearchResults.get(0).getIncidentDate(), equalTo(LocalDate.of(2016, 6, 12)));
 
+		incidentSearchRequest.setSubmissionEndYear(2017);
+		count = arrestReportService.countAllByCriteria(incidentSearchRequest);
+		assertThat(count, equalTo(2L));
+
+	}
 }

@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
     public void configure(WebSecurity web) throws Exception {
 		if (appProperties.getSecurityEnabled()) {
-			web.ignoring().antMatchers("/css/**", "/images/**", "/js/**", "/testFiles/**", "/logoutSuccess/**", "/webjars/**");
+			web.ignoring().antMatchers("/toolLimitations/**","/css/**", "/images/**", "/js/**", "/testFiles/**", "/logoutSuccess/**", "/webjars/**", "/");
 		}
 		else {
 			web.ignoring().antMatchers("/**");

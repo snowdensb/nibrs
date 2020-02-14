@@ -708,10 +708,11 @@ public class PropertySegmentRulesFactory {
 			@Override
 			public NIBRSError apply(PropertySegment subject) {
 				NIBRSError ret = null;
-				String loss = subject.getTypeOfPropertyLoss();
 				
-				if (TypeOfPropertyLossCode.requirePropertyDescriptionValueCodeSet().contains(loss) 
-						&& (allNull(subject.getPropertyDescription()) &&
+				String loss = subject.getTypeOfPropertyLoss();
+				boolean violate = false; 
+				if (TypeOfPropertyLossCode.requirePropertyDescriptionValueCodeSet().contains(loss)){
+					if (allNull(subject.getPropertyDescription()) &&
 								allNull(subject.getValueOfProperty()) &&
 								allNull(subject.getDateRecovered()) &&
 								(subject.getNumberOfRecoveredMotorVehicles().getValue() == null) &&
@@ -719,13 +720,28 @@ public class PropertySegmentRulesFactory {
 								allNull(subject.getSuspectedDrugType()) &&
 								allNull(subject.getEstimatedDrugQuantity()) &&
 								allNull(subject.getTypeDrugMeasurement())
-								)) {
+								) {
+						violate = true; 
+					}
+					else if (notAllNull(subject.getPropertyDescription())){
+						for (int i = 0; i < subject.getPropertyDescription().length; i++) {
+							if (StringUtils.isNotBlank(subject.getPropertyDescription(i)) 
+									&& !PropertyDescriptionCode._10.code.equals(subject.getPropertyDescription(i))
+									&& (subject.getValueOfProperty(i) == null || subject.getValueOfProperty(i).isMissing())){
+								violate = true; 
+								break; 
+							}
+									
+						}
+					}
+				}
+				
+				if (violate) {
 					ret = subject.getErrorTemplate();
 					ret.setValue(loss);
 					ret.setNIBRSErrorCode(NIBRSErrorCode._372);
 					ret.setDataElementIdentifier("14");
 				}
-				
 				return ret;
 			}
 		};

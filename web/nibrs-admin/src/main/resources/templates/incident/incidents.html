@@ -1,0 +1,197 @@
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>OJBC Web Portal</title>
+		<th:block th:include="fragments/general.html :: headerfiles"></th:block>
+		<link rel="stylesheet" type="text/css" th:href="@{/webjars/datatables/1.10.19/css/dataTables.bootstrap4.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/5.2.0/css/all.css}" />
+		<link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+	   <!-- Begin page content -->
+	   <div th:fragment="resultsPage" class="container">
+	      <nav aria-label="breadcrumb">
+	           <ol class="breadcrumb">
+	           <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+	           <li class="breadcrumb-item active" aria-current="page">Incident Search Results</li>
+	         </ol>
+	      </nav>
+	      <h3>Incident Search Results</h3>
+	      <form th:replace="incident/incidentSearchForm.html :: incidentSearchFormContent" th:object="${incidentSearchRequest}">
+	      </form>
+	      <hr/>
+	       
+	      <div id="searchResultsList" th:fragment="resultsList" >
+		      <div class="alert alert-secondary" role="alert"
+		        th:if="${incidentSearchResult != null && incidentSearchResult.totalCount != incidentSearchResult.returnedCount}"
+            th:text=" 'The latest ' + ${incidentSearchResult.returnedCount} + ' of the ' + ${incidentSearchResult.totalCount} + 
+             ' records are shown in the table'">
+          </div>
+	        
+					<table id="searchResultsTable" class="table table-striped table-bordered dt-responsive display responsive" style="width: 100%; border-spacing: 0;" th:if="${incidentSearchResult != null}">
+						<thead>
+							<tr>
+								<th>Incident Identifier</th>
+								<th>Reporting Agency</th>
+								<th>Incident Date</th>
+								<th>Submission Date</th>
+								<th>UCR Offense Type</th>
+								<th>Report Type</th>
+								<th>FBI Status</th>
+							</tr>
+						</thead>
+					</table>
+				  <div class="modal ojbc-modal" id="reportDetailModal">
+	      		<div class="modalIframeSpinner" ></div>
+				    <div class="modal-dialog modal-lg">
+					    <div class="modal-content">
+					      <!-- Modal Header -->
+					      <div class="modal-header">
+					        <h4 class="modal-title"></h4>
+					        <button type="button" class="close" data-dismiss="modal">&times;</button>
+					      </div>
+					
+					      <!-- Modal body -->
+					      <div class="modal-body"></div>
+				
+					      <!-- Modal footer -->
+					      <div class="modal-footer">
+							     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					      </div>
+	         		</div>
+				    </div>
+			    </div>
+	      </div>
+	
+ 		  <script th:inline="javascript">
+		       /*<![CDATA[*/
+		          var context = [[@{/}]];
+	              var offenseCodeMapping = [[${offenseCodeMapping}]]; 
+		        /*]]>*/
+	
+		       $(function(){
+			            
+		          $.fn.dataTable.moment( 'MM/YYYY' );
+		        
+		          var table = $('#searchResultsTable').DataTable({
+	              ajax: context +"incidents/pointers",
+	              rowId: "primaryKey",
+	              columns: [
+	                  { "data": "incidentIdentifier" },
+	                  { "data": "agencyName" },
+	                  { "data": "incidentDate" },
+	                  { "data": "submissionDateString" },
+	                  { "data": "ucrOffenseCodeTypeId" },
+	                  { "data": "reportType" },
+	                  { "data": "fbiStatus" }, 
+	                  { "data": "primaryKey", "visible":false}
+	              ], 
+	              buttons: [
+	                  {
+	                      extend: 'excelHtml5',
+	                      title:'Incidents',
+	                      exportOptions: {
+	                          columns: ':visible'
+	                      }
+	                  },
+	                  {
+	                      extend: 'csvHtml5',
+	                      title:'Incidents',
+	                      exportOptions: {
+	                          columns: ':visible'
+	                      }
+	                  },
+	                  {
+	                      extend: 'pdfHtml5',
+	                      title:'Incidents',
+	                      orientation:'landscape', 
+	                      exportOptions: {
+	                          columns: ':visible'
+	                      }
+	                  },
+	                  'colvis'
+	              ],
+	              deferRender: true,
+		            responsive: true, 
+		            fixedHeader: { header: true },
+								columnDefs: [ 
+								    {
+								         "targets": [4],
+								         "render": function ( data, type, row, meta ) {
+								             if (offenseCodeMapping.hasOwnProperty(data)){
+								               return offenseCodeMapping[data];
+								             }
+								             else{
+								               return data;
+								             }
+								         }
+								    },
+								    {
+								         "targets": [5],
+								         "render": function ( data, type, row, meta ) {
+								             if (data === 'GroupA'){
+								               return 'Group A';
+								             }
+								             else if (data === 'GroupB' ){
+								               return 'Group B';
+								             }
+								             else {
+								            	 return data;
+								             }
+								         }
+								    }
+								],
+	              initComplete: function(settings, json) {
+	                  table.buttons().container()
+	                    .appendTo( '#searchResultsTable_length' ).addClass("mr-4");
+                }
+
+		          });
+		          
+		          $('[data-toggle="tooltip"]').tooltip({
+		              trigger : 'hover'
+		          });   
+		
+		                  
+		          $('#searchResultsTable tbody').on('click', 'tr',function() {
+		            table.$('tr.selected').removeClass('selected');
+		            $(this).addClass('selected');  
+		
+		            var rowData = table.row(this).data();
+		            var reportType = rowData.reportType; 
+		            xhr = $.get( context +"incidents/" + reportType + "/" + $(this).attr("id"), function(data) {
+		              $('#reportDetailModal .modal-body').html(data);
+		              
+		              if (reportType === "A"){
+		                $('#reportDetailModal .modal-title').html("Group A Incident");
+		              }
+		              else if (reportType === "B"){
+		                $('#reportDetailModal .modal-title').html("Group B Arrest");
+		              }
+		              $('#reportDetailModal').modal('show');
+		            }).fail(ojbc.displayFailMessage);
+		          });
+		        }); 
+		
+      	</script>
+	  </div>
+	
+	</body>
+</html>

@@ -17,11 +17,14 @@ package org.search.nibrs.report;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.search.nibrs.model.reports.arson.ArsonReport;
+import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
 import org.search.nibrs.report.service.ArsonExcelExporter;
 import org.search.nibrs.report.service.AsrExcelExporter;
-import org.search.nibrs.report.service.ExcelExporter;
+import org.search.nibrs.report.service.CargoTheftReportExporter;
+import org.search.nibrs.report.service.HumanTraffickingExporter;
+import org.search.nibrs.report.service.ReturnAFormExporter;
 import org.search.nibrs.report.service.StagingDataRestClient;
+import org.search.nibrs.report.service.SupplementaryHomicideReportExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -34,11 +37,18 @@ public class NibrsSummaryReportApplication implements CommandLineRunner{
 	@Autowired 
 	public StagingDataRestClient restClient; 
 	@Autowired 
-	public ExcelExporter excelExporter;
+	public ReturnAFormExporter excelExporter;
 	@Autowired 
 	public AsrExcelExporter asrExcelExporter;
 	@Autowired 
 	public ArsonExcelExporter arsonExcelExporter;
+	@Autowired 
+	public HumanTraffickingExporter humanTraffickingExporter;
+	@Autowired 
+	public SupplementaryHomicideReportExporter supplementaryHomicideReportExporter;
+	@Autowired 
+	public CargoTheftReportExporter cargoTheftReportExporter;
+
 	public static ConfigurableApplicationContext context;
 	
 	public static void main(String[] args) {
@@ -66,10 +76,19 @@ public class NibrsSummaryReportApplication implements CommandLineRunner{
 //        asrExcelExporter.exportAsrJuvenileForm(asrAdult);
 //        asrExcelExporter.exportAsrAdultForm(asrAdult);
         
-        ArsonReport arsonReport = restClient.getArsonReport(args[0], args[1], args[2]);
-        System.out.println("arsonReport: \n" + arsonReport);
-        arsonExcelExporter.exportArsonReport(arsonReport);
+//        ArsonReport arsonReport = restClient.getArsonReport(args[0], args[1], args[2]);
+//        System.out.println("arsonReport: \n" + arsonReport);
+//        arsonExcelExporter.exportArsonReport(arsonReport);
 
+//        HumanTraffickingForm humanTraffickingForm = restClient.getHumanTraffickingForm(args[0], args[1], args[2]);
+//        humanTraffickingExporter.exportHumanTraffickingReport(humanTraffickingForm);
+        
+//        SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReport(args[0], args[1], args[2]);
+//        supplementaryHomicideReportExporter.exportSupplementaryHomicideReport(supplementaryHomicideReport);
+        
+        CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(args[0], args[1], args[2]);
+        cargoTheftReportExporter.exportCargoTheftReport(cargoTheftReport);;
+        
 //        ReturnAForm returnAForm = restClient.getReturnAForm(args[0], args[1], args[2]);
 //        System.out.println("returnAForm: \n" + returnAForm);
 //        excelExporter.exportReturnAForm(returnAForm);

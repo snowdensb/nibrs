@@ -100,7 +100,7 @@
 		<dependency>
 			<groupId>org.search.nibrs</groupId>
 			<artifactId>nibrs-staging-data-common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		<!-- poi libs -->
 		<dependency>
@@ -145,6 +145,7 @@
 	</dependencies>
 
 	<build>
+	  <finalName>nibrs-staging-data</finalName>
 		<plugins>
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
@@ -169,11 +170,11 @@
 				<executions>
 					<execution>
 						<goals>
-	                        <goal>repackage</goal>
-	                    </goals>
-	                    <configuration>
-	                        <mainClass>org.search.nibrs.stagingdata.NibrsDataApplication</mainClass>
-	                    </configuration>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <mainClass>org.search.nibrs.stagingdata.NibrsDataApplication</mainClass>
+            </configuration>
 					</execution>
 				</executions>
 			</plugin>

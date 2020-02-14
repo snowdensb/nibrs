@@ -62,6 +62,10 @@ import org.search.nibrs.model.codes.PropertyDescriptionCode;
 import org.search.nibrs.model.codes.RelationshipOfVictimToOffenderCode;
 import org.search.nibrs.model.codes.TypeOfPropertyLossCode;
 import org.search.nibrs.xml.XmlUtils;
+import org.search.nibrs.xmlfile.NibrsXmlFileProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -81,9 +85,12 @@ import org.xml.sax.SAXException;
  * 
  */
 @Component
+@Scope(scopeName = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class XmlIncidentBuilder extends AbstractIncidentBuilder{
-	private static final Log log = LogFactory.getLog(XmlIncidentBuilder.class);;
+	private static final Log log = LogFactory.getLog(XmlIncidentBuilder.class);
 	
+	NibrsXmlFileProperties nibrsXmlFileProperties;
+
 	private DocumentBuilder documentBuilder; 
 	private List<String> automaticWeaponCodes = Arrays.asList("11A", "12A", "13A", "14A", "15A");
 
@@ -93,6 +100,12 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 		initDocumentBuilder();
 	}
 
+	@Autowired
+	public XmlIncidentBuilder(NibrsXmlFileProperties nibrsXmlFileProperties) throws ParserConfigurationException {
+		this();
+		this.nibrsXmlFileProperties = nibrsXmlFileProperties;
+	}
+	
 	private void initDocumentBuilder() throws ParserConfigurationException {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
@@ -333,7 +346,7 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 			
 			newArrestee.setAge(parseAgeNode(personNode, newArrestee));
 			newArrestee.setSex(XmlUtils.xPathStringSearch(personNode, "j:PersonSexCode"));
-			newArrestee.setRace(XmlUtils.xPathStringSearch(personNode, "j:PersonRaceNDExCode"));
+			newArrestee.setRace(XmlUtils.xPathStringSearch(personNode, nibrsXmlFileProperties.getRaceCodeXPath()));
 			newArrestee.setEthnicity(XmlUtils.xPathStringSearch(personNode, "j:PersonEthnicityCode"));
 			newArrestee.setResidentStatus(XmlUtils.xPathStringSearch(personNode, "j:PersonResidentCode"));
 			
@@ -638,7 +651,7 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 			
 			newArrestee.setAge(parseAgeNode(personNode, newArrestee));
 			newArrestee.setSex(XmlUtils.xPathStringSearch(personNode, "j:PersonSexCode"));
-			newArrestee.setRace(XmlUtils.xPathStringSearch(personNode, "j:PersonRaceNDExCode"));
+			newArrestee.setRace(XmlUtils.xPathStringSearch(personNode, nibrsXmlFileProperties.getRaceCodeXPath()));
 			newArrestee.setEthnicity(XmlUtils.xPathStringSearch(personNode, "j:PersonEthnicityCode"));
 			newArrestee.setResidentStatus(XmlUtils.xPathStringSearch(personNode, "j:PersonResidentCode"));
 			
@@ -690,7 +703,7 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 			
 			newOffender.setAge(parseAgeNode(personNode, newOffender));
 			newOffender.setSex(XmlUtils.xPathStringSearch(personNode, "j:PersonSexCode"));
-			newOffender.setRace(XmlUtils.xPathStringSearch(personNode, "j:PersonRaceNDExCode"));
+			newOffender.setRace(XmlUtils.xPathStringSearch(personNode, nibrsXmlFileProperties.getRaceCodeXPath()));
 			newOffender.setEthnicity(XmlUtils.xPathStringSearch(personNode, "j:PersonEthnicityCode"));
 			
 			incident.addOffender(newOffender);
@@ -799,7 +812,7 @@ public class XmlIncidentBuilder extends AbstractIncidentBuilder{
 			
 			newVictim.setAge(parseAgeNode(personNode, newVictim));
 			newVictim.setSex(XmlUtils.xPathStringSearch(personNode, "j:PersonSexCode"));
-			newVictim.setRace(XmlUtils.xPathStringSearch(personNode, "j:PersonRaceNDExCode"));
+			newVictim.setRace(XmlUtils.xPathStringSearch(personNode, nibrsXmlFileProperties.getRaceCodeXPath()));
 			newVictim.setEthnicity(XmlUtils.xPathStringSearch(personNode, "j:PersonEthnicityCode"));
 			newVictim.setResidentStatus(XmlUtils.xPathStringSearch(personNode, "j:PersonResidentCode"));
 			newVictim.setAggravatedAssaultHomicideCircumstances(0, XmlUtils.xPathStringSearch(victimElement, "j:VictimAggravatedAssaultHomicideFactorCode"));

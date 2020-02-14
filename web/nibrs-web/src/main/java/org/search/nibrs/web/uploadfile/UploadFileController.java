@@ -39,7 +39,7 @@ import org.search.nibrs.common.NIBRSJsonError;
 import org.search.nibrs.importer.ReportListener;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.util.NibrsFileUtils;
-import org.search.nibrs.validate.common.NibrsValidationUtils;
+import org.search.nibrs.validate.common.SubmissionFileValidator;
 import org.search.nibrs.validation.SubmissionValidator;
 import org.search.nibrs.web.AppProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,6 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -67,18 +66,22 @@ public class UploadFileController {
 	@Autowired
 	SubmissionValidator submissionValidator;
 
+	@Autowired
+	SubmissionFileValidator submissionFileValidator;
+	
 	final List<String> acceptedFileTypes = 
 			Arrays.asList("application/zip", "text/plain", "application/octet-stream", "text/xml", "application/xml");
-	
-	@ModelAttribute("showUserInfoDropdown")
-	public Boolean getShowUserInfoDropDown(){
-		return appProperties.getShowUserInfoDropdown(); 
-	}
 	
 	@GetMapping("/")
 	public String getFileUploadForm(Model model) throws IOException {
 	
 	    return "index";
+	}
+	
+	@GetMapping("/home")
+	public String getFrontPage(Model model) throws IOException {
+		
+		return "home";
 	}
 	
 	@GetMapping("/logout")
@@ -195,7 +198,7 @@ public class UploadFileController {
 				validateZippedFile( validatorListener, multipartFile.getInputStream());
 			}
 			else {
-				NibrsValidationUtils.validateInputStream(
+				submissionFileValidator.validateInputStream(
 						validatorListener, multipartFile.getContentType(), multipartFile.getInputStream(), "console");
 			}
 			
@@ -258,7 +261,7 @@ public class UploadFileController {
 		    String mediaType = NibrsFileUtils.getMediaType(inStream);
 
 		    try {
-		    	NibrsValidationUtils.validateInputStream(validatorlistener, mediaType, inStream, "console");
+		    	submissionFileValidator.validateInputStream(validatorlistener, mediaType, inStream, "console");
 			} catch (ParserConfigurationException e) {
 				log.error("Got exception while parsing the file " + zipEntry.getName(), e);
 			}

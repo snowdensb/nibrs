@@ -36,9 +36,18 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 	@Query("SELECT count(*) > 0 from ArrestReportSegment a "
 			+ "LEFT JOIN a.segmentActionType s "
 			+ "WHERE a.arrestReportSegmentId = "
-			+ "			(SELECT max(arrestReportSegmentId) FROM ArrestReportSegment where arrestTransactionNumber = ?1 ) "
+			+ "			(SELECT max(arrestReportSegmentId) FROM ArrestReportSegment "
+			+ "				where arrestTransactionNumber = ?1 AND ori = ?2 ) "
 			+ "		AND s.nibrsCode != 'D' ")
-	boolean existsByArrestTransactionNumber(String arrestTransactionNumber);
+	boolean existsByArrestTransactionNumberAndOri(String arrestTransactionNumber, String ori);
+	
+	@Query("SELECT count(*) > 0 from ArrestReportSegment a "
+			+ "LEFT JOIN a.segmentActionType s "
+			+ "WHERE a.arrestReportSegmentId = "
+			+ "			(SELECT max(arrestReportSegmentId) FROM ArrestReportSegment "
+			+ "				where arrestTransactionNumber = ?1 AND ori = ?2 ) "
+			+ "		and cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) > ?3")
+	boolean existsByArrestTransactionNumberAndOriAndSubmissionDate(String arrestTransactionNumber, String ori, Date submissionDate);
 	
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)
 	ArrestReportSegment findByArrestReportSegmentId(Integer arrestReportSegmentId);
@@ -53,20 +62,25 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 			+ "INNER JOIN a.ucrOffenseCodeType u "
 			+ "WHERE u.nibrsCode != '90I' AND "
 			+ "		(?1 = null OR a.ori in (?1)) AND "
+			+ "		(?4 = null OR a.agency.agencyId in (?4)) AND "
 			+ "		(?2 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) >= ?2) AND "
-			+ "		(?3 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) <= ?3) "
+			+ "		(?3 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) <= ?3) AND "
+			+ "     ( a.submission = null )"
 			+ "ORDER BY a.arrestReportSegmentId asc ")
 	List<Integer> findIdsByOriListAndSubmissionDateRange(List<String> ori, Date startDate, 
-			Date endDate);
+			Date endDate, List<Integer> agencyIds);
 	
 	@Query("SELECT count(DISTINCT a.arrestReportSegmentId) from ArrestReportSegment a "
 			+ "INNER JOIN a.ucrOffenseCodeType u "
 			+ "WHERE u.nibrsCode != '90I' AND "
 			+ "		(?1 = null OR a.ori in (?1)) AND "
+			+ "		(?4 = null OR a.agency.agencyId in (?4)) AND "
 			+ "		(?2 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) >= ?2) AND "
-			+ "		(?3 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) <= ?3) ")
+			+ "		(?3 = null OR cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) <= ?3) AND "
+			+ "     ( a.submission = null )"
+			)
 	long countByOriListAndSubmissionDateRange(List<String> oris, Date startDate, 
-			Date endDate);
+			Date endDate, List<Integer> agencyIds);
 	
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)
 	List<ArrestReportSegment> findAllById(Iterable<Integer> ids);

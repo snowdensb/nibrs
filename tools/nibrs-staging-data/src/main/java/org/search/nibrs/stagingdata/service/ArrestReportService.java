@@ -43,6 +43,8 @@ import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
+import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.repository.AdditionalJustifiableHomicideCircumstancesTypeRepository;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
@@ -74,6 +76,7 @@ import org.search.nibrs.stagingdata.repository.TypePropertyLossEtcTypeRepository
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.VictimOffenderRelationshipTypeRepository;
 import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentRepository;
+import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentRepositoryCustom;
 import org.search.nibrs.stagingdata.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -151,6 +154,8 @@ public class ArrestReportService {
 	@Autowired
 	public VictimOffenderRelationshipTypeRepository victimOffenderRelationshipTypeRepository; 
 	@Autowired
+	ArrestReportSegmentRepositoryCustom arrestReportSegmentRepositoryCustom;
+	@Autowired
 	public CodeTableService codeTableService; 
 	
 	@Transactional
@@ -158,7 +163,14 @@ public class ArrestReportService {
 		return arrestReportSegmentRepository.save(arrestReportSegment);
 	}
 	
-	@Transactional
+	public List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest){
+		return arrestReportSegmentRepositoryCustom.findAllByCriteria(incidentSearchRequest);
+	}
+	
+	public long countAllByCriteria(IncidentSearchRequest incidentSearchRequest){
+		return arrestReportSegmentRepositoryCustom.countAllByCriteria(incidentSearchRequest);
+	}
+	
 	public ArrestReportSegment findArrestReportSegment(Integer id){
 		return arrestReportSegmentRepository.findByArrestReportSegmentId(id);
 	}
@@ -211,11 +223,22 @@ public class ArrestReportService {
 			
 			arrestReportSegment.setArrestTransactionNumber(groupBArrestReport.getIdentifier());
 			arrestReportSegment.setAgency(agencyRepository.findFirstByAgencyOri(groupBArrestReport.getOri()));
+			arrestReportSegment.setOri(groupBArrestReport.getOri());
+			
+			if (groupBArrestReport.getYearOfTape() != null && groupBArrestReport.getMonthOfTape() != null) {
+				boolean havingNewerSubmission = arrestReportSegmentRepository.existsByArrestTransactionNumberAndOriAndSubmissionDate
+						(arrestReportSegment.getArrestTransactionNumber(), arrestReportSegment.getOri(), 
+								DateUtils.getStartDate(groupBArrestReport.getYearOfTape(), groupBArrestReport.getMonthOfTape()));
+				
+				if (havingNewerSubmission) {
+					continue;
+				}
+			}
 			
 			String reportActionType = String.valueOf(groupBArrestReport.getReportActionType()).trim();
-			
 			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
-				if (arrestReportSegmentRepository.existsByArrestTransactionNumber(groupBArrestReport.getIdentifier())){
+				if (arrestReportSegmentRepository
+						.existsByArrestTransactionNumberAndOri(groupBArrestReport.getIdentifier(), groupBArrestReport.getOri())){
 					reportActionType = "R"; 
 				}
 			}
@@ -234,7 +257,6 @@ public class ArrestReportService {
 			}
 			
 			arrestReportSegment.setCityIndicator(groupBArrestReport.getCityIndicator());
-			arrestReportSegment.setOri(groupBArrestReport.getOri());
 			arrestReportSegment.setStateCode(StringUtils.substring(groupBArrestReport.getOri(), 0, 2));
 			Agency agency = codeTableService.getCodeTableType(groupBArrestReport.getOri(), 
 					agencyRepository::findFirstByAgencyOri, Agency::new); 
@@ -242,7 +264,7 @@ public class ArrestReportService {
 	
 			arrestReportSegment.setArresteeSequenceNumber(groupBArrestReport.getArresteeSequenceNumber());
 			
-			arrestReportSegment.setArrestDate(DateUtils.asDate(groupBArrestReport.getArrestDate()));
+			arrestReportSegment.setArrestDate(groupBArrestReport.getArrestDate());
 			arrestReportSegment.setArrestDateType(codeTableService.getDateType(DateUtils.asDate(groupBArrestReport.getArrestDate())));
 			
 			TypeOfArrestType typeOfArrestType = codeTableService.getCodeTableType(
@@ -320,5 +342,10 @@ public class ArrestReportService {
 		if (!armedWiths.isEmpty()){
 			arrestReportSegment.setArrestReportSegmentWasArmedWiths(armedWiths);
 		}
+	}
+	
+	@Transactional
+	public int deleteByOriAndSubmissionDate(String ori, String yearOfTape, String monthOfTape) {
+		return arrestReportSegmentRepositoryCustom.deleteByOriAndSubmissionDate(ori, yearOfTape, monthOfTape);
 	}
 }

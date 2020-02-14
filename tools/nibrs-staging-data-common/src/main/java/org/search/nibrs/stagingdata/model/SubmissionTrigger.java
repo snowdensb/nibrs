@@ -20,16 +20,36 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
+import org.search.nibrs.stagingdata.util.DateUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class SubmissionTrigger {
 	private List<String> oris; 
+	private List<Integer> agencyIds; 
 	private Integer startYear; 
 	private Integer startMonth; 
 	private Integer endYear; 
 	private Integer endMonth; 
+	
+	public SubmissionTrigger() {
+		super();
+	}
+	
+	public SubmissionTrigger(IncidentSearchRequest incidentSearchRequest) {
+		super();
+		
+		if (incidentSearchRequest.getAgencyIds() != null 
+				&& incidentSearchRequest.getAgencyIds().size() > 0) {
+			this.agencyIds = incidentSearchRequest.getAgencyIds();
+		}
+		this.startYear = incidentSearchRequest.getSubmissionStartYear(); 
+		this.endYear = incidentSearchRequest.getSubmissionEndYear(); 
+		this.startMonth = incidentSearchRequest.getSubmissionStartMonth(); 
+		this.endMonth = incidentSearchRequest.getSubmissionEndMonth();
+	}
 	
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
@@ -80,7 +100,7 @@ public class SubmissionTrigger {
 		if (startYear != null && startYear > 0) {
 			LocalDate localDate = LocalDate.of(startYear, 1, 1);
 			
-			if (isValidMonth(startMonth)) {
+			if (DateUtils.isValidMonth(startMonth)) {
 					localDate = LocalDate.of(startYear, startMonth, 1);
 			}
 			date = java.sql.Date.valueOf(localDate);
@@ -95,7 +115,7 @@ public class SubmissionTrigger {
 		if (endYear != null && endYear > 0) {
 			LocalDate localDate = LocalDate.of(endYear, 12, 31);
 			
-			if (isValidMonth(endMonth)) {
+			if (DateUtils.isValidMonth(endMonth)) {
 					if (endMonth < 12) {
 						localDate = LocalDate.of(endYear, endMonth+1, 1).minusDays(1);
 					}
@@ -110,8 +130,13 @@ public class SubmissionTrigger {
 		return date;
 	}
 	
-	private boolean isValidMonth(Integer month) {
-		return month != null && month > 0 && month <=12;
+
+	public List<Integer> getAgencyIds() {
+		return agencyIds;
+	}
+
+	public void setAgencyIds(List<Integer> agencyIds) {
+		this.agencyIds = agencyIds;
 	}
 
 }

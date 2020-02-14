@@ -65,6 +65,7 @@ public class VictimSegmentRulesFactory {
 
 	private List<Rule<VictimSegment>> rulesList__2_1;
 	private List<Rule<VictimSegment>> rulesList__3_1;
+	private List<Rule<VictimSegment>> rulesList__2019;
 	private PersonSegmentRulesFactory<VictimSegment> personSegmentRulesFactory;
 	
 	public static VictimSegmentRulesFactory instance(ValidatorProperties validatorProperties) {
@@ -203,6 +204,10 @@ public class VictimSegmentRulesFactory {
 		rulesList__3_1.remove(rule450);
 		rulesList__3_1.add(getRule450ForAgeOfVictim__3_1());
 		
+		rulesList__2019 = new ArrayList<Rule<VictimSegment>>();
+		rulesList__2019.addAll(rulesList__3_1);
+		rulesList__2019.remove(getRule459ForOffenderNumberToBeRelated());
+		
 	}
 		
 	public List<Rule<VictimSegment>> getRulesList() {
@@ -214,6 +219,8 @@ public class VictimSegmentRulesFactory {
 			return rulesList__2_1;
 		} else if (ValidationConstants.SPEC__3_1.equals(specVersion)) {
 			return rulesList__3_1;
+		} else if (ValidationConstants.SPEC__2019.contentEquals(specVersion)) {
+			return rulesList__2019;
 		}
 		throw new IllegalArgumentException("Invalid spec version: " + specVersion);
 	}	
@@ -239,6 +246,34 @@ public class VictimSegmentRulesFactory {
 						break;
 					}
 				}
+				return e;
+			}
+		};
+	}
+	
+	Rule<VictimSegment> getRule085_31() {
+		return new Rule<VictimSegment>() {
+			@Override
+			public NIBRSError apply(VictimSegment subject) {
+				NIBRSError e = null;
+				GroupAIncidentReport parent = (GroupAIncidentReport) subject.getParentReport();
+				
+				if (parent.getOffenderCount() >= 3 
+						&& subject.isPerson()
+						&& (subject.getUcrOffenseCodeList().contains(OffenseCode._120.code)||
+							OffenseCode.containsCrimeAgainstPersonCode(subject.getUcrOffenseCodeList()))
+						){
+					long relatedOffenderCount = subject.getOffenderNumberRelatedList().stream()
+							.filter(item->!(item.isInvalid() || item.isMissing() ||item.getValue() == null)).count();
+					if (relatedOffenderCount < 2){
+						e = subject.getErrorTemplate();
+						e.setNIBRSErrorCode(NIBRSErrorCode._085);
+						e.setDataElementIdentifier("34");
+						e.setCrossSegment(true);
+						e.setWithinSegmentIdentifier(null); 
+					}
+				}
+					
 				return e;
 			}
 		};
@@ -271,6 +306,7 @@ public class VictimSegmentRulesFactory {
 			}
 		};
 	}
+			
 			
 	Rule<VictimSegment> getRule401ForSequenceNumber() {
 		return new Rule<VictimSegment>() {
@@ -581,6 +617,47 @@ public class VictimSegmentRulesFactory {
 							
 					if ((isMandatory && (StringUtils.isBlank(relationship) || !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship)))
 						||(!isMandatory && (StringUtils.isNotBlank(relationship)) && !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship))) {
+						invalidRelationships.add(StringUtils.trimToEmpty(relationship));
+					}
+				}
+				
+				if ( !invalidRelationships.isEmpty() ){
+					e = victimSegment.getErrorTemplate();
+					e.setNIBRSErrorCode(NIBRSErrorCode._404);
+					e.setDataElementIdentifier("35");
+					e.setValue(invalidRelationships);
+				}
+
+				return e;
+				
+			}
+
+			private boolean isEmpty(ParsedObject<Integer> offenderNumber) {
+				return offenderNumber.getValue() == null || offenderNumber.getValue() == 0;
+			}
+		};
+	}
+	
+	Rule<VictimSegment> getRule404ForRelationshipOfVictimToOffender_31() {
+		return new Rule<VictimSegment>() {
+			@Override
+			public NIBRSError apply(VictimSegment victimSegment) {
+				
+				NIBRSError e = null;
+				
+				List<ParsedObject<Integer>> relatedOffenderNumbers = victimSegment.getOffenderNumberRelatedList();
+				List<String> relationships = victimSegment.getVictimOffenderRelationshipList();
+				List<String> invalidRelationships = new ArrayList<>();
+				
+				for (int i= 0; i<relatedOffenderNumbers.size(); i++){
+					ParsedObject<Integer> offenderNumber = relatedOffenderNumbers.get(i);
+					String relationship = relationships.get(i);
+					boolean isMandatory = !isEmpty(offenderNumber) &&
+							(OffenseCode.containsCrimeAgainstPersonCode(victimSegment.getUcrOffenseCodeList())
+									|| OffenseCode.containsCrimeAgainstPropertyCode(victimSegment.getUcrOffenseCodeList())); 
+							
+					if ((isMandatory && (StringUtils.isBlank(relationship) || (!RelationshipOfVictimToOffenderCode.codeSet().contains(relationship) && !"HR".equalsIgnoreCase(relationship))))
+						||(!isMandatory && (StringUtils.isNotBlank(relationship)) && !RelationshipOfVictimToOffenderCode.codeSet().contains(relationship) && !"HR".equalsIgnoreCase(relationship))) {
 						invalidRelationships.add(StringUtils.trimToEmpty(relationship));
 					}
 				}

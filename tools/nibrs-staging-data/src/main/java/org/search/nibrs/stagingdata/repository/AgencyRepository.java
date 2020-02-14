@@ -15,9 +15,18 @@
  */
 package org.search.nibrs.stagingdata.repository;
 
-import org.search.nibrs.stagingdata.model.Agency;
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
 
-public interface AgencyRepository extends CrudRepository<Agency, Integer>{
+import org.search.nibrs.stagingdata.model.Agency;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+public interface AgencyRepository extends JpaRepository<Agency, Integer>{
 	public Agency findFirstByAgencyOri(String agencyOri);
+	
+	@Query("SELECT a from Agency a "
+		+ "WHERE exists (select adminSegment from AdministrativeSegment adminSegment where adminSegment.agency.agencyId = a.agencyId ) "
+		+ "		OR exists (select arrestReportSegment from ArrestReportSegment arrestReportSegment where arrestReportSegment.agency.agencyId = a.agencyId )  "
+		+ "Order BY a.agencyName ")
+	public List<Agency> findAllHavingData();
 }

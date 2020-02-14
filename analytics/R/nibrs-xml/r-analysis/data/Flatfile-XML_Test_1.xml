@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/2019" 
+	xmlns:cjis="http://fbi.gov/cjis/2.0" 
+	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/2.0" 
+	xmlns:i="http://release.niem.gov/niem/appinfo/3.0/" 
+	xmlns:ucr="http://release.niem.gov/niem/codes/fbi_ucr/3.2/" 
+	xmlns:j="http://release.niem.gov/niem/domains/jxdm/5.2/" 
+	xmlns:term="http://release.niem.gov/niem/localTerminology/3.0/" 
+	xmlns:nc="http://release.niem.gov/niem/niem-core/3.0/"
+	xmlns:niem-xsd="http://release.niem.gov/niem/proxy/xsd/3.0/" 
+	xmlns:s="http://release.niem.gov/niem/structures/3.0/" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/2019" 
+	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/2019 ../base-xsd/nibrs/2019/nibrs.xsd">
+	<cjis:MessageMetadata>
+		<!-- Message Timestamp -->
+		<cjis:MessageDateTime>2017-03-23T03:00:00</cjis:MessageDateTime>
+		<!-- Message ID -->
+		<cjis:MessageIdentification>
+			<nc:IdentificationID>123456</nc:IdentificationID>
+		</cjis:MessageIdentification>
+		<!-- NIBRS IEPD Version -->
+		<cjis:MessageImplementationVersion>4.2</cjis:MessageImplementationVersion>
+		<cjis:MessageSubmittingOrganization>
+			<j:OrganizationAugmentation>
+				<j:OrganizationORIIdentification>
+					<!-- Submitting Agency ORI -->
+					<nc:IdentificationID>HI0020000</nc:IdentificationID>
+				</j:OrganizationORIIdentification>
+			</j:OrganizationAugmentation>
+		</cjis:MessageSubmittingOrganization>
+	</cjis:MessageMetadata>
+	<nibrs:Report>
+		<nibrs:ReportHeader>
+			<!-- Submission Type -->
+			<nibrs:NIBRSReportCategoryCode>GROUP A INCIDENT REPORT</nibrs:NIBRSReportCategoryCode>
+			<!-- Submission Action Type -->
+			<nibrs:ReportActionCategoryCode>I</nibrs:ReportActionCategoryCode>
+			<!-- Year/Month Of Report -->
+			<nibrs:ReportDate>
+				<nc:YearMonthDate>2016-02</nc:YearMonthDate>
+			</nibrs:ReportDate>
+			<nibrs:ReportingAgency>
+				<j:OrganizationAugmentation>
+					<j:OrganizationORIIdentification>
+						<!-- Element 1, ORI Code, Owning Agency ORI -->
+						<nc:IdentificationID>HI0020000</nc:IdentificationID>
+					</j:OrganizationORIIdentification>
+				</j:OrganizationAugmentation>
+			</nibrs:ReportingAgency>
+		</nibrs:ReportHeader>
+		<nc:Incident>
+			<nc:ActivityIdentification>
+				<!-- Element 2, Incident Number -->
+				<nc:IdentificationID>19263469-1</nc:IdentificationID>
+			</nc:ActivityIdentification>
+			<nc:ActivityDate>
+				<nc:YearMonthDate>2019-07</nc:YearMonthDate>
+				<!-- Element 3, Incident Date and Hour -->
+				<nc:DateTime>2019-07-13T14:00:00</nc:DateTime>
+				<!-- Element 3, Incident Date if Hour is Unknown -->
+				<nc:Date>2019-07-13</nc:Date>
+			</nc:ActivityDate>
+			<cjis:IncidentAugmentation>
+				<!-- Element 3, IncidentReportDateIndicator is true to designate that the ActivityDate is the Report Date rather than the Incident 
+					Date -->
+				<cjis:IncidentReportDateIndicator>false</cjis:IncidentReportDateIndicator>
+			</cjis:IncidentAugmentation>
+			<j:IncidentAugmentation>
+				<!-- Element 4, Cleared Exceptionally -->
+				<j:IncidentExceptionalClearanceCode>N</j:IncidentExceptionalClearanceCode>
+				<!-- Element 5, Exceptional Clearance Date -->
+				<!-- j:IncidentExceptionalClearanceDate> <nc:Date>2016-02-25</nc:Date> </j:IncidentExceptionalClearanceDate -->
+			</j:IncidentAugmentation>
+		</nc:Incident>
+		<j:Offense s:id="Offense1">
+			<!-- Element 6, Offense Code -->
+			<nibrs:OffenseUCRCode>220</nibrs:OffenseUCRCode>
+			<!-- Element 12, Type Criminal Activity/Gang Information -->
+			<!-- Element 8A, Bias Motivation -->
+			<j:OffenseFactorBiasMotivationCode>88</j:OffenseFactorBiasMotivationCode>
+			<!-- Element 10, Number Of Premises Entered -->
+			<!-- Element 8, Offender(s) Suspected Of Using -->
+			<j:OffenseFactor>
+				<j:OffenseFactorCode>N</j:OffenseFactorCode>
+			</j:OffenseFactor>
+			<!-- Element 11, Method Of Entry -->
+			<j:OffenseEntryPoint>
+				<j:PassagePointMethodCode>F</j:PassagePointMethodCode>
+			</j:OffenseEntryPoint>			
+			<!-- Element 13, Type Weapon/Force Involved -->
+			<!-- Element 7, Attempted/Completed -->
+			<j:OffenseAttemptedIndicator>false</j:OffenseAttemptedIndicator>
+		</j:Offense>
+		<!-- Begin Property -->
+		<!-- Element 9, Location Type -->
+		<nc:Location s:id="Location1">
+			<nibrs:LocationCategoryCode>20</nibrs:LocationCategoryCode>
+		</nc:Location>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>53200</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>21</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>1607</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>16</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>200</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>75</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>100</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>44</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>100</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>6</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>75</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>25</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>50</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>72</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>15</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>36</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>12</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>20</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>0</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<!-- REMOVED ITEM VALUE DATE -->
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>77</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>53200</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>21</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>1607</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>17</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>200</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>75</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>100</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>44</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>100</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>6</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>75</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>25</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>50</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>72</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>15</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>36</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>12</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>20</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<nc:Item>
+			<!-- Element 14, Type Property Loss/etc Substituted for nc:ItemStatus -->
+			<nc:ItemStatus>
+				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
+			</nc:ItemStatus>
+			<!-- Element 16, Value of Property in US Dollars -->
+			<nc:ItemValue>
+				<nc:ItemValueAmount>
+					<nc:Amount>0</nc:Amount>
+				</nc:ItemValueAmount>
+				<!-- Element 17, Date Recovered -->
+				<nc:ItemValueDate>
+					<nc:Date>2019-07-13</nc:Date>
+					<nc:DateTime>2019-07-13T03:00:00</nc:DateTime>
+				</nc:ItemValueDate>
+			</nc:ItemValue>
+			<!-- Element 15, Property Description -->
+			<j:ItemCategoryNIBRSPropertyCategoryCode>77</j:ItemCategoryNIBRSPropertyCategoryCode>
+			<!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
+		</nc:Item>
+		<!--End Property -->
+		<nc:Person s:id="PersonVictim1">
+			<!-- Element 26, Age of Victim (only one would be included per victim) -->
+			<nc:PersonAgeMeasure>
+				<nc:MeasureIntegerValue>74</nc:MeasureIntegerValue>
+			</nc:PersonAgeMeasure>
+			<!-- Element 29, Ethnicity of Victim -->
+			<j:PersonEthnicityCode>N</j:PersonEthnicityCode>
+			<!-- Element 28, Race of Victim -->
+			<j:PersonRaceNDExCode>W</j:PersonRaceNDExCode>
+			<!-- Element 30, Resident Status -->
+			<j:PersonResidentCode>R</j:PersonResidentCode>
+			<!-- Element 27, Sex of Victim -->
+			<j:PersonSexCode>M</j:PersonSexCode>
+		</nc:Person>
+		<nc:Person s:id="PersonSubject1">
+			<!-- Element 37, Age of Subject (only one would be included per subject) -->
+			<nc:PersonAgeMeasure>
+				<nc:MeasureIntegerRange>
+					<nc:RangeMaximumIntegerValue>29</nc:RangeMaximumIntegerValue>
+					<nc:RangeMinimumIntegerValue>29</nc:RangeMinimumIntegerValue>
+				</nc:MeasureIntegerRange>
+			</nc:PersonAgeMeasure>
+			<!-- Element 39A, Ethnicity of Subject -->
+			<j:PersonEthnicityCode>N</j:PersonEthnicityCode>
+			<!-- Element 39, Race of Subject -->
+			<j:PersonRaceNDExCode>B</j:PersonRaceNDExCode>
+			<!-- Element 38, Sex of Subject -->
+			<j:PersonSexCode>M</j:PersonSexCode>
+		</nc:Person>
+		<j:Victim s:id="Victim1">
+			<nc:RoleOfPerson s:ref="PersonVictim1" />
+			<!-- Element 23, Victim Sequence Number -->
+			<j:VictimSequenceNumberText>1</j:VictimSequenceNumberText>
+			<!-- Element 33, Type Injury -->
+			<j:VictimInjury>
+				<j:InjuryCategoryCode></j:InjuryCategoryCode>
+			</j:VictimInjury>							
+			<!-- Element 25, Type of Victim -->
+			<j:VictimCategoryCode>I</j:VictimCategoryCode>
+			<!-- Element 31, Aggravated Assault/Homicide Circumstances -->
+			<j:VictimAggravatedAssaultHomicideFactorCode></j:VictimAggravatedAssaultHomicideFactorCode>
+			<!-- Element 32, Additional Justifiable Homicide Circumstances -->
+			<j:VictimJustifiableHomicideFactorCode></j:VictimJustifiableHomicideFactorCode>
+		</j:Victim>
+		<j:Subject s:id="Subject1">
+			<nc:RoleOfPerson s:ref="PersonSubject1" />
+			<!-- Element 36, Offender Sequence Number -->
+			<j:SubjectSequenceNumberText>1</j:SubjectSequenceNumberText>
+		</j:Subject>
+		<!-- Associations ================================================== -->
+		<!-- Offense Location Association -->
+		<j:OffenseLocationAssociation>
+			<j:Offense s:ref="Offense1" />
+			<nc:Location s:ref="Location1" />
+		</j:OffenseLocationAssociation>
+		<!-- Element 24, Victim Connected to UCR Offense Code -->
+		<j:OffenseVictimAssociation>
+			<j:Offense s:ref="Offense1" />
+			<j:Victim s:ref="Victim1" />
+		</j:OffenseVictimAssociation>
+		<!-- Element 24, Victim Connected to UCR Offense Code -->
+		<!--Element 34, Offender Number(s) to be related -->
+		<j:SubjectVictimAssociation s:id="SubjectVictimAssocSP1">
+			<!-- Element 35, Relationship(s) of Victim To Offender -->
+			<j:Subject s:ref="Subject1" />
+			<j:Victim s:ref="Victim1" />
+			<nibrs:VictimToSubjectRelationshipCode>RU</nibrs:VictimToSubjectRelationshipCode>
+		</j:SubjectVictimAssociation>
+		<!--Element 34, Offender Number(s) to be related -->
+	</nibrs:Report>
+</nibrs:Submission>

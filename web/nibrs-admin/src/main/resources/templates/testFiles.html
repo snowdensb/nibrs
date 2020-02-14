@@ -1,0 +1,52 @@
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/header :: header-css">
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+	<div id="mainContent">
+	 	<div id="content" class="container">
+	 		<div class="jumbotron">
+				<p><strong>This page contains test cases consisting of a NIBRS submission file and its corresponding FBI EDS results file.  To demonstrate NIBRS PCT functionality, you can download each NIBRS submission file and go <a th:href="@{/}">here</a> to use 'drag and drop' or 'choose' to submit the file. Once processed, the NIBRS PCT will present results in the same window and you can compare those results to the corresponding EDS file.</strong></p>
+<!-- 				<ul> -->
+<!-- 					<li>Test Case 1 -->
+<!-- 						<ul> -->
+<!-- 							<li><a th:href="@{/testFiles/Test-Submission-1.txt}" download="Test-Submission-1">NIBRS Submission File #1</a></li> -->
+<!-- 							<li><a th:href="@{/testFiles/Test-EDS-1.txt}" download="Test-EDS-1">FBI EDS Results #1</a></li> -->
+<!-- 						</ul> -->
+<!-- 					</li> -->
+<!-- 					<li>Test Case 2 -->
+<!-- 						<ul> -->
+<!-- 							<li><a th:href="@{/testFiles/Test-Submission-2.txt}" download="Test-Submission-2">NIBRS Submission File #2</a></li> -->
+<!-- 							<li><a th:href="@{/testFiles/Test-EDS-2.txt}" download="Test-EDS-2">FBI EDS Results #2</a></li> -->
+<!-- 						</ul> -->
+<!-- 					</li> -->
+<!-- 				</ul> -->
+				
+				<p align="center">Test Case 1: <a th:href="@{/testFiles/Test-Submission-1.txt}" download="Test-Submission-1">NIBRS Submission File</a> | <a th:href="@{/testFiles/Test-EDS-1.txt}" download="Test-EDS-1">FBI EDS Results</a></p>
+				<p/>
+				<p align="center">Test Case 2: <a th:href="@{/testFiles/Test-Submission-2.txt}" download="Test-Submission-2">NIBRS Submission File</a> | <a th:href="@{/testFiles/Test-EDS-2.txt}" download="Test-EDS-2">FBI EDS Results</a></p>
+				
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>	
+</body>
+</html>
