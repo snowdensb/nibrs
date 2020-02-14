@@ -30,11 +30,11 @@ COPY files/NIBRSAnalyticsMondrianSchema.xml /tmp/
 
 RUN sed -Ei "s/Table(.+)\//Table\1 schema=\"dfs.nibrs\"\//g" /tmp/NIBRSAnalyticsMondrianSchema.xml
 
-RUN curl -O https://www-us.apache.org/dist/drill/drill-1.15.0/apache-drill-1.15.0.tar.gz
+RUN curl -O https://www-us.apache.org/dist/drill/drill-1.17.0/apache-drill-1.17.0.tar.gz
 
-RUN tar -xvf apache-drill-1.15.0.tar.gz && \
-  mv apache-drill-1.15.0/jars/jdbc-driver/drill-jdbc-all-1.15.0.jar /opt/saiku-server/tomcat/webapps/saiku/WEB-INF/lib/ && \
-  rm -rf apache-drill-1.15.0
+RUN tar -xvf apache-drill-1.17.0.tar.gz && \
+  mv apache-drill-1.17.0/jars/jdbc-driver/drill-jdbc-all-1.17.0.jar /opt/saiku-server/tomcat/webapps/saiku/WEB-INF/lib/ && \
+  rm -rf apache-drill-1.17.0
 
 RUN chmod a+x /tmp/server-config.sh
 RUN /tmp/server-config.sh ${MODE}
