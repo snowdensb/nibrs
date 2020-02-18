@@ -47,6 +47,7 @@
     <Table name="DateType"/>
     <Table name="HourType"/>
     <Table name="CompletionStatusType"/>
+    <Table name="CargoTheftIndicatorType"/>
     <Table name="ClearanceType"/>
     <Table name="LocationTypeType"/>
     <Table name="VictimOffenderRelationshipType"/>
@@ -186,17 +187,6 @@
       </Hierarchy>
     </Hierarchies>
   </Dimension>
-  <Dimension visible="true" name="EthnicityOfPerson" table="EthnicityOfPersonType" key="EthnicityOfPersonTypeID" caption="Ethnicity">
-    <Attributes>
-      <Attribute name="EthnicityOfPersonTypeID" keyColumn="EthnicityOfPersonTypeID" hasHierarchy="false"/>
-      <Attribute name="EthnicityOfPersonDescription" keyColumn="StateDescription" caption="Ethnicity" hasHierarchy="false"/>
-    </Attributes>
-    <Hierarchies>
-      <Hierarchy name="EthnicityOfPerson" allMemberName="All Ethnicities" caption="Ethnicity">
-        <Level attribute="EthnicityOfPersonDescription" caption="Ethnicity"/>
-      </Hierarchy>
-    </Hierarchies>
-  </Dimension>
   <Dimension visible="true" name="LocationType" key="LocationTypeTypeID" table="LocationTypeType" caption="Location Type">
     <Attributes>
       <Attribute name="LocationTypeTypeID" keyColumn="LocationTypeTypeID" hasHierarchy="false"/>
@@ -267,17 +257,6 @@
       </Hierarchy>
     </Hierarchies>
   </Dimension>
-  <Dimension visible="true" name="RaceOfPerson" table="RaceOfPersonType" key="RaceOfPersonTypeID" caption="Race">
-    <Attributes>
-      <Attribute name="RaceOfPersonTypeID" keyColumn="RaceOfPersonTypeID" hasHierarchy="false"/>
-      <Attribute name="RaceOfPersonTypeDescription" keyColumn="StateDescription" caption="Race (State Code)" hasHierarchy="false"/>
-    </Attributes>
-    <Hierarchies>
-      <Hierarchy name="RaceOfPerson" allMemberName="All Races" caption="Race">
-        <Level attribute="RaceOfPersonTypeDescription" caption="Race (State Code)"/>
-      </Hierarchy>
-    </Hierarchies>
-  </Dimension>
   <Dimension visible="true" name="VictimOffenderRelationship" table="VictimOffenderRelationshipType" key="VictimOffenderRelationshipTypeID" caption="Victim/Offender Relationship">
     <Attributes>
       <Attribute name="VictimOffenderRelationshipTypeID" keyColumn="VictimOffenderRelationshipTypeID" hasHierarchy="false"/>
@@ -299,17 +278,6 @@
     <Hierarchies>
       <Hierarchy name="ResidentStatusOfPerson" allMemberName="All Resident Statuses" caption="Resident Status">
         <Level attribute="ResidentStatusOfPersonDescription" caption="Resident Status"/>
-      </Hierarchy>
-    </Hierarchies>
-  </Dimension>
-  <Dimension visible="true" name="SexOfPerson" table="SexOfPersonType" key="SexOfPersonTypeID" caption="Sex">
-    <Attributes>
-      <Attribute name="SexOfPersonTypeID" keyColumn="SexOfPersonTypeID" hasHierarchy="false"/>
-      <Attribute name="SexOfPersonDescription" keyColumn="StateDescription" caption="Sex" hasHierarchy="false"/>
-    </Attributes>
-    <Hierarchies>
-      <Hierarchy name="SexOfPerson" allMemberName="All Sexes" caption="Sex">
-        <Level attribute="SexOfPersonDescription" caption="Sex"/>
       </Hierarchy>
     </Hierarchies>
   </Dimension>
@@ -398,6 +366,17 @@
     <Hierarchies>
       <Hierarchy name="TypePropertyLossEtc" allMemberName="All Loss Types" caption="Type of Loss">
         <Level attribute="TypePropertyLossEtcDescription" caption="Type of Loss"/>
+      </Hierarchy>
+    </Hierarchies>
+  </Dimension>
+  <Dimension visible="true" name="CargoTheftIndicator" table="CargoTheftIndicatorType" key="CargoTheftIndicatorTypeID" caption="Cargo Theft Status">
+    <Attributes>
+      <Attribute name="CargoTheftIndicatorTypeID" keyColumn="CargoTheftIndicatorTypeID" hasHierarchy="false"/>
+      <Attribute name="CargoTheftIndicatorTypeDescription" keyColumn="StateDescription" hasHierarchy="false"/>
+    </Attributes>
+    <Hierarchies>
+      <Hierarchy name="CargoTheftIndicator" allMemberName="All Statuses" caption="Cargo Theft Status">
+        <Level attribute="CargoTheftIndicatorTypeDescription" caption="Cargo Theft Status"/>
       </Hierarchy>
     </Hierarchies>
   </Dimension>
@@ -501,7 +480,9 @@
   </Dimension>
 
   <Cube name="IncidentsInvolving" visible="true" caption="Incidents Involving">
+
     <Dimensions>
+
       <Dimension source="TypeInjury"/>
       <Dimension source="Date"/>
       <Dimension source="Hour"/>
@@ -513,12 +494,82 @@
       <Dimension source="TypeOfVictim"/>
       <Dimension source="OfficerActivityCircumstance"/>
       <Dimension source="OfficerAssignmentType"/>
-      <Dimension source="SexOfPerson" caption="Victim Sex"/>
-      <Dimension source="RaceOfPerson" caption="Victim Race"/>
-      <Dimension source="EthnicityOfPerson" caption="Victim Ethnicity"/>
       <Dimension source="ResidentStatusOfPerson" caption="Victim Resident Status"/>
       <Dimension source="AdditionalJustifiableHomicideCircumstances"/>
       <Dimension source="CompletionStatus" caption="Offense Completed?"/>
+      <Dimension source="CargoTheftIndicator" caption="Cargo Theft?"/>
+
+      <Dimension visible="true" name="VictimRace" table="RaceOfPersonType" key="RaceOfPersonTypeID" caption="Victim Race">
+        <Attributes>
+          <Attribute name="RaceOfPersonTypeID" keyColumn="RaceOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="RaceOfPersonTypeDescription" keyColumn="StateDescription" caption="Victim Race (State Code)" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="RaceOfPerson" allMemberName="All Races" caption="Victim Race">
+            <Level attribute="RaceOfPersonTypeDescription" caption="Victim Race (State Code)"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="VictimEthnicity" table="EthnicityOfPersonType" key="EthnicityOfPersonTypeID" caption="Victim Ethnicity">
+        <Attributes>
+          <Attribute name="EthnicityOfPersonTypeID" keyColumn="EthnicityOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="EthnicityOfPersonDescription" keyColumn="StateDescription" caption="Victim Ethnicity" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="EthnicityOfPerson" allMemberName="All Ethnicities" caption="Victim Ethnicity">
+            <Level attribute="EthnicityOfPersonDescription" caption="Victim Ethnicity"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="VictimSex" table="SexOfPersonType" key="SexOfPersonTypeID" caption="Victim Sex">
+        <Attributes>
+          <Attribute name="SexOfPersonTypeID" keyColumn="SexOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="SexOfPersonDescription" keyColumn="StateDescription" caption="Victim Sex" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="SexOfPerson" allMemberName="All Sexes" caption="Victim Sex">
+            <Level attribute="SexOfPersonDescription" caption="Victim Sex"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="OffenderRace" table="RaceOfPersonType" key="RaceOfPersonTypeID" caption="Offender Race">
+        <Attributes>
+          <Attribute name="RaceOfPersonTypeID" keyColumn="RaceOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="RaceOfPersonTypeDescription" keyColumn="StateDescription" caption="Offender Race (State Code)" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="RaceOfPerson" allMemberName="All Races" caption="Offender Race">
+            <Level attribute="RaceOfPersonTypeDescription" caption="Offender Race (State Code)"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="OffenderEthnicity" table="EthnicityOfPersonType" key="EthnicityOfPersonTypeID" caption="Offender Ethnicity">
+        <Attributes>
+          <Attribute name="EthnicityOfPersonTypeID" keyColumn="EthnicityOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="EthnicityOfPersonDescription" keyColumn="StateDescription" caption="Offender Ethnicity" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="EthnicityOfPerson" allMemberName="All Ethnicities" caption="Offender Ethnicity">
+            <Level attribute="EthnicityOfPersonDescription" caption="Offender Ethnicity"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="OffenderSex" table="SexOfPersonType" key="SexOfPersonTypeID" caption="Offender Sex">
+        <Attributes>
+          <Attribute name="SexOfPersonTypeID" keyColumn="SexOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="SexOfPersonDescription" keyColumn="StateDescription" caption="Offender Sex" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="SexOfPerson" allMemberName="All Sexes" caption="Offender Sex">
+            <Level attribute="SexOfPersonDescription" caption="Offender Sex"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
 
       <Dimension visible="true" name="Offenses Per Incident">
         <Attributes>
@@ -527,6 +578,39 @@
         <Hierarchies>
           <Hierarchy name="Offenses Per Incident"  visible="true" hasAll="true"  allMemberCaption="All Counts">
             <Level attribute="Offenses Per Incident" caption="Offenses Per Incident"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="Offenders Per Incident">
+        <Attributes>
+          <Attribute name="Offenders Per Incident" keyColumn="OffendersPerIncidentDim" hasHierarchy="false" table="FullIncidentView"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="Offenders Per Incident"  visible="true" hasAll="true"  allMemberCaption="All Counts">
+            <Level attribute="Offenders Per Incident" caption="Offenders Per Incident"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="Victims Per Incident">
+        <Attributes>
+          <Attribute name="Victims Per Incident" keyColumn="VictimsPerIncidentDim" hasHierarchy="false" table="FullIncidentView"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="Victims Per Incident"  visible="true" hasAll="true"  allMemberCaption="All Counts">
+            <Level attribute="Victims Per Incident" caption="Victims Per Incident"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="Arrestees Per Incident">
+        <Attributes>
+          <Attribute name="Arrestees Per Incident" keyColumn="ArresteesPerIncidentDim" hasHierarchy="false" table="FullIncidentView"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="Arrestees Per Incident"  visible="true" hasAll="true"  allMemberCaption="All Counts">
+            <Level attribute="Arrestees Per Incident" caption="Arrestees Per Incident"/>
           </Hierarchy>
         </Hierarchies>
       </Dimension>
@@ -562,9 +646,6 @@
           </Hierarchy>
         </Hierarchies>
       </Dimension>
-      <Dimension source="SexOfPerson" caption="Offender Sex" name="OffenderSex"/>
-      <Dimension source="RaceOfPerson" caption="Offender Race" name="OffenderRace"/>
-      <Dimension source="EthnicityOfPerson" caption="Offender Ethnicity" name="OffenderEthnicity"/>
       <Dimension visible="true" name="Offender Age" key="OffenderAge">
         <Attributes>
           <Attribute name="OffenderAge" keyColumn="OffenderAgeDim" hasHierarchy="false" table="FullIncidentView" orderByColumn="AgeOfOffenderMin"/>
@@ -635,13 +716,17 @@
           <ForeignKeyLink dimension="TypeOfVictim" foreignKeyColumn="TypeOfVictimTypeID"/>
           <ForeignKeyLink dimension="OfficerActivityCircumstance" foreignKeyColumn="OfficerActivityCircumstanceTypeID"/>
           <ForeignKeyLink dimension="OfficerAssignmentType" foreignKeyColumn="OfficerAssignmentTypeTypeID"/>
-          <ForeignKeyLink dimension="SexOfPerson" foreignKeyColumn="SexOfPersonTypeID"/>
-          <ForeignKeyLink dimension="RaceOfPerson" foreignKeyColumn="RaceOfPersonTypeID"/>
-          <ForeignKeyLink dimension="EthnicityOfPerson" foreignKeyColumn="EthnicityOfPersonTypeID"/>
+          <ForeignKeyLink dimension="VictimSex" foreignKeyColumn="SexOfPersonTypeID"/>
+          <ForeignKeyLink dimension="VictimRace" foreignKeyColumn="RaceOfPersonTypeID"/>
+          <ForeignKeyLink dimension="VictimEthnicity" foreignKeyColumn="EthnicityOfPersonTypeID"/>
           <ForeignKeyLink dimension="ResidentStatusOfPerson" foreignKeyColumn="ResidentStatusOfPersonTypeID"/>
           <ForeignKeyLink dimension="AdditionalJustifiableHomicideCircumstances" foreignKeyColumn="AdditionalJustifiableHomicideCircumstancesTypeID"/>
           <ForeignKeyLink dimension="CompletionStatus" foreignKeyColumn="CompletionStatusIndicator"/>
+          <ForeignKeyLink dimension="CargoTheftIndicator" foreignKeyColumn="CargoTheftIndicatorTypeID"/>
           <FactLink dimension="Offenses Per Incident"/>
+          <FactLink dimension="Offenders Per Incident"/>
+          <FactLink dimension="Victims Per Incident"/>
+          <FactLink dimension="Arrestees Per Incident"/>
           <FactLink dimension="Premises Entered"/>
           <FactLink dimension="Victim Age"/>
           <ForeignKeyLink dimension="TypeOfCriminalActivity" foreignKeyColumn="TypeOfCriminalActivityTypeID"/>
@@ -676,9 +761,6 @@
       <Dimension source="TypeOfVictim"/>
       <Dimension source="OfficerActivityCircumstance"/>
       <Dimension source="OfficerAssignmentType"/>
-      <Dimension source="SexOfPerson" caption="Victim Sex"/>
-      <Dimension source="RaceOfPerson" caption="Victim Race"/>
-      <Dimension source="EthnicityOfPerson" caption="Victim Ethnicity"/>
       <Dimension source="ResidentStatusOfPerson" caption="Victim Resident Status"/>
       <Dimension source="AdditionalJustifiableHomicideCircumstances"/>
       <Dimension source="CompletionStatus" caption="Offense Completed?"/>
@@ -696,6 +778,43 @@
       <Dimension source="AggravatedAssaultHomicideCircumstances"/>
       <Dimension source="OffenderSuspectedOfUsing"/>
       <Dimension source="TypeOfWeaponForceInvolved"/>
+
+      <Dimension visible="true" name="VictimRace" table="RaceOfPersonType" key="RaceOfPersonTypeID" caption="Victim Race">
+        <Attributes>
+          <Attribute name="RaceOfPersonTypeID" keyColumn="RaceOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="RaceOfPersonTypeDescription" keyColumn="StateDescription" caption="Victim Race (State Code)" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="RaceOfPerson" allMemberName="All Races" caption="Victim Race">
+            <Level attribute="RaceOfPersonTypeDescription" caption="Victim Race (State Code)"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="VictimEthnicity" table="EthnicityOfPersonType" key="EthnicityOfPersonTypeID" caption="Victim Ethnicity">
+        <Attributes>
+          <Attribute name="EthnicityOfPersonTypeID" keyColumn="EthnicityOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="EthnicityOfPersonDescription" keyColumn="StateDescription" caption="Victim Ethnicity" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="EthnicityOfPerson" allMemberName="All Ethnicities" caption="Victim Ethnicity">
+            <Level attribute="EthnicityOfPersonDescription" caption="Victim Ethnicity"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="VictimSex" table="SexOfPersonType" key="SexOfPersonTypeID" caption="Victim Sex">
+        <Attributes>
+          <Attribute name="SexOfPersonTypeID" keyColumn="SexOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="SexOfPersonDescription" keyColumn="StateDescription" caption="Victim Sex" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="SexOfPerson" allMemberName="All Sexes" caption="Victim Sex">
+            <Level attribute="SexOfPersonDescription" caption="Victim Sex"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
       <Dimension visible="true" name="Victim Age" key="VictimAge">
         <Attributes>
           <Attribute name="VictimAge" keyColumn="VictimAgeDim" hasHierarchy="false" table="FullVictimOffenseView" orderByColumn="VictimAgeDimSort"/>
@@ -739,9 +858,9 @@
           <ForeignKeyLink dimension="TypeOfVictim" foreignKeyColumn="TypeOfVictimTypeID"/>
           <ForeignKeyLink dimension="OfficerActivityCircumstance" foreignKeyColumn="OfficerActivityCircumstanceTypeID"/>
           <ForeignKeyLink dimension="OfficerAssignmentType" foreignKeyColumn="OfficerAssignmentTypeTypeID"/>
-          <ForeignKeyLink dimension="SexOfPerson" foreignKeyColumn="SexOfPersonTypeID"/>
-          <ForeignKeyLink dimension="RaceOfPerson" foreignKeyColumn="RaceOfPersonTypeID"/>
-          <ForeignKeyLink dimension="EthnicityOfPerson" foreignKeyColumn="EthnicityOfPersonTypeID"/>
+          <ForeignKeyLink dimension="VictimSex" foreignKeyColumn="SexOfPersonTypeID"/>
+          <ForeignKeyLink dimension="VictimRace" foreignKeyColumn="RaceOfPersonTypeID"/>
+          <ForeignKeyLink dimension="VictimEthnicity" foreignKeyColumn="EthnicityOfPersonTypeID"/>
           <ForeignKeyLink dimension="ResidentStatusOfPerson" foreignKeyColumn="ResidentStatusOfPersonTypeID"/>
           <ForeignKeyLink dimension="AdditionalJustifiableHomicideCircumstances" foreignKeyColumn="AdditionalJustifiableHomicideCircumstancesTypeID"/>
           <ForeignKeyLink dimension="CompletionStatus" foreignKeyColumn="CompletionStatusIndicator"/>
@@ -765,15 +884,82 @@
       <Dimension source="TypeOfVictim"/>
       <Dimension source="OfficerActivityCircumstance"/>
       <Dimension source="OfficerAssignmentType"/>
-      <Dimension source="SexOfPerson" caption="Victim Sex" name="VictimSex"/>
-      <Dimension source="RaceOfPerson" caption="Victim Race" name="VictimRace"/>
-      <Dimension source="EthnicityOfPerson" caption="Victim Ethnicity" name="VictimEthnicity"/>
       <Dimension source="ResidentStatusOfPerson" caption="Victim Resident Status"/>
       <Dimension source="AdditionalJustifiableHomicideCircumstances"/>
       <Dimension source="AggravatedAssaultHomicideCircumstances"/>
-      <Dimension source="SexOfPerson" caption="Offender Sex" name="OffenderSex"/>
-      <Dimension source="RaceOfPerson" caption="Offender Race" name="OffenderRace"/>
-      <Dimension source="EthnicityOfPerson" caption="Offender Ethnicity" name="OffenderEthnicity"/>
+
+      <Dimension visible="true" name="VictimRace" table="RaceOfPersonType" key="RaceOfPersonTypeID" caption="Victim Race">
+        <Attributes>
+          <Attribute name="RaceOfPersonTypeID" keyColumn="RaceOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="RaceOfPersonTypeDescription" keyColumn="StateDescription" caption="Victim Race (State Code)" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="RaceOfPerson" allMemberName="All Races" caption="Victim Race">
+            <Level attribute="RaceOfPersonTypeDescription" caption="Victim Race (State Code)"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="VictimEthnicity" table="EthnicityOfPersonType" key="EthnicityOfPersonTypeID" caption="Victim Ethnicity">
+        <Attributes>
+          <Attribute name="EthnicityOfPersonTypeID" keyColumn="EthnicityOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="EthnicityOfPersonDescription" keyColumn="StateDescription" caption="Victim Ethnicity" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="EthnicityOfPerson" allMemberName="All Ethnicities" caption="Victim Ethnicity">
+            <Level attribute="EthnicityOfPersonDescription" caption="Victim Ethnicity"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="VictimSex" table="SexOfPersonType" key="SexOfPersonTypeID" caption="Victim Sex">
+        <Attributes>
+          <Attribute name="SexOfPersonTypeID" keyColumn="SexOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="SexOfPersonDescription" keyColumn="StateDescription" caption="Victim Sex" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="SexOfPerson" allMemberName="All Sexes" caption="Victim Sex">
+            <Level attribute="SexOfPersonDescription" caption="Victim Sex"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="OffenderRace" table="RaceOfPersonType" key="RaceOfPersonTypeID" caption="Offender Race">
+        <Attributes>
+          <Attribute name="RaceOfPersonTypeID" keyColumn="RaceOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="RaceOfPersonTypeDescription" keyColumn="StateDescription" caption="Offender Race (State Code)" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="RaceOfPerson" allMemberName="All Races" caption="Offender Race">
+            <Level attribute="RaceOfPersonTypeDescription" caption="Offender Race (State Code)"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="OffenderEthnicity" table="EthnicityOfPersonType" key="EthnicityOfPersonTypeID" caption="Offender Ethnicity">
+        <Attributes>
+          <Attribute name="EthnicityOfPersonTypeID" keyColumn="EthnicityOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="EthnicityOfPersonDescription" keyColumn="StateDescription" caption="Offender Ethnicity" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="EthnicityOfPerson" allMemberName="All Ethnicities" caption="Offender Ethnicity">
+            <Level attribute="EthnicityOfPersonDescription" caption="Offender Ethnicity"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="OffenderSex" table="SexOfPersonType" key="SexOfPersonTypeID" caption="Offender Sex">
+        <Attributes>
+          <Attribute name="SexOfPersonTypeID" keyColumn="SexOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="SexOfPersonDescription" keyColumn="StateDescription" caption="Offender Sex" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="SexOfPerson" allMemberName="All Sexes" caption="Offender Sex">
+            <Level attribute="SexOfPersonDescription" caption="Offender Sex"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
       <Dimension visible="true" name="Victim Age" key="VictimAge">
         <Attributes>
           <Attribute name="VictimAge" keyColumn="VictimAgeDim" hasHierarchy="false" table="FullVictimOffenderView" orderByColumn="AgeOfVictimMin"/>
@@ -854,9 +1040,43 @@
       <Dimension source="Date" caption="Arrest Date" name="ArrestDate"/>
       <Dimension source="Hour"/>
       <Dimension source="Agency"/>
-      <Dimension source="SexOfPerson" caption="Arrestee Sex"/>
-      <Dimension source="RaceOfPerson" caption="Arrestee Race"/>
-      <Dimension source="EthnicityOfPerson" caption="Arrestee Ethnicity"/>
+
+      <Dimension visible="true" name="ArresteeRace" table="RaceOfPersonType" key="RaceOfPersonTypeID" caption="Arrestee Race">
+        <Attributes>
+          <Attribute name="RaceOfPersonTypeID" keyColumn="RaceOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="RaceOfPersonTypeDescription" keyColumn="StateDescription" caption="Arrestee Race (State Code)" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="RaceOfPerson" allMemberName="All Races" caption="Arrestee Race">
+            <Level attribute="RaceOfPersonTypeDescription" caption="Arrestee Race (State Code)"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="ArresteeEthnicity" table="EthnicityOfPersonType" key="EthnicityOfPersonTypeID" caption="Arrestee Ethnicity">
+        <Attributes>
+          <Attribute name="EthnicityOfPersonTypeID" keyColumn="EthnicityOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="EthnicityOfPersonDescription" keyColumn="StateDescription" caption="Arrestee Ethnicity" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="EthnicityOfPerson" allMemberName="All Ethnicities" caption="Arrestee Ethnicity">
+            <Level attribute="EthnicityOfPersonDescription" caption="Arrestee Ethnicity"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="ArresteeSex" table="SexOfPersonType" key="SexOfPersonTypeID" caption="Arrestee Sex">
+        <Attributes>
+          <Attribute name="SexOfPersonTypeID" keyColumn="SexOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="SexOfPersonDescription" keyColumn="StateDescription" caption="Arrestee Sex" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="SexOfPerson" allMemberName="All Sexes" caption="Arrestee Sex">
+            <Level attribute="SexOfPersonDescription" caption="Arrestee Sex"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
       <Dimension source="ResidentStatusOfPerson" caption="Arrestee Resident Status"/>
       <Dimension visible="true" name="Arrestee Age" key="ArresteeAge">
         <Attributes>
@@ -894,9 +1114,9 @@
           <ForeignKeyLink dimension="IncidentDate" foreignKeyColumn="IncidentDateID"/>
           <ForeignKeyLink dimension="Agency" foreignKeyColumn="ORI"/>
           <ForeignKeyLink dimension="ArrestDate" foreignKeyColumn="ArrestDateID"/>
-          <ForeignKeyLink dimension="SexOfPerson" foreignKeyColumn="SexOfPersonTypeID"/>
-          <ForeignKeyLink dimension="RaceOfPerson" foreignKeyColumn="RaceOfPersonTypeID"/>
-          <ForeignKeyLink dimension="EthnicityOfPerson" foreignKeyColumn="EthnicityOfPersonTypeID"/>
+          <ForeignKeyLink dimension="ArresteeSex" foreignKeyColumn="SexOfPersonTypeID"/>
+          <ForeignKeyLink dimension="ArresteeRace" foreignKeyColumn="RaceOfPersonTypeID"/>
+          <ForeignKeyLink dimension="ArresteeEthnicity" foreignKeyColumn="EthnicityOfPersonTypeID"/>
           <ForeignKeyLink dimension="ResidentStatusOfPerson" foreignKeyColumn="ResidentStatusOfPersonTypeID"/>
           <FactLink dimension="Arrestee Age"/>
           <ForeignKeyLink dimension="ArresteeWasArmedWith" foreignKeyColumn="ArresteeWasArmedWithTypeID"/>
@@ -912,9 +1132,43 @@
     <Dimensions>
       <Dimension source="Date" caption="Arrest Date" name="ArrestDate"/>
       <Dimension source="Agency"/>
-      <Dimension source="SexOfPerson" caption="Arrestee Sex"/>
-      <Dimension source="RaceOfPerson" caption="Arrestee Race"/>
-      <Dimension source="EthnicityOfPerson" caption="Arrestee Ethnicity"/>
+
+      <Dimension visible="true" name="ArresteeRace" table="RaceOfPersonType" key="RaceOfPersonTypeID" caption="Arrestee Race">
+        <Attributes>
+          <Attribute name="RaceOfPersonTypeID" keyColumn="RaceOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="RaceOfPersonTypeDescription" keyColumn="StateDescription" caption="Arrestee Race (State Code)" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="RaceOfPerson" allMemberName="All Races" caption="Arrestee Race">
+            <Level attribute="RaceOfPersonTypeDescription" caption="Arrestee Race (State Code)"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="ArresteeEthnicity" table="EthnicityOfPersonType" key="EthnicityOfPersonTypeID" caption="Arrestee Ethnicity">
+        <Attributes>
+          <Attribute name="EthnicityOfPersonTypeID" keyColumn="EthnicityOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="EthnicityOfPersonDescription" keyColumn="StateDescription" caption="Arrestee Ethnicity" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="EthnicityOfPerson" allMemberName="All Ethnicities" caption="Arrestee Ethnicity">
+            <Level attribute="EthnicityOfPersonDescription" caption="Arrestee Ethnicity"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
+      <Dimension visible="true" name="ArresteeSex" table="SexOfPersonType" key="SexOfPersonTypeID" caption="Arrestee Sex">
+        <Attributes>
+          <Attribute name="SexOfPersonTypeID" keyColumn="SexOfPersonTypeID" hasHierarchy="false"/>
+          <Attribute name="SexOfPersonDescription" keyColumn="StateDescription" caption="Arrestee Sex" hasHierarchy="false"/>
+        </Attributes>
+        <Hierarchies>
+          <Hierarchy name="SexOfPerson" allMemberName="All Sexes" caption="Arrestee Sex">
+            <Level attribute="SexOfPersonDescription" caption="Arrestee Sex"/>
+          </Hierarchy>
+        </Hierarchies>
+      </Dimension>
+
       <Dimension source="ResidentStatusOfPerson" caption="Arrestee Resident Status"/>
       <Dimension visible="true" name="Arrestee Age" key="ArresteeAge">
         <Attributes>
@@ -948,9 +1202,9 @@
         <DimensionLinks>
           <ForeignKeyLink dimension="Agency" foreignKeyColumn="ORI"/>
           <ForeignKeyLink dimension="ArrestDate" foreignKeyColumn="ArrestDateID"/>
-          <ForeignKeyLink dimension="SexOfPerson" foreignKeyColumn="SexOfPersonTypeID"/>
-          <ForeignKeyLink dimension="RaceOfPerson" foreignKeyColumn="RaceOfPersonTypeID"/>
-          <ForeignKeyLink dimension="EthnicityOfPerson" foreignKeyColumn="EthnicityOfPersonTypeID"/>
+          <ForeignKeyLink dimension="ArresteeSex" foreignKeyColumn="SexOfPersonTypeID"/>
+          <ForeignKeyLink dimension="ArresteeRace" foreignKeyColumn="RaceOfPersonTypeID"/>
+          <ForeignKeyLink dimension="ArresteeEthnicity" foreignKeyColumn="EthnicityOfPersonTypeID"/>
           <ForeignKeyLink dimension="ResidentStatusOfPerson" foreignKeyColumn="ResidentStatusOfPersonTypeID"/>
           <FactLink dimension="Arrestee Age"/>
           <ForeignKeyLink dimension="ArresteeWasArmedWith" foreignKeyColumn="ArresteeWasArmedWithTypeID"/>
@@ -1006,7 +1260,7 @@
         <DimensionLinks>
           <ForeignKeyLink dimension="State" foreignKeyColumn="StateID"/>
           <ForeignKeyLink dimension="Clearance" foreignKeyColumn="ClearanceType"/>
-          <ForeignKeyLink dimension="Agency" foreignKeyColumn="AgencyID"/>
+          <ForeignKeyLink dimension="Agency" foreignKeyColumn="ORI"/>
           <ForeignKeyLink dimension="Hour" foreignKeyColumn="IncidentHour"/>
           <ForeignKeyLink dimension="Date" foreignKeyColumn="IncidentDateID"/>
           <FactLink dimension="Stolen Motor Vehicles"/>

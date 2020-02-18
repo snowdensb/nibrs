@@ -130,18 +130,22 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     if ('SegmentActionTypeTypeID' %in% colnames(factTableDf)) {
       factTableDf <- factTableDf %>% select(-SegmentActionTypeTypeID)
     }
-    if ('NonNumericAge' %in% colnames(factTableDf)) {
-      factTableDf <- factTableDf %>% select(-NonNumericAge)
-    }
+    # if ('NonNumericAge' %in% colnames(factTableDf)) {
+    #   factTableDf <- factTableDf %>% select(-NonNumericAge)
+    # }
     factTableDf
   })
 
   dimensionTables <- enhanceDimensionTables(dimensionTables)
 
-  createOffenderAgeDim <- function(AgeOfOffenderMin) {
+  createOffenderAgeDim <- function(AgeOfOffenderMin, NonNumericAge) {
+    if (is.null(NonNumericAge)) {
+      NonNumericAge=rep('0', length(age))
+    }
     case_when(
       AgeOfOffenderMin == 99 ~ '> 98 years',
-      is.na(AgeOfOffenderMin) ~ 'N/A',
+      NonNumericAge == '00' ~ 'Unknown',
+      is.na(AgeOfOffenderMin) ~ 'Blank',
       TRUE ~ as.character(AgeOfOffenderMin)
     )
   }
@@ -152,7 +156,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       AgeFirstWeekIndicator == 1 ~ '< 1 week',
       AgeFirstYearIndicator == 1 ~ '< 1 year',
       AgeOfVictimMin == 99 ~ '> 98 years',
-      is.na(AgeOfVictimMin) ~ 'N/A',
+      is.na(AgeOfVictimMin) ~ 'Blank',
       TRUE ~ as.character(AgeOfVictimMin)
     )
   }
@@ -184,7 +188,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     )
   }
 
-  createUcrAgeGroup <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL) {
+  createUcrAgeGroup <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
     if (is.null(AgeNeonateIndicator)) {
       AgeNeonateIndicator=rep(0, length(age))
     }
@@ -193,6 +197,9 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     }
     if (is.null(AgeFirstYearIndicator)) {
       AgeFirstYearIndicator=rep(0, length(age))
+    }
+    if (is.null(NonNumericAge)) {
+      NonNumericAge=rep('0', length(age))
     }
     case_when(
       AgeNeonateIndicator==1 ~ '< 10',
@@ -211,11 +218,13 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       age <= 59 ~ '55-59',
       age <= 64 ~ '60-64',
       age >= 65 ~ '65+',
-      TRUE ~ 'Unknown'
+      NonNumericAge == '00' ~ 'Unknown',
+      is.na(age) ~ 'Blank',
+      TRUE ~ 'N/A'
     )
   }
 
-  createAgeGroup <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL) {
+  createAgeGroup <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
     if (is.null(AgeNeonateIndicator)) {
       AgeNeonateIndicator=rep(0, length(age))
     }
@@ -224,6 +233,9 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     }
     if (is.null(AgeFirstYearIndicator)) {
       AgeFirstYearIndicator=rep(0, length(age))
+    }
+    if (is.null(NonNumericAge)) {
+      NonNumericAge=rep('0', length(age))
     }
     case_when(
       AgeNeonateIndicator==1 ~ '1 or less',
@@ -243,11 +255,13 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       age <= 70 ~ '61-70',
       age <= 80 ~ '71-80',
       age >= 81 ~ '81+',
-      TRUE ~ 'Unknown'
+      NonNumericAge == '00' ~ 'Unknown',
+      is.na(age) ~ 'Blank',
+      TRUE ~ 'N/A'
     )
   }
 
-  createUcrAgeGroupSort <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL) {
+  createUcrAgeGroupSort <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
     if (is.null(AgeNeonateIndicator)) {
       AgeNeonateIndicator=rep(0, length(age))
     }
@@ -256,6 +270,9 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     }
     if (is.null(AgeFirstYearIndicator)) {
       AgeFirstYearIndicator=rep(0, length(age))
+    }
+    if (is.null(NonNumericAge)) {
+      NonNumericAge=rep('0', length(age))
     }
     case_when(
       AgeNeonateIndicator==1 ~ 1,
@@ -274,11 +291,13 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       age <= 59 ~ 20,
       age <= 64 ~ 21,
       age >= 65 ~ 22,
+      NonNumericAge == '00' ~ 99,
+      is.na(age) ~ 98,
       TRUE ~ 100
     )
   }
 
-  createAgeGroupSort <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL) {
+  createAgeGroupSort <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
     if (is.null(AgeNeonateIndicator)) {
       AgeNeonateIndicator=rep(0, length(age))
     }
@@ -287,6 +306,9 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     }
     if (is.null(AgeFirstYearIndicator)) {
       AgeFirstYearIndicator=rep(0, length(age))
+    }
+    if (is.null(NonNumericAge)) {
+      NonNumericAge=rep('0', length(age))
     }
     case_when(
       AgeNeonateIndicator==1 ~ 1,
@@ -306,6 +328,8 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       age <= 70 ~ 12,
       age <= 80 ~ 13,
       age >= 81 ~ 14,
+      NonNumericAge == '00' ~ 99,
+      is.na(age) ~ 98,
       TRUE ~ 100
     )
   }
@@ -334,7 +358,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
 
   iv <- factTables$AdministrativeSegment %>%
     samp() %>%
-    left_join(factTables$VictimSegment, by='AdministrativeSegmentID') %>%
+    left_join(factTables$VictimSegment %>% select(-NonNumericAge), by='AdministrativeSegmentID') %>%
     left_join(factTables$VictimOffenseAssociation, by='VictimSegmentID')
 
   iv <- iv %>% filter(!is.na(OffenseSegmentID)) %>%
@@ -379,15 +403,15 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       RecoveredMotorVehiclesDim=createMotorVehiclesDim(NumberOfRecoveredMotorVehicles),
       VictimAgeDim=createVictimAgeDim(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
       VictimAgeDimSort=createVictimAgeDimSort(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
-      VictimAgeGroup=createAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      VictimAgeGroupSort=createAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      VictimUcrAgeGroup=createUcrAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      VictimUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      OffenderAgeDim=createOffenderAgeDim(AgeOfOffenderMin),
-      OffenderAgeGroup=createAgeGroup(AgeOfOffenderMin),
-      OffenderAgeGroupSort=createAgeGroupSort(AgeOfOffenderMin),
-      OffenderUcrAgeGroup=createUcrAgeGroup(AgeOfOffenderMin),
-      OffenderUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfOffenderMin),
+      VictimAgeGroup=createAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      VictimAgeGroupSort=createAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      VictimUcrAgeGroup=createUcrAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      VictimUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      OffenderAgeDim=createOffenderAgeDim(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
+      OffenderAgeGroup=createAgeGroup(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
+      OffenderAgeGroupSort=createAgeGroupSort(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
+      OffenderUcrAgeGroup=createUcrAgeGroup(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
+      OffenderUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
       ClearedIndicator=createClearedIndicator(ArresteeSegmentID, ClearedExceptionallyTypeID),
       ClearanceType=createClearanceType(ClearedExceptionallyTypeID, ArresteeSegmentID),
       AggravatedAssaultHomicideCircumstancesTypeID=case_when(is.na(AggravatedAssaultHomicideCircumstancesTypeID) ~ 99998L, TRUE ~ AggravatedAssaultHomicideCircumstancesTypeID),
@@ -419,6 +443,27 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     mutate(OffensesPerIncident=case_when(is.na(OffensesPerIncident) ~ 0L, TRUE ~ OffensesPerIncident),
            OffensesPerIncidentDim=case_when(
              OffensesPerIncident <= 4 ~ as.character(OffensesPerIncident),
+             TRUE ~ '5+'
+           )) %>%
+    left_join(factTables$VictimSegment %>% select(AdministrativeSegmentID, VictimSegmentID) %>% distinct() %>%
+                group_by(AdministrativeSegmentID) %>% summarize(VictimsPerIncident=n()), by='AdministrativeSegmentID') %>%
+    mutate(VictimsPerIncident=case_when(is.na(VictimsPerIncident) ~ 0L, TRUE ~ VictimsPerIncident),
+           VictimsPerIncidentDim=case_when(
+             VictimsPerIncident <= 4 ~ as.character(VictimsPerIncident),
+             TRUE ~ '5+'
+           )) %>%
+    left_join(factTables$OffenderSegment %>% select(AdministrativeSegmentID, OffenderSegmentID) %>% distinct() %>%
+                group_by(AdministrativeSegmentID) %>% summarize(OffendersPerIncident=n()), by='AdministrativeSegmentID') %>%
+    mutate(OffendersPerIncident=case_when(is.na(OffendersPerIncident) ~ 0L, TRUE ~ OffendersPerIncident),
+           OffendersPerIncidentDim=case_when(
+             OffendersPerIncident <= 4 ~ as.character(OffendersPerIncident),
+             TRUE ~ '5+'
+           )) %>%
+    left_join(factTables$ArresteeSegment %>% select(AdministrativeSegmentID, ArresteeSegmentID) %>% distinct() %>%
+                group_by(AdministrativeSegmentID) %>% summarize(ArresteesPerIncident=n()), by='AdministrativeSegmentID') %>%
+    mutate(ArresteesPerIncident=case_when(is.na(ArresteesPerIncident) ~ 0L, TRUE ~ ArresteesPerIncident),
+           ArresteesPerIncidentDim=case_when(
+             ArresteesPerIncident <= 4 ~ as.character(ArresteesPerIncident),
              TRUE ~ '5+'
            )) %>%
     left_join(dimensionTables$State %>% select(StateCode, StateID), by='StateCode') %>%
@@ -484,6 +529,12 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       ArresteeSegmentID,
       OffensesPerIncident,
       OffensesPerIncidentDim,
+      OffendersPerIncident,
+      OffendersPerIncidentDim,
+      VictimsPerIncident,
+      VictimsPerIncidentDim,
+      ArresteesPerIncident,
+      ArresteesPerIncidentDim,
       NumberOfPremisesEnteredDim,
       VictimAgeDim,
       VictimAgeDimSort,
@@ -521,10 +572,10 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
       NumberOfPremisesEnteredDim=case_when(is.na(NumberOfPremisesEntered) ~ 'N/A', TRUE ~ as.character(NumberOfPremisesEntered)),
       VictimAgeDim=createVictimAgeDim(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
       VictimAgeDimSort=createVictimAgeDimSort(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
-      VictimAgeGroup=createAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      VictimAgeGroupSort=createAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      VictimUcrAgeGroup=createUcrAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      VictimUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
+      VictimAgeGroup=createAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      VictimAgeGroupSort=createAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      VictimUcrAgeGroup=createUcrAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      VictimUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
       ClearedIndicator=createClearedIndicator(ArresteeSegmentID, ClearedExceptionallyTypeID),
       ClearanceType=createClearanceType(ClearedExceptionallyTypeID, ArresteeSegmentID),
       AggravatedAssaultHomicideCircumstancesTypeID=case_when(is.na(AggravatedAssaultHomicideCircumstancesTypeID) ~ 99998L, TRUE ~ AggravatedAssaultHomicideCircumstancesTypeID),
@@ -595,6 +646,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
   ret$FullVictimOffenderView <- factTables$AdministrativeSegment %>%
     samp() %>%
     left_join(factTables$VictimSegment %>%
+                select(-NonNumericAge) %>%
                 rename(
                   VictimSexOfPersonTypeID=SexOfPersonTypeID,
                   VictimRaceOfPersonTypeID=RaceOfPersonTypeID,
@@ -615,15 +667,15 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     mutate(
       VictimAgeDim=createVictimAgeDim(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
       VictimAgeDimSort=createVictimAgeDimSort(AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, AgeOfVictimMin),
-      VictimAgeGroup=createAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      VictimAgeGroupSort=createAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      VictimUcrAgeGroup=createUcrAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      VictimUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator),
-      OffenderAgeDim=createOffenderAgeDim(AgeOfOffenderMin),
-      OffenderAgeGroup=createAgeGroup(AgeOfOffenderMin),
-      OffenderAgeGroupSort=createAgeGroupSort(AgeOfOffenderMin),
-      OffenderUcrAgeGroup=createUcrAgeGroup(AgeOfOffenderMin),
-      OffenderUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfOffenderMin),
+      VictimAgeGroup=createAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      VictimAgeGroupSort=createAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      VictimUcrAgeGroup=createUcrAgeGroup(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      VictimUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfVictimMin, AgeNeonateIndicator, AgeFirstWeekIndicator, AgeFirstYearIndicator, NonNumericAge=NULL),
+      OffenderAgeDim=createOffenderAgeDim(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
+      OffenderAgeGroup=createAgeGroup(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
+      OffenderAgeGroupSort=createAgeGroupSort(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
+      OffenderUcrAgeGroup=createUcrAgeGroup(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
+      OffenderUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfOffenderMin, NonNumericAge=NonNumericAge),
       ClearedIndicator=createClearedIndicator(ArresteeSegmentID, ClearedExceptionallyTypeID),
       ClearanceType=createClearanceType(ClearedExceptionallyTypeID, ArresteeSegmentID),
       AggravatedAssaultHomicideCircumstancesTypeID=case_when(is.na(AggravatedAssaultHomicideCircumstancesTypeID) ~ 99998L, TRUE ~ AggravatedAssaultHomicideCircumstancesTypeID),
@@ -689,11 +741,11 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     left_join(factTables$ArresteeSegmentWasArmedWith, by='ArresteeSegmentID') %>%
     mutate_at(vars(ends_with('ID')), as.integer) %>%
     mutate(
-      ArresteeAgeDim=createOffenderAgeDim(AgeOfArresteeMin),
-      ArresteeAgeGroup=createAgeGroup(AgeOfArresteeMin),
-      ArresteeAgeGroupSort=createAgeGroupSort(AgeOfArresteeMin),
-      ArresteeUcrAgeGroup=createUcrAgeGroup(AgeOfArresteeMin),
-      ArresteeUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfArresteeMin),
+      ArresteeAgeDim=createOffenderAgeDim(AgeOfArresteeMin, NonNumericAge),
+      ArresteeAgeGroup=createAgeGroup(AgeOfArresteeMin, NonNumericAge),
+      ArresteeAgeGroupSort=createAgeGroupSort(AgeOfArresteeMin, NonNumericAge),
+      ArresteeUcrAgeGroup=createUcrAgeGroup(AgeOfArresteeMin, NonNumericAge),
+      ArresteeUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfArresteeMin, NonNumericAge),
       ArresteeWasArmedWithTypeID=case_when(is.na(ArresteeWasArmedWithTypeID) ~ -1L, TRUE ~ ArresteeWasArmedWithTypeID),
       AutomaticWeaponIndicator=case_when(is.na(AutomaticWeaponIndicator) ~ 'N', TRUE ~ AutomaticWeaponIndicator),
       ArrestDateID=case_when(is.na(ArrestDateID) ~ 99998L, TRUE ~ ArrestDateID),
@@ -793,11 +845,11 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     left_join(factTables$ArrestReportSegmentWasArmedWith, by='ArrestReportSegmentID') %>%
     mutate_at(vars(ends_with('ID')), as.integer) %>%
     mutate(
-      ArresteeAgeDim=createOffenderAgeDim(AgeOfArresteeMin),
-      ArresteeAgeGroup=createAgeGroup(AgeOfArresteeMin),
-      ArresteeAgeGroupSort=createAgeGroupSort(AgeOfArresteeMin),
-      ArresteeUcrAgeGroup=createUcrAgeGroup(AgeOfArresteeMin),
-      ArresteeUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfArresteeMin),
+      ArresteeAgeDim=createOffenderAgeDim(AgeOfArresteeMin, NonNumericAge),
+      ArresteeAgeGroup=createAgeGroup(AgeOfArresteeMin, NonNumericAge),
+      ArresteeAgeGroupSort=createAgeGroupSort(AgeOfArresteeMin, NonNumericAge),
+      ArresteeUcrAgeGroup=createUcrAgeGroup(AgeOfArresteeMin, NonNumericAge),
+      ArresteeUcrAgeGroupSort=createUcrAgeGroupSort(AgeOfArresteeMin, NonNumericAge),
       ArresteeWasArmedWithTypeID=case_when(is.na(ArresteeWasArmedWithTypeID) ~ -1L, TRUE ~ ArresteeWasArmedWithTypeID),
       AutomaticWeaponIndicator=case_when(is.na(AutomaticWeaponIndicator) ~ 'N', TRUE ~ AutomaticWeaponIndicator),
       ArrestDateID=case_when(is.na(ArrestDateID) ~ 99998L, TRUE ~ ArrestDateID)
