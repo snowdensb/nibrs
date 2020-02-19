@@ -22,6 +22,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("admin")
 public class AppProperties {
 
+	private Boolean allowSubmitToFbi = false;
+	
 	private Boolean securityEnabled = false;
 	private Boolean allowAccessWithoutSamlToken = true;
 	private String signOutUrl = "/logoutSuccess"; 
@@ -127,6 +129,14 @@ public class AppProperties {
 
 	public void setExternalTemplatesFolder(String externalTemplatesFolder) {
 		this.externalTemplatesFolder = externalTemplatesFolder;
+	}
+
+	public Boolean getAllowSubmitToFbi() {
+		return allowSubmitToFbi;
+	}
+
+	public void setAllowSubmitToFbi(Boolean allowSubmitToFbi) {
+		this.allowSubmitToFbi = allowSubmitToFbi;
 	}
 
 }

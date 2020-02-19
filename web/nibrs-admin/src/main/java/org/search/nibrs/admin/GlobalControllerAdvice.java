@@ -38,6 +38,7 @@ public class GlobalControllerAdvice {
         model.addAttribute("inactivityTimeoutInSeconds", appProperties.getInactivityTimeoutInSeconds());
         model.addAttribute("showUserInfoDropdown", appProperties.getShowUserInfoDropdown());
         model.addAttribute("securityEnabled", appProperties.getSecurityEnabled());
+        model.addAttribute("allowSubmitToFbi", appProperties.getAllowSubmitToFbi());
     }
     
 }
