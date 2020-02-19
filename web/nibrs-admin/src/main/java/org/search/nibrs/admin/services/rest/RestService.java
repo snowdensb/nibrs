@@ -57,8 +57,8 @@ public class RestService{
 		this.webClient = webClientBuilder.baseUrl(appProperties.getRestServiceBaseUrl()).build();
 	}
 	
-	public Map<Integer, String> getAgencies() {
-		return this.webClient.get().uri("/codeTables/agencies")
+	public Map<Integer, String> getAgencies(String federationId) {
+		return this.webClient.get().uri("/codeTables/agencies/"+federationId)
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
 				.block();

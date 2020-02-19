@@ -8,5 +8,15 @@
     "name": "pct.show-user-info-dropdown",
     "type": "java.lang.String",
     "description": "A description for 'pct.show-user-info-dropdown'"
+  },
+  {
+    "name": "admin.security-enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.security-enabled'"
+  },
+  {
+    "name": "admin.private-summary-report-site",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.private-summary-report-site'"
   }
 ]}

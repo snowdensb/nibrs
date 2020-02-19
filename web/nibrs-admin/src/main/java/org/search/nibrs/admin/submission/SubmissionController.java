@@ -60,10 +60,6 @@ public class SubmissionController {
     	
     	log.info("Add ModelAtrributes");
 		
-		if (!model.containsAttribute("agencyMapping")) {
-			model.addAttribute("agencyMapping", restService.getAgencies());
-		}
-		
 		if (!model.containsAttribute("offenseCodeMapping")) {
 			model.addAttribute("offenseCodeMapping", restService.getOffenseCodes());
 		}

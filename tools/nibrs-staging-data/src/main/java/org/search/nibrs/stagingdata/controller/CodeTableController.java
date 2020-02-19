@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
@@ -56,10 +57,19 @@ public class CodeTableController {
 
 	@GetMapping("/agencies")
 	public Map<Integer, String> agencies(){
-		Map<Integer, String> agencyMap = StreamSupport.stream(agencyRepository.findAll(new Sort(Sort.Direction.ASC, "agencyName")).spliterator(), false)
+		Map<Integer, String> agencyMap = 
+			StreamSupport.stream(agencyRepository.findAll(new Sort(Sort.Direction.ASC, "agencyName")).spliterator(), false)
 				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
 				.collect(Collectors.toMap(Agency::getAgencyId, Agency::getAgencyName, (u, v) -> u,
 					      LinkedHashMap::new));
+		return agencyMap;
+	}
+	
+	@GetMapping("/agencies/{federationId}")
+	public Map<Integer, String> agenciesByFederationId(@PathVariable String federationId){
+		Map<Integer, String> agencyMap = new LinkedHashMap<>(); 
+		
+		//TODO finish the query. 
 		return agencyMap;
 	}
 	

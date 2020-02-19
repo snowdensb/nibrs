@@ -51,19 +51,19 @@
 	            <li class="nav-item active">
 	              <a class="nav-link" th:href="@{/}" id="home">Home <span class="sr-only">(current)</span></a>
 	            </li>
-	            <li class="nav-item">
+	            <li class="nav-item" th:unless="${agencyMapping.empty}">
 	              <a class="nav-link" href="#" id="incidents">Incidents</a>
 	            </li>
 	            <li class="nav-item">
 	              <a class="nav-link uploadToValidate" href="#" id="upload">Validate/Upload</a>
 	            </li>
-	            <li class="nav-item">
+	            <li class="nav-item" th:unless="${agencyMapping.empty}">
 	              <a class="nav-link" href="#" id="errors">Errors</a>
 	            </li>
-	            <li class="nav-item" th:if="${allowSubmitToFbi}">
+	            <li class="nav-item" th:if="${allowSubmitToFbi && !agencyMapping.empty}">
 	              <a class="nav-link" href="#" id="submitToFbi">Submit to FBI</a>
 	            </li>
-	            <li class="nav-item">
+	            <li class="nav-item" th:unless="${agencyMapping.empty}">
 	              <a class="nav-link" href="#" id="summaryReportInputForm">Summary Reports</a>
 	            </li>
 	          </ul>

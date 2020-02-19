@@ -60,9 +60,6 @@ public class PrecertErrorAdminController {
     	
     	log.info("Add ModelAtrributes");
 		
-		if (!model.containsAttribute("agencyMapping")) {
-			model.addAttribute("agencyMapping", restService.getAgencies());
-		}
 		if (!model.containsAttribute("nibrsErrorCodeMapping")) {
 			model.addAttribute("nibrsErrorCodeMapping", restService.getNibrsErrorCodes());
 		}

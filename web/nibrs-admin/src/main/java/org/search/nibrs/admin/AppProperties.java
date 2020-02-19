@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppProperties {
 
 	private Boolean allowSubmitToFbi = false;
+	private Boolean privateSummaryReportSite=false; 
 	
 	private Boolean securityEnabled = false;
 	private Boolean allowAccessWithoutSamlToken = true;
@@ -137,6 +138,14 @@ public class AppProperties {
 
 	public void setAllowSubmitToFbi(Boolean allowSubmitToFbi) {
 		this.allowSubmitToFbi = allowSubmitToFbi;
+	}
+
+	public Boolean getPrivateSummaryReportSite() {
+		return privateSummaryReportSite;
+	}
+
+	public void setPrivateSummaryReportSite(Boolean privateSummaryReportSite) {
+		this.privateSummaryReportSite = privateSummaryReportSite;
 	}
 
 }

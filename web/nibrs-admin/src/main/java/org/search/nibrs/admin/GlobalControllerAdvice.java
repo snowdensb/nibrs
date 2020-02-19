@@ -16,29 +16,41 @@
 package org.search.nibrs.admin;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
+import org.search.nibrs.admin.services.rest.RestService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 @ControllerAdvice
+@SessionAttributes({"agencyMapping"})
 public class GlobalControllerAdvice {
 	
-	@SuppressWarnings("unused")
-	private final Log log = LogFactory.getLog(this.getClass());
-
 	@Resource
     AppProperties appProperties;
     
+	@Resource
+	RestService restService;
+	
     @ModelAttribute
-    public void setupModelAttributes(Model model) {
+    public void setupModelAttributes(HttpServletRequest request, Model model) {
         model.addAttribute("inactivityTimeout", appProperties.getInactivityTimeout());
         model.addAttribute("inactivityTimeoutInSeconds", appProperties.getInactivityTimeoutInSeconds());
         model.addAttribute("showUserInfoDropdown", appProperties.getShowUserInfoDropdown());
         model.addAttribute("securityEnabled", appProperties.getSecurityEnabled());
         model.addAttribute("allowSubmitToFbi", appProperties.getAllowSubmitToFbi());
+        model.addAttribute("privateSummaryReportSite", appProperties.getPrivateSummaryReportSite());
+		if (!model.containsAttribute("agencyMapping")) {
+			if (appProperties.getPrivateSummaryReportSite()) {
+				model.addAttribute("agencyMapping", restService.getAgencies(StringUtils.EMPTY));
+			}
+			else {
+				model.addAttribute("agencyMapping", restService.getAgencies((String) request.getAttribute("principal")));
+			}
+		}
     }
     
 }
