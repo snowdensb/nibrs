@@ -22,6 +22,16 @@ Drop schema if exists search_nibrs_staging;
 CREATE schema search_nibrs_staging;
 use search_nibrs_staging;
 
+CREATE TABLE User (
+                UserId INT AUTO_INCREMENT NOT NULL,
+                FederationId VARCHAR(100) NOT NULL,
+                SuperUserIndicator BOOLEAN DEFAULT false NOT NULL,
+                Email VARCHAR(100),
+                FirstName VARCHAR(100) NOT NULL,
+                LastName VARCHAR(100) NOT NULL,
+                PRIMARY KEY (UserId)
+);
+create unique index user_federationId_idx on User(FederationId); 
 
 CREATE TABLE NibrsErrorCodeType (
                 NibrsErrorCodeTypeId INT AUTO_INCREMENT NOT NULL,
@@ -47,6 +57,8 @@ CREATE TABLE Submission (
                 SubmissionTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (SubmissionID)
 );
+
+ALTER TABLE Submission MODIFY COLUMN NIBRSReportCategoryCode VARCHAR(30) COMMENT 'Group A or Group B.';
 
 
 CREATE TABLE Violation (
@@ -107,6 +119,14 @@ CREATE TABLE Agency (
                 StateName VARCHAR(20) NOT NULL,
                 Population INT,
                 PRIMARY KEY (AgencyID)
+);
+
+
+CREATE TABLE AuthorizedAgency (
+                AuthorizedAgencyId INT AUTO_INCREMENT NOT NULL,
+                AgencyID INT NOT NULL,
+                UserId INT NOT NULL,
+                PRIMARY KEY (AuthorizedAgencyId)
 );
 
 
@@ -692,7 +712,13 @@ CREATE TABLE LEOKASegment (
 );
 
 
-ALTER TABLE PreCertificationError ADD CONSTRAINT nibrserrorcodetype_PreCertificationErrorid_fk
+ALTER TABLE AuthorizedAgency ADD CONSTRAINT user_authorizedagency_fk
+FOREIGN KEY (UserId)
+REFERENCES User (UserId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE PreCertificationError ADD CONSTRAINT nibrserrorcodetype_nibrserrorid_fk
 FOREIGN KEY (NibrsErrorCodeTypeId)
 REFERENCES NibrsErrorCodeType (NibrsErrorCodeTypeId)
 ON DELETE NO ACTION
@@ -782,7 +808,13 @@ REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE PreCertificationError ADD CONSTRAINT agency_PreCertificationErrorid_fk
+ALTER TABLE PreCertificationError ADD CONSTRAINT agency_nibrserrorid_fk
+FOREIGN KEY (AgencyID)
+REFERENCES Agency (AgencyID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE AuthorizedAgency ADD CONSTRAINT agency_authorizedagency_fk
 FOREIGN KEY (AgencyID)
 REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION
@@ -1052,7 +1084,7 @@ REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE PreCertificationError ADD CONSTRAINT segmentactiontypetype_PreCertificationErrorid_fk
+ALTER TABLE PreCertificationError ADD CONSTRAINT segmentactiontypetype_nibrserrorid_fk
 FOREIGN KEY (SegmentActionTypeTypeID)
 REFERENCES SegmentActionTypeType (SegmentActionTypeTypeID)
 ON DELETE NO ACTION

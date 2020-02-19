@@ -24,6 +24,18 @@ CREATE schema search_nibrs_staging;
 Use search_nibrs_staging; 
 
 
+
+CREATE TABLE User (
+                UserId IDENTITY NOT NULL,
+                FederationId VARCHAR(100) NOT NULL,
+                SuperUserIndicator BOOLEAN DEFAULT false NOT NULL,
+                Email VARCHAR(100),
+                FirstName VARCHAR(100) NOT NULL,
+                LastName VARCHAR(100) NOT NULL,
+                CONSTRAINT UserId PRIMARY KEY (UserId)
+);
+create unique index user_federationId_idx on User(FederationId); 
+
 CREATE TABLE NibrsErrorCodeType (
                 NibrsErrorCodeTypeId IDENTITY NOT NULL,
                 Code VARCHAR(3) NOT NULL,
@@ -109,6 +121,14 @@ CREATE TABLE Agency (
                 StateName VARCHAR(20) NOT NULL,
                 Population INTEGER,
                 CONSTRAINT Agency_pk PRIMARY KEY (AgencyID)
+);
+
+
+CREATE TABLE AuthorizedAgency (
+                AuthorizedAgencyId IDENTITY NOT NULL,
+                AgencyID INTEGER NOT NULL,
+                UserId INTEGER NOT NULL,
+                CONSTRAINT AuthorizedAgencyId PRIMARY KEY (AuthorizedAgencyId)
 );
 
 
@@ -373,9 +393,9 @@ CREATE TABLE PreCertificationError (
 CREATE TABLE VictimOffenderRelationshipType (
                 VictimOffenderRelationshipTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(2) NOT NULL,
-                StateDescription VARCHAR(50) NOT NULL,
+                StateDescription VARCHAR(100) NOT NULL,
                 NIBRSCode VARCHAR(2) NOT NULL,
-                NIBRSDescription VARCHAR(50) NOT NULL,
+                NIBRSDescription VARCHAR(100) NOT NULL,
                 CONSTRAINT VictimOffenderRelationshipType_pk PRIMARY KEY (VictimOffenderRelationshipTypeID)
 );
 
@@ -694,6 +714,12 @@ CREATE TABLE LEOKASegment (
 );
 
 
+ALTER TABLE AuthorizedAgency ADD CONSTRAINT User_AuthorizedAgency_fk
+FOREIGN KEY (UserId)
+REFERENCES User (UserId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
 ALTER TABLE PreCertificationError ADD CONSTRAINT NibrsErrorCodeType_NibrsErrorId_fk
 FOREIGN KEY (NibrsErrorCodeTypeId)
 REFERENCES NibrsErrorCodeType (NibrsErrorCodeTypeId)
@@ -785,6 +811,12 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE PreCertificationError ADD CONSTRAINT Agency_NibrsErrorId_fk
+FOREIGN KEY (AgencyID)
+REFERENCES Agency (AgencyID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE AuthorizedAgency ADD CONSTRAINT Agency_AuthorizedAgency_fk
 FOREIGN KEY (AgencyID)
 REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION
