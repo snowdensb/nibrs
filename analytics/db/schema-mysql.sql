@@ -122,14 +122,6 @@ CREATE TABLE Agency (
 );
 
 
-CREATE TABLE AuthorizedAgency (
-                AuthorizedAgencyId INT AUTO_INCREMENT NOT NULL,
-                AgencyID INT NOT NULL,
-                UserId INT NOT NULL,
-                PRIMARY KEY (AuthorizedAgencyId)
-);
-
-
 CREATE TABLE OfficerAssignmentTypeType (
                 OfficerAssignmentTypeTypeID INT AUTO_INCREMENT NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
@@ -456,6 +448,7 @@ CREATE TABLE ArrestReportSegment (
                 DispositionOfArresteeUnder18TypeID INT NOT NULL,
                 UCROffenseCodeTypeID INT NOT NULL,
                 SubmissionID INT,
+                OwnerId INT NOT NULL,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (ArrestReportSegmentID)
 );
@@ -489,6 +482,7 @@ CREATE TABLE AdministrativeSegment (
                 ExceptionalClearanceDateID INT NOT NULL,
                 CargoTheftIndicatorTypeID INT NOT NULL,
                 SubmissionID INT,
+                OwnerId INT NOT NULL,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (AdministrativeSegmentID)
 );
@@ -712,8 +706,14 @@ CREATE TABLE LEOKASegment (
 );
 
 
-ALTER TABLE AuthorizedAgency ADD CONSTRAINT user_authorizedagency_fk
-FOREIGN KEY (UserId)
+ALTER TABLE ArrestReportSegment ADD CONSTRAINT user_arrestreportsegment_fk
+FOREIGN KEY (OwnerId)
+REFERENCES User (UserId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE AdministrativeSegment ADD CONSTRAINT user_administrativesegment_fk
+FOREIGN KEY (OwnerId)
 REFERENCES User (UserId)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
@@ -809,12 +809,6 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE PreCertificationError ADD CONSTRAINT agency_nibrserrorid_fk
-FOREIGN KEY (AgencyID)
-REFERENCES Agency (AgencyID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE AuthorizedAgency ADD CONSTRAINT agency_authorizedagency_fk
 FOREIGN KEY (AgencyID)
 REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION

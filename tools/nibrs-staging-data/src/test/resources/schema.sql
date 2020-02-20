@@ -124,14 +124,6 @@ CREATE TABLE Agency (
 );
 
 
-CREATE TABLE AuthorizedAgency (
-                AuthorizedAgencyId IDENTITY NOT NULL,
-                AgencyID INTEGER NOT NULL,
-                UserId INTEGER NOT NULL,
-                CONSTRAINT AuthorizedAgencyId PRIMARY KEY (AuthorizedAgencyId)
-);
-
-
 CREATE TABLE OfficerAssignmentTypeType (
                 OfficerAssignmentTypeTypeID IDENTITY NOT NULL,
                 StateCode VARCHAR(1) NOT NULL,
@@ -458,6 +450,7 @@ CREATE TABLE ArrestReportSegment (
                 DispositionOfArresteeUnder18TypeID INTEGER NOT NULL,
                 UCROffenseCodeTypeID INTEGER NOT NULL,
                 SubmissionID INTEGER,
+                OwnerId INTEGER NOT NULL,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT ArresteReport_pk PRIMARY KEY (ArrestReportSegmentID)
 );
@@ -491,6 +484,7 @@ CREATE TABLE AdministrativeSegment (
                 ExceptionalClearanceDateID INTEGER NOT NULL,
                 CargoTheftIndicatorTypeID INTEGER NOT NULL,
                 SubmissionID INTEGER,
+                OwnerId INTEGER NOT NULL,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT AdministrativeSegment_pk PRIMARY KEY (AdministrativeSegmentID)
 );
@@ -714,8 +708,14 @@ CREATE TABLE LEOKASegment (
 );
 
 
-ALTER TABLE AuthorizedAgency ADD CONSTRAINT User_AuthorizedAgency_fk
-FOREIGN KEY (UserId)
+ALTER TABLE ArrestReportSegment ADD CONSTRAINT User_ArrestReportSegment_fk
+FOREIGN KEY (OwnerId)
+REFERENCES User (UserId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE AdministrativeSegment ADD CONSTRAINT User_AdministrativeSegment_fk
+FOREIGN KEY (OwnerId)
 REFERENCES User (UserId)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
@@ -811,12 +811,6 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE PreCertificationError ADD CONSTRAINT Agency_NibrsErrorId_fk
-FOREIGN KEY (AgencyID)
-REFERENCES Agency (AgencyID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE AuthorizedAgency ADD CONSTRAINT Agency_AuthorizedAgency_fk
 FOREIGN KEY (AgencyID)
 REFERENCES Agency (AgencyID)
 ON DELETE NO ACTION
