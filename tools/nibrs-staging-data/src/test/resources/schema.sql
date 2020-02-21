@@ -25,10 +25,10 @@ Use search_nibrs_staging;
 
 
 
+
 CREATE TABLE User (
                 UserId IDENTITY NOT NULL,
                 FederationId VARCHAR(100) NOT NULL,
-                SuperUserIndicator BOOLEAN DEFAULT false NOT NULL,
                 Email VARCHAR(100),
                 FirstName VARCHAR(100) NOT NULL,
                 LastName VARCHAR(100) NOT NULL,
@@ -450,7 +450,7 @@ CREATE TABLE ArrestReportSegment (
                 DispositionOfArresteeUnder18TypeID INTEGER NOT NULL,
                 UCROffenseCodeTypeID INTEGER NOT NULL,
                 SubmissionID INTEGER,
-                OwnerId INTEGER NOT NULL,
+                OwnerId INTEGER,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT ArresteReport_pk PRIMARY KEY (ArrestReportSegmentID)
 );
@@ -484,7 +484,7 @@ CREATE TABLE AdministrativeSegment (
                 ExceptionalClearanceDateID INTEGER NOT NULL,
                 CargoTheftIndicatorTypeID INTEGER NOT NULL,
                 SubmissionID INTEGER,
-                OwnerId INTEGER NOT NULL,
+                OwnerId INTEGER,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT AdministrativeSegment_pk PRIMARY KEY (AdministrativeSegmentID)
 );
