@@ -514,7 +514,7 @@ public class GroupAIncidentServiceTest {
 		assertThat(persisted.getYearOfTape(), equalTo("2016"));
 		assertThat(persisted.getCityIndicator(), equalTo("Y"));
 		assertThat(persisted.getOri(), equalTo("WA1234567"));
-		assertThat(persisted.getAgency().getAgencyId(), equalTo(99998));
+		assertThat(persisted.getAgency().getAgencyId(), equalTo(100000));
 		assertThat(persisted.getIncidentNumber(), equalTo("54236732"));
 		assertThat(persisted.getIncidentDate(), equalTo(LocalDate.of(2016, 5, 12)));
 		assertThat(persisted.getIncidentDateType().getDateTypeId(), equalTo(2324));
@@ -807,7 +807,7 @@ public class GroupAIncidentServiceTest {
 		assertThat(persisted.getYearOfTape(), equalTo("2016"));
 		assertThat(persisted.getCityIndicator(), equalTo("Y"));
 		assertThat(persisted.getOri(), equalTo("WA1234567"));
-		assertThat(persisted.getAgency().getAgencyId(), equalTo(99998));
+		assertThat(persisted.getAgency().getAgencyId(), equalTo(100000));
 		assertThat(persisted.getIncidentNumber(), equalTo("9876543"));
 		assertThat(persisted.getIncidentDate(), equalTo(LocalDate.of(2016, 5, 12)));
 		assertThat(persisted.getIncidentDateType().getDateTypeId(), equalTo(2324));
@@ -1162,7 +1162,7 @@ public class GroupAIncidentServiceTest {
 		assertThat(updated.getYearOfTape(), equalTo("2016"));
 		assertThat(updated.getCityIndicator(), equalTo("Y"));
 		assertThat(updated.getOri(), equalTo("WA1234567"));
-		assertThat(updated.getAgency().getAgencyId(), equalTo(99998));
+		assertThat(updated.getAgency().getAgencyId(), equalTo(100000));
 		assertThat(updated.getIncidentNumber(), equalTo("54236732"));
 		assertThat(updated.getIncidentDate(), equalTo(LocalDate.of(2016, 5, 12)));
 		assertThat(updated.getIncidentDateType().getDateTypeId(), equalTo(2324));

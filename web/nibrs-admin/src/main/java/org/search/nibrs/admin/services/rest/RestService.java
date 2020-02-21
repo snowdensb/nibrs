@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
+import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.uploadfile.PersistReportTask;
 import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.model.AbstractReport;
@@ -30,6 +31,7 @@ import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.GroupBArrestReport;
 import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.search.nibrs.stagingdata.model.SubmissionTrigger;
+import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.search.PrecertErrorSearchRequest;
@@ -107,6 +109,14 @@ public class RestService{
 				.block();
 	}
 	
+	public WebUser getSavedUser(WebUser webUser){
+		return this.webClient.post().uri("/codeTables/user")
+				.body(BodyInserters.fromObject(webUser))
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<WebUser>() {})
+				.block();
+	}
+	
 	public AdministrativeSegment getAdministrativeSegment(String id){
 		return this.webClient.get().uri("/reports/A/" + id)
 				.retrieve()
@@ -170,12 +180,15 @@ public class RestService{
 	}
 	
 	@Async
-	public void persistValidReportsAsync(PersistReportTask persistReportTask, List<AbstractReport> validReports) {
+	public void persistValidReportsAsync(PersistReportTask persistReportTask, List<AbstractReport> validReports, AuthUser authUser) {
 		log.info("Execute method asynchronously. "
 			      + Thread.currentThread().getName());
 		int count = 0; 
 		persistReportTask.setStarted(true);
 		for(AbstractReport abstractReport: validReports){
+			if (authUser != null) {
+				abstractReport.setOwnerId(authUser.getUserId());
+			}
 			try{
 				this.persistAbstractReport(abstractReport);
 				persistReportTask.increaseProcessedCount();

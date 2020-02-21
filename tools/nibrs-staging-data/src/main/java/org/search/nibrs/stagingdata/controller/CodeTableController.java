@@ -22,28 +22,37 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.NibrsErrorCodeType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
+import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.repository.NibrsErrorCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
+import org.search.nibrs.stagingdata.repository.WebUserRepository;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/codeTables")
 public class CodeTableController {
+	private static final Log log = LogFactory.getLog(CodeTableController.class);
 	@Autowired
 	private AgencyRepository agencyRepository;
+	@Autowired
+	private WebUserRepository webUserRepository;
 	@Autowired
 	private AdministrativeSegmentRepository administrativeSegmentRepository;
 	@Autowired
@@ -54,6 +63,18 @@ public class CodeTableController {
 	public AppProperties appProperties;
 	
 	private final List<String> unknownOrBlank = Arrays.asList("UNKOWN", "BLANK");
+
+	@PostMapping("/user")
+	public @ResponseBody WebUser search(@RequestBody WebUser webUser){
+		log.debug("webUser:" + webUser);
+		WebUser savedUser = webUserRepository.findFirstByFederationId(webUser.getFederationId());
+		
+		if (savedUser == null) {
+			savedUser=webUserRepository.save(webUser);
+		}
+		
+		return savedUser;
+	}
 
 	@GetMapping("/agencies")
 	public Map<Integer, String> agencies(){

@@ -33,6 +33,7 @@ import org.search.nibrs.model.ArresteeSegment;
 import org.search.nibrs.model.GroupBArrestReport;
 import org.search.nibrs.stagingdata.controller.BadRequestException;
 import org.search.nibrs.stagingdata.model.Agency;
+import org.search.nibrs.stagingdata.model.AgencyType;
 import org.search.nibrs.stagingdata.model.ArrestReportSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.ArresteeWasArmedWithType;
 import org.search.nibrs.stagingdata.model.DispositionOfArresteeUnder18Type;
@@ -43,6 +44,7 @@ import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
+import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
@@ -221,6 +223,11 @@ public class ArrestReportService {
 			
 			ArrestReportSegment arrestReportSegment = new ArrestReportSegment();
 			
+			if (groupBArrestReport.getOwnerId() != null) {
+				WebUser owner = new WebUser(groupBArrestReport.getOwnerId());
+				arrestReportSegment.setOwner(owner);
+			}
+
 			arrestReportSegment.setArrestTransactionNumber(groupBArrestReport.getIdentifier());
 			arrestReportSegment.setAgency(agencyRepository.findFirstByAgencyOri(groupBArrestReport.getOri()));
 			arrestReportSegment.setOri(groupBArrestReport.getOri());
@@ -260,6 +267,18 @@ public class ArrestReportService {
 			arrestReportSegment.setStateCode(StringUtils.substring(groupBArrestReport.getOri(), 0, 2));
 			Agency agency = codeTableService.getCodeTableType(groupBArrestReport.getOri(), 
 					agencyRepository::findFirstByAgencyOri, Agency::new); 
+			
+			if (StringUtils.isNotBlank(groupBArrestReport.getOri()) && agency.getAgencyId() == 99998) {
+				agency.setAgencyId(null);
+				agency.setAgencyOri(groupBArrestReport.getOri());
+				agency.setAgencyName(groupBArrestReport.getOri());
+				agency.setAgencyType(new AgencyType(99999));
+				agency.setStateCode(StringUtils.substring(groupBArrestReport.getOri(), 0, 2));
+				agency.setStateName(StringUtils.substring(groupBArrestReport.getOri(), 0, 2));
+				
+				agency = agencyRepository.saveAndFlush(agency);
+			}
+
 			arrestReportSegment.setAgency(agency);
 	
 			arrestReportSegment.setArresteeSequenceNumber(groupBArrestReport.getArresteeSequenceNumber());

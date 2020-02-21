@@ -41,6 +41,7 @@ import org.search.nibrs.stagingdata.model.ClearedExceptionallyType;
 import org.search.nibrs.stagingdata.model.DateType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.Submission;
+import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.model.search.FbiSubmissionStatus;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -99,6 +100,10 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="agencyId")
 	private Agency agency; 
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="ownerId", referencedColumnName = "userId")
+	private WebUser owner; 
 	
 	private String incidentNumber; 
 	
@@ -251,6 +256,7 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 		int result = 1;
 		result = prime * result + ((administrativeSegmentId == null) ? 0 : administrativeSegmentId.hashCode());
 		result = prime * result + ((agency == null) ? 0 : agency.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
 		result = prime * result + ((cargoTheftIndicatorType == null) ? 0 : cargoTheftIndicatorType.hashCode());
 		result = prime * result + ((cityIndicator == null) ? 0 : cityIndicator.hashCode());
 		result = prime * result + ((clearedExceptionallyType == null) ? 0 : clearedExceptionallyType.hashCode());
@@ -300,7 +306,8 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 				+ "yearOfTape=" + yearOfTape + ", cityIndicator="
 				+ cityIndicator + ", ori=" + ori + ", offenseSegments=" + offenseSegments + ", propertySegments="
 				+ propertySegments + ", arresteeSegments=" + arresteeSegments + ", offenderSegments=" + offenderSegments
-				+ ", victimSegments=" + victimSegments + ", agency=" + agency + ", incidentNumber=" + incidentNumber
+				+ ", victimSegments=" + victimSegments + ", agency=" + agency + ", owner=" + owner==null?"null": owner
+				+ ",incidentNumber=" + incidentNumber
 				+ ", incidentDate=" + getIncidentDate() + ", incidentDateType=" + incidentDateType
 				+ ", exceptionalClearanceDate=" + exceptionalClearanceDate + ", exceptionalClearanceDateType="
 				+ exceptionalClearanceDateType + ", reportDateIndicator=" + reportDateIndicator + ", incidentHour="
@@ -326,6 +333,11 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 			if (other.agency != null)
 				return false;
 		} else if (!agency.equals(other.agency))
+			return false;
+		if (owner == null) {
+			if (other.owner != null)
+				return false;
+		} else if (!owner.equals(other.owner))
 			return false;
 		if (arresteeSegments == null) {
 			if (other.arresteeSegments != null)
@@ -485,6 +497,14 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 		else {
 			return FbiSubmissionStatus.REJECTED; 
 		}
+	}
+
+	public WebUser getOwner() {
+		return owner;
+	}
+
+	public void setOwner(WebUser owner) {
+		this.owner = owner;
 	}
 
 }

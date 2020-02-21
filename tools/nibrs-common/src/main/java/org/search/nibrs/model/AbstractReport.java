@@ -40,6 +40,7 @@ public abstract class AbstractReport implements ValidationTarget, Identifiable, 
 
 	private Integer monthOfTape;
 	private Integer yearOfTape;
+	private Integer ownerId; 
 	private String cityIndicator;
 	private String ori;
 	protected char adminSegmentLevel;
@@ -189,6 +190,14 @@ public abstract class AbstractReport implements ValidationTarget, Identifiable, 
 		ret.setSegmentType(getAdminSegmentLevel());
 		ret.setReport(this);
 		return ret;
+	}
+
+	public Integer getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(Integer ownerId) {
+		this.ownerId = ownerId;
 	}
 
 }

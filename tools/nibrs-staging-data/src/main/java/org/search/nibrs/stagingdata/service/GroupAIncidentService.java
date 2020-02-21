@@ -39,6 +39,7 @@ import org.search.nibrs.model.NIBRSAge;
 import org.search.nibrs.stagingdata.controller.BadRequestException;
 import org.search.nibrs.stagingdata.model.AdditionalJustifiableHomicideCircumstancesType;
 import org.search.nibrs.stagingdata.model.Agency;
+import org.search.nibrs.stagingdata.model.AgencyType;
 import org.search.nibrs.stagingdata.model.AggravatedAssaultHomicideCircumstancesType;
 import org.search.nibrs.stagingdata.model.ArresteeSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.ArresteeWasArmedWithType;
@@ -71,6 +72,7 @@ import org.search.nibrs.stagingdata.model.TypePropertyLossEtcType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.model.VictimOffenderAssociation;
 import org.search.nibrs.stagingdata.model.VictimOffenderRelationshipType;
+import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenderSegment;
@@ -232,6 +234,10 @@ public class GroupAIncidentService {
 		for (GroupAIncidentReport groupAIncidentReport: groupAIncidentReports){
 			AdministrativeSegment administrativeSegment = new AdministrativeSegment();
 			
+			if (groupAIncidentReport.getOwnerId() != null) {
+				WebUser owner = new WebUser(groupAIncidentReport.getOwnerId());
+				administrativeSegment.setOwner(owner);
+			}
 			log.info("Persisting GroupAIncident: " + groupAIncidentReport.getIncidentNumber());
 			
 			
@@ -285,7 +291,17 @@ public class GroupAIncidentService {
 							ClearedExceptionallyType::new); 
 			administrativeSegment.setClearedExceptionallyType(clearedExceptionallyType);
 			
-			Agency agency = codeTableService.getCodeTableType(groupAIncidentReport.getOri(), agencyRepository::findFirstByAgencyOri, Agency::new); 
+			Agency agency = codeTableService.getCodeTableType(groupAIncidentReport.getOri(), agencyRepository::findFirstByAgencyOri, Agency::new);
+			
+			if (StringUtils.isNotBlank(groupAIncidentReport.getOri()) && agency.getAgencyId() == 99998) {
+				agency.setAgencyId(null);
+				agency.setAgencyOri(groupAIncidentReport.getOri());
+				agency.setAgencyName(groupAIncidentReport.getOri());
+				agency.setAgencyType(new AgencyType(99999));
+				agency.setStateCode(StringUtils.substring(groupAIncidentReport.getOri(), 0, 2));
+				agency.setStateName(StringUtils.substring(groupAIncidentReport.getOri(), 0, 2));
+				agency = agencyRepository.save(agency);
+			}
 			administrativeSegment.setAgency(agency);
 			
 			CargoTheftIndicatorType cargoTheftIndicatorType = 

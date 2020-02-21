@@ -45,6 +45,7 @@ import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
+import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.model.search.FbiSubmissionStatus;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -80,6 +81,11 @@ public class ArrestReportSegment {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="agencyId")
 	private Agency agency; 
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="ownerId", referencedColumnName = "userId")
+	private WebUser owner; 
+
 	private String ori; 
 	private String arrestTransactionNumber; 
 	private Integer arresteeSequenceNumber; 
@@ -262,6 +268,7 @@ public class ArrestReportSegment {
 		result = prime * result + ((ageOfArresteeMax == null) ? 0 : ageOfArresteeMax.hashCode());
 		result = prime * result + ((ageOfArresteeMin == null) ? 0 : ageOfArresteeMin.hashCode());
 		result = prime * result + ((agency == null) ? 0 : agency.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
 		result = prime * result + ((arrestDate == null) ? 0 : arrestDate.hashCode());
 		result = prime * result + ((arrestDateType == null) ? 0 : arrestDateType.hashCode());
 		result = prime * result + ((arrestReportSegmentId == null) ? 0 : arrestReportSegmentId.hashCode());
@@ -305,6 +312,11 @@ public class ArrestReportSegment {
 			if (other.agency != null)
 				return false;
 		} else if (!agency.equals(other.agency))
+			return false;
+		if (owner == null) {
+			if (other.owner != null)
+				return false;
+		} else if (!owner.equals(other.owner))
 			return false;
 		if (arrestDate == null) {
 			if (other.arrestDate != null)
@@ -399,7 +411,7 @@ public class ArrestReportSegment {
 	public String toString() {
 		return "ArrestReportSegment [arrestReportSegmentId=" + arrestReportSegmentId + ", segmentActionType="
 				+ segmentActionType + ", stateCode=" + getStateCode() + ", monthOfTape=" + monthOfTape + ", yearOfTape=" + yearOfTape + ", cityIndicator="
-				+ cityIndicator + ", agency=" + agency + ", ori=" + ori + ", arrestTransactionNumber="
+				+ cityIndicator + ", agency=" + agency + "owner=" + owner==null?"null":owner + ", ori=" + ori + ", arrestTransactionNumber="
 				+ arrestTransactionNumber + ", arresteeSequenceNumber=" + arresteeSequenceNumber + ", arrestDate="
 				+ arrestDate + ", arrestDateType=" + arrestDateType + ", typeOfArrestType=" + typeOfArrestType
 				+ ", ageOfArresteeMin=" + ageOfArresteeMin + ", ageOfArresteeMax=" + ageOfArresteeMax
@@ -467,6 +479,12 @@ public class ArrestReportSegment {
 		else {
 			return FbiSubmissionStatus.REJECTED; 
 		}
+	}
+	public WebUser getOwner() {
+		return owner;
+	}
+	public void setOwner(WebUser owner) {
+		this.owner = owner;
 	}
 
 }

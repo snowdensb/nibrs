@@ -36,6 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
+import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.common.NIBRSJsonError;
@@ -58,7 +59,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@SessionAttributes({"showUserInfoDropdown", "validationResults", "persistReportTask"})
+@SessionAttributes({"showUserInfoDropdown", "validationResults", "persistReportTask", "authUser", "privateSummaryReportSite"})
 @RequestMapping("/files")
 public class UploadFileController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -273,7 +274,9 @@ public class UploadFileController {
 		logCountsOfReports(validReports);
 		
 		PersistReportTask persistReportTask = (PersistReportTask) model.get("persistReportTask");
-		restService.persistValidReportsAsync(persistReportTask, validReports);
+		
+		AuthUser authUser = (AuthUser) model.get("authUser"); 
+		restService.persistValidReportsAsync(persistReportTask, validReports, authUser);
 		
 		log.info("called the aync method"); 
 		return "Server processing the valid reports.";

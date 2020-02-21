@@ -18,16 +18,19 @@ package org.search.nibrs.admin.security;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.search.nibrs.admin.services.rest.RestService;
+import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.xml.XmlUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthoritiesContainer;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -37,6 +40,10 @@ import org.w3c.dom.Element;
 @Component
 public class PortalPreAuthenticatedUserDetailsService implements
 		AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
+	
+	@Resource
+	RestService restService;
+
     private final Log log = LogFactory.getLog(this.getClass());
 	/**
 	 * Get a UserDetails object based on the user name contained in the given token, and
@@ -63,6 +70,7 @@ public class PortalPreAuthenticatedUserDetailsService implements
 			Collection<? extends GrantedAuthority> authorities) {
 		String userName = "anonymous"; 
 		Element samlAssertion = (Element)token.getPrincipal();
+		WebUser savedUser = new WebUser();
 		try {
 			String givenName = XmlUtils.xPathStringSearch(samlAssertion,
 			        "/saml2:Assertion/saml2:AttributeStatement[1]/"
@@ -74,9 +82,24 @@ public class PortalPreAuthenticatedUserDetailsService implements
 			if (StringUtils.isNotBlank(fullName)) {
 				userName = fullName; 
 			}
+			
+			String federationId = XmlUtils.xPathStringSearch(samlAssertion,
+                    "/saml2:Assertion/saml2:AttributeStatement[1]/"
+                    + "saml2:Attribute[@Name='gfipm:2.0:user:FederationId']/saml2:AttributeValue");
+			String email = XmlUtils.xPathStringSearch(samlAssertion,
+					"/saml2:Assertion/saml2:AttributeStatement[1]/"
+							+ "saml2:Attribute[@Name='gfipm:2.0:user:EmailAddressText']/saml2:AttributeValue");
+			WebUser webUser = new WebUser();
+			webUser.setFirstName(givenName);
+			webUser.setLastName(surName);
+			webUser.setFederationId(federationId);
+			webUser.setEmail(email);
+			
+			savedUser = restService.getSavedUser(webUser);
 		} catch (Exception e) {
 			log.error("Failed to retrieve the user name from the SAML token.", e);
 		}
-		return new User(userName, "N/A", true, true, true, true, authorities);
+		return new AuthUser(userName, "N/A", authorities, savedUser);
 	}
+	
 }
