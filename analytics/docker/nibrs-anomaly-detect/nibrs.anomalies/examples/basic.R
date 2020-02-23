@@ -1,15 +1,21 @@
-extractDfList <- readRDS('~/git-repos/SEARCH-NCJIS/nibrs/analytics/docker/nibrs-cde-extract/cde-extract.rds')
+library(tidyverse)
+library(nibrs.anomalies)
+
+extractDfList <- readRDS('/opt/data/nibrs/cde/cde-extract.rds')
 
 variableValueList <- list(
   'distincts'='VictimSegmentID',
-  'stateRegex'='WA',
-  'yearRegex'='201[67]',
+  'stateRegex'='AR',
+  'yearRegex'='2018',
   'VictimAgeDim'=list(
-    'values'='Blank'
+    'values'='Blank',
+    'label'='Victim Age'
   ),
   'SexOfPersonTypeID'=list(
-    'values'=99998:99999
+    'values'=99998:99999,
+    'label'='Victim Sex'
   )
 )
 
-detectMissingUnknown(extractDfList, variableValueList)
+detectMissingUnknown(extractDfList, variableValueList) %>%
+  write_csv('/tmp/anomaly.csv')

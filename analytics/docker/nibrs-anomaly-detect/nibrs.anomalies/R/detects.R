@@ -25,6 +25,21 @@ detectMissingUnknown <- function(extractDfList, variableValueList) {
     mutate(!!!flist) %>%
     group_by(AgencyID)
 
+  outNames <- variableValueList %>%
+    .[!(names(.) %in% c('distincts','stateRegex','yearRegex'))] %>%
+    map(function(item) {
+      item$label
+    }) %>%
+    imap_chr(function(item, nm) {
+      if (is.null(item)) {
+        nm
+      } else {
+        item
+      }
+    })
+
+  outNames <- names(outNames) %>% set_names(outNames)
+
   results <- inner_join(
     results %>% summarize_at(names(flist), mean),
     results %>% summarize(Records=n()),
@@ -35,7 +50,8 @@ detectMissingUnknown <- function(extractDfList, variableValueList) {
     select(AgencyName, Records, everything()) %>%
     bind_rows(results %>% ungroup() %>% summarize_at(names(flist), mean) %>%
                 bind_cols(results %>% ungroup() %>% summarize(Records=n()) %>% select(Records)) %>%
-                mutate(AgencyName='Total'))
+                mutate(AgencyName='Total')) %>%
+    rename(!!!outNames)
 
   results
 
