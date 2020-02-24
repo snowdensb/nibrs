@@ -50,10 +50,8 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 			+ "		and cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) > ?3")
 	boolean existsByArrestTransactionNumberAndOriAndSubmissionDate(String arrestTransactionNumber, String ori, Date submissionDate);
 	
-	@Query("SELECT distinct ag.agencyId from ArrestReportSegment a "
-			+ "LEFT JOIN a.agency ag "
-			+ "LEFT JOIN a.owner o "
-			+ "WHERE o.userId = ?1 ")
+	@Query("SELECT distinct a.agency.agencyId from ArrestReportSegment a "
+			+ "WHERE a.owner.ownerId = ?1 ")
 	Set<Integer> findAgencyIdsByOwnerId(Integer ownerId);
 
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)

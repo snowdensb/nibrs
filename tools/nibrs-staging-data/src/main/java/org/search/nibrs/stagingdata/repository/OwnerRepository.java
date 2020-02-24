@@ -17,11 +17,11 @@ package org.search.nibrs.stagingdata.repository;
 
 import javax.transaction.Transactional;
 
-import org.search.nibrs.stagingdata.model.WebUser;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @Transactional
-public interface WebUserRepository extends JpaRepository<WebUser, Integer>{
-	public WebUser findFirstByFederationId(String federationId);
+public interface OwnerRepository extends JpaRepository<Owner, Integer>{
+	public Owner findFirstByFederationId(String federationId);
 	
 }

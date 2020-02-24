@@ -286,7 +286,8 @@ public class UploadFileController {
 	public @ResponseBody String persistPreCertificationErrors(Map<String, Object> model) {
 		
 		ValidationResults validationResults = (ValidationResults) model.get("validationResults");
-		String response = restService.persistPreCertificationErrors(validationResults.getErrorList());
+		AuthUser authUser = (AuthUser) model.get("authUser"); 
+		String response = restService.persistPreCertificationErrors(validationResults.getErrorList(), authUser);
 		
 		return response;
 	}

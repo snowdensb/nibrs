@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.services.rest.RestService;
-import org.search.nibrs.stagingdata.model.WebUser;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.xml.XmlUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -70,7 +70,7 @@ public class PortalPreAuthenticatedUserDetailsService implements
 			Collection<? extends GrantedAuthority> authorities) {
 		String userName = "anonymous"; 
 		Element samlAssertion = (Element)token.getPrincipal();
-		WebUser savedUser = new WebUser();
+		Owner savedUser = new Owner();
 		try {
 			String givenName = XmlUtils.xPathStringSearch(samlAssertion,
 			        "/saml2:Assertion/saml2:AttributeStatement[1]/"
@@ -89,7 +89,7 @@ public class PortalPreAuthenticatedUserDetailsService implements
 			String email = XmlUtils.xPathStringSearch(samlAssertion,
 					"/saml2:Assertion/saml2:AttributeStatement[1]/"
 							+ "saml2:Attribute[@Name='gfipm:2.0:user:EmailAddressText']/saml2:AttributeValue");
-			WebUser webUser = new WebUser();
+			Owner webUser = new Owner();
 			webUser.setFirstName(givenName);
 			webUser.setLastName(surName);
 			webUser.setFederationId(federationId);

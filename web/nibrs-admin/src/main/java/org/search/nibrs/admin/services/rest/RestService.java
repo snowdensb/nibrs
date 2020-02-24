@@ -29,9 +29,9 @@ import org.search.nibrs.common.NIBRSError;
 import org.search.nibrs.model.AbstractReport;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.model.GroupBArrestReport;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.search.nibrs.stagingdata.model.SubmissionTrigger;
-import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.search.PrecertErrorSearchRequest;
@@ -109,11 +109,11 @@ public class RestService{
 				.block();
 	}
 	
-	public WebUser getSavedUser(WebUser webUser){
+	public Owner getSavedUser(Owner webUser){
 		return this.webClient.post().uri("/codeTables/user")
 				.body(BodyInserters.fromObject(webUser))
 				.retrieve()
-				.bodyToMono(new ParameterizedTypeReference<WebUser>() {})
+				.bodyToMono(new ParameterizedTypeReference<Owner>() {})
 				.block();
 	}
 	
@@ -211,13 +211,15 @@ public class RestService{
 		
 	}
 	
-	public String persistPreCertificationErrors(List<NIBRSError> nibrsErrors) {
+	public String persistPreCertificationErrors(List<NIBRSError> nibrsErrors, AuthUser authUser) {
 		log.info("Execute method asynchronously. "
 				+ Thread.currentThread().getName());
 		
 		List<PreCertificationError> preCertificationErrors = nibrsErrors.stream()
 				.map(nibrsError -> new PreCertificationError(nibrsError))
 				.collect(Collectors.toList());
+		
+		preCertificationErrors.forEach(error -> error.setOwnerId(authUser.getUserId()));
 		Integer savedCount = webClient.post().uri("/preCertificationErrors")
 			.body(BodyInserters.fromObject(preCertificationErrors))
 			.retrieve()

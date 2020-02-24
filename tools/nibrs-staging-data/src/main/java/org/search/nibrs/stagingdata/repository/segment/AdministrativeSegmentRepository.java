@@ -58,10 +58,8 @@ public interface AdministrativeSegmentRepository
 			+ "		and cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) > ?3")
 	boolean existsByIncidentNumberAndOriAndSubmissionDate(String incidentNumber, String ori, Date submissionDate);
 	
-	@Query("SELECT distinct ag.agencyId from AdministrativeSegment a "
-			+ "LEFT JOIN a.owner o "
-			+ "LEFT JOIN a.agency ag "
-			+ "WHERE o.userId = ?1 ")
+	@Query("SELECT distinct a.agency.agencyId from AdministrativeSegment a "
+			+ "WHERE a.owner.ownerId = ?1 ")
 	Set<Integer> findAgencyIdsByOwnerId(Integer ownerId);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)

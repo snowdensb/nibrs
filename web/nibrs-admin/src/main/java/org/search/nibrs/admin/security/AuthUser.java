@@ -19,7 +19,7 @@ package org.search.nibrs.admin.security;
 import java.util.Collection;
 import java.util.List;
 
-import org.search.nibrs.stagingdata.model.WebUser;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -43,14 +43,14 @@ public class AuthUser extends User implements UserDetails, CredentialsContainer 
 	 * Calls the more complex constructor with all boolean arguments set to {@code true}.
 	 */
 	public AuthUser(String username, String password,
-			Collection<? extends GrantedAuthority> authorities,  WebUser webUser) {
+			Collection<? extends GrantedAuthority> authorities,  Owner owner) {
 		super(username, password, true, true, true, true, authorities);
 		this.setOris(oris);
-		this.setEmailAddress(webUser.getEmail());
-		this.setFederationId(webUser.getFederationId());
-		this.setFirstName(webUser.getFirstName());
-		this.setLastName(webUser.getLastName());
-		this.setUserId(webUser.getUserId());
+		this.setEmailAddress(owner.getEmail());
+		this.setFederationId(owner.getFederationId());
+		this.setFirstName(owner.getFirstName());
+		this.setLastName(owner.getLastName());
+		this.setUserId(owner.getOwnerId());
 	}
 
 	// ~ Methods

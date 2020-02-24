@@ -22,29 +22,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Entity
 @Cacheable
-@Table(name = "user")
-public class WebUser {
+public class Owner {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer userId; 
+	private Integer ownerId; 
 	
 	private String federationId;
 	private String firstName;
 	private String lastName;
 	private String email;
 	
-	public WebUser() {
+	public Owner() {
 		super();
 	}
-	public WebUser(Integer userId) {
+	public Owner(Integer ownerId) {
 		super();
-		this.setUserId(userId);
+		this.setOwnerId(ownerId);
 	}
 	
 
@@ -54,7 +52,7 @@ public class WebUser {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(email, federationId, firstName, lastName, getUserId());
+		return Objects.hash(email, federationId, firstName, lastName, getOwnerId());
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -64,13 +62,13 @@ public class WebUser {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof WebUser)) {
+		if (!(obj instanceof Owner)) {
 			return false;
 		}
-		WebUser other = (WebUser) obj;
+		Owner other = (Owner) obj;
 		return Objects.equals(email, other.email) && Objects.equals(federationId, other.federationId)
 				&& Objects.equals(firstName, other.firstName) && Objects.equals(lastName, other.lastName)
-				&& Objects.equals(getUserId(), other.getUserId());
+				&& Objects.equals(getOwnerId(), other.getOwnerId());
 	}
 	public String getFederationId() {
 		return federationId;
@@ -96,11 +94,11 @@ public class WebUser {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Integer getUserId() {
-		return userId;
+	public Integer getOwnerId() {
+		return ownerId;
 	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setOwnerId(Integer ownerId) {
+		this.ownerId = ownerId;
 	}
 
 }

@@ -38,6 +38,7 @@ import org.search.nibrs.stagingdata.model.ArrestReportSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.DateType;
 import org.search.nibrs.stagingdata.model.DispositionOfArresteeUnder18Type;
 import org.search.nibrs.stagingdata.model.EthnicityOfPersonType;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.stagingdata.model.RaceOfPersonType;
 import org.search.nibrs.stagingdata.model.ResidentStatusOfPersonType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
@@ -45,7 +46,6 @@ import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
-import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.model.search.FbiSubmissionStatus;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -83,8 +83,8 @@ public class ArrestReportSegment {
 	private Agency agency; 
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ownerId", referencedColumnName = "userId")
-	private WebUser owner; 
+	@JoinColumn(name="ownerId")
+	private Owner owner; 
 
 	private String ori; 
 	private String arrestTransactionNumber; 
@@ -480,10 +480,10 @@ public class ArrestReportSegment {
 			return FbiSubmissionStatus.REJECTED; 
 		}
 	}
-	public WebUser getOwner() {
+	public Owner getOwner() {
 		return owner;
 	}
-	public void setOwner(WebUser owner) {
+	public void setOwner(Owner owner) {
 		this.owner = owner;
 	}
 

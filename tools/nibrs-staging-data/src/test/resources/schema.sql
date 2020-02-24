@@ -24,17 +24,16 @@ CREATE schema search_nibrs_staging;
 Use search_nibrs_staging; 
 
 
-
-
-CREATE TABLE User (
-                UserId IDENTITY NOT NULL,
+CREATE TABLE Owner (
+                OwnerId IDENTITY NOT NULL,
                 FederationId VARCHAR(100) NOT NULL,
                 Email VARCHAR(100),
                 FirstName VARCHAR(100) NOT NULL,
                 LastName VARCHAR(100) NOT NULL,
-                CONSTRAINT UserId PRIMARY KEY (UserId)
+                CONSTRAINT OwnerId PRIMARY KEY (OwnerId)
 );
-create unique index user_federationId_idx on User(FederationId); 
+create unique index owner_federationId_idx on Owner(FederationId); 
+
 
 CREATE TABLE NibrsErrorCodeType (
                 NibrsErrorCodeTypeId IDENTITY NOT NULL,
@@ -378,6 +377,7 @@ CREATE TABLE PreCertificationError (
                 DataElement VARCHAR(4),
                 RejectedValue VARCHAR(50),
                 PreCertificationErrorTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                OwnerId INTEGER,
                 CONSTRAINT PreCertificationErrorId PRIMARY KEY (PreCertificationErrorId)
 );
 
@@ -687,6 +687,7 @@ CREATE TABLE ZeroReportingSegment (
                 IncidentHour VARCHAR(4),
                 CleardExceptionally VARCHAR(1),
                 ExceptionalClearanceDate DATE,
+                OwnerInd INTEGER,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT ZeroReportingSegment_Pk PRIMARY KEY (ZeroReportingSegmentID)
 );
@@ -703,20 +704,39 @@ CREATE TABLE LEOKASegment (
                 CityIndicator VARCHAR(4),
                 Filler VARCHAR(12),
                 LEOKAData VARCHAR(600),
+                OwnerInd INTEGER,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 CONSTRAINT idLEOKASegment PRIMARY KEY (LEOKASegmentID)
 );
 
 
-ALTER TABLE ArrestReportSegment ADD CONSTRAINT User_ArrestReportSegment_fk
+ALTER TABLE ArrestReportSegment ADD CONSTRAINT Owner_ArrestReportSegment_fk
 FOREIGN KEY (OwnerId)
-REFERENCES User (UserId)
+REFERENCES Owner (OwnerId)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE AdministrativeSegment ADD CONSTRAINT User_AdministrativeSegment_fk
+ALTER TABLE AdministrativeSegment ADD CONSTRAINT Owner_AdministrativeSegment_fk
 FOREIGN KEY (OwnerId)
-REFERENCES User (UserId)
+REFERENCES Owner (OwnerId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE PreCertificationError ADD CONSTRAINT Owner_PreCertificationError_fk
+FOREIGN KEY (OwnerId)
+REFERENCES Owner (OwnerId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE ZeroReportingSegment ADD CONSTRAINT OwnerId_ZeroReportingSegment_fk
+FOREIGN KEY (OwnerInd)
+REFERENCES Owner (OwnerId)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE LEOKASegment ADD CONSTRAINT OwnerId_LEOKASegment_fk
+FOREIGN KEY (OwnerInd)
+REFERENCES Owner (OwnerId)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 

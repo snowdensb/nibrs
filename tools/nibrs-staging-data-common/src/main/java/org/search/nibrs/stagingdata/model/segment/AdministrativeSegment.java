@@ -39,9 +39,9 @@ import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.CargoTheftIndicatorType;
 import org.search.nibrs.stagingdata.model.ClearedExceptionallyType;
 import org.search.nibrs.stagingdata.model.DateType;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.Submission;
-import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.model.search.FbiSubmissionStatus;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -102,8 +102,8 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 	private Agency agency; 
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ownerId", referencedColumnName = "userId")
-	private WebUser owner; 
+	@JoinColumn(name="ownerId")
+	private Owner owner; 
 	
 	private String incidentNumber; 
 	
@@ -499,11 +499,11 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 		}
 	}
 
-	public WebUser getOwner() {
+	public Owner getOwner() {
 		return owner;
 	}
 
-	public void setOwner(WebUser owner) {
+	public void setOwner(Owner owner) {
 		this.owner = owner;
 	}
 

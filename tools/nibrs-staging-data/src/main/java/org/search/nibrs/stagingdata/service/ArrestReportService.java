@@ -38,15 +38,15 @@ import org.search.nibrs.stagingdata.model.ArrestReportSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.ArresteeWasArmedWithType;
 import org.search.nibrs.stagingdata.model.DispositionOfArresteeUnder18Type;
 import org.search.nibrs.stagingdata.model.EthnicityOfPersonType;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.stagingdata.model.RaceOfPersonType;
 import org.search.nibrs.stagingdata.model.ResidentStatusOfPersonType;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
-import org.search.nibrs.stagingdata.model.WebUser;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.repository.AdditionalJustifiableHomicideCircumstancesTypeRepository;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
@@ -224,7 +224,7 @@ public class ArrestReportService {
 			ArrestReportSegment arrestReportSegment = new ArrestReportSegment();
 			
 			if (groupBArrestReport.getOwnerId() != null) {
-				WebUser owner = new WebUser(groupBArrestReport.getOwnerId());
+				Owner owner = new Owner(groupBArrestReport.getOwnerId());
 				arrestReportSegment.setOwner(owner);
 			}
 

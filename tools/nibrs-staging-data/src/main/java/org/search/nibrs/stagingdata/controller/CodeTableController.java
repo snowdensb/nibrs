@@ -31,12 +31,12 @@ import org.joda.time.LocalDateTime;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.NibrsErrorCodeType;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
-import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.repository.NibrsErrorCodeTypeRepository;
+import org.search.nibrs.stagingdata.repository.OwnerRepository;
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
-import org.search.nibrs.stagingdata.repository.WebUserRepository;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class CodeTableController {
 	@Autowired
 	private AgencyRepository agencyRepository;
 	@Autowired
-	private WebUserRepository webUserRepository;
+	private OwnerRepository ownerRepository;
 	@Autowired
 	private AdministrativeSegmentRepository administrativeSegmentRepository;
 	@Autowired
@@ -71,15 +71,15 @@ public class CodeTableController {
 	private final List<String> unknownOrBlank = Arrays.asList("UNKOWN", "BLANK");
 
 	@PostMapping("/user")
-	public @ResponseBody WebUser search(@RequestBody WebUser webUser){
-		log.debug("webUser:" + webUser);
-		WebUser savedUser = webUserRepository.findFirstByFederationId(webUser.getFederationId());
+	public @ResponseBody Owner search(@RequestBody Owner owner){
+		log.debug("Owner:" + owner);
+		Owner savedOwner = ownerRepository.findFirstByFederationId(owner.getFederationId());
 		
-		if (savedUser == null) {
-			savedUser=webUserRepository.save(webUser);
+		if (savedOwner == null) {
+			savedOwner=ownerRepository.save(owner);
 		}
 		
-		return savedUser;
+		return savedOwner;
 	}
 
 	@GetMapping("/agencies")

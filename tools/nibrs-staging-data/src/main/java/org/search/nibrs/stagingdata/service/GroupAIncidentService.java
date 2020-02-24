@@ -54,6 +54,7 @@ import org.search.nibrs.stagingdata.model.MultipleArresteeSegmentsIndicatorType;
 import org.search.nibrs.stagingdata.model.OffenderSuspectedOfUsingType;
 import org.search.nibrs.stagingdata.model.OfficerActivityCircumstanceType;
 import org.search.nibrs.stagingdata.model.OfficerAssignmentTypeType;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.stagingdata.model.PropertyDescriptionType;
 import org.search.nibrs.stagingdata.model.PropertyType;
 import org.search.nibrs.stagingdata.model.RaceOfPersonType;
@@ -72,7 +73,6 @@ import org.search.nibrs.stagingdata.model.TypePropertyLossEtcType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.model.VictimOffenderAssociation;
 import org.search.nibrs.stagingdata.model.VictimOffenderRelationshipType;
-import org.search.nibrs.stagingdata.model.WebUser;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenderSegment;
@@ -235,7 +235,7 @@ public class GroupAIncidentService {
 			AdministrativeSegment administrativeSegment = new AdministrativeSegment();
 			
 			if (groupAIncidentReport.getOwnerId() != null) {
-				WebUser owner = new WebUser(groupAIncidentReport.getOwnerId());
+				Owner owner = new Owner(groupAIncidentReport.getOwnerId());
 				administrativeSegment.setOwner(owner);
 			}
 			log.info("Persisting GroupAIncident: " + groupAIncidentReport.getIncidentNumber());
