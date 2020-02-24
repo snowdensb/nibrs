@@ -5,7 +5,7 @@
 detectMissingUnknown <- function(extractDfList, variableValueList) {
 
   flist <- variableValueList %>%
-    .[!(names(.) %in% c('distincts','stateRegex','yearRegex'))] %>%
+    .[!(names(.) %in% c('distincts','stateRegex','yearRegex','filter'))] %>%
     imap(function(item, nm) {
       parse_expr(paste0(nm, ' %in% c(', paste0(gsub(x=item$values, pattern='(.+)', replacement='"\\1"'), collapse=','), ')'))
     })
@@ -16,7 +16,14 @@ detectMissingUnknown <- function(extractDfList, variableValueList) {
     semi_join(extractDfList$FullIncidentView, by='StateID') %>%
     filter(grepl(x=StateCode, pattern=variableValueList$stateRegex))
 
+  if (is.null(variableValueList$filter)) {
+    filt <- parse_expr('TRUE')
+  } else {
+    filt <- parse_expr(variableValueList$filter)
+  }
+
   results <- extractDfList$FullIncidentView %>%
+    filter(!!filt) %>%
     semi_join(states, by='StateID') %>%
     filter(grepl(x=as.character(CDEYear), pattern=variableValueList$yearRegex)) %>%
     select(!!!syms(c(names(flist), distincts,'AgencyID'))) %>%
@@ -26,7 +33,7 @@ detectMissingUnknown <- function(extractDfList, variableValueList) {
     group_by(AgencyID)
 
   outNames <- variableValueList %>%
-    .[!(names(.) %in% c('distincts','stateRegex','yearRegex'))] %>%
+    .[!(names(.) %in% c('distincts','stateRegex','yearRegex','filter'))] %>%
     map(function(item) {
       item$label
     }) %>%
@@ -53,6 +60,6 @@ detectMissingUnknown <- function(extractDfList, variableValueList) {
                 mutate(AgencyName='Total')) %>%
     rename(!!!outNames)
 
-  results
+  results %>% arrange(desc(Records))
 
 }
