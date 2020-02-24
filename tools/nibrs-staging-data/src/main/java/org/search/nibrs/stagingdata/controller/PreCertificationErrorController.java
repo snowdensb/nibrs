@@ -18,11 +18,14 @@ package org.search.nibrs.stagingdata.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
+import org.search.nibrs.stagingdata.model.AgencyType;
 import org.search.nibrs.stagingdata.model.NibrsErrorCodeType;
+import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.search.PrecertErrorSearchRequest;
@@ -70,11 +73,22 @@ public class PreCertificationErrorController {
 	private PreCertificationError convertPreCertificationError(PreCertificationError preCertificationError) {
 		Agency agency = agencyRepository.findFirstByAgencyOri(preCertificationError.getOri());
 		
-		if (agency == null) {
+		if (agency == null && StringUtils.isNotBlank(preCertificationError.getOri())){
+			agency = new Agency(); 
+			agency.setAgencyId(null);
+			agency.setAgencyOri(preCertificationError.getOri());
+			agency.setAgencyName(preCertificationError.getOri());
+			agency.setAgencyType(new AgencyType(99999));
+			agency.setStateCode(StringUtils.substring(preCertificationError.getOri(), 0, 2));
+			agency.setStateName(StringUtils.substring(preCertificationError.getOri(), 0, 2));
+			agency = agencyRepository.save(agency);
+		}
+		else if (agency == null){
 			agency = agencyRepository.findById(99999).get();
 		}
 		preCertificationError.setAgency(agency);
 		
+		preCertificationError.setOwner(new Owner(preCertificationError.getOwnerId()));
 		SegmentActionTypeType segmentActionType = 
 				segmentActionTypeRepository.findFirstByStateCode(preCertificationError.getSegmentActionTypeCode());
 		preCertificationError.setSegmentActionType(segmentActionType);

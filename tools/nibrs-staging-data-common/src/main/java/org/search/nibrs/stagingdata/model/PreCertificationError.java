@@ -60,6 +60,10 @@ public class PreCertificationError implements Serializable{
 	private Agency agency; 
 
 	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="ownerId")
+	private Owner owner; 
+
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="nibrsErrorCodeTypeId")
 	private NibrsErrorCodeType nibrsErrorCodeType;
 	
@@ -70,7 +74,10 @@ public class PreCertificationError implements Serializable{
 	
 	private String ori;
 	@Transient
-	private String segmentActionTypeCode; 
+	private String segmentActionTypeCode;
+	
+	@Transient
+	private Integer ownerId; 
 	
 	private String monthOfTape; 
 	private String yearOfTape; 
@@ -326,6 +333,22 @@ public class PreCertificationError implements Serializable{
 
 	public void setNibrsErrorMessage(String nibrsErrorMessage) {
 		this.nibrsErrorMessage = nibrsErrorMessage;
+	}
+
+	public Owner getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Owner owner) {
+		this.owner = owner;
+	}
+
+	public Integer getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(Integer ownerId) {
+		this.ownerId = ownerId;
 	}
 
 }
