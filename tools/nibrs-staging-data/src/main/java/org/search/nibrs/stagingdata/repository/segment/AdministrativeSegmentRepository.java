@@ -17,6 +17,7 @@ package org.search.nibrs.stagingdata.repository.segment;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -56,6 +57,12 @@ public interface AdministrativeSegmentRepository
 			+ "			where incidentNumber = ?1 and ori = ?2) "
 			+ "		and cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) > ?3")
 	boolean existsByIncidentNumberAndOriAndSubmissionDate(String incidentNumber, String ori, Date submissionDate);
+	
+	@Query("SELECT distinct ag.agencyId from AdministrativeSegment a "
+			+ "LEFT JOIN a.owner o "
+			+ "LEFT JOIN a.agency ag "
+			+ "WHERE o.userId = ?1 ")
+	Set<Integer> findAgencyIdsByOwnerId(Integer ownerId);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	List<AdministrativeSegment> findDistinctByOriAndIncidentDateTypeYearNumAndIncidentDateTypeMonthNum(String ori, Integer year,  Integer month);

@@ -16,9 +16,12 @@
 package org.search.nibrs.stagingdata.controller;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -35,6 +38,7 @@ import org.search.nibrs.stagingdata.repository.NibrsErrorCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.WebUserRepository;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
+import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +59,8 @@ public class CodeTableController {
 	private WebUserRepository webUserRepository;
 	@Autowired
 	private AdministrativeSegmentRepository administrativeSegmentRepository;
+	@Autowired
+	private ArrestReportSegmentRepository arrestReportSegmentRepository;
 	@Autowired
 	private UcrOffenseCodeTypeRepository ucrOffenseCodeTypeRepository;
 	@Autowired
@@ -80,17 +86,28 @@ public class CodeTableController {
 	public Map<Integer, String> agencies(){
 		Map<Integer, String> agencyMap = 
 			StreamSupport.stream(agencyRepository.findAll(new Sort(Sort.Direction.ASC, "agencyName")).spliterator(), false)
-				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
+				.filter(agency-> !"UNKNOWN".equalsIgnoreCase(agency.getAgencyName()) && !"BLANK".equalsIgnoreCase(agency.getAgencyName()))
 				.collect(Collectors.toMap(Agency::getAgencyId, Agency::getAgencyName, (u, v) -> u,
 					      LinkedHashMap::new));
 		return agencyMap;
 	}
 	
-	@GetMapping("/agencies/{federationId}")
-	public Map<Integer, String> agenciesByFederationId(@PathVariable String federationId){
-		Map<Integer, String> agencyMap = new LinkedHashMap<>(); 
+	@GetMapping("/agencies/{ownerId}")
+	public Map<Integer, String> agenciesByFederationId(@PathVariable Integer ownerId){
 		
-		//TODO finish the query. 
+		Set<Integer> agencyIds = administrativeSegmentRepository.findAgencyIdsByOwnerId(ownerId); 
+		Set<Integer> agencyIdsFromGroupB = arrestReportSegmentRepository.findAgencyIdsByOwnerId(ownerId); 
+		agencyIds.addAll(agencyIdsFromGroupB); 
+		
+		Comparator<Agency> compareByAgencyName = (Agency a1, Agency a2) -> a1.getAgencyName().compareTo( a2.getAgencyName() );
+		List<Agency> agencies = agencyRepository.findAllById(agencyIds); 
+		Collections.sort(agencies, compareByAgencyName); 
+		
+		Map<Integer, String> agencyMap = 
+			StreamSupport.stream(agencies.spliterator(), false)
+				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
+					.collect(Collectors.toMap(Agency::getAgencyId, Agency::getAgencyName, (u, v) -> u,
+						      LinkedHashMap::new));
 		return agencyMap;
 	}
 	
