@@ -58,19 +58,17 @@
 				<div class="form-row align-text-center">
 				  <label class="col-2 col-form-label font-weight-bold text-right" for="incidentMonth">Incident Date</label>
 				  <div class="col-sm-2">
-					<select th:field="*{incidentYear}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="Please select one" required>
-					</select>
-		 	        <div class="invalid-feedback">a 4-digit year required</div>
+						<select th:field="*{incidentYear}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="Please select one" required>
+						</select>
+			 	        <div class="invalid-feedback">a 4-digit year required</div>
 				  </div>
 				  <div class="col-sm-2">
-					<select th:field="*{incidentMonth}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="Please select one" required>
-					</select>
-<!-- 				  	<input class="form-control form-control-sm" type="number" th:field="*{incidentMonth}" 
-				  		width="2" maxlength="2" placeholder="month" th:errorclass="is-invalid" min="1" max="12" required/> -->
+						<select th:field="*{incidentMonth}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="Please select one" required>
+						</select>
 				    <div class="invalid-feedback">
 				        a valid month required
 				    </div>
-      			  </div>
+  			  </div>
 				</div>
 				<div class="form-row pt-2">
 					<div class="col-2"></div>
