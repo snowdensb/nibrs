@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
@@ -93,7 +94,7 @@ public class CodeTableController {
 	}
 	
 	@GetMapping("/agencies/{ownerId}")
-	public Map<Integer, String> agenciesByFederationId(@PathVariable Integer ownerId){
+	public Map<Integer, String> agenciesByOwnerId(@PathVariable Integer ownerId){
 		
 		Set<Integer> agencyIds = administrativeSegmentRepository.findAgencyIdsByOwnerId(ownerId); 
 		Set<Integer> agencyIdsFromGroupB = arrestReportSegmentRepository.findAgencyIdsByOwnerId(ownerId); 
@@ -113,21 +114,38 @@ public class CodeTableController {
 	
 	@GetMapping("/agenciesHavingData")
 	public Map<String, String> getAgenciesHavingData(){
-		Map<String, String> agencyMap = StreamSupport.stream(agencyRepository.findAllHavingData().spliterator(), false)
+		Map<String, String> agencyMap = StreamSupport.stream(agencyRepository.findAllHavingData(null).spliterator(), false)
 				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
 				.collect(Collectors.toMap(Agency::getAgencyOri, Agency::getAgencyName, (u, v) -> u,
 						LinkedHashMap::new));
 		return agencyMap;
 	}
 	
-	@GetMapping("/years/{ori}") 
-	public List<Integer> getYears(@PathVariable String ori){
-		return administrativeSegmentRepository.findDistinctYears(ori);
+	@GetMapping("/agenciesHavingData/{ownerId}")
+	public Map<String, String> getAgenciesHavingDataByOwnerId(@PathVariable Integer ownerId){
+		Map<String, String> agencyMap = StreamSupport.stream(agencyRepository.findAllHavingData(ownerId).spliterator(), false)
+				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
+				.collect(Collectors.toMap(Agency::getAgencyOri, Agency::getAgencyName, (u, v) -> u,
+						LinkedHashMap::new));
+		return agencyMap;
 	}
 	
-	@GetMapping("/months/{year}/{ori}") 
-	public List<Integer> getMonths(@PathVariable String ori, @PathVariable Integer year){
-		return administrativeSegmentRepository.findDistinctMonths(ori, year);
+	@GetMapping("/years/{ownerId}/{ori}") 
+	public List<Integer> getYears(@PathVariable String ori, @PathVariable String ownerId){
+		return administrativeSegmentRepository.findDistinctYears(ori, getOwnerId(ownerId));
+	}
+
+	private Integer getOwnerId(String ownerIdString) {
+		Integer ownerId = null;
+		if (StringUtils.isNotBlank(ownerIdString)) {
+			ownerId = Integer.valueOf(ownerIdString);
+		}
+		return ownerId;
+	}
+	
+	@GetMapping("/months/{year}/{ownerId}/{ori}") 
+	public List<Integer> getMonths(@PathVariable String ori, @PathVariable Integer year, @PathVariable String ownerId){
+		return administrativeSegmentRepository.findDistinctMonths(ori, year, getOwnerId(ownerId));
 	}
 	
 	@GetMapping("/offenseCodes")

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.search.nibrs.admin.AppProperties;
+import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.arson.ArsonReport;
@@ -44,7 +47,6 @@ import org.search.nibrs.report.service.StagingDataRestClient;
 import org.search.nibrs.report.service.SupplementaryHomicideReportExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,13 +56,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"summaryReportRequest", "oriMapping"})
+@SessionAttributes({"summaryReportRequest", "oriMapping", "authUser"})
 public class SummaryReportController {
 	private static final Log log = LogFactory.getLog(SummaryReportController.class);
 
 	@Resource
 	RestService restService;
-	
+	@Resource
+    AppProperties appProperties;
 	@Autowired 
 	public StagingDataRestClient restClient; 
 	@Autowired 
@@ -77,12 +80,20 @@ public class SummaryReportController {
 	public CargoTheftReportExporter cargoTheftReportExporter;
 	
     @ModelAttribute
-    public void addModelAttributes(Model model) {
+    public void addModelAttributes(Map<String, Object> model) {
     	
     	log.info("Add ModelAtrributes");
 		
-		if (!model.containsAttribute("oriMapping")) {
-			model.addAttribute("oriMapping", restService.getOris());
+		if (!model.containsKey("oriMapping")) {
+			if (appProperties.getPrivateSummaryReportSite()) {
+				model.put("oriMapping", restService.getOris(StringUtils.EMPTY));
+			}
+			else {
+				AuthUser authUser =(AuthUser) model.get("authUser");  
+				String ownerId = Objects.toString(authUser.getUserId());
+				model.put("oriMapping", restService.getOris(ownerId));
+
+			}
 		}
     	log.debug("Model: " + model);
     }
@@ -214,13 +225,24 @@ public class SummaryReportController {
 	}
 	
 	@GetMapping("/years/{ori}")
-	public @ResponseBody List<Integer> getDistinctYears(@PathVariable String ori) throws IOException{
-		return restService.getYears(ori);
+	public @ResponseBody List<Integer> getDistinctYears(@PathVariable String ori, Map<String, Object> model) throws IOException{
+		String ownerId = getOwnerId(model);
+		return restService.getYears(ori, ownerId);
+	}
+
+	private String getOwnerId(Map<String, Object> model) {
+		String ownerId = StringUtils.EMPTY;
+		if (!appProperties.getPrivateSummaryReportSite()) {
+			AuthUser authUser =(AuthUser) model.get("authUser");  
+			ownerId = Objects.toString(authUser.getUserId());
+		}
+		return ownerId;
 	}
 	
 	@GetMapping("/months/{year}/{ori}")
-	public @ResponseBody List<Integer> getDistinctMonths(@PathVariable String ori, @PathVariable Integer year) throws IOException{
-		return restService.getMonths(ori, year);
+	public @ResponseBody List<Integer> getDistinctMonths(@PathVariable String ori, @PathVariable Integer year, Map<String, Object> model) throws IOException{
+		String ownerId = getOwnerId(model);
+		return restService.getMonths(ori, year, ownerId);
 	}
 	
 	@RequestMapping("/arsonReport/{ori}/{year}/{month}")

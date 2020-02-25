@@ -90,14 +90,14 @@ public interface AdministrativeSegmentRepository
 	List<Integer> findIdsByOriListAndSubmissionDateRange(List<String> oris, Date startDate, Date endDate, List<Integer> agencyIds);
 	
 	@Query("SELECT DISTINCT year(a.incidentDate) as incidentYear from AdministrativeSegment a "
-			+ "WHERE a.ori = ?1 "
+			+ "WHERE a.ori = ?1 AND (?2 = null OR a.owner.ownerId = ?2)"
 			+ "ORDER BY incidentYear ")
-	List<Integer> findDistinctYears(String ori);
+	List<Integer> findDistinctYears(String ori, Integer ownerId);
 	
 	@Query("SELECT DISTINCT month(a.incidentDate) as incidentMonth from AdministrativeSegment a "
-			+ "WHERE a.ori = ?1 AND year(a.incidentDate) = ?2 "
+			+ "WHERE a.ori = ?1 AND year(a.incidentDate) = ?2 AND (?3 = null OR a.owner.ownerId = ?3)"
 			+ "ORDER BY incidentMonth ")
-	List<Integer> findDistinctMonths(String ori, Integer Year);
+	List<Integer> findDistinctMonths(String ori, Integer Year, Integer ownerId);
 	
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "LEFT JOIN a.arresteeSegments aa "

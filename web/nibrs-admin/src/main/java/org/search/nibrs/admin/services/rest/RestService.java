@@ -66,22 +66,22 @@ public class RestService{
 				.block();
 	}
 	
-	public Map<String, String> getOris() {
-		return this.webClient.get().uri("/codeTables/agenciesHavingData")
+	public Map<String, String> getOris(String ownerId) {
+		return this.webClient.get().uri("/codeTables/agenciesHavingData/" + ownerId)
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<String, String>>() {})
 				.block();
 	}
 	
-	public List<Integer> getYears(String ori) {
-		return this.webClient.get().uri("/codeTables/years/" + ori)
+	public List<Integer> getYears(String ori, String ownerId) {
+		return this.webClient.get().uri("/codeTables/years/"+ ownerId + "/" + ori)
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
 				.block();
 	}
 	
-	public List<Integer> getMonths(String ori, Integer year) {
-		return this.webClient.get().uri("/codeTables/months/" + year + "/" + ori)
+	public List<Integer> getMonths(String ori, Integer year, String ownerId) {
+		return this.webClient.get().uri("/codeTables/months/" + year + "/" + ownerId + "/"+ ori)
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
 				.block();
