@@ -118,6 +118,10 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
         		predicates.add(criteriaBuilder.and(root.get("agency").get("agencyId").in(incidentSearchRequest.getAgencyIds())));
         	}
         	
+        	if (incidentSearchRequest.getOwnerId() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("owner").get("ownerId"), incidentSearchRequest.getOwnerId())));
+        	}
+        	
         	if (incidentSearchRequest.getIncidentIdentifier() != null) {
         		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("incidentNumber"), incidentSearchRequest.getIncidentIdentifier())));
         	}

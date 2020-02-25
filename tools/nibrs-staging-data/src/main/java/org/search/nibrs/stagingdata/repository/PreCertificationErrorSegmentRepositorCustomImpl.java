@@ -65,6 +65,10 @@ public class PreCertificationErrorSegmentRepositorCustomImpl implements PreCerti
 		List<Predicate> predicates = new ArrayList<>();
 		
 		if (!precertErrorSearchRequest.isEmpty()) {
+        	if (precertErrorSearchRequest.getOwnerId() != null) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("owner").get("ownerId"), precertErrorSearchRequest.getOwnerId())));
+        	}
+        	
 			if (StringUtils.isNotBlank(precertErrorSearchRequest.getIncidentIdentifier())) {
         		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("incidentIdentifier"), precertErrorSearchRequest.getIncidentIdentifier())));
 			}

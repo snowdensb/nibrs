@@ -150,14 +150,14 @@ public class SamlServiceImpl implements SamlService{
         try {
             Map<SamlAttribute, String> customAttributes = new HashMap<SamlAttribute, String>();
 //            customAttributes.put(SamlAttribute.FederationId, "");
-            customAttributes.put(SamlAttribute.FederationId, "HIJIS:IDP:HCJDC:USER:demouser");
-//                customAttributes.put(SamlAttribute.FederationId.getAttibuteName(), "HIJIS:IDP:HCJDC:USER:demouser4");
+//            customAttributes.put(SamlAttribute.FederationId, "HIJIS:IDP:HCJDC:USER:demouser");
+            customAttributes.put(SamlAttribute.FederationId, "HIJIS:IDP:HCJDC:USER:demouser2");
             customAttributes.put(SamlAttribute.EmployerORI, "OK072015A");
             //customAttributes.put(SamlAttribute.EmployerORI, "1234567890");
             customAttributes.put(SamlAttribute.FirearmsRegistrationRecordsPersonnelIndicator, "true");
             customAttributes.put(SamlAttribute.SupervisoryRoleIndicator, "true");
             customAttributes.put(SamlAttribute.GivenName, "Demo");
-            customAttributes.put(SamlAttribute.SurName, "User");
+            customAttributes.put(SamlAttribute.SurName, "User2");
 //            customAttributes.put(SamlAttribute.FederatedQueryUserIndicator, "");
 //                customAttributes.put("gfipm:2.0:user:EmployerORI", "H00000001");
             if (BooleanUtils.isNotTrue(appProperties.getDemoLawEnforcementEmployerIndicator())){

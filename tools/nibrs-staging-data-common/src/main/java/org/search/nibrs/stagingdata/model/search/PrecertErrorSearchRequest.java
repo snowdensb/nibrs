@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class PrecertErrorSearchRequest implements Serializable {
 	private static final long serialVersionUID = 7916910066665545067L;
 	private String incidentIdentifier; 
+	private Integer ownerId; 
 	private List<Integer> agencyIds; 
 	private Integer nibrsErrorCodeTypeId; 
 
@@ -64,7 +65,8 @@ public class PrecertErrorSearchRequest implements Serializable {
 				&& (agencyIds == null || agencyIds.isEmpty())  
 				&& (nibrsErrorCodeTypeId == null || nibrsErrorCodeTypeId == 0) 
 				&& submissionMonth == null 
-				&& submissionYear == null ;
+				&& submissionYear == null 
+				&& ownerId == null;
 	}
 	public List<Integer> getAgencyIds() {
 		return agencyIds;
@@ -77,6 +79,12 @@ public class PrecertErrorSearchRequest implements Serializable {
 	}
 	public void setNibrsErrorCodeTypeId(Integer nibrsErrorCodeTypeId) {
 		this.nibrsErrorCodeTypeId = nibrsErrorCodeTypeId;
+	}
+	public Integer getOwnerId() {
+		return ownerId;
+	}
+	public void setOwnerId(Integer ownerId) {
+		this.ownerId = ownerId;
 	}
 	
 }

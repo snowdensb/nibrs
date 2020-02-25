@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class IncidentSearchRequest implements Serializable {
 	private static final long serialVersionUID = 7916910066665545067L;
 	private String incidentIdentifier; 
+	private Integer ownerId; 
 	private List<Integer> agencyIds; 
 	private List<String> agenycyNames; 
 	@DateTimeFormat(pattern = "MM/dd/yyyy")
@@ -188,6 +189,12 @@ public class IncidentSearchRequest implements Serializable {
 	}
 	public void setFbiSubmissionStatus(FbiSubmissionStatus fbiSubmissionStatus) {
 		this.fbiSubmissionStatus = fbiSubmissionStatus;
+	}
+	public Integer getOwnerId() {
+		return ownerId;
+	}
+	public void setOwnerId(Integer ownerId) {
+		this.ownerId = ownerId;
 	}
 	
 }

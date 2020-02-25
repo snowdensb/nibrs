@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.admin.incident.Data;
+import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.search.nibrs.stagingdata.model.search.PrecertErrorSearchRequest;
@@ -104,6 +105,12 @@ public class PrecertErrorAdminController {
 
 	private void getPrecertErrorSearchResults(HttpServletRequest request, PrecertErrorSearchRequest precertErrorSearchRequest,
 			Map<String, Object> model) throws Throwable {
+		if (!appProperties.getPrivateSummaryReportSite()) {
+			AuthUser authUser =(AuthUser) model.get("authUser");  
+			Integer ownerId = authUser.getUserId();
+			precertErrorSearchRequest.setOwnerId(ownerId);
+		}
+
 		model.put("precertErrorSearchRequest: ", precertErrorSearchRequest); 
 		SearchResult<PreCertificationError> searchResult = restService.getPrecertErrors(precertErrorSearchRequest);
 		log.debug("precertErrorSearchResult" + searchResult);

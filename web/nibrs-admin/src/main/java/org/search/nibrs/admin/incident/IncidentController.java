@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
+import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.stagingdata.model.search.FbiSubmissionStatus;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
@@ -45,7 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping", "incidentSearchResult", "fbiSubmissionStatuses"})
+@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping", "incidentSearchResult", "fbiSubmissionStatuses", "authUser"})
 @RequestMapping("/incidents")
 public class IncidentController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -109,6 +110,11 @@ public class IncidentController {
 
 	private void getIncidentSearchResults(HttpServletRequest request, IncidentSearchRequest incidentSearchRequest,
 			Map<String, Object> model) throws Throwable {
+		if (!appProperties.getPrivateSummaryReportSite()) {
+			AuthUser authUser =(AuthUser) model.get("authUser");  
+			Integer ownerId = authUser.getUserId();
+			incidentSearchRequest.setOwnerId(ownerId);
+		}
 		model.put("incidentSearchRequest", incidentSearchRequest); 
 		IncidentSearchResult incidentSearchResult = restService.getIncidents(incidentSearchRequest);
 		log.debug("incidentSearchResult" + incidentSearchResult);
