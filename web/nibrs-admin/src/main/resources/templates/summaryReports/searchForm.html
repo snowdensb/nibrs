@@ -79,9 +79,16 @@
 					    <button type="reset" class="btn-secondary" id="reset">Reset</button>
 					</div>
 			   </div>
-			   <script type="text/javascript" th:src="@{/js/summaryReportForm.js}"></script>
 				 
 			</form>
+      <script th:inline="javascript">
+        /*<![CDATA[*/
+          var context = [[@{/}]];
+          var _csrf_token = /*[[${_csrf.token}]]*/ '';
+          var _csrf_param_name = /*[[${_csrf.parameterName}]]*/ '';
+        /*]]>*/
+      </script>			
+	    <script type="text/javascript" th:src="@{/js/summaryReportForm.js}"></script>
 		</div>
 	</body>
 </html>
