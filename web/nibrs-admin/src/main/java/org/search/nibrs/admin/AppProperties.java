@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("admin")
 public class AppProperties {
 
-	private Boolean allowSubmitToFbi = false;
+	private Boolean allowSubmitToFbi = true;
 	private Boolean privateSummaryReportSite=false; 
 	
 	private Boolean securityEnabled = false;
