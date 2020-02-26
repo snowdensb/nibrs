@@ -41,7 +41,7 @@ public class CargoTheftReportService {
 	@Autowired
 	public AppProperties appProperties; 
 
-	public CargoTheftReport createCargoTheftReport(String ori, Integer year,  Integer month ) {
+	public CargoTheftReport createCargoTheftReport(String ownerId, String ori, Integer year,  Integer month ) {
 		
 		CargoTheftReport cargoTheftReport = new CargoTheftReport(ori, year, month); 
 		
@@ -63,14 +63,14 @@ public class CargoTheftReportService {
 			cargoTheftReport.setStateCode("");
 			cargoTheftReport.setPopulation(null);
 		}
-		processCargoTheftIncident(ori, year, month, cargoTheftReport);
+		processCargoTheftIncident(ori, year, month, cargoTheftReport, ownerId);
 		log.debug("cargoTheftReport: " + cargoTheftReport);
 		return cargoTheftReport;
 	}
 
-	private void processCargoTheftIncident(String ori, Integer year, Integer month, CargoTheftReport cargoTheftReport) {
+	private void processCargoTheftIncident(String ori, Integer year, Integer month, CargoTheftReport cargoTheftReport, String ownerId) {
 		List<CargoTheftFormRow> cargoTheftRows = 
-				administrativeSegmentService.findCargoTheftRowsByOriAndIncidentDate(ori, year, month);
+				administrativeSegmentService.findCargoTheftRowsByOriAndIncidentDate(ori, year, month, ownerId);
 		cargoTheftReport.setCargoTheftRows(cargoTheftRows);
 	}
 

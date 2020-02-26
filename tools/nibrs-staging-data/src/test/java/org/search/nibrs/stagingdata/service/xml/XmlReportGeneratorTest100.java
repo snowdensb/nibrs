@@ -101,7 +101,7 @@ public class XmlReportGeneratorTest100 {
 	@Test
 	public void createGroupBIncidentReport() throws Exception {
 		
-		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriAndArrestDate(null, 2018, 1);
+		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriAndArrestDate(null, 2018, 1, null);
 		List<Integer> arrestReportSegmentIds = ids.stream().limit(50).collect(Collectors.toList()); 
 		
 		for (Integer arrestReportSegmentId : arrestReportSegmentIds) {

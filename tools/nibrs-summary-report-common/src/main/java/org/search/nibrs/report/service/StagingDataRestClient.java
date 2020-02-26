@@ -50,9 +50,9 @@ public class StagingDataRestClient {
 		restTemplate.setMessageConverters(getMessageConverters());
 	}
 	
-	public ReturnAForm getReturnAForm(String ori, String year, String month) {
+	public ReturnAForm getReturnAForm(String ori, String year, String month, String ownerId) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"returnAForm/", ori, year, month); 
+				"returnAForm/", ownerId, ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the ReturnAForm object from the url " + url);
 
@@ -61,9 +61,9 @@ public class StagingDataRestClient {
 		return returnAForm;
 	}
 
-	public AsrReports getAsrReports(String ori, String year, String month) {
+	public AsrReports getAsrReports(String ori, String year, String month, String ownerId) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"asrReports", ori, year, month); 
+				"asrReports", ownerId, ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the ASR Report object from the url " + url);
 		
@@ -72,9 +72,9 @@ public class StagingDataRestClient {
 		return asrAdult;
 	}
 	
-	public ArsonReport getArsonReport(String ori, String year, String month) {
+	public ArsonReport getArsonReport(String ori, String year, String month, String ownerId) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"arsonReport", ori, year, month); 
+				"arsonReport", ownerId, ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the Arson Report object from the url " + url);
 		
@@ -83,9 +83,9 @@ public class StagingDataRestClient {
 		return arsonReport;
 	}
 	
-	public HumanTraffickingForm getHumanTraffickingForm(String ori, String year, String month) {
+	public HumanTraffickingForm getHumanTraffickingForm(String ori, String year, String month, String ownerId) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"humanTraffickingReport", ori, year, month); 
+				"humanTraffickingReport", ownerId, ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the humanTraffickingForm object from the url " + url);
 		
@@ -94,9 +94,9 @@ public class StagingDataRestClient {
 		return humanTraffickingForm;
 	}
 	
-	public SupplementaryHomicideReport getSupplementaryHomicideReport(String ori, String year, String month) {
+	public SupplementaryHomicideReport getSupplementaryHomicideReport(String ori, String year, String month, String ownerId) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"shrReports", ori, year, month); 
+				"shrReports", ownerId, ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the SupplementaryHomicideReport object from the url " + url);
 		
@@ -105,9 +105,9 @@ public class StagingDataRestClient {
 		return supplementaryHomicideReport;
 	}
 	
-	public CargoTheftReport getCargoTheftReport(String ori, String year, String month) {
+	public CargoTheftReport getCargoTheftReport(String ori, String year, String month, String ownerId) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"cargoTheftReport", ori, year, month); 
+				"cargoTheftReport", ownerId, ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the CargoTheftReport object from the url " + url);
 		

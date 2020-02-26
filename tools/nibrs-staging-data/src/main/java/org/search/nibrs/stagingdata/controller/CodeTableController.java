@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
@@ -40,6 +39,7 @@ import org.search.nibrs.stagingdata.repository.OwnerRepository;
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.search.nibrs.stagingdata.repository.segment.ArrestReportSegmentRepository;
+import org.search.nibrs.stagingdata.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -131,21 +131,13 @@ public class CodeTableController {
 	}
 	
 	@GetMapping("/years/{ownerId}/{ori}") 
-	public List<Integer> getYears(@PathVariable String ori, @PathVariable String ownerId){
-		return administrativeSegmentRepository.findDistinctYears(ori, getOwnerId(ownerId));
-	}
-
-	private Integer getOwnerId(String ownerIdString) {
-		Integer ownerId = null;
-		if (StringUtils.isNotBlank(ownerIdString)) {
-			ownerId = Integer.valueOf(ownerIdString);
-		}
-		return ownerId;
+	public List<Integer> getYearsByOriAndOwner(@PathVariable String ori, @PathVariable String ownerId){
+		return administrativeSegmentRepository.findDistinctYears(ori, ObjectUtils.getInteger(ownerId));
 	}
 	
 	@GetMapping("/months/{year}/{ownerId}/{ori}") 
 	public List<Integer> getMonths(@PathVariable String ori, @PathVariable Integer year, @PathVariable String ownerId){
-		return administrativeSegmentRepository.findDistinctMonths(ori, year, getOwnerId(ownerId));
+		return administrativeSegmentRepository.findDistinctMonths(ori, year, ObjectUtils.getInteger(ownerId));
 	}
 	
 	@GetMapping("/offenseCodes")

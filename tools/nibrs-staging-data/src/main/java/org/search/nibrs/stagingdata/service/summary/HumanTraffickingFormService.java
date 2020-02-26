@@ -49,7 +49,7 @@ public class HumanTraffickingFormService {
 		super();
 	}
 	
-	public HumanTraffickingForm createHumanTraffickingReport(String ori, Integer year,  Integer month ) {
+	public HumanTraffickingForm createHumanTraffickingReport(String ownerId, String ori, Integer year,  Integer month ) {
 		
 		HumanTraffickingForm humanTraffickingForm = new HumanTraffickingForm(ori, year, month); 
 		
@@ -72,8 +72,8 @@ public class HumanTraffickingFormService {
 			humanTraffickingForm.setPopulation(null);
 		}
 
-		processReportedOffenses(ori, year, month, humanTraffickingForm);
-		processOffenseClearances(ori, year, month, humanTraffickingForm);
+		processReportedOffenses(ori, year, month, humanTraffickingForm, ownerId);
+		processOffenseClearances(ori, year, month, humanTraffickingForm, ownerId);
 		
 		fillTheGrandTotalRow(humanTraffickingForm);
 
@@ -81,8 +81,8 @@ public class HumanTraffickingFormService {
 		return humanTraffickingForm;
 	}
 
-	private void processOffenseClearances(String ori, Integer year, Integer month, HumanTraffickingForm humanTraffickingForm) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findHumanTraffickingIncidentByOriAndClearanceDate(ori, year, month);
+	private void processOffenseClearances(String ori, Integer year, Integer month, HumanTraffickingForm humanTraffickingForm, String ownerId) {
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findHumanTraffickingIncidentByOriAndClearanceDate(ori, year, month, ownerId);
 		
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue;
@@ -131,8 +131,8 @@ public class HumanTraffickingFormService {
 		return offense;
 	}
 
-	private void processReportedOffenses(String ori, Integer year, Integer month, HumanTraffickingForm humanTraffickingForm) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findHumanTraffickingIncidentByOriAndIncidentDate(ori, year, month);
+	private void processReportedOffenses(String ori, Integer year, Integer month, HumanTraffickingForm humanTraffickingForm, String ownerId) {
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findHumanTraffickingIncidentByOriAndIncidentDate(ori, year, month, ownerId);
 
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue; 

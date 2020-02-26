@@ -17,6 +17,8 @@
 
 package org.search.nibrs.stagingdata.service.summary;
 
+import static org.search.nibrs.stagingdata.util.ObjectUtils.getInteger;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -103,7 +105,7 @@ public class ReturnAFormService {
 		larcenyOffenseByNatureMap.put("23H", PropertyStolenByClassificationRowName.LARCENY_ALL_OTHER);  // All Other 
 	}
 	
-	public ReturnAForm createReturnASummaryReport(String ori, Integer year,  Integer month ) {
+	public ReturnAForm createReturnASummaryReport(String ownerId, String ori, Integer year,  Integer month ) {
 		
 		ReturnAForm returnAForm = new ReturnAForm(ori, year, month); 
 		
@@ -126,8 +128,8 @@ public class ReturnAFormService {
 			returnAForm.setPopulation(null);
 		}
 
-		processReportedOffenses(ori, year, month, returnAForm);
-		processOffenseClearances(ori, year, month, returnAForm);
+		processReportedOffenses(ownerId, ori, year, month, returnAForm);
+		processOffenseClearances(ownerId, ori, year, month, returnAForm);
 		
 		fillTheForcibleRapeTotalRow(returnAForm);
 		fillTheRobberyTotalRow(returnAForm);
@@ -140,9 +142,9 @@ public class ReturnAFormService {
 		return returnAForm;
 	}
 
-	private void processOffenseClearances(String ori, Integer year, Integer month, ReturnAForm returnAForm) {
+	private void processOffenseClearances(String ownerId, String ori, Integer year, Integer month, ReturnAForm returnAForm) {
 		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentService.findByOriAndClearanceDateAndOffenses(ori, year, month, new ArrayList<>(partIOffensesMap.keySet()));
+				administrativeSegmentService.findByOriAndClearanceDateAndOffenses(getInteger(ownerId), ori, year, month, new ArrayList<>(partIOffensesMap.keySet()));
 
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue;
@@ -356,9 +358,9 @@ public class ReturnAFormService {
 		return offenses;
 	}
 
-	private void processReportedOffenses(String ori, Integer year, Integer month, ReturnAForm returnAForm) {
+	private void processReportedOffenses(String ownerId, String ori, Integer year, Integer month, ReturnAForm returnAForm) {
 		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentService.findByOriAndIncidentDateAndOffenses(ori, year, month, new ArrayList(partIOffensesMap.keySet()));
+				administrativeSegmentService.findByOriAndIncidentDateAndOffenses(getInteger(ownerId), ori, year, month, new ArrayList(partIOffensesMap.keySet()));
 		
 		PropertyStolenByClassification[] stolenProperties = returnAForm.getPropertyStolenByClassifications();
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){

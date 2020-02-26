@@ -124,7 +124,7 @@ public class AdministrativeSegmentRepositoryTest {
 	@DirtiesContext
 	public void testFindIdsByOriAndArrestDateAndFindAll() {
 		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
-				.findIdsByOriAndArrestDate("WA1234567", 2016, 5);
+				.findIdsByOriAndArrestDate("WA1234567", 2016, 5, null);
 		
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository
 				.findAllById(administrativeSegmentIds).stream().distinct().collect(Collectors.toList());

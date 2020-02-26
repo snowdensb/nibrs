@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.service;
 
+import static org.search.nibrs.stagingdata.util.ObjectUtils.getInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -170,12 +171,12 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
-	public List<AdministrativeSegment> findByOriAndIncidentDateAndOffenses(String ori, Integer year, Integer month, List<String> offenseCodes){
+	public List<AdministrativeSegment> findByOriAndIncidentDateAndOffenses(Integer ownerId, String ori, Integer year, Integer month, List<String> offenseCodes){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
 		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, offenseCodes);
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, offenseCodes, ownerId);
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)
@@ -184,7 +185,7 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
-	public List<AdministrativeSegment> findArsonIncidentByOriAndIncidentDate(String ori, Integer year, Integer month){
+	public List<AdministrativeSegment> findArsonIncidentByOriAndIncidentDate(String ori, Integer year, Integer month, String ownerId){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
@@ -198,12 +199,12 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
-	public List<AdministrativeSegment> findHumanTraffickingIncidentByOriAndIncidentDate(String ori, Integer year, Integer month){
+	public List<AdministrativeSegment> findHumanTraffickingIncidentByOriAndIncidentDate(String ori, Integer year, Integer month, String ownerId){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
 		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"));
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"), getInteger(ownerId));
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)
@@ -212,12 +213,12 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
-	public List<AdministrativeSegment> findIncidentByOriAndIncidentDateAndOffenses(String ori, Integer year, Integer month, String... offenseCodes){
+	public List<AdministrativeSegment> findIncidentByOriAndIncidentDateAndOffenses(String ori, Integer year, Integer month, String ownerId, String... offenseCodes){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
 		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList(offenseCodes));
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList(offenseCodes), getInteger(ownerId));
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)
@@ -226,12 +227,12 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
-	public List<AdministrativeSegment> findArsonIncidentByOriAndAClearanceDate(String ori, Integer year, Integer month){
+	public List<AdministrativeSegment> findArsonIncidentByOriAndAClearanceDate(String ori, Integer year, Integer month, String ownerId){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
 		}
-		List<Integer> ids = administrativeSegmentRepository.findArsonIdsByOriAndClearanceDate(ori, year, month);
+		List<Integer> ids = administrativeSegmentRepository.findArsonIdsByOriAndClearanceDate(ori, year, month, getInteger(ownerId));
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)
@@ -240,11 +241,11 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
-	public List<ArresteeSegment> findArresteeSegmentByOriAndArrestDate(String ori, Integer arrestYear, Integer arrestMonth){
+	public List<ArresteeSegment> findArresteeSegmentByOriAndArrestDate(String ori, Integer arrestYear, Integer arrestMonth, String ownerId){
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
 		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndArrestDate(ori, arrestYear, arrestMonth);
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndArrestDate(ori, arrestYear, arrestMonth, getInteger(ownerId));
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)
@@ -262,11 +263,11 @@ public class AdministrativeSegmentService {
 	}
 
 	public List<AdministrativeSegment> findHumanTraffickingIncidentByOriAndClearanceDate(String ori, Integer year,
-			Integer month) {
+			Integer month, String ownerId) {
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
 		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"));
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"), getInteger(ownerId));
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)
@@ -276,11 +277,11 @@ public class AdministrativeSegmentService {
 	}
 
 	public List<CargoTheftFormRow> findCargoTheftRowsByOriAndIncidentDate(String ori, Integer year,
-			Integer month) {
+			Integer month, String ownerId) {
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
 		}
-		List<Integer> ids = administrativeSegmentRepository.findCargoTheftIdsByOriAndIncidentDate(ori, year, month);
+		List<Integer> ids = administrativeSegmentRepository.findCargoTheftIdsByOriAndIncidentDate(ori, year, month, getInteger(ownerId));
 		
 		log.info("ids:" + ids);
 		
@@ -291,12 +292,12 @@ public class AdministrativeSegmentService {
 		return cargoTheftFormRows;
 	}
 
-	public List<AdministrativeSegment> findByOriAndClearanceDateAndOffenses(String ori, Integer year, Integer month,
+	public List<AdministrativeSegment> findByOriAndClearanceDateAndOffenses(Integer ownerId, String ori, Integer year, Integer month,
 			ArrayList<String> offenseCodes) {
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
 		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, offenseCodes);
+		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, offenseCodes, ownerId);
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)

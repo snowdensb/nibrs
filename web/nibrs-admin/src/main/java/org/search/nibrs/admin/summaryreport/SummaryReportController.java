@@ -119,8 +119,8 @@ public class SummaryReportController {
 	
 	@GetMapping("/returnAForm/{ori}/{year}/{month}")
 	public void getReturnAForm(@PathVariable String ori, @PathVariable String year, @PathVariable String month, 
-			HttpServletResponse response) throws IOException{
-		ReturnAForm returnAForm = restClient.getReturnAForm(ori, year, month);
+			HttpServletResponse response, Map<String, Object> model) throws IOException{
+		ReturnAForm returnAForm = restClient.getReturnAForm(ori, year, month, getOwnerId(model));
 		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
 		String fileName = "ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
 		downloadReport(response, workbook, fileName);
@@ -146,9 +146,9 @@ public class SummaryReportController {
 	
 	@PostMapping("/summaryReports/returnAForm")
 	public void getReturnAFormByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
-			HttpServletResponse response) throws IOException{
+			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		ReturnAForm returnAForm = restClient.getReturnAForm(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
 		String fileName = "ReturnA-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
 
@@ -157,9 +157,9 @@ public class SummaryReportController {
 	
 	@PostMapping("/summaryReports/returnASupplement")
 	public void getReturnASupplementByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
-			HttpServletResponse response) throws IOException{
+			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		ReturnAForm returnAForm = restClient.getReturnAForm(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = returnAFormExporter.createReturnASupplementWorkBook(returnAForm);
 		String fileName = "ReturnASupplement-" + returnAForm.getOri() + "-" + returnAForm.getYear() + "-" + StringUtils.leftPad(String.valueOf(returnAForm.getMonth()), 2, '0') + ".xlsx";
 		
@@ -168,10 +168,10 @@ public class SummaryReportController {
 	
 	@PostMapping("/summaryReports/arsonReport")
 	public void getArsonReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
-			HttpServletResponse response) throws IOException{
+			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get arson report");
 		ArsonReport arsonReport = restClient.getArsonReport(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = arsonExcelExporter.createWorkBook(arsonReport);
 		String fileName = "ARSON-Report-" + arsonReport.getOri() + "-" + arsonReport.getYear() + "-" + StringUtils.leftPad(String.valueOf(arsonReport.getMonth()), 2, '0') + ".xlsx";
 		downloadReport(response, workbook, fileName);
@@ -179,10 +179,10 @@ public class SummaryReportController {
 	
 	@PostMapping("/summaryReports/humanTraffickingReport")
 	public void getHumanTraffickingReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
-			HttpServletResponse response) throws IOException{
+			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get humanTraffickingReport");
 		HumanTraffickingForm humanTraffickingForm = restClient.getHumanTraffickingForm(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = humanTraffickingExporter.createWorkbook(humanTraffickingForm);
 		String fileName = "HumanTrafficking-" + humanTraffickingForm.getOri() + "-" + humanTraffickingForm.getYear() + 
 				"-" + StringUtils.leftPad(String.valueOf(humanTraffickingForm.getMonth()), 2, '0') + ".xlsx";
@@ -191,10 +191,10 @@ public class SummaryReportController {
 	
 	@PostMapping("/summaryReports/asrReports")
 	public void getAsrReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
-			HttpServletResponse response) throws IOException{
+			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get asrReports");
 		AsrReports asrReports = restClient.getAsrReports(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = asrExcelExporter.createWorkbook(asrReports);
 		String fileName = "ASR-REPORTS-" + asrReports.getOri() + "-" + asrReports.getYear() + "-" + StringUtils.leftPad(String.valueOf(asrReports.getMonth()), 2, '0') + ".xlsx";
 		downloadReport(response, workbook, fileName);
@@ -202,10 +202,10 @@ public class SummaryReportController {
 	
 	@PostMapping("/summaryReports/shrReports")
 	public void getSupplementaryHomicideReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
-			HttpServletResponse response) throws IOException{
+			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get shrReports");
 		SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReport(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = supplementaryHomicideReportExporter.createWorkbook(supplementaryHomicideReport);
 		String fileName = "SupplementaryHomicideReport-" + supplementaryHomicideReport.getOri() + "-" + supplementaryHomicideReport.getYear() + 
 				"-" + StringUtils.leftPad(String.valueOf(supplementaryHomicideReport.getMonth()), 2, '0') + ".xlsx";
@@ -214,10 +214,10 @@ public class SummaryReportController {
 	
 	@PostMapping("/summaryReports/cargoTheftReport")
 	public void getCargoTheftReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
-			HttpServletResponse response) throws IOException{
+			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get cargo theft report");
         CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(
-        		summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString());
+        		summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = cargoTheftReportExporter.createWorkbook(cargoTheftReport);
 		String fileName = "CargoTheftReport-" + cargoTheftReport.getOri() + "-" + cargoTheftReport.getYear() + 
 				"-" + StringUtils.leftPad(String.valueOf(cargoTheftReport.getMonth()), 2, '0') + ".xlsx";
@@ -231,7 +231,7 @@ public class SummaryReportController {
 	}
 
 	private String getOwnerId(Map<String, Object> model) {
-		String ownerId = StringUtils.EMPTY;
+		String ownerId = "0";
 		if (!appProperties.getPrivateSummaryReportSite()) {
 			AuthUser authUser =(AuthUser) model.get("authUser");  
 			ownerId = Objects.toString(authUser.getUserId());

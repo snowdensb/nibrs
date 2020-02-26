@@ -55,7 +55,7 @@ public class SupplementaryHomicideReportService {
 		super();
 	}
 	
-	public SupplementaryHomicideReport createSupplementaryHomicideReport(String ori, Integer year,  Integer month ) {
+	public SupplementaryHomicideReport createSupplementaryHomicideReport(String ownerId, String ori, Integer year,  Integer month ) {
 		
 		SupplementaryHomicideReport supplementaryHomicideReport = new SupplementaryHomicideReport(ori, year, month); 
 		
@@ -78,16 +78,16 @@ public class SupplementaryHomicideReportService {
 			supplementaryHomicideReport.setPopulation(null);
 		}
 
-		processMurderAndNonnegligentManslaughter(ori, year, month, supplementaryHomicideReport);
-		processNegligentManslaughter(ori, year, month, supplementaryHomicideReport);
+		processMurderAndNonnegligentManslaughter(ori, year, month, supplementaryHomicideReport, ownerId);
+		processNegligentManslaughter(ori, year, month, supplementaryHomicideReport, ownerId);
 		
 
 		log.info("supplementaryHomicideReport: " + supplementaryHomicideReport);
 		return supplementaryHomicideReport;
 	}
 
-	private void processNegligentManslaughter(String ori, Integer year, Integer month, SupplementaryHomicideReport supplementaryHomicideReport) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findIncidentByOriAndIncidentDateAndOffenses(ori, year, month, "09B");
+	private void processNegligentManslaughter(String ori, Integer year, Integer month, SupplementaryHomicideReport supplementaryHomicideReport, String ownerId) {
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findIncidentByOriAndIncidentDateAndOffenses(ori, year, month, ownerId, "09B");
 		
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			
@@ -182,8 +182,8 @@ public class SupplementaryHomicideReportService {
 		return offense;
 	}
 
-	private void processMurderAndNonnegligentManslaughter(String ori, Integer year, Integer month, SupplementaryHomicideReport supplementaryHomicideReport) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findIncidentByOriAndIncidentDateAndOffenses(ori, year, month, "09A", "09C");
+	private void processMurderAndNonnegligentManslaughter(String ori, Integer year, Integer month, SupplementaryHomicideReport supplementaryHomicideReport, String ownerId) {
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findIncidentByOriAndIncidentDateAndOffenses(ori, year, month, ownerId, "09A", "09C");
 		
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			

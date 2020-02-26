@@ -190,7 +190,7 @@ public class ArsonFormService {
 		propertyDescriptionArsonRowNameMap.put("80", ArsonRowName.TOTAL_OTHER);
 	}
 	
-	public ArsonReport createArsonSummaryReports(String ori, Integer year,  Integer month ) {
+	public ArsonReport createArsonSummaryReports(String ownerId, String ori, Integer year,  Integer month ) {
 		
 		ArsonReport arsonReport = new ArsonReport(ori, year, month); 
 		
@@ -212,14 +212,14 @@ public class ArsonFormService {
 			arsonReport.setStateCode("");
 			arsonReport.setPopulation(null);
 		}
-		processReportedOffenses(ori, year, month, arsonReport);
-		processClearedOffenses(ori, year, month, arsonReport);
+		processReportedOffenses(ori, year, month, arsonReport, ownerId);
+		processClearedOffenses(ori, year, month, arsonReport, ownerId);
 		log.debug("arsonReport: " + arsonReport);
 		return arsonReport;
 	}
 
-	private void processClearedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findArsonIncidentByOriAndAClearanceDate(ori, year, month);
+	private void processClearedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport, String ownerId) {
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findArsonIncidentByOriAndAClearanceDate(ori, year, month, ownerId);
 
 		ArsonRow[] arsonRows = arsonReport.getArsonRows();
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
@@ -276,8 +276,8 @@ public class ArsonFormService {
 		}
 	}
 
-	private void processReportedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findArsonIncidentByOriAndIncidentDate(ori, year, month);
+	private void processReportedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport, String ownerId) {
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findArsonIncidentByOriAndIncidentDate(ori, year, month, ownerId);
 
 		ArsonRow[] arsonRows = arsonReport.getArsonRows();
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){

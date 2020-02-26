@@ -196,7 +196,7 @@ public class AsrFormService {
 		
 	}
 	
-	public AsrReports createAsrSummaryReports(String ori, Integer arrestYear,  Integer arrestMonth ) {
+	public AsrReports createAsrSummaryReports(String ownerId, String ori, Integer arrestYear,  Integer arrestMonth ) {
 		
 		AsrReports asrReports = new AsrReports(ori, arrestYear, arrestMonth); 
 		
@@ -219,8 +219,8 @@ public class AsrFormService {
 			asrReports.setPopulation(null);
 		}
 
-		processGroupAArrests(ori, arrestYear, arrestMonth, asrReports);
-		processGroupBArrests(ori, arrestYear, arrestMonth, asrReports);
+		processGroupAArrests(ori, arrestYear, arrestMonth, asrReports, ownerId);
+		processGroupBArrests(ori, arrestYear, arrestMonth, asrReports, ownerId);
 		
 		log.debug("asrAdult: " + asrReports);
 		log.debug("asrAdult rows drug grand total "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()]);
@@ -237,9 +237,9 @@ public class AsrFormService {
 		return asrReports;
 	}
 
-	private void processGroupBArrests(String ori, Integer arrestYear, Integer arrestMonth, AsrReports asrReports) {
+	private void processGroupBArrests(String ori, Integer arrestYear, Integer arrestMonth, AsrReports asrReports, String ownerId) {
 		AsrAdultRow[] asrAdultRows = asrReports.getAdultRows(); 
-		List<ArrestReportSegment> arrestReportSegments = arrestReportService.findArrestReportSegmentByOriAndArrestDate(ori, arrestYear, arrestMonth);
+		List<ArrestReportSegment> arrestReportSegments = arrestReportService.findArrestReportSegmentByOriAndArrestDate(ori, arrestYear, arrestMonth, ownerId);
 		
 		List<ArrestReportSegment> adultArrestReportSegments = arrestReportSegments.stream()
 				.filter(i-> i.getAverageAge() >= 18 || i.isAgeUnknown())
@@ -276,8 +276,8 @@ public class AsrFormService {
 		
 	}
 
-	private void processGroupAArrests(String ori, Integer arrestYear, Integer arrestMonth, AsrReports asrReports) {
-		List<ArresteeSegment> arresteeSegments = administrativeSegmentService.findArresteeSegmentByOriAndArrestDate(ori, arrestYear, arrestMonth); 
+	private void processGroupAArrests(String ori, Integer arrestYear, Integer arrestMonth, AsrReports asrReports, String ownerId) {
+		List<ArresteeSegment> arresteeSegments = administrativeSegmentService.findArresteeSegmentByOriAndArrestDate(ori, arrestYear, arrestMonth, ownerId); 
 		countAdultFormGroupAArrestees(ori, arrestYear, arrestMonth, asrReports, arresteeSegments);
 		countJuvenileFormGroupAArrestees(ori, arrestYear, arrestMonth, asrReports, arresteeSegments);
 	}

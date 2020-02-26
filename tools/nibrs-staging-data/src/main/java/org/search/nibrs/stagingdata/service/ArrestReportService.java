@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.service;
 
+import static org.search.nibrs.stagingdata.util.ObjectUtils.getInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -183,11 +184,11 @@ public class ArrestReportService {
 		return arrestReportSegments;
 	}
 	
-	public List<ArrestReportSegment> findArrestReportSegmentByOriAndArrestDate(String ori, Integer arrestYear, Integer arrestMonth){
+	public List<ArrestReportSegment> findArrestReportSegmentByOriAndArrestDate(String ori, Integer arrestYear, Integer arrestMonth, String ownerId){
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
 		}
-		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriAndArrestDate(ori, arrestYear, arrestMonth);
+		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriAndArrestDate(ori, arrestYear, arrestMonth, getInteger(ownerId));
 		
 		List<ArrestReportSegment> arrestReportSegments = 
 				arrestReportSegmentRepository.findAllById(ids)

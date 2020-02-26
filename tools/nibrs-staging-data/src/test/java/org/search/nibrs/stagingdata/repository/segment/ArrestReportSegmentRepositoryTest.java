@@ -58,7 +58,7 @@ public class ArrestReportSegmentRepositoryTest {
 	@DirtiesContext
 	public void testFindIdsByOriAndArrestDateAndFindAll() {
 		List<Integer> arrestReportSegmentIds = arrestReportSegmentRepository
-				.findIdsByOriAndArrestDate("agencyORI", 2017, 5);
+				.findIdsByOriAndArrestDate("agencyORI", 2017, 5, null);
 		
 		List<ArrestReportSegment> arrestReportSegments = arrestReportSegmentRepository
 				.findAllById(arrestReportSegmentIds).stream().distinct().collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class ArrestReportSegmentRepositoryTest {
 		assertTrue(arrestTransactionNumbers.containsAll(Arrays.asList("12345")));
 		
 		arrestReportSegmentIds = arrestReportSegmentRepository
-				.findIdsByOriAndArrestDate("agencyORI", 2017, 6);
+				.findIdsByOriAndArrestDate("agencyORI", 2017, 6, null);
 		assertThat(arrestReportSegmentIds.size(), equalTo(0));
 		
 	}
