@@ -8,10 +8,10 @@ analyzeAnomalies <- function(state, yr) {
 
   results <- list()
 
-  results$VictimSegment <- detectMissingUnknown(
+  results$VictimSegment <- summarizeValues(
     extractDfList,
     list(
-      'distincts'='VictimSegmentID',
+      'aggregateBy'='VictimSegmentID',
       'stateRegex'=state,
       'yearRegex'=yr,
       'filter'="TypeOfVictimTypeID %in% c(1,5)",
@@ -30,10 +30,10 @@ analyzeAnomalies <- function(state, yr) {
     )
   )
 
-  results$OffenderSegment <- detectMissingUnknown(
+  results$OffenderSegment <- summarizeValues(
     extractDfList,
     list(
-      'distincts'='OffenderSegmentID',
+      'aggregateBy'='OffenderSegmentID',
       'stateRegex'=state,
       'yearRegex'=yr,
       'OffenderAgeDim'=list(
@@ -50,10 +50,10 @@ analyzeAnomalies <- function(state, yr) {
       )
     )
   ) %>%
-    inner_join(detectMissingUnknown(
+    inner_join(summarizeValues(
       extractDfList,
       list(
-        'distincts'='OffenderSegmentID',
+        'aggregateBy'='OffenderSegmentID',
         'stateRegex'=state,
         'yearRegex'=yr,
         'OffenderAgeDim'=list(
@@ -64,10 +64,10 @@ analyzeAnomalies <- function(state, yr) {
     ) %>% select(-Records), by='AgencyName'
     )
 
-  results$VictimOffenderAssn <- detectMissingUnknown(
+  results$VictimOffenderAssn <- summarizeValues(
     extractDfList,
     list(
-      'distincts'='VictimOffenderAssociationID',
+      'aggregateBy'='VictimOffenderAssociationID',
       'stateRegex'=state,
       'yearRegex'=yr,
       'VictimOffenderRelationshipTypeID'=list(
@@ -77,10 +77,10 @@ analyzeAnomalies <- function(state, yr) {
     )
   )
 
-  results$OffenseSegment <- detectMissingUnknown(
+  results$OffenseSegment <- summarizeValues(
     extractDfList,
     list(
-      'distincts'='OffenseSegmentID',
+      'aggregateBy'='OffenseSegmentID',
       'stateRegex'=state,
       'yearRegex'=yr,
       'LocationTypeTypeID'=list(
@@ -94,10 +94,10 @@ analyzeAnomalies <- function(state, yr) {
     )
   )
 
-  results$PropertySegment <- detectMissingUnknown(
+  results$PropertySegment <- summarizeValues(
     extractDfList,
     list(
-      'distincts'='PropertySegmentID',
+      'aggregateBy'='PropertySegmentID',
       'stateRegex'=state,
       'yearRegex'=yr,
       'PropertyDescriptionTypeID'=list(
@@ -106,10 +106,10 @@ analyzeAnomalies <- function(state, yr) {
       )
     )
   ) %>% inner_join(
-    detectMissingUnknown(
+    summarizeValues(
       extractDfList,
       list(
-        'distincts'='PropertySegmentID',
+        'aggregateBy'='PropertySegmentID',
         'stateRegex'=state,
         'yearRegex'=yr,
         'PropertyDescriptionTypeID'=list(
@@ -120,10 +120,10 @@ analyzeAnomalies <- function(state, yr) {
     ) %>% select(-Records), by='AgencyName'
   )
 
-  results$AdminSegment <- detectMissingUnknown(
+  results$AdminSegment <- summarizeValues(
     extractDfList,
     list(
-      'distincts'='AdministrativeSegmentID',
+      'aggregateBy'='AdministrativeSegmentID',
       'stateRegex'=state,
       'yearRegex'=yr,
       'IncidentHour'=list(
@@ -132,10 +132,10 @@ analyzeAnomalies <- function(state, yr) {
       )
     )
   ) %>% inner_join(
-    detectMissingUnknown(
+    summarizeValues(
       extractDfList,
       list(
-        'distincts'='AdministrativeSegmentID',
+        'aggregateBy'='AdministrativeSegmentID',
         'stateRegex'=state,
         'yearRegex'=yr,
         'IncidentHour'=list(

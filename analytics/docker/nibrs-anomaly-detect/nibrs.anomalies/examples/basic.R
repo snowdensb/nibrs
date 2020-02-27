@@ -4,7 +4,7 @@ library(nibrs.anomalies)
 extractDfList <- readRDS('/opt/data/nibrs/cde/cde-extract.rds')
 
 variableValueList <- list(
-  'distincts'='VictimSegmentID',
+  'aggregateBy'='VictimSegmentID',
   'stateRegex'='AR',
   'yearRegex'='2018',
   'VictimAgeDim'=list(
@@ -17,5 +17,4 @@ variableValueList <- list(
   )
 )
 
-detectMissingUnknown(extractDfList, variableValueList) %>%
-  write_csv('/tmp/anomaly.csv')
+summarizeValues(extractDfList, variableValueList)
