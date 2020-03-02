@@ -26,9 +26,9 @@ public class AppProperties {
 	private Boolean privateSummaryReportSite=false; 
 	
 	private Boolean securityEnabled = false;
-	private Boolean allowAccessWithoutSamlToken = true;
+	private Boolean allowAccessWithoutSamlToken = false;
 	private String signOutUrl = "/logoutSuccess"; 
-	private Boolean showUserInfoDropdown = true;
+	private Boolean showUserInfoDropdown = false;
 	private Boolean demoLawEnforcementEmployerIndicator = true;
 	private Integer ajpPort = 9090; 
 	private Boolean ajpEnabled = true; 

@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.admin;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Resource;
@@ -59,6 +60,9 @@ public class GlobalControllerAdvice {
 			}
 			else if (authUser != null){
 				model.addAttribute("agencyMapping", restService.getAgencies(Objects.toString(authUser.getUserId())));
+			}
+			else {
+				model.addAttribute("agencyMapping", new HashMap<Integer, String>());
 			}
 		}
     }

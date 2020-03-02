@@ -17,14 +17,17 @@
 -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:include="fragments/header :: header-css">
-    <link type="text/css" rel="stylesheet" th:href="@{/css/nibrs.web.css}"/>
+<head>
+    <title>NIBRS ADMIN Tool</title>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
 </head>
 <body>
-	<div th:replace="fragments/header :: header"></div>
+  <header th:replace="fragments/general.html :: header"> </header>  
 	<div id="$errorMsg" class="jumbotron" 
-		style="color:red; 	line-height: calc(100vh - 120px);  text-align: center;">
+		style="color:red; text-align: center; vertical-align: center;">
 		There was an unexpected error (type=<span th:text="${error}">Bad</span>, status=<span th:text="${status}">500</span>).</div>
-	<div th:replace="fragments/footer :: footer"></div>	
+	<footer th:replace="fragments/general.html :: footer"></footer> 
+	<!-- /.container -->
+	<th:block th:include="fragments/general.html :: javascripts"></th:block>
 </body>
 </html>
