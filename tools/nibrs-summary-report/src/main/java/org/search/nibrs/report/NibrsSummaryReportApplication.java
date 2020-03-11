@@ -86,7 +86,7 @@ public class NibrsSummaryReportApplication implements CommandLineRunner{
 //        SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReport(args[0], args[1], args[2]);
 //        supplementaryHomicideReportExporter.exportSupplementaryHomicideReport(supplementaryHomicideReport);
         
-        CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(args[0], args[1], args[2]);
+        CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(args[0], args[1], args[2], "0");
         cargoTheftReportExporter.exportCargoTheftReport(cargoTheftReport);;
         
 //        ReturnAForm returnAForm = restClient.getReturnAForm(args[0], args[1], args[2]);
