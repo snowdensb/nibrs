@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"precertErrorSearchRequest", "agencyMapping", "nibrsErrorCodeMapping", "precertErrorSearchResult"})
+@SessionAttributes({"precertErrorSearchRequest", "nibrsErrorCodeMapping", "precertErrorSearchResult"})
 @RequestMapping("/precertErrors")
 public class PrecertErrorAdminController {
 	private final Log log = LogFactory.getLog(this.getClass());

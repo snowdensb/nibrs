@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @ControllerAdvice
-@SessionAttributes({"agencyMapping", "authUser"})
+@SessionAttributes({"authUser"})
 public class GlobalControllerAdvice {
 	
 	@Resource
@@ -54,17 +54,17 @@ public class GlobalControllerAdvice {
 	        authUser = (AuthUser) authentication.getPrincipal();
 	        model.addAttribute("authUser", authUser);
         }
-		if (!model.containsAttribute("agencyMapping")) {
-			if (appProperties.getPrivateSummaryReportSite()) {
-				model.addAttribute("agencyMapping", restService.getAgencies(StringUtils.EMPTY));
-			}
-			else if (authUser != null){
-				model.addAttribute("agencyMapping", restService.getAgencies(Objects.toString(authUser.getUserId())));
-			}
-			else {
-				model.addAttribute("agencyMapping", new HashMap<Integer, String>());
-			}
+        
+		if (appProperties.getPrivateSummaryReportSite()) {
+			model.addAttribute("agencyMapping", restService.getAgencies(StringUtils.EMPTY));
 		}
+		else if (authUser != null){
+			model.addAttribute("agencyMapping", restService.getAgencies(Objects.toString(authUser.getUserId())));
+		}
+		else {
+			model.addAttribute("agencyMapping", new HashMap<Integer, String>());
+		}
+			
     }
     
 }

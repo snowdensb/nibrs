@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"incidentSearchRequest", "agencyMapping", "offenseCodeMapping", "incidentSearchResult", "fbiSubmissionStatuses", "authUser"})
+@SessionAttributes({"incidentSearchRequest", "offenseCodeMapping", "incidentSearchResult", "fbiSubmissionStatuses", "authUser"})
 @RequestMapping("/incidents")
 public class IncidentController {
 	private final Log log = LogFactory.getLog(this.getClass());
