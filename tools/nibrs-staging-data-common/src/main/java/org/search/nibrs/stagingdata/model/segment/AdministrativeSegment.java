@@ -64,6 +64,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
         @NamedAttributeNode("exceptionalClearanceDateType"),
         @NamedAttributeNode("clearedExceptionallyType"),
         @NamedAttributeNode("cargoTheftIndicatorType"),
+        @NamedAttributeNode("owner"),
         @NamedAttributeNode("submission")
 	})
 public class AdministrativeSegment implements Comparable<AdministrativeSegment>, Serializable{

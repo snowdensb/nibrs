@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Cacheable;
@@ -27,7 +28,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Entity
 @Cacheable
-public class Owner {
+public class Owner implements Serializable{
+	private static final long serialVersionUID = 5440022360032371701L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer ownerId; 

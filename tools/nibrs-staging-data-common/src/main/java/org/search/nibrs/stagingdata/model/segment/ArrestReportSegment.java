@@ -63,6 +63,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
         @NamedAttributeNode("dispositionOfArresteeUnder18Type"),
         @NamedAttributeNode("ucrOffenseCodeType"),
         @NamedAttributeNode("arrestReportSegmentWasArmedWiths"),
+        @NamedAttributeNode("owner"),
         @NamedAttributeNode("submission")
 	})
 public class ArrestReportSegment {
