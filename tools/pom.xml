@@ -38,12 +38,13 @@
 	  <module>nibrs-route</module>
 	  <module>nibrs-validation</module>
 	  <module>nibrs-xmlfile</module>
-      <module>nibrs-apps</module>
-      <module>nibrs-fbi-service</module>
-      <module>nibrs-staging-data</module>
-      <module>nibrs-summary-report</module> 
+    <module>nibrs-apps</module>
+    <module>nibrs-fbi-service</module>
+    <module>nibrs-staging-data</module>
+    <module>nibrs-summary-report</module> 
+    <module>nibrs-summary-report-common</module> 
 <!--       <module>nibrs-ndex-conversion</module> -->
-	  <module>nibrs-xml</module>
+<!--  	  <module>nibrs-xml</module> -->
   </modules>
 
 </project>
