@@ -116,8 +116,8 @@
 						<exclude>**/jquery.maskinput.js</exclude>
 						<exclude>**/bin/**</exclude>
 						<exclude>**/docs/**</exclude>
-                        <exclude>**/docker/**</exclude>
-                        <exclude>**/NIBRS_IEPD_4_2_RC2_FINAL_20171214/**</exclude>
+            <exclude>**/docker/**</exclude>
+            <exclude>**/NIBRS_IEPD_4_2_RC2_FINAL_20171214/**</exclude>
 						<exclude>**/analytics/R/nibrs-xml/**</exclude>
 						<exclude>**/analytics/**</exclude>
 					</excludes>
