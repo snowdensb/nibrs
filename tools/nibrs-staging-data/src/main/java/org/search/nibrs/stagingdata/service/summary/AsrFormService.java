@@ -41,9 +41,11 @@ import org.search.nibrs.model.reports.asr.AsrRow.Ethnicity;
 import org.search.nibrs.model.reports.asr.AsrRow.Race;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
+import org.search.nibrs.stagingdata.model.PropertyType;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
+import org.search.nibrs.stagingdata.model.segment.PropertySegment;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.service.AdministrativeSegmentService;
 import org.search.nibrs.stagingdata.service.ArrestReportService;
@@ -334,6 +336,7 @@ public class AsrFormService {
 			AsrAdultRowName asrAdultRowName = null;
 			
 			String offenseCode = arresteeSegment.getUcrOffenseCodeType().getNibrsCode();
+			log.info("arrestee offenseCode: " + offenseCode);
 			if ("35A".equals(offenseCode)){
 				asrAdultRowName= get35AAsrRowName(arresteeSegment).map(AsrAdultRowName::valueOf).orElse(null);
 			}
@@ -344,7 +347,6 @@ public class AsrFormService {
 				asrAdultRowName = offenseCodeAdultRowNameMap.get(offenseCode); 
 			}
 			
-			log.info("arrestee offenseCode: " + offenseCode);
 			log.info("asrAdultRowName: " + asrAdultRowName);
 			if (asrAdultRowName != null){
 				countToAdultAgeGroups(asrAdultRows, arresteeSegment.getAverageAge(), arresteeSegment.getSexOfPersonType().getNibrsCode(), asrAdultRowName);
@@ -378,10 +380,16 @@ public class AsrFormService {
 				rowNamePrefix = "DRUG_POSSESSION";
 			}
 			
-			if (StringUtils.isNotBlank(rowNamePrefix)){
-				List<String> suspectedDrugCode = offenseSegment.getOffenderSuspectedOfUsingTypes().stream()
-						.map(i->i.getNibrsCode())
+			PropertySegment propertySegment = arresteeSegment.getAdministrativeSegment()
+					.getPropertySegments()
+					.stream()
+					.filter(i->(i.getPropertyTypes().stream().anyMatch(pt -> "10".equals(pt.getPropertyDescriptionType().getNibrsCode()))))
+					.findFirst().orElse(null);
+			if (propertySegment != null && StringUtils.isNotBlank(rowNamePrefix)){
+				List<String> suspectedDrugCode = propertySegment.getSuspectedDrugTypes().stream()
+						.map(i-> i.getSuspectedDrugTypeType().getNibrsCode())
 						.collect(Collectors.toList());
+				log.info("suspectedDrugCode: " + suspectedDrugCode);
 				
 				if (CollectionUtils.containsAny(OPIUM_COCAINE_AND_DERIVATIVES_CODES, suspectedDrugCode)){
 					asrAdultRowName = Optional.of(rowNamePrefix + "_OPIUM_COCAINE_DERIVATIVES");
