@@ -43,7 +43,7 @@
 	   if (ori && incidentYear){
 		   xhr = $.get( context +"months/" + incidentYear + "/" + ori, function(data) {
 			   $('#incidentMonth').empty();
-			   $('#incidentMonth').append('<option value="">Please select ...</option>');
+			   $('#incidentMonth').append('<option value="0">Please select ...</option>');
 			   data.forEach( function(item, index) {
 				   $('#incidentMonth').append($('<option></option>').attr('value', item).text(item));
 			   });
@@ -93,7 +93,7 @@
 					var loadingDiv =  $("#loadingAjaxPane");
 					var portalContentDiv = $("#portalContent");
 					
-					loadingDiv.height(portalContentDiv.height());
+					loadingDiv.height(portalContentDiv.height() + 20);
 					loadingDiv.width(portalContentDiv.width());
 					
 					$("#loadingAjaxPane").show();
