@@ -310,8 +310,6 @@ public class AsrFormService {
 				asrJuvenileRowName = offenseCodeJuvenileRowNameMap.get(offenseCode); 
 			}
 			
-			log.info("arrestee offenseCode: " + offenseCode);
-			log.info("asrJuvenileRowName: " + asrJuvenileRowName);
 			if (asrJuvenileRowName != null){
 				countToJuvenileAgeGroups(asrJuvenileRows, arresteeSegment.getAverageAge(), arresteeSegment.getSexOfPersonType().getNibrsCode(), asrJuvenileRowName);
 				countToRaceGroups(asrJuvenileRows, arresteeSegment.getRaceOfPersonType().getNibrsCode(), asrJuvenileRowName.name(), AsrJuvenileRowName.class);
@@ -331,13 +329,11 @@ public class AsrFormService {
 				(i.getAverageAge() >= 18 || i.isAgeUnknown()))
 				.collect(Collectors.toList());
 		
-		log.info("adult arresteeSegments: " + arresteeSegments.size());
 		for (ArresteeSegment arresteeSegment: adultArresteeSegments){
 			
 			AsrAdultRowName asrAdultRowName = null;
 			
 			String offenseCode = arresteeSegment.getUcrOffenseCodeType().getNibrsCode();
-			log.info("arrestee offenseCode: " + offenseCode);
 			if ("35A".equals(offenseCode)){
 				asrAdultRowName= get35AAsrRowName(arresteeSegment).map(AsrAdultRowName::valueOf).orElse(null);
 			}
@@ -348,7 +344,6 @@ public class AsrFormService {
 				asrAdultRowName = offenseCodeAdultRowNameMap.get(offenseCode); 
 			}
 			
-			log.info("asrAdultRowName: " + asrAdultRowName);
 			if (asrAdultRowName != null){
 				countToAdultAgeGroups(asrAdultRows, arresteeSegment.getAverageAge(), arresteeSegment.getSexOfPersonType().getNibrsCode(), asrAdultRowName);
 				countToRaceGroups(asrAdultRows, arresteeSegment.getRaceOfPersonType().getNibrsCode(), asrAdultRowName.name(), AsrAdultRowName.class);
@@ -391,19 +386,26 @@ public class AsrFormService {
 						.flatMap(i->i.getSuspectedDrugTypes().stream())
 						.map(i-> i.getSuspectedDrugTypeType().getNibrsCode())
 						.collect(Collectors.toList());
-				log.info("suspectedDrugCode: " + suspectedDrugCode);
 				
 				if (CollectionUtils.containsAny(OPIUM_COCAINE_AND_DERIVATIVES_CODES, suspectedDrugCode)){
 					asrAdultRowName = Optional.of(rowNamePrefix + "_OPIUM_COCAINE_DERIVATIVES");
 				}
-				else if (CollectionUtils.containsAny(MARIJUANA_CODES, suspectedDrugCode)){
-					asrAdultRowName =Optional.of(rowNamePrefix + "_MARIJUANA");
+				else if (CollectionUtils.containsAny(Other_Dangerous_Nonnarcotic_Drugs_CODES, suspectedDrugCode)){
+					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.getAverageAge() >= 18 || arresteeSegment.isAgeUnknown())) {
+						log.info("adminSegmentId" +  arresteeSegment.getAdministrativeSegment().getAdministrativeSegmentId());
+						log.info("suspectedDrugCode: " + suspectedDrugCode);
+					}
+					asrAdultRowName = Optional.of(rowNamePrefix + "_OTHER");
 				}
 				else if (CollectionUtils.containsAny(SYNTHETIC_NARCOTICS_CODES, suspectedDrugCode)){
+					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.getAverageAge() >= 18 || arresteeSegment.isAgeUnknown())) {
+						log.info("adminSegmentId" +  arresteeSegment.getAdministrativeSegment().getAdministrativeSegmentId());
+						log.info("suspectedDrugCode: " + suspectedDrugCode);
+					}
 					asrAdultRowName = Optional.of(rowNamePrefix + "_SYNTHETIC_NARCOTICS");
 				}
-				else if (CollectionUtils.containsAny(Other_Dangerous_Nonnarcotic_Drugs_CODES, suspectedDrugCode)){
-					asrAdultRowName = Optional.of(rowNamePrefix + "_OTHER");
+				else if (CollectionUtils.containsAny(MARIJUANA_CODES, suspectedDrugCode)){
+					asrAdultRowName =Optional.of(rowNamePrefix + "_MARIJUANA");
 				}
 			}
 					
