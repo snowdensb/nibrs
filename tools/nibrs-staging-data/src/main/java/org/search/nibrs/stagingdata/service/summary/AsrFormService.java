@@ -44,6 +44,7 @@ import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
+import org.search.nibrs.stagingdata.model.segment.PropertySegment;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
 import org.search.nibrs.stagingdata.service.AdministrativeSegmentService;
 import org.search.nibrs.stagingdata.service.ArrestReportService;
@@ -308,8 +309,6 @@ public class AsrFormService {
 				asrJuvenileRowName = offenseCodeJuvenileRowNameMap.get(offenseCode); 
 			}
 			
-			log.info("arrestee offenseCode: " + offenseCode);
-			log.info("asrJuvenileRowName: " + asrJuvenileRowName);
 			if (asrJuvenileRowName != null){
 				countToJuvenileAgeGroups(asrJuvenileRows, arresteeSegment.getAverageAge(), arresteeSegment.getSexOfPersonType().getNibrsCode(), asrJuvenileRowName);
 				countToRaceGroups(asrJuvenileRows, arresteeSegment.getRaceOfPersonType().getNibrsCode(), asrJuvenileRowName.name(), AsrJuvenileRowName.class);
@@ -344,8 +343,6 @@ public class AsrFormService {
 				asrAdultRowName = offenseCodeAdultRowNameMap.get(offenseCode); 
 			}
 			
-			log.info("arrestee offenseCode: " + offenseCode);
-			log.info("asrAdultRowName: " + asrAdultRowName);
 			if (asrAdultRowName != null){
 				countToAdultAgeGroups(asrAdultRows, arresteeSegment.getAverageAge(), arresteeSegment.getSexOfPersonType().getNibrsCode(), asrAdultRowName);
 				countToRaceGroups(asrAdultRows, arresteeSegment.getRaceOfPersonType().getNibrsCode(), asrAdultRowName.name(), AsrAdultRowName.class);
@@ -378,22 +375,36 @@ public class AsrFormService {
 				rowNamePrefix = "DRUG_POSSESSION";
 			}
 			
+			List<PropertySegment> propertySegments = arresteeSegment.getAdministrativeSegment()
+					.getPropertySegments()
+					.stream()
+					.filter(i->(i.getPropertyTypes().stream().anyMatch(pt -> "10".equals(pt.getPropertyDescriptionType().getNibrsCode()))))
+					.collect(Collectors.toList());
 			if (StringUtils.isNotBlank(rowNamePrefix)){
-				List<String> suspectedDrugCode = offenseSegment.getOffenderSuspectedOfUsingTypes().stream()
-						.map(i->i.getNibrsCode())
+				List<String> suspectedDrugCode = propertySegments.stream()
+						.flatMap(i->i.getSuspectedDrugTypes().stream())
+						.map(i-> i.getSuspectedDrugTypeType().getNibrsCode())
 						.collect(Collectors.toList());
 				
 				if (CollectionUtils.containsAny(OPIUM_COCAINE_AND_DERIVATIVES_CODES, suspectedDrugCode)){
 					asrAdultRowName = Optional.of(rowNamePrefix + "_OPIUM_COCAINE_DERIVATIVES");
 				}
-				else if (CollectionUtils.containsAny(MARIJUANA_CODES, suspectedDrugCode)){
-					asrAdultRowName =Optional.of(rowNamePrefix + "_MARIJUANA");
+				else if (CollectionUtils.containsAny(Other_Dangerous_Nonnarcotic_Drugs_CODES, suspectedDrugCode)){
+					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.getAverageAge() >= 18 || arresteeSegment.isAgeUnknown())) {
+						log.info("adminSegmentId" +  arresteeSegment.getAdministrativeSegment().getAdministrativeSegmentId());
+						log.info("suspectedDrugCode: " + suspectedDrugCode);
+					}
+					asrAdultRowName = Optional.of(rowNamePrefix + "_OTHER");
 				}
 				else if (CollectionUtils.containsAny(SYNTHETIC_NARCOTICS_CODES, suspectedDrugCode)){
+					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.getAverageAge() >= 18 || arresteeSegment.isAgeUnknown())) {
+						log.info("adminSegmentId" +  arresteeSegment.getAdministrativeSegment().getAdministrativeSegmentId());
+						log.info("suspectedDrugCode: " + suspectedDrugCode);
+					}
 					asrAdultRowName = Optional.of(rowNamePrefix + "_SYNTHETIC_NARCOTICS");
 				}
-				else if (CollectionUtils.containsAny(Other_Dangerous_Nonnarcotic_Drugs_CODES, suspectedDrugCode)){
-					asrAdultRowName = Optional.of(rowNamePrefix + "_OTHER");
+				else if (CollectionUtils.containsAny(MARIJUANA_CODES, suspectedDrugCode)){
+					asrAdultRowName =Optional.of(rowNamePrefix + "_MARIJUANA");
 				}
 			}
 					
@@ -439,6 +450,9 @@ public class AsrFormService {
 			case "ASSISTING_PROMOTING_PROSTITUTION": 
 				asrRows[Enum.valueOf(asrRowEnum, "PROSTITUTION_AND_COMMERCIALIZED_VICE").ordinal()].getEthnicityGroups()[ethnicity.ordinal()] ++;
 				break;
+			case "GAMBLING_TOTAL": 
+				asrRows[Enum.valueOf(asrRowEnum, "GAMBLING_ALL_OTHER").ordinal()].getEthnicityGroups()[ethnicity.ordinal()] ++;
+				break; 
 			default:
 				break;
 			}
@@ -471,6 +485,9 @@ public class AsrFormService {
 			case "ASSISTING_PROMOTING_PROSTITUTION": 
 				asrRows[Enum.valueOf(asrRowEnumClass, "PROSTITUTION_AND_COMMERCIALIZED_VICE").ordinal()].getRaceGroups()[race.ordinal()]++;
 				break;
+			case "GAMBLING_TOTAL": 
+				asrRows[Enum.valueOf(asrRowEnumClass, "GAMBLING_ALL_OTHER").ordinal()].getRaceGroups()[race.ordinal()] ++;
+				break; 
 			default:
 				break;
 			}
@@ -513,6 +530,10 @@ public class AsrFormService {
 				case ASSISTING_PROMOTING_PROSTITUTION: 
 					asrAdultRows[AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
 					break;
+				case GAMBLING_TOTAL: 
+					asrAdultRows[AsrAdultRowName.GAMBLING_ALL_OTHER.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrAdultRows[AsrAdultRowName.GAMBLING_ALL_OTHER.ordinal()].getMaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
+					break; 
 				default:
 					break;
 				}
@@ -548,6 +569,10 @@ public class AsrFormService {
 				case ASSISTING_PROMOTING_PROSTITUTION: 
 					asrAdultRows[AsrAdultRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
 					break;
+				case GAMBLING_TOTAL: 
+					asrAdultRows[AsrAdultRowName.GAMBLING_ALL_OTHER.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrAdultRows[AsrAdultRowName.GAMBLING_ALL_OTHER.ordinal()].getFemaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
+					break; 
 				default:
 					break;
 				}
@@ -556,76 +581,84 @@ public class AsrFormService {
 		}
 	}
 
-	private void countToJuvenileAgeGroups(AsrJuvenileRow[] asrAdultRows, Integer averageAge, String sexCode,
+	private void countToJuvenileAgeGroups(AsrJuvenileRow[] asrJuvenilRows, Integer averageAge, String sexCode,
 			AsrJuvenileRowName asrJuvenileRowName) {
 		JuvenileAgeGroup ageGroup = getJuvenileAgeGroup(averageAge);
 		if (ageGroup != null){
 			switch( sexCode ){
 			case "M":
-				asrAdultRows[asrJuvenileRowName.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
-				asrAdultRows[asrJuvenileRowName.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
-				asrAdultRows[AsrJuvenileRowName.TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
-				asrAdultRows[AsrJuvenileRowName.TOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+				asrJuvenilRows[asrJuvenileRowName.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+				asrJuvenilRows[asrJuvenileRowName.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+				asrJuvenilRows[AsrJuvenileRowName.TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+				asrJuvenilRows[AsrJuvenileRowName.TOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
 				
 				switch (asrJuvenileRowName) {
 				case DRUG_SALE_MANUFACTURING_OPIUM_COCAINE_DERIVATIVES:
 				case DRUG_SALE_MANUFACTURING_MARIJUANA:
 				case DRUG_SALE_MANUFACTURING_SYNTHETIC_NARCOTICS:
 				case DRUG_SALE_MANUFACTURING_OTHER:
-					asrAdultRows[AsrJuvenileRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
 					
 					break;
 				case DRUG_POSSESSION_OPIUM_COCAINE_DERIVATIVES:
 				case DRUG_POSSESSION_MARIJUANA:
 				case DRUG_POSSESSION_SYNTHETIC_NARCOTICS:
 				case DRUG_POSSESSION_OTHER:
-					asrAdultRows[AsrJuvenileRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
 					break;
 				case PROSTITUTION:
 				case ASSISTING_PROMOTING_PROSTITUTION: 
-					asrAdultRows[AsrJuvenileRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
 					break;
+				case GAMBLING_TOTAL: 
+					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getMaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
+					break; 
 				default:
 					break;
 				}
 				
 				break; 
 			case "F":
-				asrAdultRows[asrJuvenileRowName.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
-				asrAdultRows[asrJuvenileRowName.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
-				asrAdultRows[AsrJuvenileRowName.TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
-				asrAdultRows[AsrJuvenileRowName.TOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+				asrJuvenilRows[asrJuvenileRowName.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
+				asrJuvenilRows[asrJuvenileRowName.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+				asrJuvenilRows[AsrJuvenileRowName.TOTAL.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
+				asrJuvenilRows[AsrJuvenileRowName.TOTAL.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
 				
 				switch (asrJuvenileRowName) {
 				case DRUG_SALE_MANUFACTURING_OPIUM_COCAINE_DERIVATIVES:
 				case DRUG_SALE_MANUFACTURING_MARIJUANA:
 				case DRUG_SALE_MANUFACTURING_SYNTHETIC_NARCOTICS:
 				case DRUG_SALE_MANUFACTURING_OTHER:
-					asrAdultRows[AsrJuvenileRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
 					
 					break;
 				case DRUG_POSSESSION_OPIUM_COCAINE_DERIVATIVES:
 				case DRUG_POSSESSION_MARIJUANA:
 				case DRUG_POSSESSION_SYNTHETIC_NARCOTICS:
 				case DRUG_POSSESSION_OTHER:
-					asrAdultRows[AsrJuvenileRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrAdultRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
 					break;
 				case PROSTITUTION:
 				case ASSISTING_PROMOTING_PROSTITUTION: 
-					asrAdultRows[AsrJuvenileRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.PROSTITUTION_AND_COMMERCIALIZED_VICE.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
 					break;
+				case GAMBLING_TOTAL: 
+					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getFemaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
+					break; 
 				default:
 					break;
 				}

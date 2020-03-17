@@ -24,6 +24,8 @@ services:
    nibrs-analytics-saiku:
     container_name: nibrs-analytics-saiku
     image: searchncjis/nibrs-analytics-saiku
+    # use the dev tagged verison if you want access to the admin console in Saiku
+    #image: searchncjis/nibrs-analytics-saiku:dev
     networks:
       nibrs_analytics_nw:
     ports:

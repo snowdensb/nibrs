@@ -168,7 +168,7 @@ public class OffenderSegment {
 	@JsonIgnore
 	public Integer getAverageAge() {
 		Integer ret = null;
-		if (!isAgeUnknown()) {
+		if (!isAgeUnknown() && ageOfOffenderMin != null) {
 			double min = ageOfOffenderMin.doubleValue();
 			double max = ageOfOffenderMax.doubleValue();
 			double average = (min + max) / 2.0;
