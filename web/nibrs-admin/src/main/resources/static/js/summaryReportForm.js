@@ -67,7 +67,11 @@
    
    $('#submit').click( function(){
 	 $("#loadingText").removeClass("d-none");
-     var formData = $('#summaryReportRequestForm').serialize() + '&'+_csrf_param_name+'='+_csrf_token;
+     var formData = $('#summaryReportRequestForm').serialize(); 
+     
+     if (typeof _csrf_param_name !== 'undefined'){
+    	 formData += '&'+_csrf_param_name+'='+_csrf_token;
+     }
      //console.log("formData" + formData);
      
      var form = document.getElementById('summaryReportRequestForm'); 
