@@ -619,7 +619,7 @@ public class AsrFormService {
 					break;
 				case GAMBLING_TOTAL: 
 					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getMaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getMaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getMaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
 					break; 
 				default:
 					break;
@@ -658,7 +658,7 @@ public class AsrFormService {
 					break;
 				case GAMBLING_TOTAL: 
 					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getFemaleAgeGroups()[ageGroup.ordinal()] ++;
-					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getFemaleAgeGroups()[AdultAgeGroup.TOTAL.ordinal()] ++;
+					asrJuvenilRows[AsrJuvenileRowName.GAMBLING_ALL_OTHER.ordinal()].getFemaleAgeGroups()[JuvenileAgeGroup.TOTAL.ordinal()] ++;
 					break; 
 				default:
 					break;
