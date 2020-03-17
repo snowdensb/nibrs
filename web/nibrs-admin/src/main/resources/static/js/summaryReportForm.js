@@ -43,7 +43,7 @@
 	   if (ori && incidentYear){
 		   xhr = $.get( context +"months/" + incidentYear + "/" + ori, function(data) {
 			   $('#incidentMonth').empty();
-			   $('#incidentMonth').append('<option value="0">Please select ...</option>');
+			   $('#incidentMonth').append('<option value="0">All available months</option>');
 			   data.forEach( function(item, index) {
 				   $('#incidentMonth').append($('<option></option>').attr('value', item).text(item));
 			   });
