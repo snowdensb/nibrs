@@ -243,7 +243,7 @@ public class AsrFormService {
 		List<ArrestReportSegment> arrestReportSegments = arrestReportService.findArrestReportSegmentByOriAndArrestDate(ori, arrestYear, arrestMonth);
 		
 		List<ArrestReportSegment> adultArrestReportSegments = arrestReportSegments.stream()
-				.filter(i-> i.getAverageAge() >= 18 || i.isAgeUnknown())
+				.filter(i-> i.isAgeUnknown() || i.getAverageAge() >= 18 )
 				.collect(Collectors.toList());
 		
 		for (ArrestReportSegment arrestReportSegment: adultArrestReportSegments) {
@@ -326,7 +326,7 @@ public class AsrFormService {
 				.stream()
 				.filter(i->
 				Arrays.asList("C", "N").contains(i.getMultipleArresteeSegmentsIndicatorType().getNibrsCode()) &&  
-				(i.getAverageAge() >= 18 || i.isAgeUnknown()))
+				(i.isAgeUnknown() || i.getAverageAge() >= 18))
 				.collect(Collectors.toList());
 		
 		for (ArresteeSegment arresteeSegment: adultArresteeSegments){
@@ -391,14 +391,14 @@ public class AsrFormService {
 					asrAdultRowName = Optional.of(rowNamePrefix + "_OPIUM_COCAINE_DERIVATIVES");
 				}
 				else if (CollectionUtils.containsAny(Other_Dangerous_Nonnarcotic_Drugs_CODES, suspectedDrugCode)){
-					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.getAverageAge() >= 18 || arresteeSegment.isAgeUnknown())) {
+					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.isAgeUnknown() || arresteeSegment.getAverageAge() >= 18)) {
 						log.info("adminSegmentId" +  arresteeSegment.getAdministrativeSegment().getAdministrativeSegmentId());
 						log.info("suspectedDrugCode: " + suspectedDrugCode);
 					}
 					asrAdultRowName = Optional.of(rowNamePrefix + "_OTHER");
 				}
 				else if (CollectionUtils.containsAny(SYNTHETIC_NARCOTICS_CODES, suspectedDrugCode)){
-					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.getAverageAge() >= 18 || arresteeSegment.isAgeUnknown())) {
+					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.isAgeUnknown() || arresteeSegment.getAverageAge() >= 18 )) {
 						log.info("adminSegmentId" +  arresteeSegment.getAdministrativeSegment().getAdministrativeSegmentId());
 						log.info("suspectedDrugCode: " + suspectedDrugCode);
 					}
