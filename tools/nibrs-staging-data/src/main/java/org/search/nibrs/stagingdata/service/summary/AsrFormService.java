@@ -390,14 +390,14 @@ public class AsrFormService {
 					asrAdultRowName = Optional.of(rowNamePrefix + "_OPIUM_COCAINE_DERIVATIVES");
 				}
 				else if (CollectionUtils.containsAny(Other_Dangerous_Nonnarcotic_Drugs_CODES, suspectedDrugCode)){
-					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.getAverageAge() >= 18 || arresteeSegment.isAgeUnknown())) {
+					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.isAgeUnknown() || arresteeSegment.getAverageAge() >= 18)) {
 						log.info("adminSegmentId" +  arresteeSegment.getAdministrativeSegment().getAdministrativeSegmentId());
 						log.info("suspectedDrugCode: " + suspectedDrugCode);
 					}
 					asrAdultRowName = Optional.of(rowNamePrefix + "_OTHER");
 				}
 				else if (CollectionUtils.containsAny(SYNTHETIC_NARCOTICS_CODES, suspectedDrugCode)){
-					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.getAverageAge() >= 18 || arresteeSegment.isAgeUnknown())) {
+					if ("DRUG_SALE_MANUFACTURING".contentEquals(rowNamePrefix) && (arresteeSegment.isAgeUnknown() || arresteeSegment.getAverageAge() >= 18 )) {
 						log.info("adminSegmentId" +  arresteeSegment.getAdministrativeSegment().getAdministrativeSegmentId());
 						log.info("suspectedDrugCode: " + suspectedDrugCode);
 					}
