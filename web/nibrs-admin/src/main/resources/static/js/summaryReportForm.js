@@ -43,7 +43,7 @@
 	   if (ori && incidentYear){
 		   xhr = $.get( context +"months/" + incidentYear + "/" + ori, function(data) {
 			   $('#incidentMonth').empty();
-			   $('#incidentMonth').append('<option value="0">All available months</option>');
+			   $('#incidentMonth').append('<option value="0">All months</option>');
 			   data.forEach( function(item, index) {
 				   $('#incidentMonth').append($('<option></option>').attr('value', item).text(item));
 			   });
@@ -67,7 +67,12 @@
    
    $('#submit').click( function(){
 	 $("#loadingText").removeClass("d-none");
-     var formData = $('#summaryReportRequestForm').serialize();
+     var formData = $('#summaryReportRequestForm').serialize(); 
+     
+     if (typeof _csrf_param_name !== 'undefined'){
+    	 formData += '&'+_csrf_param_name+'='+_csrf_token;
+     }
+     //console.log("formData" + formData);
      
      var form = document.getElementById('summaryReportRequestForm'); 
      

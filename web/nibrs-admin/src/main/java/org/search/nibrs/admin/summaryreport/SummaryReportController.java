@@ -44,7 +44,6 @@ import org.search.nibrs.report.service.StagingDataRestClient;
 import org.search.nibrs.report.service.SupplementaryHomicideReportExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,14 +76,12 @@ public class SummaryReportController {
 	public CargoTheftReportExporter cargoTheftReportExporter;
 	
     @ModelAttribute
-    public void addModelAttributes(Model model) {
+    public void addModelAttributes(Map<String, Object> model) {
     	
-    	log.info("Add ModelAtrributes");
+    	log.info("Add new ModelAtrributes");
 		
-		if (!model.containsAttribute("oriMapping")) {
-			model.addAttribute("oriMapping", restService.getOris());
-		}
-    	log.debug("Model: " + model);
+		model.put("oriMapping", restService.getOris());
+    	log.info("oriMapping: " + restService.getOris());
     }
 
 	@GetMapping("/summaryReports/searchForm")
@@ -215,7 +212,11 @@ public class SummaryReportController {
 	
 	@GetMapping("/years/{ori}")
 	public @ResponseBody List<Integer> getDistinctYears(@PathVariable String ori) throws IOException{
-		return restService.getYears(ori);
+		List<Integer> years = restService.getYears(ori);
+		log.info("in getDistinctYears() "); 
+		log.info("Ori: " + (StringUtils.isNotBlank(ori)? ori : ""));
+		log.info("Get the years in portal: " + years);
+		return years; 
 	}
 	
 	@GetMapping("/months/{year}/{ori}")

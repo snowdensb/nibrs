@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
@@ -41,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/codeTables")
 public class CodeTableController {
+	private final Log log = LogFactory.getLog(this.getClass());
 	@Autowired
 	private AgencyRepository agencyRepository;
 	@Autowired
@@ -74,7 +77,9 @@ public class CodeTableController {
 	
 	@GetMapping("/years/{ori}") 
 	public List<Integer> getYears(@PathVariable String ori){
-		return administrativeSegmentRepository.findDistinctYears(ori);
+		List<Integer> years = administrativeSegmentRepository.findDistinctYears(ori);
+		log.debug("Years from the database for ORI " + ori + ": " + years); 
+		return years;
 	}
 	
 	@GetMapping("/months/{year}/{ori}") 
