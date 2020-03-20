@@ -132,7 +132,9 @@ public class CodeTableController {
 	
 	@GetMapping("/years/{ownerId}/{ori}") 
 	public List<Integer> getYearsByOriAndOwner(@PathVariable String ori, @PathVariable String ownerId){
-		return administrativeSegmentRepository.findDistinctYears(ori, ObjectUtils.getInteger(ownerId));
+		List<Integer> years = administrativeSegmentRepository.findDistinctYears(ori, ObjectUtils.getInteger(ownerId));
+		log.debug("Years from the database for ORI " + ori + " and ownerId " + ownerId + " : " + years);
+		return years;
 	}
 	
 	@GetMapping("/months/{year}/{ownerId}/{ori}") 

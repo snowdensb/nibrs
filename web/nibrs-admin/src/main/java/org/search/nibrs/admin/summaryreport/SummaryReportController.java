@@ -236,6 +236,7 @@ public class SummaryReportController {
 			AuthUser authUser =(AuthUser) model.get("authUser");  
 			ownerId = Objects.toString(authUser.getUserId());
 		}
+		
 		return ownerId;
 	}
 	
