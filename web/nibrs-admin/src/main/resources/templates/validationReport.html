@@ -16,18 +16,21 @@
 
 -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 	<body>
 		<div id="content" class="container-fluid">
 		  <div id="loadingAjaxPane" ></div>
 		  
+		  <script th:inline="javascript" sec:authorize="isAuthenticated()">
+        /*<![CDATA[*/
+          var _csrf_token = /*[[${_csrf.token}]]*/ '';
+          var _csrf_param_name = /*[[${_csrf.parameterName}]]*/ '';
+        /*]]>*/
+      </script>     
 		  <script th:inline="javascript">
         /*<![CDATA[*/
           var context = [[@{/}]];
           var persistReportTask = [[${persistReportTask}]]; 
-          var _csrf_token = /*[[${_csrf.token}]]*/ '';
-          var _csrf_param_name = /*[[${_csrf.parameterName}]]*/ '';
-
         /*]]>*/
 
 			  $(function() {
@@ -83,7 +86,9 @@
           
           $('#loadIncidentsAync').click (function(){
             var requestData = {}; 
-            requestData[_csrf_param_name] = _csrf_token;
+            if (typeof _csrf_param_name !== 'undefined'){
+            	  requestData[_csrf_param_name] = _csrf_token;
+            }
           	var data = table.rows().data();
           	if (data.length > 0){
           		  xhr =  $.post(context + "files/preCertificationErrors", requestData, function(data, status){  
