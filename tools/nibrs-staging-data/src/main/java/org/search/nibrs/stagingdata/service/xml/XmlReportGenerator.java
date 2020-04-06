@@ -506,8 +506,17 @@ public class XmlReportGenerator {
 	}
 	
 	private void addSubstanceElements(AdministrativeSegment administrativeSegment, Element reportElement) {
-		for (PropertySegment property : administrativeSegment.getPropertySegments()) {
-			for (PropertyType propertyType : property.getPropertyTypes()) {
+		List<PropertySegment> properties = administrativeSegment.getPropertySegments()
+				.stream()
+				.sorted((h1, h2) -> h1.getPropertySegmentId().compareTo(h2.getPropertySegmentId()))
+				.collect(Collectors.toList()); 
+		for (PropertySegment property : properties) {
+			List<PropertyType> sortedPropertyTypes = property.getPropertyTypes()
+					.stream()
+					.sorted((h1, h2) -> h1.getPropertyTypeId().compareTo(h2.getPropertyTypeId()))
+					.collect(Collectors.toList()); 
+			
+			for (PropertyType propertyType : sortedPropertyTypes) {
 				String description = propertyType.getPropertyDescriptionType().getNibrsCode();
 				if ("10".equals(description)) {
 					
