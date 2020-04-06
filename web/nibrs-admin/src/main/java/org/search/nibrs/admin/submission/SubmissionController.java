@@ -16,6 +16,7 @@
 package org.search.nibrs.admin.submission;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -78,6 +79,7 @@ public class SubmissionController {
 		}
 		
 		model.put("submissionIncidentSearchRequest", incidentSearchRequest);
+		model.put("submissionIncidentSearchResult",  new IncidentSearchResult(new ArrayList<IncidentPointer>(), 1000));
 	    return "/submission/eligibleIncidents::resultsPage";
 	}
 	
