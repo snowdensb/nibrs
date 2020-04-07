@@ -445,7 +445,15 @@ public class XmlReportGenerator {
 	}
 
 	private void addItemElements(AdministrativeSegment administrativeSegment, Element reportElement) {
-		for (PropertySegment property : administrativeSegment.getPropertySegments()) {
+		
+		boolean contains35A = administrativeSegment.getOffenseSegments().stream()
+				.anyMatch(offenseSegment-> "35A".equals(offenseSegment.getUcrOffenseCodeType().getNibrsCode()));
+		
+		List<PropertySegment> properties = administrativeSegment.getPropertySegments()
+				.stream()
+				.sorted((h1, h2) -> h1.getPropertySegmentId().compareTo(h2.getPropertySegmentId()))
+				.collect(Collectors.toList()); 
+		for (PropertySegment property : properties) {
 			if ("NONE".equalsIgnoreCase(property.getTypePropertyLossEtcType().getNibrsDescription()) || 
 					"UNKNOWN".equalsIgnoreCase(property.getTypePropertyLossEtcType().getNibrsDescription())){
 			
@@ -456,9 +464,14 @@ public class XmlReportGenerator {
 				continue;
 			}
 			
-			for (PropertyType propertyType: property.getPropertyTypes()) {
+			List<PropertyType> sortedPropertyTypes = property.getPropertyTypes()
+					.stream()
+					.sorted((h1, h2) -> h1.getPropertyTypeId().compareTo(h2.getPropertyTypeId()))
+					.collect(Collectors.toList()); 
+			
+			for (PropertyType propertyType : sortedPropertyTypes) {
 				String nibrsCode = propertyType.getPropertyDescriptionType().getNibrsCode();
-				if (nibrsCode != null && !"10".equals(nibrsCode)) {
+				if (nibrsCode != null && !("10".equals(nibrsCode) && contains35A) ) {
 					Element itemElement = XmlUtils.appendChildElement(reportElement, Namespace.NC, "Item");
 					
 					addItemStatus(property, itemElement);
@@ -506,6 +519,12 @@ public class XmlReportGenerator {
 	}
 	
 	private void addSubstanceElements(AdministrativeSegment administrativeSegment, Element reportElement) {
+		boolean contains35A = administrativeSegment.getOffenseSegments().stream()
+				.anyMatch(offenseSegment-> "35A".equals(offenseSegment.getUcrOffenseCodeType().getNibrsCode()));
+
+		if (!contains35A) {
+			return;
+		}
 		List<PropertySegment> properties = administrativeSegment.getPropertySegments()
 				.stream()
 				.sorted((h1, h2) -> h1.getPropertySegmentId().compareTo(h2.getPropertySegmentId()))

@@ -17,9 +17,9 @@
 -->
 <nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/4.2" xmlns:cjis="http://fbi.gov/cjis/1.0" xmlns:j="http://release.niem.gov/niem/domains/jxdm/5.2/" xmlns:nc="http://release.niem.gov/niem/niem-core/3.0/" xmlns:s="http://release.niem.gov/niem/structures/3.0/">
     <cjis:MessageMetadata>
-        <cjis:MessageDateTime>2018-09-12T12:06:49</cjis:MessageDateTime>
+        <cjis:MessageDateTime>2020-04-07T02:59:54</cjis:MessageDateTime>
         <cjis:MessageIdentification>
-            <nc:IdentificationID>GroupAIncident1</nc:IdentificationID>
+            <nc:IdentificationID>1</nc:IdentificationID>
         </cjis:MessageIdentification>
         <cjis:MessageImplementationVersion>4.2</cjis:MessageImplementationVersion>
         <cjis:MessageSubmittingOrganization>
@@ -82,6 +82,17 @@
         </nc:Location>
         <nc:Item>
             <nc:ItemStatus>
+                <cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+            </nc:ItemStatus>
+            <nc:ItemValue>
+                <nc:ItemValueAmount>
+                    <nc:Amount>5000</nc:Amount>
+                </nc:ItemValueAmount>
+            </nc:ItemValue>
+            <j:ItemCategoryNIBRSPropertyCategoryCode>20</j:ItemCategoryNIBRSPropertyCategoryCode>
+        </nc:Item>
+        <nc:Item>
+            <nc:ItemStatus>
                 <cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
             </nc:ItemStatus>
             <nc:ItemValue>
@@ -93,14 +104,9 @@
         </nc:Item>
         <nc:Item>
             <nc:ItemStatus>
-                <cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+                <cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
             </nc:ItemStatus>
-            <nc:ItemValue>
-                <nc:ItemValueAmount>
-                    <nc:Amount>5000</nc:Amount>
-                </nc:ItemValueAmount>
-            </nc:ItemValue>
-            <j:ItemCategoryNIBRSPropertyCategoryCode>20</j:ItemCategoryNIBRSPropertyCategoryCode>
+            <j:ItemCategoryNIBRSPropertyCategoryCode>10</j:ItemCategoryNIBRSPropertyCategoryCode>
         </nc:Item>
         <nc:Item>
             <nc:ItemStatus>
@@ -116,35 +122,6 @@
             </nc:ItemValue>
             <j:ItemCategoryNIBRSPropertyCategoryCode>20</j:ItemCategoryNIBRSPropertyCategoryCode>
         </nc:Item>
-        <nc:Substance>
-            <nc:ItemStatus>
-                <cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
-            </nc:ItemStatus>
-            <j:ItemCategoryNIBRSPropertyCategoryCode>10</j:ItemCategoryNIBRSPropertyCategoryCode>
-            <j:DrugCategoryCode>E</j:DrugCategoryCode>
-            <nc:SubstanceQuantityMeasure>
-                <nc:MeasureDecimalValue>0.001</nc:MeasureDecimalValue>
-                <j:SubstanceUnitCode>LB</j:SubstanceUnitCode>
-            </nc:SubstanceQuantityMeasure>
-        </nc:Substance>
-        <nc:Substance>
-            <nc:ItemStatus>
-                <cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
-            </nc:ItemStatus>
-            <j:ItemCategoryNIBRSPropertyCategoryCode>10</j:ItemCategoryNIBRSPropertyCategoryCode>
-            <j:DrugCategoryCode>E</j:DrugCategoryCode>
-            <nc:SubstanceQuantityMeasure>
-                <nc:MeasureDecimalValue>0.001</nc:MeasureDecimalValue>
-                <j:SubstanceUnitCode>OZ</j:SubstanceUnitCode>
-            </nc:SubstanceQuantityMeasure>
-        </nc:Substance>
-        <nc:Substance>
-            <nc:ItemStatus>
-                <cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
-            </nc:ItemStatus>
-            <j:ItemCategoryNIBRSPropertyCategoryCode>10</j:ItemCategoryNIBRSPropertyCategoryCode>
-            <j:DrugCategoryCode>X</j:DrugCategoryCode>
-        </nc:Substance>
         <nc:Person s:id="PersonVictim-1">
             <nc:PersonAgeMeasure>
                 <nc:MeasureRangeValue>
