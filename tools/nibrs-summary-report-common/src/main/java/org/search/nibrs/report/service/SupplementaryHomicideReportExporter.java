@@ -329,10 +329,10 @@ public class SupplementaryHomicideReportExporter {
 		cell.setCellValue("DO NOT WRITE HERE");
 		CellRangeAddress mergedRegions = new CellRangeAddress(rowNum, rowNum, 15, 16); 
 		sheet.addMergedRegion(mergedRegions);
-        RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), mergedRegions, sheet);
-        RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), mergedRegions, sheet);
-        RegionUtil.setBorderTop(BorderStyle.THIN.getCode(), mergedRegions, sheet);
-        RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+        RegionUtil.setBorderLeft(BorderStyle.THIN, mergedRegions, sheet);
+        RegionUtil.setBorderRight(BorderStyle.THIN, mergedRegions, sheet);
+        RegionUtil.setBorderTop(BorderStyle.THIN, mergedRegions, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
 
 		rowNum ++; 
 		row = sheet.createRow(rowNum);
@@ -350,25 +350,25 @@ public class SupplementaryHomicideReportExporter {
 		cell.setCellValue(supplementaryHomicideReport.getMonthString() + "/" + supplementaryHomicideReport.getYear());
 		mergedRegions = new CellRangeAddress(rowNum, rowNum, 0, 1);
 		sheet.addMergedRegion(mergedRegions);
-        RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
 		
         cell = row.createCell(3); 
         cell.setCellStyle(centeredStyle); 
         cell.setCellValue(supplementaryHomicideReport.getOri());
         mergedRegions = new CellRangeAddress(rowNum, rowNum, 3, 8);
 		sheet.addMergedRegion(mergedRegions);
-        RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
         
         cell = row.createCell(10); 
         cell.setCellStyle(centeredStyle); 
         mergedRegions = new CellRangeAddress(rowNum, rowNum, 10, 11);
 		sheet.addMergedRegion(mergedRegions);
-        RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
         
         cell = row.createCell(13); 
         cell.setCellStyle(centeredStyle); 
         mergedRegions = new CellRangeAddress(rowNum, rowNum, 13, 13);
-        RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
         
 		cell= row.createCell(15);
 		cell.setCellStyle(wrappedBorderedStyle);
@@ -430,20 +430,20 @@ public class SupplementaryHomicideReportExporter {
 		cell.setCellValue(supplementaryHomicideReport.getAgencyName());
 		mergedRegions = new CellRangeAddress(rowNum, rowNum, 0, 1);
 		sheet.addMergedRegion(mergedRegions);
-        RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
 		
         cell = row.createCell(3); 
         cell.setCellStyle(centeredStyle); 
         cell.setCellValue(supplementaryHomicideReport.getStateName());
         mergedRegions = new CellRangeAddress(rowNum, rowNum, 3, 8);
 		sheet.addMergedRegion(mergedRegions);
-        RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
         
         cell = row.createCell(10); 
         cell.setCellStyle(centeredStyle); 
         mergedRegions = new CellRangeAddress(rowNum, rowNum, 10, 13);
 		sheet.addMergedRegion(mergedRegions);
-        RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
         
         rowNum ++; 
         row = sheet.createRow(rowNum);
@@ -662,10 +662,10 @@ public class SupplementaryHomicideReportExporter {
             System.out.println("CellRangeAddress:" + mergedRegions);
             if (mergedRegions.getFirstRow() > minRowNum && mergedRegions.getFirstRow() < maxRowNum) {
             	System.out.println("Add borders");
-	            RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), mergedRegions, sheet);
-	            RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), mergedRegions, sheet);
-	            RegionUtil.setBorderTop(BorderStyle.THIN.getCode(), mergedRegions, sheet);
-	            RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+	            RegionUtil.setBorderLeft(BorderStyle.THIN, mergedRegions, sheet);
+	            RegionUtil.setBorderRight(BorderStyle.THIN, mergedRegions, sheet);
+	            RegionUtil.setBorderTop(BorderStyle.THIN, mergedRegions, sheet);
+	            RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
             }
 
         }

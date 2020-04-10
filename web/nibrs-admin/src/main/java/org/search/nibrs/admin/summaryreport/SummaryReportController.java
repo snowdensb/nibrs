@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.admin.summaryreport;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -126,8 +127,20 @@ public class SummaryReportController {
 		
 		// get output stream of the response
 		OutputStream outStream = response.getOutputStream();
-		workbook.write(outStream);
-		outStream.close();
+		
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(8192)) { 
+            try { 
+                workbook.write(baos); 
+            } finally { 
+                workbook.close(); 
+            }
+            
+            baos.writeTo(outStream);
+            baos.close(); 
+        } finally{
+        	outStream.close();
+        }
+		log.info("The report is writen to fileName: " + fileName);
 	}
 	
 	@PostMapping("/summaryReports/returnAForm")
