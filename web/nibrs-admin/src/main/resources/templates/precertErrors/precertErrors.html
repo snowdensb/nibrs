@@ -68,9 +68,7 @@
 	
 	       $(function(){
 		            
-	          $.fn.dataTable.moment( 'MM/YYYY' );
-	        
-	          var table = $('#searchResultsTable').DataTable({
+	          table = $('#searchResultsTable').DataTable({
               ajax: context +"precertErrors/searchResults",
               columns: [
                   { "data": "submissionDateString" },
@@ -117,6 +115,8 @@
 	            }
 	          });
 	          
+	          $.fn.dataTable.moment( 'MM/YYYY' );
+	            
 	          $('[data-toggle="tooltip"]').tooltip({
 	              trigger : 'hover'
 	          });   

@@ -34,9 +34,9 @@
         /*]]>*/
 
 			  $(function() {
-				  var table = $('#errorReport').DataTable({
+				  table = $('#errorReport').DataTable({
             responsive: true, 
-            fixedHeader: {header: true}, 
+            fixedHeader: true, 
             language: {
                 emptyTable: "No errors found in this NIBRS submission"
             },
@@ -75,7 +75,7 @@
           });
 					  
           table.buttons().container()
-           .appendTo( '#errorReport_length' ).addClass("mr-5");
+            .appendTo( '#errorReport_length' ).addClass("mr-5");
           
           if (persistReportTask && !persistReportTask.aborted && !persistReportTask.complete && persistReportTask.started){
               $('#loadIncidents').attr('disabled', true);
