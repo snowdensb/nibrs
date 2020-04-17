@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
-<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/4.2" 
-	xmlns:cjis="http://fbi.gov/cjis/1.0" 
-	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/1.0" 
+<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/2019" 
+	xmlns:cjis="http://fbi.gov/cjis/2.0" 
+	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/2.0" 
 	xmlns:i="http://release.niem.gov/niem/appinfo/3.0/" 
 	xmlns:ucr="http://release.niem.gov/niem/codes/fbi_ucr/3.2/" 
 	xmlns:j="http://release.niem.gov/niem/domains/jxdm/5.2/" 
@@ -28,8 +11,8 @@
 	xmlns:s="http://release.niem.gov/niem/structures/3.0/" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/4.2" 
-	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/4.2 ../base-xsd/nibrs/4.2/nibrs.xsd">
+	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/2019" 
+	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/2019 ../base-xsd/nibrs/2019/nibrs.xsd">
 	<cjis:MessageMetadata>
 		<!-- Message Timestamp -->
 		<cjis:MessageDateTime>2017-03-23T03:00:00</cjis:MessageDateTime>
@@ -38,7 +21,7 @@
 			<nc:IdentificationID>123456</nc:IdentificationID>
 		</cjis:MessageIdentification>
 		<!-- NIBRS IEPD Version -->
-		<cjis:MessageImplementationVersion>4.2</cjis:MessageImplementationVersion>
+		<cjis:MessageImplementationVersion>2019</cjis:MessageImplementationVersion>
 		<cjis:MessageSubmittingOrganization>
 			<j:OrganizationAugmentation>
 				<j:OrganizationORIIdentification>
@@ -65,24 +48,19 @@
 						<nc:IdentificationID>WVNDX0100</nc:IdentificationID>
 					</j:OrganizationORIIdentification>
 				</j:OrganizationAugmentation>
-				<cjis:OrganizationAugmentation>
-	            	<cjis:DirectReportingCityIdentification>
-	                	<nc:IdentificationID>GAA7</nc:IdentificationID>
-					</cjis:DirectReportingCityIdentification>
-	            </cjis:OrganizationAugmentation>
 			</nibrs:ReportingAgency>
 		</nibrs:ReportHeader>
 		<nc:Incident>
 			<nc:ActivityIdentification>
 				<!-- Element 2, Incident Number -->
-				<nc:IdentificationID>000054236732</nc:IdentificationID>
+				<nc:IdentificationID>54236732</nc:IdentificationID>
 			</nc:ActivityIdentification>
 			<nc:ActivityDate>
-			    <!-- <nc:YearMonthDate>1999-01</nc:YearMonthDate>-->
+			    <nc:YearMonthDate>1999-01</nc:YearMonthDate>
 				<!-- Element 3, Incident Date and Hour-->
 				<nc:DateTime>2016-02-19T10:00:00</nc:DateTime>
 				<!-- Element 3, Incident Date if Hour is Unknown-->
-				<!-- <nc:Date>2016-02-19</nc:Date> -->
+				<nc:Date>2016-02-19</nc:Date>
 			</nc:ActivityDate>
 			<cjis:IncidentAugmentation>
 				<!-- Element 3, IncidentReportDateIndicator is true to designate that the ActivityDate is the Report Date rather than the Incident Date -->
@@ -137,68 +115,7 @@
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
 	            <nc:ItemValueAmount>
-	                <nc:Amount>12001</nc:Amount>
-	            </nc:ItemValueAmount>
-	            <!-- Element 17, Date Recovered -->
-	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-21</nc:Date>
-	            </nc:ItemValueDate>
-	        </nc:ItemValue>
-	        <!-- Element 15, Property Description -->
-	        <j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
-	        <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
-	        <!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
-	    </nc:Item>
-	    <nc:Item>
-	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
-	        <nc:ItemStatus>
-	            <cjis:ItemStatusCode>BURNED</cjis:ItemStatusCode>
-	        </nc:ItemStatus>
-	        <!-- Element 16, Value of Property in US Dollars -->
-	        <nc:ItemValue>
-	            <nc:ItemValueAmount>
-	                <nc:Amount>12002</nc:Amount>
-	            </nc:ItemValueAmount>
-	            <!-- Element 17, Date Recovered -->
-	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-22</nc:Date>
-	                <nc:DateTime>2016-02-22T03:00:00</nc:DateTime>
-	            </nc:ItemValueDate>
-	        </nc:ItemValue>
-	        <!-- Element 15, Property Description -->
-	        <j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
-	        <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
-	        <!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
-	    </nc:Item>
-	    <nc:Item>
-	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
-	        <nc:ItemStatus>
-	            <cjis:ItemStatusCode>COUNTERFEITED</cjis:ItemStatusCode>
-	        </nc:ItemStatus>
-	        <!-- Element 16, Value of Property in US Dollars -->
-	        <nc:ItemValue>
-	            <nc:ItemValueAmount>
-	                <nc:Amount>12003</nc:Amount>
-	            </nc:ItemValueAmount>
-	            <!-- Element 17, Date Recovered -->
-	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-23</nc:Date>
-	            </nc:ItemValueDate>
-	        </nc:ItemValue>
-	        <!-- Element 15, Property Description -->
-	        <j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
-	        <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
-	        <!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
-	    </nc:Item>
-	    <nc:Item>
-	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
-	        <nc:ItemStatus>
-	            <cjis:ItemStatusCode>DESTROYED_DAMAGED_VANDALIZED</cjis:ItemStatusCode>
-	        </nc:ItemStatus>
-	        <!-- Element 16, Value of Property in US Dollars -->
-	        <nc:ItemValue>
-	            <nc:ItemValueAmount>
-	                <nc:Amount>12004</nc:Amount>
+	                <nc:Amount>12000</nc:Amount>
 	            </nc:ItemValueAmount>
 	            <!-- Element 17, Date Recovered -->
 	            <nc:ItemValueDate>
@@ -209,6 +126,71 @@
 	        <j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
 	        <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
 	        <!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+	        <nc:ItemQuantity>1</nc:ItemQuantity>
+	    </nc:Item>
+	    <nc:Item>
+	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
+	        <nc:ItemStatus>
+	            <cjis:ItemStatusCode>BURNED</cjis:ItemStatusCode>
+	        </nc:ItemStatus>
+	        <!-- Element 16, Value of Property in US Dollars -->
+	        <nc:ItemValue>
+	            <nc:ItemValueAmount>
+	                <nc:Amount>12000</nc:Amount>
+	            </nc:ItemValueAmount>
+	            <!-- Element 17, Date Recovered -->
+	            <nc:ItemValueDate>
+	                <nc:Date>2016-02-24</nc:Date>
+	                <nc:DateTime>2017-03-23T03:00:00</nc:DateTime>
+	            </nc:ItemValueDate>
+	        </nc:ItemValue>
+	        <!-- Element 15, Property Description -->
+	        <j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
+	        <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+	        <!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+	        <nc:ItemQuantity>1</nc:ItemQuantity>
+	    </nc:Item>
+	    <nc:Item>
+	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
+	        <nc:ItemStatus>
+	            <cjis:ItemStatusCode>COUNTERFEITED</cjis:ItemStatusCode>
+	        </nc:ItemStatus>
+	        <!-- Element 16, Value of Property in US Dollars -->
+	        <nc:ItemValue>
+	            <nc:ItemValueAmount>
+	                <nc:Amount>12000</nc:Amount>
+	            </nc:ItemValueAmount>
+	            <!-- Element 17, Date Recovered -->
+	            <nc:ItemValueDate>
+	                <nc:Date>2016-02-24</nc:Date>
+	            </nc:ItemValueDate>
+	        </nc:ItemValue>
+	        <!-- Element 15, Property Description -->
+	        <j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
+	        <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+	        <!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+	        <nc:ItemQuantity>1</nc:ItemQuantity>
+	    </nc:Item>
+	    <nc:Item>
+	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
+	        <nc:ItemStatus>
+	            <cjis:ItemStatusCode>DESTROYED_DAMAGED_VANDALIZED</cjis:ItemStatusCode>
+	        </nc:ItemStatus>
+	        <!-- Element 16, Value of Property in US Dollars -->
+	        <nc:ItemValue>
+	            <nc:ItemValueAmount>
+	                <nc:Amount>12000</nc:Amount>
+	            </nc:ItemValueAmount>
+	            <!-- Element 17, Date Recovered -->
+	            <nc:ItemValueDate>
+	                <nc:Date>2016-02-24</nc:Date>
+	            </nc:ItemValueDate>
+	        </nc:ItemValue>
+	        <!-- Element 15, Property Description -->
+	        <j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
+	        <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
+	        <!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+	        <nc:ItemQuantity>1</nc:ItemQuantity>
 	    </nc:Item>
 		<nc:Item>
 			<!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
@@ -218,17 +200,18 @@
 			<!-- Element 16, Value of Property in US Dollars -->
 			<nc:ItemValue>
 				<nc:ItemValueAmount>
-					<nc:Amount>12005</nc:Amount>
+					<nc:Amount>12000</nc:Amount>
 				</nc:ItemValueAmount>
 				<!-- Element 17, Date Recovered -->
 				<nc:ItemValueDate>
-					<nc:Date>2016-02-25</nc:Date>
+					<nc:Date>2016-02-24</nc:Date>
 				</nc:ItemValueDate>
 			</nc:ItemValue>
 			<!-- Element 15, Property Description -->
 			<j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
 		    <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
 			<!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
+			<nc:ItemQuantity>1</nc:ItemQuantity>
 		</nc:Item>
 	    <nc:Item>
 	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
@@ -238,15 +221,15 @@
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
 	            <nc:ItemValueAmount>
-	                <nc:Amount>12006</nc:Amount>
+	                <nc:Amount>12000</nc:Amount>
 	            </nc:ItemValueAmount>
 	            <!-- Element 17, Date Recovered -->
 	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-26</nc:Date>
+	                <nc:Date>2016-02-24</nc:Date>
 	            </nc:ItemValueDate>
 	        </nc:ItemValue>
 	        <!-- Element 15, Property Description -->
-	        <j:ItemCategoryNIBRSPropertyCategoryCode>05</j:ItemCategoryNIBRSPropertyCategoryCode>
+	        <j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
 	        <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
 	        <!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
 	        <nc:ItemQuantity>4</nc:ItemQuantity>
@@ -259,11 +242,11 @@
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
 	            <nc:ItemValueAmount>
-	                <nc:Amount>12007</nc:Amount>
+	                <nc:Amount>12000</nc:Amount>
 	            </nc:ItemValueAmount>
 	            <!-- Element 17, Date Recovered -->
 	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-27</nc:Date>
+	                <nc:Date>2016-02-24</nc:Date>
 	            </nc:ItemValueDate>
 	        </nc:ItemValue>
 	        <!-- Element 15, Property Description -->
@@ -280,11 +263,11 @@
 			<!-- Element 16, Value of Property in US Dollars -->
 			<nc:ItemValue>
 				<nc:ItemValueAmount>
-					<nc:Amount>12008</nc:Amount>
+					<nc:Amount>12000</nc:Amount>
 				</nc:ItemValueAmount>
 				<!-- Element 17, Date Recovered -->
 				<nc:ItemValueDate>
-					<nc:Date>2016-02-28</nc:Date>
+					<nc:Date>2016-02-24</nc:Date>
 				</nc:ItemValueDate>
 			</nc:ItemValue>
 			<!-- Element 15, Property Description -->
@@ -295,31 +278,6 @@
 				<!-- Element 21/22, Estimated Quantity/Fraction -->
 				<nc:MeasureDecimalValue>1.5</nc:MeasureDecimalValue>
 				<j:SubstanceUnitCode>XX</j:SubstanceUnitCode>
-			</nc:SubstanceQuantityMeasure>
-		</nc:Substance>
-		<nc:Substance>
-			<!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
-			<nc:ItemStatus>
-				<cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
-			</nc:ItemStatus>
-			<!-- Element 16, Value of Property in US Dollars -->
-			<nc:ItemValue>
-				<nc:ItemValueAmount>
-					<nc:Amount>1200</nc:Amount>
-				</nc:ItemValueAmount>
-				<!-- Element 17, Date Recovered -->
-				<nc:ItemValueDate>
-					<nc:Date>2016-02-28</nc:Date>
-				</nc:ItemValueDate>
-			</nc:ItemValue>
-			<!-- Element 15, Property Description -->
-			<j:ItemCategoryNIBRSPropertyCategoryCode>10</j:ItemCategoryNIBRSPropertyCategoryCode>
-			<!-- Element 20, Suspected Involved Drug Type -->
-			<j:DrugCategoryCode>X</j:DrugCategoryCode>
-			<nc:SubstanceQuantityMeasure>
-				<!-- Element 21/22, Estimated Quantity/Fraction -->
-				<nc:MeasureDecimalValue>1.5</nc:MeasureDecimalValue>
-				<j:SubstanceUnitCode>LB</j:SubstanceUnitCode>
 			</nc:SubstanceQuantityMeasure>
 		</nc:Substance>
 		<!--End Property-->

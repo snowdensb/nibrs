@@ -1,24 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
-<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/4.2" 
-	xmlns:cjis="http://fbi.gov/cjis/1.0" 
-	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/1.0" 
+<?xml version="1.0" encoding="UTF-8"?> 
+<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/2019" 
+	xmlns:cjis="http://fbi.gov/cjis/2.0" 
+	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/2.0" 
 	xmlns:i="http://release.niem.gov/niem/appinfo/3.0/" 
 	xmlns:ucr="http://release.niem.gov/niem/codes/fbi_ucr/3.2/" 
 	xmlns:j="http://release.niem.gov/niem/domains/jxdm/5.2/" 
@@ -28,8 +11,8 @@
 	xmlns:s="http://release.niem.gov/niem/structures/3.0/" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/4.2" 
-	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/4.2 ../base-xsd/nibrs/4.2/nibrs.xsd">
+	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/2019" 
+	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/2019 ../base-xsd/nibrs/2019/nibrs.xsd">
 	<cjis:MessageMetadata>
 		<!-- Message Timestamp -->
 		<cjis:MessageDateTime>2017-03-23T03:00:00</cjis:MessageDateTime>
@@ -38,7 +21,7 @@
 			<nc:IdentificationID>123456</nc:IdentificationID>
 		</cjis:MessageIdentification>
 		<!-- NIBRS IEPD Version -->
-		<cjis:MessageImplementationVersion>4.2</cjis:MessageImplementationVersion>
+		<cjis:MessageImplementationVersion>2019</cjis:MessageImplementationVersion>
 		<cjis:MessageSubmittingOrganization>
 			<j:OrganizationAugmentation>
 				<j:OrganizationORIIdentification>
@@ -169,7 +152,7 @@
 	    <nc:Item>
 	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->
 	        <nc:ItemStatus>
-	            <cjis:ItemStatusCode>DESTROYED</cjis:ItemStatusCode>
+	            <cjis:ItemStatusCode>DESTROYED_DAMAGED_VANDALIZED</cjis:ItemStatusCode>
 	        </nc:ItemStatus>
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
