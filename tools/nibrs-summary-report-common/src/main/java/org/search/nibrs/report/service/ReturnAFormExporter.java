@@ -69,13 +69,12 @@ public class ReturnAFormExporter {
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();
-            System.out.println("The return A form is writen to fileName: " + fileName);
+            log.info("The return A form Supplement is writen to fileName: " + fileName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
     
@@ -584,14 +583,14 @@ public class ReturnAFormExporter {
 		Cell cell5 = row.createCell(5);
 		cell5.setCellStyle(column0Style);
 		
-		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 4, 0, 0), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 4, 0, 0), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1,1,2,5), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(1,1,2,5), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(2,4,4,5), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(2,4,2,3), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(2,4,4,5), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(2,4,4,5), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, new CellRangeAddress(1, 4, 0, 0), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1, 4, 0, 0), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1,1,2,5), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, new CellRangeAddress(1,1,2,5), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, new CellRangeAddress(2,4,4,5), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, new CellRangeAddress(2,4,2,3), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(2,4,4,5), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, new CellRangeAddress(2,4,4,5), sheet);
 				
 		return rowNum;
 	}
@@ -611,10 +610,10 @@ public class ReturnAFormExporter {
 		s1.applyFont(boldFont);
 		cell.setCellValue(s1);
 		
-		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 5), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 5), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 5), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 0, 0, 5), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, new CellRangeAddress(0, 0, 0, 5), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THIN, new CellRangeAddress(0, 0, 0, 5), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, new CellRangeAddress(0, 0, 0, 5), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(0, 0, 0, 5), sheet);
 
 		return rowNum;
 	}
@@ -709,14 +708,14 @@ public class ReturnAFormExporter {
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();
-            System.out.println("The return A form is writen to fileName: " + fileName);
+            log.info("The return A form is writen to fileName: " + fileName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Done");
+        log.info("Done");
     }
 
 	public XSSFWorkbook createReturnAWorkbook(ReturnAForm returnAForm) {
@@ -922,35 +921,35 @@ public class ReturnAFormExporter {
 		cell.setCellValue("Chief, Commisioner, Sheriff, or Superintendent");
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 4, 6));
 		
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 1, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 1, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(4, 4, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(7, 7, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(12, 12, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(18, 18, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(22, 22, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(23, 23, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(27, 27, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(28, 28, 0, 6), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THICK.getCode(), new CellRangeAddress(28, 42, 5, 5), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(43, 43, 0, 6), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.MEDIUM.getCode(), new CellRangeAddress(55, 55, 0, 6), sheet);
-		RegionUtil.setBorderTop(BorderStyle.MEDIUM.getCode(), new CellRangeAddress(0, 0, 0, 6), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.MEDIUM.getCode(), new CellRangeAddress(0, 55, 0, 0), sheet);
-		RegionUtil.setBorderRight(BorderStyle.MEDIUM.getCode(), new CellRangeAddress(0, 55, 6, 6), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(1, 1, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(1, 1, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(4, 4, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(7, 7, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(12, 12, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(18, 18, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(22, 22, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(23, 23, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(27, 27, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(28, 28, 0, 6), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THICK, new CellRangeAddress(28, 42, 5, 5), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(43, 43, 0, 6), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.MEDIUM, new CellRangeAddress(55, 55, 0, 6), sheet);
+		RegionUtil.setBorderTop(BorderStyle.MEDIUM, new CellRangeAddress(0, 0, 0, 6), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.MEDIUM, new CellRangeAddress(0, 55, 0, 0), sheet);
+		RegionUtil.setBorderRight(BorderStyle.MEDIUM, new CellRangeAddress(0, 55, 6, 6), sheet);
 		
 		Arrays.asList(3, 5, 6, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 24, 25, 26)
-			.forEach(item-> RegionUtil.setBorderTop(BorderStyle.THIN.getCode(), new CellRangeAddress(item, item, 0, 6), sheet));
+			.forEach(item-> RegionUtil.setBorderTop(BorderStyle.THIN, new CellRangeAddress(item, item, 0, 6), sheet));
 		
 		for (int column = 0;  column < 6; column ++){
-			RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 27, column, column), sheet);
+			RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1, 27, column, column), sheet);
 		}
 
 		for (int i = 31; i < 42; i+=2){
-			RegionUtil.setBorderTop(BorderStyle.THIN.getCode(), new CellRangeAddress(i, i, 5, 6), sheet);
+			RegionUtil.setBorderTop(BorderStyle.THIN, new CellRangeAddress(i, i, 5, 6), sheet);
 		}
 		
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(31, 42, 5, 5), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(31, 42, 5, 5), sheet);
 		return workbook;
 	}
 

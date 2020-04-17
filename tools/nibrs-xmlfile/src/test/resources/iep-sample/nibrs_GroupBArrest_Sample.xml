@@ -16,20 +16,20 @@
     limitations under the License.
 
 -->
-<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/4.2"
-	xmlns:cjis="http://fbi.gov/cjis/1.0" 
-	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/1.0"
+<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/2019" 
+	xmlns:cjis="http://fbi.gov/cjis/2.0" 
+	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/2.0" 
 	xmlns:i="http://release.niem.gov/niem/appinfo/3.0/" 
-	xmlns:ucr="http://release.niem.gov/niem/codes/fbi_ucr/3.0/"
+	xmlns:ucr="http://release.niem.gov/niem/codes/fbi_ucr/3.2/" 
 	xmlns:j="http://release.niem.gov/niem/domains/jxdm/5.2/" 
-	xmlns:term="http://release.niem.gov/niem/localTerminology/3.0/"
-	xmlns:nc="http://release.niem.gov/niem/niem-core/3.0/" 
-	xmlns:niem-xsd="http://release.niem.gov/niem/proxy/xsd/3.0/"
+	xmlns:term="http://release.niem.gov/niem/localTerminology/3.0/" 
+	xmlns:nc="http://release.niem.gov/niem/niem-core/3.0/"
+	xmlns:niem-xsd="http://release.niem.gov/niem/proxy/xsd/3.0/" 
 	xmlns:s="http://release.niem.gov/niem/structures/3.0/" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/4.2"
-	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/4.2 ../base-xsd/nibrs/4.2/nibrs.xsd">
+	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/2019" 
+	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/2019 ../base-xsd/nibrs/2019/nibrs.xsd">
 	
 	<cjis:MessageMetadata>
 		<!-- Message Timestamp -->
@@ -39,7 +39,7 @@
 			<nc:IdentificationID>123456</nc:IdentificationID>
 		</cjis:MessageIdentification>
 		<!-- NIBRS IEPD Version -->
-		<cjis:MessageImplementationVersion>4.2</cjis:MessageImplementationVersion>
+		<cjis:MessageImplementationVersion>2019</cjis:MessageImplementationVersion>
 		<cjis:MessageSubmittingOrganization>
 			<j:OrganizationAugmentation>
 				<j:OrganizationORIIdentification>
@@ -66,11 +66,6 @@
 						<nc:IdentificationID>WVNDX0100</nc:IdentificationID>
 					</j:OrganizationORIIdentification>
 				</j:OrganizationAugmentation>
-				<cjis:OrganizationAugmentation>
-	            	<cjis:DirectReportingCityIdentification>
-	                	<nc:IdentificationID>GAA7</nc:IdentificationID>
-					</cjis:DirectReportingCityIdentification>
-	            </cjis:OrganizationAugmentation>
 			</nibrs:ReportingAgency>
 		</nibrs:ReportHeader>
 		<nc:Person s:id="PersonArrestee1">
@@ -91,14 +86,10 @@
 			<nc:RoleOfPerson s:ref="PersonArrestee1" />
 			<!-- Element 40, Arrestee Sequence Number -->
 			<j:ArrestSequenceID>1</j:ArrestSequenceID>
-			<!-- Clearance Indicator -->
-			<j:ArresteeClearanceIndicator>true</j:ArresteeClearanceIndicator>
 			<!-- Element 46, Arrestee Was Armed With -->
 			<j:ArresteeArmedWithCode>12</j:ArresteeArmedWithCode>
 			<!-- Element 52, Disposition of Arrestee Under 18 -->
-			<j:ArresteeJuvenileDispositionCode>H</j:ArresteeJuvenileDispositionCode>
-			<!-- Element 44, Multiple Arrestee Segments IndicaFtor -->
-			<j:ArrestSubjectCountCode>N</j:ArrestSubjectCountCode>
+			<!--<j:ArresteeJuvenileDispositionCode>H</j:ArresteeJuvenileDispositionCode>-->
 		</j:Arrestee>
 		<j:Arrest s:id="Arrest1">
 			<!-- Element 41, Arrest Transaction Number -->
@@ -111,7 +102,7 @@
 			</nc:ActivityDate>
 			<!-- Element 45, UCR Arrest Offense Code -->
 			<j:ArrestCharge>
-				<nibrs:ChargeUCRCode>64A</nibrs:ChargeUCRCode>
+				<nibrs:ChargeUCRCode>90Z</nibrs:ChargeUCRCode>
 			</j:ArrestCharge>
 			<!-- Element 43, Type Of Arrest -->
 			<j:ArrestCategoryCode>O</j:ArrestCategoryCode>

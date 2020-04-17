@@ -16,9 +16,9 @@
     limitations under the License.
 
 -->
-<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/4.2" 
-	xmlns:cjis="http://fbi.gov/cjis/1.0" 
-	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/1.0" 
+<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/2019" 
+	xmlns:cjis="http://fbi.gov/cjis/2.0" 
+	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/2.0" 
 	xmlns:i="http://release.niem.gov/niem/appinfo/3.0/" 
 	xmlns:ucr="http://release.niem.gov/niem/codes/fbi_ucr/3.2/" 
 	xmlns:j="http://release.niem.gov/niem/domains/jxdm/5.2/" 
@@ -28,8 +28,8 @@
 	xmlns:s="http://release.niem.gov/niem/structures/3.0/" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/4.2" 
-	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/4.2 ../base-xsd/nibrs/4.2/nibrs.xsd">
+	xmlns:nibrscodes="http://fbi.gov/cjis/nibrs/nibrs-codes/2019" 
+	xsi:schemaLocation="http://fbi.gov/cjis/nibrs/2019 ../base-xsd/nibrs/2019/nibrs.xsd">
 	<cjis:MessageMetadata>
 		<!-- Message Timestamp -->
 		<cjis:MessageDateTime>2017-03-23T03:00:00</cjis:MessageDateTime>
@@ -38,7 +38,7 @@
 			<nc:IdentificationID>123456</nc:IdentificationID>
 		</cjis:MessageIdentification>
 		<!-- NIBRS IEPD Version -->
-		<cjis:MessageImplementationVersion>4.2</cjis:MessageImplementationVersion>
+		<cjis:MessageImplementationVersion>2019</cjis:MessageImplementationVersion>
 		<cjis:MessageSubmittingOrganization>
 			<j:OrganizationAugmentation>
 				<j:OrganizationORIIdentification>
@@ -65,11 +65,6 @@
 						<nc:IdentificationID>WVNDX0100</nc:IdentificationID>
 					</j:OrganizationORIIdentification>
 				</j:OrganizationAugmentation>
-				<cjis:OrganizationAugmentation>
-	            	<cjis:DirectReportingCityIdentification>
-	                	<nc:IdentificationID>GAA7</nc:IdentificationID>
-					</cjis:DirectReportingCityIdentification>
-	            </cjis:OrganizationAugmentation>
 			</nibrs:ReportingAgency>
 		</nibrs:ReportHeader>
 		<nc:Incident>
@@ -120,7 +115,7 @@
 		<!-- Begin Property -->
 		<!-- Element 9, Location Type -->
 		<nc:Location s:id="Location1">
-			<nibrs:LocationCategoryCode>16</nibrs:LocationCategoryCode>
+			<nibrs:LocationCategoryCode>58</nibrs:LocationCategoryCode>
 		</nc:Location>
 	    <nc:Item>
 	        <!-- Element 14, Type Property Loss/etc  Substituted for nc:ItemStatus -->

@@ -84,14 +84,14 @@
  		  <script th:inline="javascript">
 		       /*<![CDATA[*/
 		          var context = [[@{/}]];
-	              var offenseCodeMapping = [[${offenseCodeMapping}]]; 
+	            var offenseCodeMapping = [[${offenseCodeMapping}]]; 
 		        /*]]>*/
 	
 		       $(function(){
 			            
 		          $.fn.dataTable.moment( 'MM/YYYY' );
 		        
-		          var table = $('#searchResultsTable').DataTable({
+		          table = $('#searchResultsTable').DataTable({
 	              ajax: context +"incidents/pointers",
 	              rowId: "primaryKey",
 	              columns: [

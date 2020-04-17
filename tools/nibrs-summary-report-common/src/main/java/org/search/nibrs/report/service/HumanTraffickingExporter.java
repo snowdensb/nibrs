@@ -175,7 +175,7 @@ public class HumanTraffickingExporter {
 	}
 
 	private int addLabel(XSSFSheet sheet, int rowNum, String boldLabel, String normalLabel) {
-		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(rowNum, rowNum, 0, 4), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, new CellRangeAddress(rowNum, rowNum, 0, 4), sheet);
 		rowNum ++;
 		Row row = sheet.createRow(rowNum);
         sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 5));
@@ -203,9 +203,9 @@ public class HumanTraffickingExporter {
         allBoldString.applyFont(bigFont);
         cell.setCellValue(allBoldString);
         sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 5));
-		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(rowNum, rowNum, 0, 5), sheet);
-		RegionUtil.setBorderTop(BorderStyle.THIN.getCode(), new CellRangeAddress(rowNum, rowNum, 0, 5), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(rowNum, rowNum, 5, 5), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, new CellRangeAddress(rowNum, rowNum, 0, 5), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THIN, new CellRangeAddress(rowNum, rowNum, 0, 5), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(rowNum, rowNum, 5, 5), sheet);
 	}
 
 

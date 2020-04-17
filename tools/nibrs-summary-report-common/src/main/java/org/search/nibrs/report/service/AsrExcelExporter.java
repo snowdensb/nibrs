@@ -137,21 +137,21 @@ public class AsrExcelExporter {
 		sheet.setColumnWidth(0, 1400 * sheet.getDefaultColumnWidth());
 		
 		for (int i = 9; i < 15; i++) {
-			RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 103, i, i), sheet);
+			RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1, 103, i, i), sheet);
 		}
 		
-		RegionUtil.setBorderRight(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 103, 15, 15), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 103, 0, 0), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(103, 103, 0, 15), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(38, 38, 0, 15), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(40, 40, 0, 15), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(48, 48, 0, 15), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(50, 50, 0, 15), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(52, 52, 0, 15), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(60, 60, 0, 15), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(62, 62, 0, 15), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(70, 70, 0, 15), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(72, 72, 0, 15), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THICK, new CellRangeAddress(1, 103, 15, 15), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THICK, new CellRangeAddress(1, 103, 0, 0), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(103, 103, 0, 15), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(38, 38, 0, 15), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(40, 40, 0, 15), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(48, 48, 0, 15), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(50, 50, 0, 15), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(52, 52, 0, 15), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(60, 60, 0, 15), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(62, 62, 0, 15), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(70, 70, 0, 15), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(72, 72, 0, 15), sheet);
 		
 
 	}
@@ -194,21 +194,21 @@ public class AsrExcelExporter {
 		sheet.setColumnWidth(0, 700 * sheet.getDefaultColumnWidth());
 		
 		for (int i = 19; i < 25; i++) {
-			RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 99, i, i), sheet);
+			RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1, 99, i, i), sheet);
 		}
 		
-		RegionUtil.setBorderRight(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 99, 25, 25), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 99, 0, 0), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(99, 99, 0, 25), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(38, 38, 0, 25), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(40, 40, 0, 25), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(48, 48, 0, 25), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(50, 50, 0, 25), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(52, 52, 0, 25), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(60, 60, 0, 25), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(62, 62, 0, 25), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(70, 70, 0, 25), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(72, 72, 0, 25), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THICK, new CellRangeAddress(1, 99, 25, 25), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THICK, new CellRangeAddress(1, 99, 0, 0), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(99, 99, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(38, 38, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(40, 40, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(48, 48, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(50, 50, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(52, 52, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(60, 60, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(62, 62, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(70, 70, 0, 25), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(72, 72, 0, 25), sheet);
 		
 
 	}
@@ -534,17 +534,17 @@ public class AsrExcelExporter {
 			cell2.setCellValue(raceAndEthnicityTitles.get(j));
 		}
 		
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 1, 0, 15), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 6, 1, 1), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 6, 1, 1), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(1, 1, 0, 15), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, new CellRangeAddress(1, 6, 1, 1), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1, 6, 1, 1), sheet);
 		for (int i = 2; i < 7; i++) {
-			RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 6, i, i), sheet);
+			RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1, 6, i, i), sheet);
 		}
 		for (int i = 9; i < 15; i++) {
-			RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 6, i, i), sheet);
+			RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1, 6, i, i), sheet);
 		}
-		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 6, 8, 8), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 6, 8, 8), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, new CellRangeAddress(0, 6, 8, 8), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(0, 6, 8, 8), sheet);
 		
 	
 		return rowNum;
@@ -618,14 +618,14 @@ public class AsrExcelExporter {
 			cell2.setCellValue(raceAndEthnicityTitles.get(j));
 		}
 		
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 1, 0, 25), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 6, 1, 1), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 6, 1, 1), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(1, 1, 0, 25), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, new CellRangeAddress(1, 6, 1, 1), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1, 6, 1, 1), sheet);
 		for (int i = 2; i < 17; i++) {
-			RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 6, i, i), sheet);
+			RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(1, 6, i, i), sheet);
 		}
-		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 6, 18, 18), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), new CellRangeAddress(0, 6, 18, 18), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, new CellRangeAddress(0, 6, 18, 18), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(0, 6, 18, 18), sheet);
 		
 		
 		return rowNum;

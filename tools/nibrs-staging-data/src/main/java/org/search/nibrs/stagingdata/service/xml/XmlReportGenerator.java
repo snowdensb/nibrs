@@ -328,7 +328,7 @@ public class XmlReportGenerator {
 		appendIdentificationIdElement(messageMetadata, CJIS, "MessageIdentification", messageId.toString());
 		
 		Element messageImplementationVersion = XmlUtils.appendChildElement(messageMetadata, CJIS, "MessageImplementationVersion"); 
-		messageImplementationVersion.setTextContent("4.2");
+		messageImplementationVersion.setTextContent("2019.1");
 		
 		Element messageSubmittingOrganization = XmlUtils.appendChildElement(messageMetadata, CJIS, "MessageSubmittingOrganization"); 
 		Element organizationAugmentation = XmlUtils.appendChildElement(messageSubmittingOrganization, J, "OrganizationAugmentation");

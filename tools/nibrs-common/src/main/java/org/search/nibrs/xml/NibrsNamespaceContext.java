@@ -30,9 +30,12 @@ import org.w3c.dom.NodeList;
 public class NibrsNamespaceContext implements NamespaceContext {
 	
 	public static enum Namespace {
-		NIBRS("nibrs", "http://fbi.gov/cjis/nibrs/4.2"),
-		CJIS("cjis", "http://fbi.gov/cjis/1.0"),
-		CJISCODES("cjiscodes", "http://fbi.gov/cjis/cjis-codes/1.0"),
+		NIBRS42("nibrs42", "http://fbi.gov/cjis/nibrs/4.2"),
+		NIBRS("nibrs", "http://fbi.gov/cjis/nibrs/2019"),
+		CJIS10("cjis10", "http://fbi.gov/cjis/1.0"),
+		CJIS("cjis", "http://fbi.gov/cjis/2.0"),
+		CJISCODES10("cjiscodes10", "http://fbi.gov/cjis/cjis-codes/1.0"),
+		CJISCODES("cjiscodes", "http://fbi.gov/cjis/cjis-codes/2.0"),
 		I("i", "http://release.niem.gov/niem/appinfo/3.0/"),
 		UCR("ucr", "http://release.niem.gov/niem/codes/fbi_ucr/3.2/"),
 		J("j", "http://release.niem.gov/niem/domains/jxdm/5.2/"),
@@ -42,7 +45,8 @@ public class NibrsNamespaceContext implements NamespaceContext {
 		S("s", "http://release.niem.gov/niem/structures/3.0/"),
 		XSI("xsi", "http://www.w3.org/2001/XMLSchema-instance"),
 		XSD("xsd", "http://www.w3.org/2001/XMLSchema"),
-		NIBRSCODES("nibrscodes", "http://fbi.gov/cjis/nibrs/nibrs-codes/4.2"),
+		NIBRSCODES42("nibrscodes42", "http://fbi.gov/cjis/nibrs/nibrs-codes/4.2"),
+		NIBRSCODES("nibrscodes", "http://fbi.gov/cjis/nibrs/nibrs-codes/2019"),
 		LEXS31("lexs31", "http://usdoj.gov/leisp/lexs/3.1"),
 		LEXSPD31("lexspd31", "http://usdoj.gov/leisp/lexs/publishdiscover/3.1"),
 		LEXSDIGEST31("lexsdigest31", "http://usdoj.gov/leisp/lexs/digest/3.1"),

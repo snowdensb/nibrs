@@ -123,14 +123,14 @@ public class ArsonExcelExporter {
 			sheet.setColumnWidth(i, 580 * sheet.getDefaultColumnWidth());
 		}
 
-		RegionUtil.setBorderTop(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 1, 0, 8), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 14, 0, 0), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(9, 9, 0, 8), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(12, 12, 0, 8), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(13, 13, 0, 8), sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THICK.getCode(), new CellRangeAddress(14, 14, 0, 8), sheet);
-		RegionUtil.setBorderLeft(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 14, 4, 4), sheet);
-		RegionUtil.setBorderRight(BorderStyle.THICK.getCode(), new CellRangeAddress(1, 14, 8, 8), sheet);
+		RegionUtil.setBorderTop(BorderStyle.THICK, new CellRangeAddress(1, 1, 0, 8), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THICK, new CellRangeAddress(1, 14, 0, 0), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(9, 9, 0, 8), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(12, 12, 0, 8), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(13, 13, 0, 8), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THICK, new CellRangeAddress(14, 14, 0, 8), sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THICK, new CellRangeAddress(1, 14, 4, 4), sheet);
+		RegionUtil.setBorderRight(BorderStyle.THICK, new CellRangeAddress(1, 14, 8, 8), sheet);
 		return workbook;
 
 	}
@@ -405,7 +405,7 @@ public class ArsonExcelExporter {
 		cell7.setCellStyle(normalStyle);
 		cell7.setCellValue("8\nEstimated Value of\nProperty Damage");
 		
-		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), new CellRangeAddress(1, 1, 1, 1), sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, new CellRangeAddress(1, 1, 1, 1), sheet);
 		
 		return rowNum;
 	}

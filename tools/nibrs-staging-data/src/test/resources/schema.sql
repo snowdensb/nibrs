@@ -65,7 +65,7 @@ COMMENT ON COLUMN Submission.NIBRSReportCategoryCode IS 'Group A or Group B.';
 CREATE TABLE Violation (
                 ViolationID IDENTITY NOT NULL,
                 SubmissionID INTEGER NOT NULL,
-                ViolationCode VARCHAR(3) NOT NULL,
+                ViolationCode VARCHAR(10) NOT NULL,
                 ViolationDescription VARCHAR(200) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
                 NibrsErrorCodeTypeId INTEGER,

@@ -198,10 +198,10 @@ public class CargoTheftReportExporter {
 		cell.setCellStyle(yellowForeGround);
 		cell.setCellValue("SUBMISSION TYPE");
 		
-		RegionUtil.setBorderLeft(BorderStyle.THIN.getCode(), mergedRegions, sheet);
-		RegionUtil.setBorderRight(BorderStyle.THIN.getCode(), mergedRegions, sheet);
-		RegionUtil.setBorderTop(BorderStyle.THIN.getCode(), mergedRegions, sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THIN.getCode(), mergedRegions, sheet);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, mergedRegions, sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, mergedRegions, sheet);
+		RegionUtil.setBorderTop(BorderStyle.THIN, mergedRegions, sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);
 		return rowNum;
 	}
 
