@@ -16,18 +16,19 @@
     limitations under the License.
 
 -->
-<ns2:SubmitNibrsNIEMDocumentResponse xmlns:ns2="http://ws.nibrs.ucr.cjis.fbi.gov/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://ws.nibrs.ucr.cjis.fbi.gov/ NIBRSServicesService.xsd">
-    <return>
-        <ingestResponse>
-            <ddocname>2017_10_HI0020000_17412975-2_INC</ddocname>
-            <status>WARNINGS</status>
-            <violations>
-                <publicationEffect>0</publicationEffect>
-                <violationCode>937</violationCode>
-                <violationDescription>PRE-NIBRS INCIDENT RECEIVED</violationDescription>
-                <violationLevel>W</violationLevel>
-            </violations>
-        </ingestResponse>
-    </return>
-</ns2:SubmitNibrsNIEMDocumentResponse>
+        <ns2:SubmitNibrsNIEMDocumentResponse xmlns:ns2="http://ws.nibrs.ucr.cjis.fbi.gov/">
+            <return>
+                <ingestResponse>
+                    <ddocname>2019_07_HI0020000_19272709-3_INC</ddocname>
+                    <status>WARNINGS</status>
+                    <violations>
+                        <publicationEffect>0</publicationEffect>
+                        <segmentLevel>4</segmentLevel>
+                        <sequenceNumber>1</sequenceNumber>
+                        <violationCode>DQ1407</violationCode>
+                        <violationDescription>WARNING - UKNOWN VICTIM INFORMATION</violationDescription>
+                        <violationLevel>W</violationLevel>
+                    </violations>
+                </ingestResponse>
+            </return>
+        </ns2:SubmitNibrsNIEMDocumentResponse>

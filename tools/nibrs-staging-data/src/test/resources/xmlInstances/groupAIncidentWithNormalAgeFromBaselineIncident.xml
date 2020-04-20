@@ -15,13 +15,13 @@
     limitations under the License.
 
 -->
-<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/4.2" xmlns:cjis="http://fbi.gov/cjis/1.0" xmlns:j="http://release.niem.gov/niem/domains/jxdm/5.2/" xmlns:nc="http://release.niem.gov/niem/niem-core/3.0/" xmlns:s="http://release.niem.gov/niem/structures/3.0/">
+<nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/2019" xmlns:cjis="http://fbi.gov/cjis/2.0" xmlns:j="http://release.niem.gov/niem/domains/jxdm/5.2/" xmlns:nc="http://release.niem.gov/niem/niem-core/3.0/" xmlns:s="http://release.niem.gov/niem/structures/3.0/">
     <cjis:MessageMetadata>
-        <cjis:MessageDateTime>2020-04-07T02:59:54</cjis:MessageDateTime>
+        <cjis:MessageDateTime>2020-04-17T03:24:34</cjis:MessageDateTime>
         <cjis:MessageIdentification>
             <nc:IdentificationID>1</nc:IdentificationID>
         </cjis:MessageIdentification>
-        <cjis:MessageImplementationVersion>4.2</cjis:MessageImplementationVersion>
+        <cjis:MessageImplementationVersion>2019.1</cjis:MessageImplementationVersion>
         <cjis:MessageSubmittingOrganization>
             <j:OrganizationAugmentation>
                 <j:OrganizationORIIdentification>
@@ -82,14 +82,9 @@
         </nc:Location>
         <nc:Item>
             <nc:ItemStatus>
-                <cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+                <cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
             </nc:ItemStatus>
-            <nc:ItemValue>
-                <nc:ItemValueAmount>
-                    <nc:Amount>5000</nc:Amount>
-                </nc:ItemValueAmount>
-            </nc:ItemValue>
-            <j:ItemCategoryNIBRSPropertyCategoryCode>20</j:ItemCategoryNIBRSPropertyCategoryCode>
+            <j:ItemCategoryNIBRSPropertyCategoryCode>10</j:ItemCategoryNIBRSPropertyCategoryCode>
         </nc:Item>
         <nc:Item>
             <nc:ItemStatus>
@@ -104,12 +99,6 @@
         </nc:Item>
         <nc:Item>
             <nc:ItemStatus>
-                <cjis:ItemStatusCode>SEIZED</cjis:ItemStatusCode>
-            </nc:ItemStatus>
-            <j:ItemCategoryNIBRSPropertyCategoryCode>10</j:ItemCategoryNIBRSPropertyCategoryCode>
-        </nc:Item>
-        <nc:Item>
-            <nc:ItemStatus>
                 <cjis:ItemStatusCode>RECOVERED</cjis:ItemStatusCode>
             </nc:ItemStatus>
             <nc:ItemValue>
@@ -119,6 +108,17 @@
                 <nc:ItemValueDate>
                     <nc:Date>2015-01-08</nc:Date>
                 </nc:ItemValueDate>
+            </nc:ItemValue>
+            <j:ItemCategoryNIBRSPropertyCategoryCode>20</j:ItemCategoryNIBRSPropertyCategoryCode>
+        </nc:Item>
+        <nc:Item>
+            <nc:ItemStatus>
+                <cjis:ItemStatusCode>STOLEN</cjis:ItemStatusCode>
+            </nc:ItemStatus>
+            <nc:ItemValue>
+                <nc:ItemValueAmount>
+                    <nc:Amount>5000</nc:Amount>
+                </nc:ItemValueAmount>
             </nc:ItemValue>
             <j:ItemCategoryNIBRSPropertyCategoryCode>20</j:ItemCategoryNIBRSPropertyCategoryCode>
         </nc:Item>

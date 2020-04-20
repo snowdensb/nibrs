@@ -181,7 +181,7 @@
               }).fail(ojbc.displayFailMessage);
            });
                    
-           $('#searchResultsTable tbody').on('click', 'tr',function() {
+           $('#searchResultsTable tbody').on('dblclick', 'tr',function() {
              table.$('tr.selected').removeClass('selected');
              $(this).addClass('selected');  
  

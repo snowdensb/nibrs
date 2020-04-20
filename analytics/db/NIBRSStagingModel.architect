@@ -1855,7 +1855,7 @@
     <column id="COL525" populated="true" UUID="76b44e2a-77f5-4824-9100-f93e0cb9a149" autoIncrement="false" autoIncrementSequenceName="Submission_SubmissionID_seq_1_1" defaultValue="" name="SubmissionID" nullable="0" physicalName="SubmissionID" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL526" populated="true" UUID="3a5aab98-3141-47bf-ac3f-c9e884ee07b3" autoIncrement="false" autoIncrementSequenceName="Violation_ViolationCode_seq" defaultValue="" name="ViolationCode" nullable="0" physicalName="ViolationCode" precision="3" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL526" populated="true" UUID="3a5aab98-3141-47bf-ac3f-c9e884ee07b3" autoIncrement="false" autoIncrementSequenceName="Violation_ViolationCode_seq" defaultValue="" name="ViolationCode" nullable="0" physicalName="ViolationCode" precision="10" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
     <column id="COL527" populated="true" UUID="3ca10d01-732d-43c3-803b-4704bb4a80aa" autoIncrement="false" autoIncrementSequenceName="Violation_ViolationDescription_seq" defaultValue="" name="ViolationDescription" nullable="0" physicalName="ViolationDescription" precision="200" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
@@ -2230,7 +2230,7 @@
  <ddl-generator type="ca.sqlpower.architect.ddl.H2DDLGenerator" allow-connection="true"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="true" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
- <play-pen zoom="1.0" viewportX="1885" viewportY="900" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+ <play-pen zoom="1.0" viewportX="1959" viewportY="1072" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
   <table-pane table-ref="TAB1" x="1162" y="756" bgColor="0xbfd6ff" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB23" x="2040" y="1264" bgColor="0xdfedce" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB30" x="1131" y="376" bgColor="0xbfd6ff" fgColor="0x000000" rounded="false" dashed="false"/>
