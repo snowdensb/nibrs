@@ -454,7 +454,8 @@ public class XmlReportGenerator {
 				.sorted((h1, h2) -> h1.getPropertySegmentId().compareTo(h2.getPropertySegmentId()))
 				.collect(Collectors.toList()); 
 		for (PropertySegment property : properties) {
-			if ("NONE".equalsIgnoreCase(property.getTypePropertyLossEtcType().getNibrsDescription()) || 
+			if (("NONE".equalsIgnoreCase(property.getTypePropertyLossEtcType().getNibrsDescription()) 
+					&& (property.getSuspectedDrugTypes() == null || property.getSuspectedDrugTypes().size() == 0))|| 
 					"UNKNOWN".equalsIgnoreCase(property.getTypePropertyLossEtcType().getNibrsDescription())){
 			
 				Element itemElement = XmlUtils.appendChildElement(reportElement, Namespace.NC, "Item");
@@ -534,6 +535,16 @@ public class XmlReportGenerator {
 					.stream()
 					.sorted((h1, h2) -> h1.getPropertyTypeId().compareTo(h2.getPropertyTypeId()))
 					.collect(Collectors.toList()); 
+			if ("NONE".equalsIgnoreCase(property.getTypePropertyLossEtcType().getNibrsDescription()) 
+					&& property.getSuspectedDrugTypes() != null && property.getSuspectedDrugTypes().size()>0){
+				for (SuspectedDrugType suspectedDrugType : property.getSuspectedDrugTypes()){
+					Element substanceElement = XmlUtils.appendChildElement(reportElement, Namespace.NC, "Substance");
+					addItemStatus(property, substanceElement);
+					XmlUtils.appendElementAndValue(substanceElement, J, "DrugCategoryCode", 
+							suspectedDrugType.getSuspectedDrugTypeType().getNibrsCode());
+				}
+				continue;
+			}
 			
 			for (PropertyType propertyType : sortedPropertyTypes) {
 				String description = propertyType.getPropertyDescriptionType().getNibrsCode();
