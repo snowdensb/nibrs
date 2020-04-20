@@ -1,0 +1,7 @@
+{"properties": [
+  {
+    "name": "staging.data.submitting-agency-ori",
+    "type": "java.lang.String",
+    "description": "A description for 'staging.data.submitting-agency-ori'"
+  }
+]}
