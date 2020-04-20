@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <nibrs:Submission xmlns:nibrs="http://fbi.gov/cjis/nibrs/2019" 
 	xmlns:cjis="http://fbi.gov/cjis/2.0" 
 	xmlns:cjiscodes="http://fbi.gov/cjis/cjis-codes/2.0" 
@@ -21,7 +38,7 @@
 			<nc:IdentificationID>123456</nc:IdentificationID>
 		</cjis:MessageIdentification>
 		<!-- NIBRS IEPD Version -->
-		<cjis:MessageImplementationVersion>2019</cjis:MessageImplementationVersion>
+		<cjis:MessageImplementationVersion>2019.1</cjis:MessageImplementationVersion>
 		<cjis:MessageSubmittingOrganization>
 			<j:OrganizationAugmentation>
 				<j:OrganizationORIIdentification>
@@ -48,6 +65,11 @@
 						<nc:IdentificationID>WVNDX0100</nc:IdentificationID>
 					</j:OrganizationORIIdentification>
 				</j:OrganizationAugmentation>
+				<cjis:OrganizationAugmentation>
+	            	<cjis:DirectReportingCityIdentification>
+	                	<nc:IdentificationID>GAA7</nc:IdentificationID>
+					</cjis:DirectReportingCityIdentification>
+	            </cjis:OrganizationAugmentation>
 			</nibrs:ReportingAgency>
 		</nibrs:ReportHeader>
 		<nc:Incident>
@@ -60,7 +82,7 @@
 				<!-- Element 3, Incident Date and Hour-->
 				<nc:DateTime>2016-02-19T10:00:00</nc:DateTime>
 				<!-- Element 3, Incident Date if Hour is Unknown-->
-				<nc:Date>2016-02-19</nc:Date>
+				<!-- <nc:Date>2016-02-19</nc:Date> -->
 			</nc:ActivityDate>
 			<cjis:IncidentAugmentation>
 				<!-- Element 3, IncidentReportDateIndicator is true to designate that the ActivityDate is the Report Date rather than the Incident Date -->
@@ -115,11 +137,11 @@
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
 	            <nc:ItemValueAmount>
-	                <nc:Amount>12000</nc:Amount>
+	                <nc:Amount>12001</nc:Amount>
 	            </nc:ItemValueAmount>
 	            <!-- Element 17, Date Recovered -->
 	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-24</nc:Date>
+	                <nc:Date>2016-02-21</nc:Date>
 	            </nc:ItemValueDate>
 	        </nc:ItemValue>
 	        <!-- Element 15, Property Description -->
@@ -136,12 +158,12 @@
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
 	            <nc:ItemValueAmount>
-	                <nc:Amount>12000</nc:Amount>
+	                <nc:Amount>12002</nc:Amount>
 	            </nc:ItemValueAmount>
 	            <!-- Element 17, Date Recovered -->
 	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-24</nc:Date>
-	                <nc:DateTime>2017-03-23T03:00:00</nc:DateTime>
+	                <nc:Date>2016-02-22</nc:Date>
+	                <nc:DateTime>2016-02-22T03:00:00</nc:DateTime>
 	            </nc:ItemValueDate>
 	        </nc:ItemValue>
 	        <!-- Element 15, Property Description -->
@@ -158,11 +180,11 @@
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
 	            <nc:ItemValueAmount>
-	                <nc:Amount>12000</nc:Amount>
+	                <nc:Amount>12003</nc:Amount>
 	            </nc:ItemValueAmount>
 	            <!-- Element 17, Date Recovered -->
 	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-24</nc:Date>
+	                <nc:Date>2016-02-23</nc:Date>
 	            </nc:ItemValueDate>
 	        </nc:ItemValue>
 	        <!-- Element 15, Property Description -->
@@ -179,7 +201,7 @@
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
 	            <nc:ItemValueAmount>
-	                <nc:Amount>12000</nc:Amount>
+	                <nc:Amount>12004</nc:Amount>
 	            </nc:ItemValueAmount>
 	            <!-- Element 17, Date Recovered -->
 	            <nc:ItemValueDate>
@@ -200,11 +222,11 @@
 			<!-- Element 16, Value of Property in US Dollars -->
 			<nc:ItemValue>
 				<nc:ItemValueAmount>
-					<nc:Amount>12000</nc:Amount>
+					<nc:Amount>12005</nc:Amount>
 				</nc:ItemValueAmount>
 				<!-- Element 17, Date Recovered -->
 				<nc:ItemValueDate>
-					<nc:Date>2016-02-24</nc:Date>
+					<nc:Date>2016-02-25</nc:Date>
 				</nc:ItemValueDate>
 			</nc:ItemValue>
 			<!-- Element 15, Property Description -->
@@ -221,15 +243,15 @@
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
 	            <nc:ItemValueAmount>
-	                <nc:Amount>12000</nc:Amount>
+	                <nc:Amount>12006</nc:Amount>
 	            </nc:ItemValueAmount>
 	            <!-- Element 17, Date Recovered -->
 	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-24</nc:Date>
+	                <nc:Date>2016-02-26</nc:Date>
 	            </nc:ItemValueDate>
 	        </nc:ItemValue>
 	        <!-- Element 15, Property Description -->
-	        <j:ItemCategoryNIBRSPropertyCategoryCode>01</j:ItemCategoryNIBRSPropertyCategoryCode>
+	        <j:ItemCategoryNIBRSPropertyCategoryCode>05</j:ItemCategoryNIBRSPropertyCategoryCode>
 	        <!-- Element 19, Number of Recovered Motor Vehicles, if Status is Recovered -->
 	        <!-- Element 18, Number of Stolen Motor Vehicles, if Status is Stolen -->
 	        <nc:ItemQuantity>4</nc:ItemQuantity>
@@ -242,11 +264,11 @@
 	        <!-- Element 16, Value of Property in US Dollars -->
 	        <nc:ItemValue>
 	            <nc:ItemValueAmount>
-	                <nc:Amount>12000</nc:Amount>
+	                <nc:Amount>12007</nc:Amount>
 	            </nc:ItemValueAmount>
 	            <!-- Element 17, Date Recovered -->
 	            <nc:ItemValueDate>
-	                <nc:Date>2016-02-24</nc:Date>
+	                <nc:Date>2016-02-27</nc:Date>
 	            </nc:ItemValueDate>
 	        </nc:ItemValue>
 	        <!-- Element 15, Property Description -->
@@ -263,11 +285,11 @@
 			<!-- Element 16, Value of Property in US Dollars -->
 			<nc:ItemValue>
 				<nc:ItemValueAmount>
-					<nc:Amount>12000</nc:Amount>
+					<nc:Amount>12008</nc:Amount>
 				</nc:ItemValueAmount>
 				<!-- Element 17, Date Recovered -->
 				<nc:ItemValueDate>
-					<nc:Date>2016-02-24</nc:Date>
+					<nc:Date>2016-02-28</nc:Date>
 				</nc:ItemValueDate>
 			</nc:ItemValue>
 			<!-- Element 15, Property Description -->

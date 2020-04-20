@@ -77,7 +77,7 @@ public class XmlIncidentBuilderGroupAIncidentReportTest {
 		assertNotNull(groupAIncident);
 		
 		assertThat(groupAIncident.getAdminSegmentLevel(), is('1'));
-		assertThat(groupAIncident.getIncidentNumber(), is("000054236732")); 
+		assertThat(groupAIncident.getIncidentNumber(), is("54236732")); 
 		assertThat(groupAIncident.getOri(), is("WVNDX0100"));
 		assertThat(groupAIncident.getCityIndicator(), is("GAA7"));
 		assertThat(groupAIncident.getIncidentDate().getValue(), is(LocalDate.of(2016, 2, 19)));
@@ -228,15 +228,12 @@ public class XmlIncidentBuilderGroupAIncidentReportTest {
 		assertThat(propertySegments.get(4).getDateRecovered(2).getValue(), is(LocalDate.of(2016, 2, 27)));
 		assertThat(propertySegments.get(4).getPropertyDescription(3), is("10"));
 		assertThat(propertySegments.get(4).getPopulatedPropertyDescriptionCount(), is(4));
-		assertThat(propertySegments.get(4).getValueOfProperty(3).getValue(), is(13208));
+		assertThat(propertySegments.get(4).getValueOfProperty(3).getValue(), is(12008));
 		assertThat(propertySegments.get(4).getDateRecovered(3).getValue(), is(LocalDate.of(2016, 2, 28)));
-		assertThat(propertySegments.get(4).getPopulatedSuspectedDrugTypeCount(), is(2));
+		assertThat(propertySegments.get(4).getPopulatedSuspectedDrugTypeCount(), is(1));
 		assertThat(propertySegments.get(4).getSuspectedDrugType(0), is("X"));
-		assertThat(propertySegments.get(4).getSuspectedDrugType(1), is("X"));
 		assertThat(propertySegments.get(4).getEstimatedDrugQuantity(0).getValue(), is(Double.valueOf("1.5")));
-		assertThat(propertySegments.get(4).getEstimatedDrugQuantity(1).getValue(), is(Double.valueOf("1.5")));
 		assertThat(propertySegments.get(4).getTypeDrugMeasurement(0), is("XX"));
-		assertThat(propertySegments.get(4).getTypeDrugMeasurement(1), is("LB"));
 		assertThat(propertySegments.get(4).getNumberOfRecoveredMotorVehicles().getValue(), is(45));
 		assertThat(propertySegments.get(4).getNumberOfRecoveredMotorVehicles().isMissing(), is(false));
 		assertThat(propertySegments.get(4).getNumberOfRecoveredMotorVehicles().isInvalid(), is(false));
