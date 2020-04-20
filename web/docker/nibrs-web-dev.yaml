@@ -1,0 +1,25 @@
+# Docker Compose file that builds to nibrs-web image
+# To run:  docker-compose -f nibrs-web-dev.yaml build
+#
+
+version: '3.2'
+
+networks:
+  nibrs_nw:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+       subnet: 192.168.0.0/16
+
+services:
+
+  nibrs-web:
+    container_name: nibrs-web
+    image: searchncjis/nibrs-web:2.0.1
+    build:
+       context: ./nibrs-web    
+    restart: always
+    networks:
+      nibrs_nw:
