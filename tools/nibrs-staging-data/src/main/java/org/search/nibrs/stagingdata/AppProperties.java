@@ -80,12 +80,12 @@ public class AppProperties {
 		getPropertyCodeMapping().put("39", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("40", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("41", "MISCELLANEOUS");
-		getPropertyCodeMapping().put("42", "CONSUMABLE_GOODS");
+		getPropertyCodeMapping().put("42", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("43", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("44", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("45", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("46", "MISCELLANEOUS");
-		getPropertyCodeMapping().put("47", "MISCELLANEOUS");
+		getPropertyCodeMapping().put("47", "CONSUMABLE_GOODS");
 		getPropertyCodeMapping().put("48", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("49", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("50", "MISCELLANEOUS");
@@ -109,7 +109,7 @@ public class AppProperties {
 		getPropertyCodeMapping().put("72", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("73", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("74", "TELEVISIONS_RADIOS_STEREOS_ETC");
-		getPropertyCodeMapping().put("75", "TELEVISIONS_RADIOS_STEREOS_ETC");
+		getPropertyCodeMapping().put("75", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("76", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("77", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("78", "MISCELLANEOUS");
