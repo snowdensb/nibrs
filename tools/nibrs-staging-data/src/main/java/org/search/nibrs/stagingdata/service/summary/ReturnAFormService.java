@@ -66,6 +66,7 @@ public class ReturnAFormService {
 	public AppProperties appProperties; 
 	
 	private Map<String, Integer> partIOffensesMap; 
+	private Map<String, Integer> larcenyOffenseImportanceMap; 
 	private Map<String, PropertyStolenByClassificationRowName> larcenyOffenseByNatureMap; 
 	
 	public ReturnAFormService() {
@@ -80,8 +81,8 @@ public class ReturnAFormService {
 		partIOffensesMap.put("13B", 8); 
 		partIOffensesMap.put("13C", 8); 
 		partIOffensesMap.put("220", 9); 
-		partIOffensesMap.put("23A", 10); 
 		partIOffensesMap.put("23B", 10); 
+		partIOffensesMap.put("23A", 10); 
 		partIOffensesMap.put("23C", 10); 
 		partIOffensesMap.put("23D", 10); 
 		partIOffensesMap.put("23E", 10); 
@@ -100,7 +101,19 @@ public class ReturnAFormService {
 		larcenyOffenseByNatureMap.put("23F", PropertyStolenByClassificationRowName.LARCENY_FROM_MOTOR_VEHICLES);  // Theft from motor Vehicles
 		larcenyOffenseByNatureMap.put("23E", PropertyStolenByClassificationRowName.LARCENY_FROM_COIN_OPERATED_MACHINES);  // Theft from Coin Operated machines and device
 		larcenyOffenseByNatureMap.put("23H04", PropertyStolenByClassificationRowName.LARCENY_BICYCLES); // Bicycles 
-		larcenyOffenseByNatureMap.put("23H", PropertyStolenByClassificationRowName.LARCENY_ALL_OTHER);  // All Other 
+		larcenyOffenseByNatureMap.put("23H", PropertyStolenByClassificationRowName.LARCENY_ALL_OTHER);  // All Other
+		
+		larcenyOffenseImportanceMap = new HashMap<>();
+		larcenyOffenseImportanceMap.put("23B", 1);
+		larcenyOffenseImportanceMap.put("23A", 2);
+		larcenyOffenseImportanceMap.put("23C", 3);
+		larcenyOffenseImportanceMap.put("23D", 4);
+		larcenyOffenseImportanceMap.put("23G", 5);
+		larcenyOffenseImportanceMap.put("23H38", 5);
+		larcenyOffenseImportanceMap.put("23F", 6);
+		larcenyOffenseImportanceMap.put("23E", 7);
+		larcenyOffenseImportanceMap.put("23H04", 8);
+		larcenyOffenseImportanceMap.put("23H", 9);
 	}
 	
 	public ReturnAForm createReturnASummaryReport(String ori, Integer year,  Integer month ) {
@@ -488,7 +501,55 @@ public class ReturnAFormService {
 	private void processLarcenyStolenPropertyByNature(PropertyStolenByClassification[] stolenProperties, OffenseCode offenseCode, 
 			AdministrativeSegment administrativeSegment) {
 		
-		String offenseCodeString = offenseCode.code;
+		List<String> offenseCodes =  administrativeSegment.getOffenseSegments()
+				.stream()
+				.map(i -> i.getUcrOffenseCodeType().getNibrsCode())
+				.collect(Collectors.toList()); 
+		List<String> larcenyOffenseCodes = administrativeSegment.getOffenseSegments()
+				.stream()
+				.map(i -> i.getUcrOffenseCodeType().getNibrsCode())
+				.filter(OffenseCode::isLarcenyOffenseCode)
+				.collect(Collectors.toList());
+		
+		List<String> convertedLarcenyOffenseCodes = 
+				larcenyOffenseCodes.stream().map(i-> convert23H(i, administrativeSegment)).collect(Collectors.toList());
+		
+//		log.info("convertedLarcenyOffenseCodes:" + convertedLarcenyOffenseCodes);
+		String offenseCodeString = StringUtils.EMPTY; 
+		Integer larcenyOffenseImportance = 99; 
+		for (String code: convertedLarcenyOffenseCodes) {
+			Integer importanceOfCode = larcenyOffenseImportanceMap.get(code); 
+			if (importanceOfCode != null && importanceOfCode < larcenyOffenseImportance) {
+				larcenyOffenseImportance = importanceOfCode; 
+				offenseCodeString = code; 
+			}
+		}
+		
+		if ("23D".equals(offenseCodeString)) {
+			log.info("offenseCodes: " + offenseCodes);
+		}
+		
+		PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = larcenyOffenseByNatureMap.get(offenseCodeString);
+		
+		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseNumberOfOffenses(1);
+		stolenProperties[PropertyStolenByClassificationRowName.LARCENIES_TOTAL_BY_NATURE.ordinal()].increaseNumberOfOffenses(1);
+
+		double stolenPropertyValue = getStolenPropertyValue(administrativeSegment);
+		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+		if ("23D".equals(offenseCodeString)) {
+			log.info("propertyTypes:" + administrativeSegment.getPropertySegments()
+						.stream()
+						.filter(propertySegment -> propertySegment.getTypePropertyLossEtcType().getNibrsCode().equals("7"))
+						.flatMap(i->i.getPropertyTypes().stream())
+						.map(i->i.getValueOfProperty())
+						.collect(Collectors.toList()));
+			log.info("stolenPropertyValue: " + stolenPropertyValue);
+			log.info("stolenProperties[LARCENY_FROM_BUILDING]: " + stolenProperties[propertyStolenByClassificationRowName.ordinal()].getMonetaryValue());
+		}
+		stolenProperties[PropertyStolenByClassificationRowName.LARCENIES_TOTAL_BY_NATURE.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+	}
+
+	private String convert23H(String offenseCodeString, AdministrativeSegment administrativeSegment) {
 		if ("23H".equals(offenseCodeString)){
 			List<PropertyType> stolenPropertyTypes =  administrativeSegment.getPropertySegments()
 					.stream()
@@ -505,15 +566,7 @@ public class ReturnAFormService {
 				}
 			}
 		}
-		
-		PropertyStolenByClassificationRowName propertyStolenByClassificationRowName = larcenyOffenseByNatureMap.get(offenseCodeString);
-		
-		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseNumberOfOffenses(1);
-		stolenProperties[PropertyStolenByClassificationRowName.LARCENIES_TOTAL_BY_NATURE.ordinal()].increaseNumberOfOffenses(1);
-
-		double stolenPropertyValue = getStolenPropertyValue(administrativeSegment);
-		stolenProperties[propertyStolenByClassificationRowName.ordinal()].increaseMonetaryValue(stolenPropertyValue);
-		stolenProperties[PropertyStolenByClassificationRowName.LARCENIES_TOTAL_BY_NATURE.ordinal()].increaseMonetaryValue(stolenPropertyValue);
+		return offenseCodeString;
 	}
 
 	private void processLarcenyStolenPropertyByValue(PropertyStolenByClassification[] stolenProperties, AdministrativeSegment administrativeSegment) {

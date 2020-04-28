@@ -73,6 +73,8 @@ public class AsrFormService {
 	private Map<String, AsrAdultRowName> offenseCodeAdultRowNameMap; 
 	private Map<String, AsrJuvenileRowName> offenseCodeJuvenileRowNameMap; 
 	
+	int countOf11AAdult = 0;
+	int countOf11AJuvenile = 0;
 	public AsrFormService() {
 		offenseCodeAdultRowNameMap = new HashMap<>();
 		offenseCodeAdultRowNameMap.put("09A", AsrAdultRowName.MURDER_NONNEGLIGENT_MANSLAUGHTER); 
@@ -325,8 +327,7 @@ public class AsrFormService {
 		List<ArresteeSegment> adultArresteeSegments = arresteeSegments
 				.stream()
 				.filter(i->
-				Arrays.asList("C", "N").contains(i.getMultipleArresteeSegmentsIndicatorType().getNibrsCode()) &&  
-				(i.isAgeUnknown() || i.getAverageAge() >= 18))
+				Arrays.asList("C", "N").contains(i.getMultipleArresteeSegmentsIndicatorType().getNibrsCode()) &&  i.getAverageAge() >= 18)
 				.collect(Collectors.toList());
 		
 		for (ArresteeSegment arresteeSegment: adultArresteeSegments){
