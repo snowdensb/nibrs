@@ -80,12 +80,12 @@ public class AppProperties {
 		getPropertyCodeMapping().put("39", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("40", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("41", "MISCELLANEOUS");
-		getPropertyCodeMapping().put("42", "CONSUMABLE_GOODS");
+		getPropertyCodeMapping().put("42", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("43", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("44", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("45", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("46", "MISCELLANEOUS");
-		getPropertyCodeMapping().put("47", "MISCELLANEOUS");
+		getPropertyCodeMapping().put("47", "CONSUMABLE_GOODS");
 		getPropertyCodeMapping().put("48", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("49", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("50", "MISCELLANEOUS");
@@ -109,7 +109,7 @@ public class AppProperties {
 		getPropertyCodeMapping().put("72", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("73", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("74", "TELEVISIONS_RADIOS_STEREOS_ETC");
-		getPropertyCodeMapping().put("75", "TELEVISIONS_RADIOS_STEREOS_ETC");
+		getPropertyCodeMapping().put("75", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("76", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("77", "MISCELLANEOUS");
 		getPropertyCodeMapping().put("78", "MISCELLANEOUS");
@@ -125,7 +125,7 @@ public class AppProperties {
 		getLocationCodeMapping().put("06", "MISCELLANEOUS");
 		getLocationCodeMapping().put("07", "CONVENIENCE_STORE");
 		getLocationCodeMapping().put("08", "COMMERCIAL_HOUSE");
-		getLocationCodeMapping().put("09", "MISCELLANEOUS");
+		getLocationCodeMapping().put("09", "COMMERCIAL_HOUSE");
 		getLocationCodeMapping().put("10", "MISCELLANEOUS");
 		getLocationCodeMapping().put("11", "MISCELLANEOUS");
 		getLocationCodeMapping().put("12", "COMMERCIAL_HOUSE");
@@ -146,13 +146,13 @@ public class AppProperties {
 		getLocationCodeMapping().put("38", "MISCELLANEOUS");
 		getLocationCodeMapping().put("39", "MISCELLANEOUS");
 		getLocationCodeMapping().put("40", "MISCELLANEOUS");
-		getLocationCodeMapping().put("41", "COMMERCIAL_HOUSE");
+		getLocationCodeMapping().put("41", "MISCELLANEOUS");
 		getLocationCodeMapping().put("42", "MISCELLANEOUS");
 		getLocationCodeMapping().put("43", "MISCELLANEOUS");
 		getLocationCodeMapping().put("44", "MISCELLANEOUS");
 		getLocationCodeMapping().put("45", "MISCELLANEOUS");
 		getLocationCodeMapping().put("46", "MISCELLANEOUS");
-		getLocationCodeMapping().put("47", "COMMERCIAL_HOUSE");
+		getLocationCodeMapping().put("47", "MISCELLANEOUS");
 		getLocationCodeMapping().put("48", "MISCELLANEOUS");
 		getLocationCodeMapping().put("49", "MISCELLANEOUS");
 		getLocationCodeMapping().put("50", "MISCELLANEOUS");
@@ -160,7 +160,7 @@ public class AppProperties {
 		getLocationCodeMapping().put("52", "MISCELLANEOUS");
 		getLocationCodeMapping().put("53", "MISCELLANEOUS");
 		getLocationCodeMapping().put("54", "MISCELLANEOUS"); // according to the conversion of NIBRS Data to Summary Data.pdf
-		getLocationCodeMapping().put("55", "COMMERCIAL_HOUSE");
+		getLocationCodeMapping().put("55", "MISCELLANEOUS");
 		getLocationCodeMapping().put("56", "MISCELLANEOUS");
 		getLocationCodeMapping().put("57", "MISCELLANEOUS");
 		getLocationCodeMapping().put("58", "MISCELLANEOUS");
