@@ -31,6 +31,7 @@
         /*<![CDATA[*/
           var context = [[@{/}]];
           var persistReportTask = [[${persistReportTask}]]; 
+          var privateSummaryReportSite = [[${privateSummaryReportSite}]]; 
         /*]]>*/
 
 			  $(function() {
@@ -90,7 +91,7 @@
             	  requestData[_csrf_param_name] = _csrf_token;
             }
           	var data = table.rows().data();
-          	if (data.length > 0){
+          	if (data.length > 0 && privateSummaryReportSite){
           		  xhr =  $.post(context + "files/preCertificationErrors", requestData, function(data, status){  
           			  $('div#alert').append('<div>' + data + '</div>');
           		  }).fail(ojbc.displayFailMessage);
