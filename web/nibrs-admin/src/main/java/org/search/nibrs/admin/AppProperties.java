@@ -33,7 +33,8 @@ public class AppProperties {
 	private Integer ajpPort = 9090; 
 	private Boolean ajpEnabled = true; 
 	
-	private String externalTemplatesFolder ;
+	private String externalTemplatesFolder;
+	private String brandImagePath="/images/search.png";
 	
 	private Boolean inactivityTimeout=true;
 	private Integer inactivityTimeoutInSeconds = 1800; 
@@ -146,6 +147,14 @@ public class AppProperties {
 
 	public void setPrivateSummaryReportSite(Boolean privateSummaryReportSite) {
 		this.privateSummaryReportSite = privateSummaryReportSite;
+	}
+
+	public String getBrandImagePath() {
+		return brandImagePath;
+	}
+
+	public void setBrandImagePath(String brandImagePath) {
+		this.brandImagePath = brandImagePath;
 	}
 
 }

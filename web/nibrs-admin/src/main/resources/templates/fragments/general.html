@@ -36,8 +36,8 @@
 <body>
     <header th:fragment="header">
         <div class="banner mt-5 pt-1" th:fragment="banner" id="banner">
-          <div class="text-white pl-3">
-            <img th:src="@{/images/oklahoma_logo.png}" height="75px" /> 
+          <div class="text-white pl-3 align-middle">
+            <img th:src="@{${brandImagePath}}" height="75px" /> 
             <span class="initials align-bottom" aria-hidden="true">NIBRS</span>
             <span class="fullname align-middle">Record of NIBRS Submissions</span>
           </div>

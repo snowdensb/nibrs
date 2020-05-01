@@ -18,5 +18,10 @@
     "name": "admin.private-summary-report-site",
     "type": "java.lang.String",
     "description": "A description for 'admin.private-summary-report-site'"
+  },
+  {
+    "name": "admin.brandImagePath",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.brandImagePath'"
   }
 ]}
