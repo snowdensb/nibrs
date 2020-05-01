@@ -686,7 +686,7 @@ CREATE TABLE ZeroReportingSegment (
                 IncidentHour VARCHAR(4),
                 CleardExceptionally VARCHAR(1),
                 ExceptionalClearanceDate DATE,
-                OwnerInd INT,
+                OwnerId INT,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (ZeroReportingSegmentID)
 );
@@ -703,7 +703,7 @@ CREATE TABLE LEOKASegment (
                 CityIndicator VARCHAR(4),
                 Filler VARCHAR(12),
                 LEOKAData VARCHAR(600),
-                OwnerInd INT,
+                OwnerId INT,
                 ReportTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (LEOKASegmentID)
 );
@@ -728,13 +728,13 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE ZeroReportingSegment ADD CONSTRAINT ownerid_zeroreportingsegment_fk
-FOREIGN KEY (OwnerInd)
+FOREIGN KEY (OwnerId)
 REFERENCES Owner (OwnerId)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
 ALTER TABLE LEOKASegment ADD CONSTRAINT ownerid_leokasegment_fk
-FOREIGN KEY (OwnerInd)
+FOREIGN KEY (OwnerId)
 REFERENCES Owner (OwnerId)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
