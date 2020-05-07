@@ -73,13 +73,11 @@ public class AsrFormService {
 	private Map<String, AsrAdultRowName> offenseCodeAdultRowNameMap; 
 	private Map<String, AsrJuvenileRowName> offenseCodeJuvenileRowNameMap; 
 	
-	int countOf11AAdult = 0;
-	int countOf11AJuvenile = 0;
 	public AsrFormService() {
 		offenseCodeAdultRowNameMap = new HashMap<>();
 		offenseCodeAdultRowNameMap.put("09A", AsrAdultRowName.MURDER_NONNEGLIGENT_MANSLAUGHTER); 
 		offenseCodeAdultRowNameMap.put("09B", AsrAdultRowName.MANSLAUGHTER_BY_NEGLIGENCE); 
-		offenseCodeAdultRowNameMap.put("11AF", AsrAdultRowName.RAPE); 
+		offenseCodeAdultRowNameMap.put("11A", AsrAdultRowName.RAPE); 
 		offenseCodeAdultRowNameMap.put("120", AsrAdultRowName.ROBBERY); 
 		offenseCodeAdultRowNameMap.put("13A", AsrAdultRowName.AGGRAVATED_ASSAULT); 
 		offenseCodeAdultRowNameMap.put("13B", AsrAdultRowName.OTHER_ASSAULTS); 
@@ -109,9 +107,8 @@ public class AsrFormService {
 		offenseCodeAdultRowNameMap.put("40A", AsrAdultRowName.PROSTITUTION); 
 		offenseCodeAdultRowNameMap.put("40B", AsrAdultRowName.ASSISTING_PROMOTING_PROSTITUTION); 
 		offenseCodeAdultRowNameMap.put("40C", AsrAdultRowName.PURCHASING_PROSTITUTION); 
-		offenseCodeAdultRowNameMap.put("11AM", AsrAdultRowName.SEX_OFFENSES); 
-		offenseCodeAdultRowNameMap.put("11B", AsrAdultRowName.SEX_OFFENSES); 
-		offenseCodeAdultRowNameMap.put("11C", AsrAdultRowName.SEX_OFFENSES); 
+		offenseCodeAdultRowNameMap.put("11B", AsrAdultRowName.RAPE); 
+		offenseCodeAdultRowNameMap.put("11C", AsrAdultRowName.RAPE); 
 		offenseCodeAdultRowNameMap.put("11D", AsrAdultRowName.SEX_OFFENSES); 
 		offenseCodeAdultRowNameMap.put("36A", AsrAdultRowName.SEX_OFFENSES); 
 		offenseCodeAdultRowNameMap.put("36B", AsrAdultRowName.SEX_OFFENSES); 
@@ -139,7 +136,7 @@ public class AsrFormService {
 		offenseCodeJuvenileRowNameMap = new HashMap<>();
 		offenseCodeJuvenileRowNameMap.put("09A", AsrJuvenileRowName.MURDER_NONNEGLIGENT_MANSLAUGHTER); 
 		offenseCodeJuvenileRowNameMap.put("09B", AsrJuvenileRowName.MANSLAUGHTER_BY_NEGLIGENCE); 
-		offenseCodeJuvenileRowNameMap.put("11AF", AsrJuvenileRowName.RAPE); 
+		offenseCodeJuvenileRowNameMap.put("11A", AsrJuvenileRowName.RAPE); 
 		offenseCodeJuvenileRowNameMap.put("120", AsrJuvenileRowName.ROBBERY); 
 		offenseCodeJuvenileRowNameMap.put("13A", AsrJuvenileRowName.AGGRAVATED_ASSAULT); 
 		offenseCodeJuvenileRowNameMap.put("13B", AsrJuvenileRowName.OTHER_ASSAULTS); 
@@ -169,9 +166,8 @@ public class AsrFormService {
 		offenseCodeJuvenileRowNameMap.put("40A", AsrJuvenileRowName.PROSTITUTION); 
 		offenseCodeJuvenileRowNameMap.put("40B", AsrJuvenileRowName.ASSISTING_PROMOTING_PROSTITUTION); 
 		offenseCodeJuvenileRowNameMap.put("40C", AsrJuvenileRowName.PURCHASING_PROSTITUTION); 
-		offenseCodeJuvenileRowNameMap.put("11AM", AsrJuvenileRowName.SEX_OFFENSES); 
-		offenseCodeJuvenileRowNameMap.put("11B", AsrJuvenileRowName.SEX_OFFENSES); 
-		offenseCodeJuvenileRowNameMap.put("11C", AsrJuvenileRowName.SEX_OFFENSES); 
+		offenseCodeJuvenileRowNameMap.put("11B", AsrJuvenileRowName.RAPE); 
+		offenseCodeJuvenileRowNameMap.put("11C", AsrJuvenileRowName.RAPE); 
 		offenseCodeJuvenileRowNameMap.put("11D", AsrJuvenileRowName.SEX_OFFENSES); 
 		offenseCodeJuvenileRowNameMap.put("36A", AsrJuvenileRowName.SEX_OFFENSES); 
 		offenseCodeJuvenileRowNameMap.put("36B", AsrJuvenileRowName.SEX_OFFENSES); 
@@ -304,9 +300,6 @@ public class AsrFormService {
 			if ("35A".equals(offenseCode)){
 				asrJuvenileRowName= get35AAsrRowName(arresteeSegment).map(AsrJuvenileRowName::valueOf).orElse(null);
 			}
-			else if ("11A".equals(offenseCode)){
-				asrJuvenileRowName = offenseCodeJuvenileRowNameMap.get(offenseCode + getVictimGender(arresteeSegment));
-			}
 			else{
 				asrJuvenileRowName = offenseCodeJuvenileRowNameMap.get(offenseCode); 
 			}
@@ -336,9 +329,6 @@ public class AsrFormService {
 			String offenseCode = arresteeSegment.getUcrOffenseCodeType().getNibrsCode();
 			if ("35A".equals(offenseCode)){
 				asrAdultRowName= get35AAsrRowName(arresteeSegment).map(AsrAdultRowName::valueOf).orElse(null);
-			}
-			else if ("11A".equals(offenseCode)){
-				asrAdultRowName = offenseCodeAdultRowNameMap.get(offenseCode + getVictimGender(arresteeSegment));
 			}
 			else{
 				asrAdultRowName = offenseCodeAdultRowNameMap.get(offenseCode); 
@@ -411,16 +401,6 @@ public class AsrFormService {
 					
 		}
 		return asrAdultRowName;
-	}
-
-	private String getVictimGender(ArresteeSegment arresteeSegment) {
-		String offenseCode = arresteeSegment.getUcrOffenseCodeType().getNibrsCode(); 
-		String victimGender = arresteeSegment.getAdministrativeSegment()
-				.getVictimSegments()
-				.stream()
-				.filter(i->i.getOffenseSegments().stream().anyMatch(o->Objects.equals(offenseCode, o.getUcrOffenseCodeType().getNibrsCode())))
-				.map(i->i.getSexOfPersonType().getNibrsCode()).findFirst().orElse("");
-		return victimGender;
 	}
 
 	private void countToEthnicityGroups(AsrRow[] asrRows, String ethnicityCode,
