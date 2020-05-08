@@ -34,7 +34,7 @@ public class AppProperties {
 	private Boolean ajpEnabled = true; 
 	
 	private String externalTemplatesFolder;
-	private String brandImagePath="/images/search-logo-scales-transparent.png";
+	private String brandImagePath="/images/search-logo-grayscales-transparent.png";
 	
 	private Boolean inactivityTimeout=true;
 	private Integer inactivityTimeoutInSeconds = 1800; 
