@@ -85,6 +85,7 @@
 		       /*<![CDATA[*/
 		          var context = [[@{/}]];
 	            var offenseCodeMapping = [[${offenseCodeMapping}]]; 
+	            var allowSubmitToFbi = [[${allowSubmitToFbi}]];
 		        /*]]>*/
 	
 		       $(function(){
@@ -101,7 +102,7 @@
 	                  { "data": "submissionDateString" },
 	                  { "data": "ucrOffenseCodeTypeId" },
 	                  { "data": "reportType" },
-	                  { "data": "fbiStatus" }, 
+	                  { "data": "fbiStatus"}, 
 	                  { "data": "primaryKey", "visible":false}
 	              ], 
 	              buttons: [
@@ -165,6 +166,11 @@
                 }
 
 		          });
+		          
+		          
+		          if (!allowSubmitToFbi){
+		        	  table.columns( [6] ).visible( false );
+		          }
 		          
 		          $('[data-toggle="tooltip"]').tooltip({
 		              trigger : 'hover'

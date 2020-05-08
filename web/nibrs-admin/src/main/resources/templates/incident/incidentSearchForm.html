@@ -68,7 +68,7 @@
 							</select>
     				</div>
          </div>
-         <div class="form-row">
+         <div class="form-row" th:if="${allowSubmitToFbi}">
            <label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">FBI Submission Status</label>
            <div class="form-check col-8 col-xl-3">
               <select th:field="*{fbiSubmissionStatus}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid">
