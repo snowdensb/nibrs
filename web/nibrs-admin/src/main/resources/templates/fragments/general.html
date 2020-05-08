@@ -66,6 +66,9 @@
 	            <li class="nav-item" th:unless="${agencyMapping.empty}">
 	              <a class="nav-link" href="#" id="summaryReportInputForm">Summary Reports</a>
 	            </li>
+	            <li th:each="instance : ${externalLinksMapping}">
+							   <a class="nav-link" th:href="${instance.value}" th:text="${instance.key}" target="_blank"></a>
+							</li>
 	          </ul>
 	          
 	          <ul class="navbar-nav flex-row ml-md-auto d-md-flex" sec:authorize="isAuthenticated()">

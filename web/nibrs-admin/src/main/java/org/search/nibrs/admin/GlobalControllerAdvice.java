@@ -49,6 +49,7 @@ public class GlobalControllerAdvice {
         model.addAttribute("allowSubmitToFbi", appProperties.getAllowSubmitToFbi());
         model.addAttribute("privateSummaryReportSite", appProperties.getPrivateSummaryReportSite());
         model.addAttribute("brandImagePath", appProperties.getBrandImagePath());
+        model.addAttribute("externalLinksMapping", appProperties.getExternalLinksMapping());
         
         AuthUser authUser = null;
         if (authentication != null) {

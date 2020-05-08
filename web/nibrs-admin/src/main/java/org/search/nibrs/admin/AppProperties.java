@@ -15,6 +15,9 @@
  */
 package org.search.nibrs.admin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -40,6 +43,8 @@ public class AppProperties {
 	private Integer inactivityTimeoutInSeconds = 1800; 
 	
 	private String restServiceBaseUrl = "http://localhost:9080";
+	
+	private final Map<String, String> externalLinksMapping = new HashMap<>();
 
 	public AppProperties() {
 		super();
@@ -155,6 +160,10 @@ public class AppProperties {
 
 	public void setBrandImagePath(String brandImagePath) {
 		this.brandImagePath = brandImagePath;
+	}
+
+	public Map<String, String> getExternalLinksMapping() {
+		return externalLinksMapping;
 	}
 
 }
