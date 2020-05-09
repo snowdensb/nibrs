@@ -1,0 +1,11 @@
+{
+	"nibrs" : {
+		"JdbcDriver" : "org.mariadb.jdbc.Driver",
+		"Jdbc" : "jdbc:mariadb://nibrs-analytics-db:3306/search_nibrs_dimensional",
+		"JdbcUser" : "analytics",
+		"JdbcPassword" : "",
+		"Catalog" : "/NIBRSAnalyticsMondrianSchema.8.xml",
+		"Description" : "NIBRS",
+		"IsDemo" : false
+	}
+}
