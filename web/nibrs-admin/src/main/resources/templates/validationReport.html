@@ -161,9 +161,8 @@
  			<div class="mt-3" id="info" >
  			  <div class="alert alert-secondary" role="alert" th:if="${validationResults.countOfValidReport} > 0" id="alert">
 			    <span th:text="${validationResults.countOfValidReport} + ' of the ' + ${validationResults.totalReportCount} + 
-			       ' are error-free. Would you like to load the '+ 
-			       ${validationResults.countOfValidReport} +' incidents into the repository?' "></span>
-	        <button type="button" class="btn btn-primary btn-sm ml-2" id="loadIncidentsAync">Load</button>
+			       ' records have been validated. In order to produce Summary Reports, you must save these records before proceeding.'"></span>
+	        <button type="button" class="btn btn-primary btn-sm ml-2" id="loadIncidentsAync">Save</button>
         </div>
         <div class="progress mt-2  d-none" id="progressDiv">
           <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0.25" aria-valuemin="0" aria-valuemax="100" id="progress" style="width:0%"></div>
