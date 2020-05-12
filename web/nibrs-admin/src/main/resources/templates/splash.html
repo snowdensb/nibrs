@@ -19,11 +19,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>NIBRS Services Toolset</title>
-    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	  <link rel="shortcut icon" href="#" />
+	  <!-- Bootstrap CSS -->
+	  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+	  <link rel="stylesheet" type="text/css" th:href="@{/webjars/datatables/1.10.19/css/dataTables.bootstrap4.min.css}" />
+	  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.bootstrap.min.css" />
+	  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css" />
+	  <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/5.2.0/css/all.css}" />
+	  <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
   </head>
-	<body>
-	  <div class="container-fluid" th:include="fragments/splashPageHeader ::headerIamge">
-	  </div>
+	<body class="small">
+	  <div class="container-fluid" th:include="fragments/splashPageHeader ::headerIamge"></div>
 	  <div id="mainContent">
 	    <div id="content" class="container">
 	      <div class="p-4">
@@ -61,7 +69,11 @@
 	      
 	    </div>
 	  </div>
-    <footer th:replace="fragments/general.html :: footer"></footer> 
+    <footer class="footer"style="background-color: #f5f5f5" >
+      <div class="container-fluid">
+        <p class="text-muted footerText" style="padding:0; margin:1em;">This website was funded by the Bureau of Justice Statistics (BJS), Office of Justice Programs, U.S. Department of Justice, under Cooperative Agreement No. 2012-MU-MU-K003, awarded to RTI International, 3040 Cornwallis Road Research Triangle Park, NC 27709-2194 and subawarded to SEARCH Group, Incorporated, 1900 Point West Way, Suite 275, Sacramento, California 95815. Contents of this document do not necessarily reflect the views or policies of BJS, the FBI, or the U.S. Department of Justice. This tool is not a substitute for FBI NIBRS or state UCR Program certification.</p>
+      </div>
+    </footer>
     <!-- /.container -->
     <th:block th:include="fragments/general.html :: javascripts"></th:block>
     </div>

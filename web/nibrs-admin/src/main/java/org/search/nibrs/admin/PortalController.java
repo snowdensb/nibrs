@@ -41,7 +41,7 @@ public class PortalController {
 	    return "index";
 	}
 	
-	@GetMapping("/index")
+	@GetMapping("/welcome")
 	public String getSplashPage(Model model) throws IOException {
 		
 		return "splash";
