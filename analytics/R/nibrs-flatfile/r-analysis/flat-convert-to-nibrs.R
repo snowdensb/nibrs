@@ -5,7 +5,7 @@ library(tibble)
 library(data.table)
 
 #Merge all "txt" nibrs files in the /data directory into file nibrs.txt used by this script 
-system("./flatfile.sh")
+#system("./flatfile.sh")
 
 # Vector of segment number for each row in the flatfile
 segments <- read_fwf("./data/nibrs/nibrs.txt", 
@@ -18,10 +18,15 @@ NIBRS <- read_fwf("./data/nibrs/nibrs.txt",
                     c(300),
                     col_names = c("NIBRS") ))
 
-## BUILD THE FUNCTION BEFORE RUNNING THIS COMMAND
+### BUILD THE FUNCTION BEFORE RUNNING THE FOLLOWING COMMANDS
+# Create an R dataframe (nibrsFlat)
 nibrsFlat <- FlatfileToNIBRS (segments, NIBRS)
+# Remove the first 6 columns 
 nibrsFlat <- nibrsFlat[-c(1:6)]
+# Write dataframe as a .csv
 write.csv(nibrsFlat, "nibrsFlat.csv", row.names=FALSE, quote = FALSE)
+###
+
 
 # Convert NIBRS Flatfile to R DF FUNCTION
 FlatfileToNIBRS <- function(segments, NIBRS) {

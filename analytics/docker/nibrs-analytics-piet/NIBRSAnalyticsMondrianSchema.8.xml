@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Schema name="nibrs_analytics" caption="NIBRS Analytics" description="NIBRS Analytics">
+  <Dimension name="Hour">
+    <Hierarchy hasAll="true" allMemberName="All Hours" name="Hour" caption="Hour of Day" primaryKey="HourTypeID">
+      <Table name="HourType"/>
+      <Level name="HourTypeCategory" column="HourTypeCategory" ordinalColumn="HourTypeCategorySort" caption="AM/PM"/>
+      <Level name="HourTypeDetailCategory" column="HourTypeDetailCategory" ordinalColumn="HourTypeDetailCategorySort" caption="Part of Day"/>
+      <Level name="HourTypeDescription" column="HourTypeDescription" ordinalColumn="HourTypeID" caption="Hour"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="Agency">
+    <Hierarchy primaryKeyTable="Agency" hasAll="true" allMemberName="All Agencies" name="Agency" caption="Agency" primaryKey="AgencyID">
+      <Join leftKey="AgencyTypeID" rightKey="AgencyTypeID">
+        <Table name="AgencyType"/>
+        <Table name="Agency"/>
+      </Join>
+      <Level name="AgencyTypeDescription" column="StateDescription" table="AgencyType" caption="Agency Type"/>
+      <Level name="AgencyName" column="AgencyName" table="Agency" caption="Agency"/>
+    </Hierarchy>
+    <!-- <Hierarchy primaryKeyTable="Agency" hasAll="true" allMemberName="All Agencies" name="AgencyORI" caption="Agency ORI" primaryKey="AgencyORI">
+      <Join leftKey="AgencyTypeID" rightKey="AgencyTypeID">
+        <Table name="AgencyType"/>
+        <Table name="Agency"/>
+      </Join>
+      <Level name="AgencyTypeDescription" column="StateDescription" table="AgencyType" caption="Agency Type"/>
+      <Level name="AgencyORI" column="AgencyORI" table="Agency" caption="Agency ORI"/>
+    </Hierarchy> -->
+  </Dimension>
+  <!-- <Dimension name="State">
+    <Hierarchy hasAll="true" allMemberName="All States" name="State" caption="State" primaryKey="StateID">
+      <Table name="State"/>
+      <Level name="StateName" column="StateName" caption="State"/>
+    </Hierarchy>
+  </Dimension> -->
+  <Dimension name="AdditionalJustifiableHomicideCircumstances" caption="Justifiable Homicide Circumstances">
+    <Hierarchy hasAll="true" allMemberName="All Circumstances" name="AdditionalJustifiableHomicideCircumstances" caption="Justifiable Homicide Circumstances" primaryKey="AdditionalJustifiableHomicideCircumstancesTypeID">
+      <Table name="AdditionalJustifiableHomicideCircumstancesType"/>
+      <Level name="AdditionalJustifiableHomicideCircumstancesDescription" column="StateDescription" caption="Justifiable Homicide Circumstances"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="AggravatedAssaultHomicideCircumstances" caption="Assault/Homicide Circumstances">
+    <Hierarchy hasAll="true" allMemberName="All Circumstances" name="AggravatedAssaultHomicideCircumstances" caption="Assault/Homicide Circumstances" primaryKey="AggravatedAssaultHomicideCircumstancesTypeID">
+      <Table name="AggravatedAssaultHomicideCircumstancesType"/>
+      <Level name="AggravatedAssaultHomicideCircumstancesDescription" column="StateDescription" caption="Assault/Homicide Circumstances"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="ArresteeWasArmedWith" caption="Weapons Armed With">
+    <Hierarchy hasAll="true" allMemberName="All Weapons" name="ArresteeWasArmedWith" caption="Weapons Armed With" primaryKey="ArresteeWasArmedWithTypeID">
+      <Table name="ArresteeWasArmedWithType"/>
+      <Level name="ArresteeWasArmedWithDescription" column="StateDescription" caption="Weapons Armed With"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="BiasMotivation" caption="Bias Motivation">
+    <Hierarchy hasAll="true" allMemberName="All Bias Motivations" name="BiasMotivation" caption="Bias Motivation" primaryKey="BiasMotivationTypeID">
+      <Table name="BiasMotivationType"/>
+      <Level name="BiasMotivationCategory" column="BiasMotivationCategory" caption="Bias Category"/>
+      <Level name="BiasMotivationDescription" column="StateDescription" caption="Bias Motivation"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="ClearedExceptionally" caption="Exceptional Clearance">
+    <Hierarchy hasAll="true" allMemberName="All Exceptional Clearances" name="ClearedExceptionally" caption="Exceptional Clearance" primaryKey="ClearedExceptionallyTypeID">
+      <Table name="ClearedExceptionallyType"/>
+      <Level name="ClearedExceptionallyDescription" column="StateDescription" caption="Exceptional Clearance"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="DispositionOfArresteeUnder18" caption="Disposition of Arrestee &lt;18">
+    <Hierarchy hasAll="true" allMemberName="All Dispositions" name="DispositionOfArresteeUnder18" caption="Disposition of Arrestee &lt;18" primaryKey="DispositionOfArresteeUnder18TypeID">
+      <Table name="DispositionOfArresteeUnder18Type"/>
+      <Level name="DispositionOfArresteeUnder18Description" column="StateDescription" caption="Disposition"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="LocationType" caption="Location Type">
+    <Hierarchy hasAll="true" allMemberName="All Location Types" name="LocationType" caption="Location Type" primaryKey="LocationTypeTypeID">
+      <Table name="LocationTypeType"/>
+      <Level name="LocationTypeCategoryDescription" column="LocationTypeCategoryDescription" caption="Location Category"/>
+      <Level name="LocationTypeDetailCategoryDescription" column="LocationTypeDetailCategoryDescription" caption="Location Detail Category"/>
+      <Level name="LocationTypeDescription" column="StateDescription" caption="Location Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="MethodOfEntry" caption="Entry Method">
+    <Hierarchy hasAll="true" allMemberName="All Entry Methods" name="MethodOfEntry" caption="Entry Method" primaryKey="MethodOfEntryTypeID">
+      <Table name="MethodOfEntryType"/>
+      <Level name="MethodOfEntryDescription" column="StateDescription" caption="Entry Method"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="OffenderSuspectedOfUsing" caption="Suspected Items Used">
+    <Hierarchy hasAll="true" allMemberName="All Items" name="OffenderSuspectedOfUsing" caption="Suspected Items Used" primaryKey="OffenderSuspectedOfUsingTypeID">
+      <Table name="OffenderSuspectedOfUsingType"/>
+      <Level name="OffenderSuspectedOfUsingDescription" column="StateDescription" caption="Suspected Items Used"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="OfficerActivityCircumstance" caption="Activity Circumstances">
+    <Hierarchy hasAll="true" allMemberName="All Activity Circumstances" name="OfficerActivityCircumstance" caption="Activity Circumstances" primaryKey="OfficerActivityCircumstanceTypeID">
+      <Table name="OfficerActivityCircumstanceType"/>
+      <Level name="OfficerActivityCircumstanceDescription" column="StateDescription" caption="Activity Circumstances"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="OfficerAssignmentType" caption="Assignment Type">
+    <Hierarchy hasAll="true" allMemberName="All Assignment Types" name="OfficerAssignmentType" caption="Assignment Type" primaryKey="OfficerAssignmentTypeTypeID">
+      <Table name="OfficerAssignmentTypeType"/>
+      <Level name="OfficerAssignmentTypeDescription" column="StateDescription" caption="Assignment Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="PropertyDescription" caption="Property Type">
+    <Hierarchy hasAll="true" allMemberName="All Property Types" name="PropertyDescription" caption="Property Type" primaryKey="PropertyDescriptionTypeID">
+      <Table name="PropertyDescriptionType"/>
+      <Level name="PropertyDescriptionDescription" column="StateDescription" caption="Property Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="VictimOffenderRelationship" caption="Victim/Offender Relationship">
+    <Hierarchy hasAll="true" allMemberName="All Relationships" name="VictimOffenderRelationship" caption="Victim/Offender Relationship" primaryKey="VictimOffenderRelationshipTypeID">
+      <Table name="VictimOffenderRelationshipType"/>
+      <Level name="VictimOffenderRelationshipCategoryDescription" column="VictimOffenderRelationshipCategoryDescription" caption="Victim/Offender Relationship Category"/>
+      <Level name="VictimOffenderRelationshipDescription" column="StateDescription" caption="Victim/Offender Relationship"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="ResidentStatusOfPerson" caption="Resident Status">
+    <Hierarchy hasAll="true" allMemberName="All Resident Statuses" name="ResidentStatusOfPerson" caption="Resident Status" primaryKey="ResidentStatusOfPersonTypeID">
+      <Table name="ResidentStatusOfPersonType"/>
+      <Level name="ResidentStatusOfPersonDescription" column="StateDescription" caption="Resident Status"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="SuspectedDrugType" caption="Drug Type">
+    <Hierarchy hasAll="true" allMemberName="All Drug Types" name="SuspectedDrugType" caption="Drug Type" primaryKey="SuspectedDrugTypeTypeID">
+      <Table name="SuspectedDrugTypeType"/>
+      <Level name="SuspectedDrugTypeDescription" column="StateDescription" caption="Drug Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="TypeDrugMeasurement" caption="Drug Measurement Type">
+    <Hierarchy hasAll="true" allMemberName="All Measurement Types" name="TypeDrugMeasurement" primaryKey="TypeDrugMeasurementTypeID">
+      <Table name="TypeDrugMeasurementType"/>
+      <Level name="TypeDrugMeasurementDescription" column="StateDescription" caption="Drug Measurement Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="TypeInjury" caption="Injury Type">
+    <Hierarchy hasAll="true" allMemberName="All Injury Types" name="TypeInjury" caption="Injury Type" primaryKey="TypeInjuryTypeID">
+      <Table name="TypeInjuryType"/>
+      <Level name="TypeInjuryDescription" column="StateDescription" caption="Injury Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="TypeOfArrest" caption="Arrest Type">
+    <Hierarchy hasAll="true" allMemberName="All Arrest Types" name="TypeOfArrest" caption="Arrest Type" primaryKey="TypeOfArrestTypeID">
+      <Table name="TypeOfArrestType"/>
+      <Level name="TypeOfArrestDescription" column="StateDescription" caption="Arrest Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="TypeOfCriminalActivity" caption="Criminal Activity Type">
+    <Hierarchy hasAll="true" allMemberName="All Criminal Activity Types" name="TypeOfCriminalActivity" caption="Criminal Activity Type" primaryKey="TypeOfCriminalActivityTypeID">
+      <Table name="TypeOfCriminalActivityType"/>
+      <Level name="TypeOfCriminalActivityDescription" column="StateDescription" caption="Criminal Activity Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="TypeOfVictim" caption="Victim Type">
+    <Hierarchy hasAll="true" allMemberName="All Victim Types" name="TypeOfVictim" caption="Victim Type" primaryKey="TypeOfVictimTypeID">
+      <Table name="TypeOfVictimType"/>
+      <Level name="TypeOfVictimDescription" column="StateDescription" caption="Victim Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="TypeOfWeaponForceInvolved" caption="Weapon/Force Type">
+    <Hierarchy hasAll="true" allMemberName="All Weapon/Force Types" name="TypeOfWeaponForceInvolved" caption="Weapon/Force Type" primaryKey="TypeOfWeaponForceInvolvedTypeID">
+      <Table name="TypeOfWeaponForceInvolvedType"/>
+      <Level name="TypeOfWeaponForceInvolvedDescription" column="StateDescription" caption="Weapon/Force Type"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="TypePropertyLossEtc" caption="Type of Loss">
+    <Hierarchy hasAll="true" allMemberName="All Loss Types" name="TypePropertyLossEtc" caption="Type of Loss" primaryKey="TypePropertyLossEtcTypeID">
+      <Table name="TypePropertyLossEtcType"/>
+      <Level name="TypePropertyLossEtcDescription" column="StateDescription" caption="Type of Loss"/>
+    </Hierarchy>
+  </Dimension>
+  <!-- <Dimension name="CargoTheftIndicator" caption="Cargo Theft Status">
+    <Hierarchy hasAll="true" allMemberName="All Statuses" name="CargoTheftIndicator" caption="Cargo Theft Status" primaryKey="CargoTheftIndicatorTypeID">
+      <Table name="CargoTheftIndicatorType"/>
+      <Level name="CargoTheftIndicatorTypeDescription" column="StateDescription" caption="Cargo Theft Status"/>
+    </Hierarchy>
+  </Dimension> -->
+  <Dimension name="CompletionStatus" caption="Completion Status">
+    <Hierarchy hasAll="true" allMemberName="All Statuses" name="CompletionStatus" caption="Completion Status" primaryKey="CompletionStatusTypeID">
+      <Table name="CompletionStatusType"/>
+      <Level name="CompletionStatusDescription" column="CompletionStatusDescription" caption="Completion Status"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="Clearance" caption="Clearance Status">
+    <Hierarchy hasAll="true" allMemberName="All Statuses" name="Clearance" caption="Clearance Status" primaryKey="ClearanceTypeID">
+      <Table name="ClearanceType"/>
+      <Level name="ClearanceTypeYN" column="ClearanceTypeYN" caption="Clearance Status"/>
+      <Level name="ClearanceTypeCategory" column="ClearanceTypeCategory" ordinalColumn="ClearanceTypeCategorySort" caption="Clearance Category"/>
+      <Level name="ClearanceTypeDescription" column="ClearanceTypeDescription" ordinalColumn="ClearanceTypeID" caption="Clearance Reason"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="UCROffenseCode" caption="Offense">
+    <Hierarchy hasAll="true" allMemberName="All Offenses" name="Group" caption="Offense Group" primaryKey="UCROffenseCodeTypeID">
+      <Table name="UCROffenseCodeType"/>
+      <Level name="OffenseCategory1" column="OffenseCategory1" caption="Group"/>
+      <Level name="UCROffenseCodeDescription" column="StateDescription" caption="Offense"/>
+    </Hierarchy>
+    <Hierarchy hasAll="true" allMemberName="All Offenses" name="Type" caption="Offense Type" primaryKey="UCROffenseCodeTypeID">
+      <Table name="UCROffenseCodeType"/>
+      <Level name="OffenseCategory4" column="OffenseCategory4" caption="Category"/>
+      <Level name="OffenseCategory3" column="OffenseCategory3" caption="Type"/>
+      <Level name="UCROffenseCodeDescription" column="StateDescription" caption="Offense"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="Date" type="TimeDimension">
+    <Hierarchy hasAll="true" allMemberName="All Years" name="DateYMD" caption="Year/Month/Day" primaryKey="DateTypeID">
+      <Table name="DateType"/>
+      <Level name="Year" column="YearLabel" levelType="TimeYears"/>
+      <Level name="Quarter" column="CalendarQuarter" levelType="TimeQuarters"/>
+      <Level name="Month" column="MonthName" ordinalColumn="Month" levelType="TimeMonths"/>
+      <Level name="Day" column="Day" levelType="TimeDays"/>
+    </Hierarchy>
+    <Hierarchy hasAll="true" allMemberName="All Dates" name="CalDate" caption="Calendar Date" primaryKey="DateTypeID">
+      <Table name="DateType"/>
+      <Level name="Date" column="CalendarDate" levelType="TimeDays"/>
+    </Hierarchy>
+    <Hierarchy hasAll="true" allMemberName="All Days" name="Day of Week" caption="Day of Week" primaryKey="DateTypeID">
+      <Table name="DateType"/>
+      <Level name="Day of Week" column="DayOfWeek" ordinalColumn="DayOfWeekSort" levelType="TimeDays"/>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="IncidentsInvolving" caption="Incidents Involving" description="Incidents Involving">
+    <Table name="FullIncidentView"/>
+    <DimensionUsage source="TypeInjury" name="TypeInjury" foreignKey="TypeInjuryTypeID"/>
+    <DimensionUsage source="Date" name="Date" foreignKey="IncidentDateID"/>
+    <DimensionUsage source="Hour" name="Hour" foreignKey="IncidentHour"/>
+    <DimensionUsage source="Agency" name="Agency" foreignKey="AgencyID"/>
+    <DimensionUsage source="LocationType" name="LocationType" foreignKey="LocationTypeTypeID"/>
+    <DimensionUsage source="MethodOfEntry" name="MethodOfEntry" foreignKey="MethodOfEntryTypeID"/>
+    <DimensionUsage source="BiasMotivation" name="BiasMotivation" foreignKey="BiasMotivationTypeID"/>
+    <DimensionUsage source="UCROffenseCode" name="UCROffenseCode" foreignKey="UCROffenseCodeTypeID"/>
+    <DimensionUsage source="TypeOfVictim" name="TypeOfVictim" foreignKey="TypeOfVictimTypeID"/>
+    <DimensionUsage source="OfficerActivityCircumstance" name="OfficerActivityCircumstance" foreignKey="OfficerActivityCircumstanceTypeID"/>
+    <DimensionUsage source="OfficerAssignmentType" name="OfficerAssignmentType" foreignKey="OfficerAssignmentTypeTypeID"/>
+    <DimensionUsage source="ResidentStatusOfPerson" name="ResidentStatusOfPerson" foreignKey="ResidentStatusOfPersonTypeID"/>
+    <DimensionUsage source="AdditionalJustifiableHomicideCircumstances" name="AdditionalJustifiableHomicideCircumstances" foreignKey="AdditionalJustifiableHomicideCircumstancesTypeID"/>
+    <DimensionUsage source="CompletionStatus" name="CompletionStatus" foreignKey="CompletionStatusIndicator"/>
+    <!-- <DimensionUsage source="CargoTheftIndicator" name="CargoTheftIndicator" foreignKey="CargoTheftIndicatorTypeID"/> -->
+    <Dimension name="VictimRace" caption="Victim Race" foreignKey="RaceOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Races" name="RaceOfPerson" caption="Victim Race" primaryKey="RaceOfPersonTypeID">
+        <Table name="RaceOfPersonType"/>
+        <Level name="RaceOfPersonTypeDescription" column="StateDescription" caption="Victim Race (State Code)"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="VictimEthnicity" caption="Victim Ethnicity" foreignKey="EthnicityOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Ethnicities" name="EthnicityOfPerson" caption="Victim Ethnicity" primaryKey="EthnicityOfPersonTypeID">
+        <Table name="EthnicityOfPersonType"/>
+        <Level name="EthnicityOfPersonDescription" column="StateDescription" caption="Victim Ethnicity"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="VictimSex" caption="Victim Sex" foreignKey="SexOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Sexes" name="SexOfPerson" caption="Victim Sex" primaryKey="SexOfPersonTypeID">
+        <Table name="SexOfPersonType"/>
+        <Level name="SexOfPersonDescription" column="StateDescription" caption="Victim Sex"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="OffenderRace" caption="Offender Race" foreignKey="OffenderRaceOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Races" name="RaceOfPerson" caption="Offender Race" primaryKey="RaceOfPersonTypeID">
+        <Table name="RaceOfPersonType"/>
+        <Level name="RaceOfPersonTypeDescription" column="StateDescription" caption="Offender Race (State Code)"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="OffenderEthnicity" caption="Offender Ethnicity" foreignKey="OffenderEthnicityOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Ethnicities" name="EthnicityOfPerson" caption="Offender Ethnicity" primaryKey="EthnicityOfPersonTypeID">
+        <Table name="EthnicityOfPersonType"/>
+        <Level name="EthnicityOfPersonDescription" column="StateDescription" caption="Offender Ethnicity"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="OffenderSex" caption="Offender Sex" foreignKey="OffenderSexOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Sexes" name="SexOfPerson" caption="Offender Sex" primaryKey="SexOfPersonTypeID">
+        <Table name="SexOfPersonType"/>
+        <Level name="SexOfPersonDescription" column="StateDescription" caption="Offender Sex"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="Offenses Per Incident">
+      <Hierarchy hasAll="true" name="Offenses Per Incident" primaryKey="OffensesPerIncidentDim">
+        <Table name="FullIncidentView"/>
+        <Level name="Offenses Per Incident" column="OffensesPerIncidentDim" table="FullIncidentView" caption="Offenses Per Incident"/>
+      </Hierarchy>
+    </Dimension>
+    <!-- <Dimension name="Offenders Per Incident">
+      <Hierarchy hasAll="true" name="Offenders Per Incident" primaryKey="OffendersPerIncidentDim">
+        <Table name="FullIncidentView"/>
+        <Level name="Offenders Per Incident" column="OffendersPerIncidentDim" table="FullIncidentView" caption="Offenders Per Incident"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="Victims Per Incident">
+      <Hierarchy hasAll="true" name="Victims Per Incident" primaryKey="VictimsPerIncidentDim">
+        <Table name="FullIncidentView"/>
+        <Level name="Victims Per Incident" column="VictimsPerIncidentDim" table="FullIncidentView" caption="Victims Per Incident"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="Arrestees Per Incident">
+      <Hierarchy hasAll="true" name="Arrestees Per Incident" primaryKey="ArresteesPerIncidentDim">
+        <Table name="FullIncidentView"/>
+        <Level name="Arrestees Per Incident" column="ArresteesPerIncidentDim" table="FullIncidentView" caption="Arrestees Per Incident"/>
+      </Hierarchy>
+    </Dimension> -->
+    <Dimension name="Premises Entered">
+      <Hierarchy hasAll="true" name="Premises Entered" primaryKey="NumberOfPremisesEnteredDim">
+        <Table name="FullIncidentView"/>
+        <Level name="Premises Entered" column="NumberOfPremisesEnteredDim" table="FullIncidentView" caption="# Premises Entered"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="TypeOfCriminalActivity" name="TypeOfCriminalActivity" foreignKey="TypeOfCriminalActivityTypeID"/>
+    <DimensionUsage source="AggravatedAssaultHomicideCircumstances" name="AggravatedAssaultHomicideCircumstances" foreignKey="AggravatedAssaultHomicideCircumstancesTypeID"/>
+    <DimensionUsage source="OffenderSuspectedOfUsing" name="OffenderSuspectedOfUsing" foreignKey="OffenderSuspectedOfUsingTypeID"/>
+    <DimensionUsage source="TypeOfWeaponForceInvolved" name="TypeOfWeaponForceInvolved" foreignKey="TypeOfWeaponForceInvolvedTypeID"/>
+    <Dimension name="Victim Age">
+      <Hierarchy hasAll="true" name="Victim Age" primaryKey="VictimAge">
+        <Table name="FullIncidentView"/>
+        <Level name="VictimAgeGroup" column="VictimAgeGroup" ordinalColumn="VictimAgeGroupSort" table="FullIncidentView" caption="Victim Age Group"/>
+        <Level name="VictimAge" column="VictimAgeDim" table="FullIncidentView" caption="Victim Age"/>
+        <!-- <Level name="VictimAge" column="VictimAgeDim" ordinalColumn="VictimAgeDimSort" table="FullIncidentView" caption="Victim Age"/> -->
+      </Hierarchy>
+      <Hierarchy hasAll="true" name="Victim Age (UCR)" primaryKey="VictimAge">
+        <Table name="FullIncidentView"/>
+        <Level name="VictimUcrAgeGroup" column="VictimUcrAgeGroup" ordinalColumn="VictimUcrAgeGroupSort" table="FullIncidentView" caption="Victim Age Group (UCR)"/>
+        <Level name="VictimAge" column="VictimAgeDim" table="FullIncidentView" caption="Victim Age"/>
+        <!-- <Level name="VictimAge" column="VictimAgeDim" ordinalColumn="VictimAgeDimSort" table="FullIncidentView" caption="Victim Age"/> -->
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="Offender Age">
+      <Hierarchy hasAll="true" name="Offender Age" primaryKey="OffenderAge">
+        <Table name="FullIncidentView"/>
+        <Level name="OffenderAgeGroup" column="OffenderAgeGroup" ordinalColumn="OffenderAgeGroupSort" table="FullIncidentView" caption="Offender Age Group"/>
+        <Level name="OffenderAge" column="OffenderAgeDim" ordinalColumn="AgeOfOffenderMin" table="FullIncidentView" caption="Offender Age"/>
+      </Hierarchy>
+      <Hierarchy hasAll="true" name="Offender Age (UCR)" primaryKey="OffenderAge">
+        <Table name="FullIncidentView"/>
+        <Level name="OffenderUcrAgeGroup" column="OffenderUcrAgeGroup" ordinalColumn="OffenderUcrAgeGroupSort" table="FullIncidentView" caption="Offender Age Group (UCR)"/>
+        <Level name="OffenderAge" column="OffenderAgeDim" ordinalColumn="AgeOfOffenderMin" table="FullIncidentView" caption="Offender Age"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="VictimOffenderRelationship" name="VictimOffenderRelationship" foreignKey="VictimOffenderRelationshipTypeID"/>
+    <Dimension name="Stolen Motor Vehicles">
+      <Hierarchy hasAll="true" name="Stolen Motor Vehicles" primaryKey="StolenMotorVehiclesDim">
+        <Table name="FullIncidentView"/>
+        <Level name="Stolen Motor Vehicles" column="StolenMotorVehiclesDim" table="FullIncidentView" caption="# Stolen Motor Vehicles"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="Recovered Motor Vehicles">
+      <Hierarchy hasAll="true" name="Recovered Motor Vehicles" primaryKey="RecoveredMotorVehiclesDim">
+        <Table name="FullIncidentView"/>
+        <Level name="Recovered Motor Vehicles" column="RecoveredMotorVehiclesDim" table="FullIncidentView" caption="# Recovered Motor Vehicles"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="TypePropertyLossEtc" name="TypePropertyLossEtc" foreignKey="TypePropertyLossEtcTypeID"/>
+    <DimensionUsage source="PropertyDescription" name="PropertyDescription" foreignKey="PropertyDescriptionTypeID"/>
+    <DimensionUsage source="SuspectedDrugType" name="SuspectedDrugType" foreignKey="SuspectedDrugTypeTypeID"/>
+    <DimensionUsage source="Clearance" name="Clearance" foreignKey="ClearanceType"/>
+    <!-- <DimensionUsage source="State" name="State" foreignKey="StateID"/> -->
+    <Measure name="Incident Count" column="AdministrativeSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Incident Count" formatString="#,###"/>
+    <Measure name="Victim Count" column="VictimSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Victim Count" formatString="#,###"/>
+    <Measure name="Offender Count" column="OffenderSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Offender Count" formatString="#,###"/>
+    <Measure name="Offense Count" column="OffenseSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Offense Count" formatString="#,###"/>
+    <Measure name="Property Item Count" column="PropertyTypeID" aggregator="distinct-count" visible="true" caption="Distinct Property Item Count" formatString="#,###"/>
+    <Measure name="Victim-Offender Count" column="VictimOffenderAssociationID" aggregator="distinct-count" visible="true" caption="Distinct Victim+Offender Count" formatString="#,###"/>
+    <Measure name="Victim-Offense Count" column="VictimOffenseAssociationID" aggregator="distinct-count" visible="true" caption="Distinct Victim+Offense Count" formatString="#,###"/>
+    <Measure name="Clearance Rate" column="ClearedIndicator" aggregator="avg" visible="true" caption="Clearance Rate" formatString="#0.0 %"/>
+  </Cube>
+  <!-- <Cube name="VictimOffense" caption="Victim/Offense" description="Victim/Offense">
+    <Table name="FullVictimOffenseView"/>
+    <DimensionUsage source="TypeInjury" name="TypeInjury" foreignKey="TypeInjuryTypeID"/>
+    <DimensionUsage source="Hour" name="Hour" foreignKey="IncidentHour"/>
+    <DimensionUsage source="Date" name="Date" foreignKey="IncidentDateID"/>
+    <DimensionUsage source="Agency" name="Agency" foreignKey="AgencyID"/>
+    <DimensionUsage source="LocationType" name="LocationType" foreignKey="LocationTypeTypeID"/>
+    <DimensionUsage source="MethodOfEntry" name="MethodOfEntry" foreignKey="MethodOfEntryTypeID"/>
+    <DimensionUsage source="BiasMotivation" name="BiasMotivation" foreignKey="BiasMotivationTypeID"/>
+    <DimensionUsage source="UCROffenseCode" name="UCROffenseCode" foreignKey="UCROffenseCodeTypeID"/>
+    <DimensionUsage source="TypeOfVictim" name="TypeOfVictim" foreignKey="TypeOfVictimTypeID"/>
+    <DimensionUsage source="OfficerActivityCircumstance" name="OfficerActivityCircumstance" foreignKey="OfficerActivityCircumstanceTypeID"/>
+    <DimensionUsage source="OfficerAssignmentType" name="OfficerAssignmentType" foreignKey="OfficerAssignmentTypeTypeID"/>
+    <DimensionUsage source="ResidentStatusOfPerson" name="ResidentStatusOfPerson" foreignKey="ResidentStatusOfPersonTypeID"/>
+    <DimensionUsage source="AdditionalJustifiableHomicideCircumstances" name="AdditionalJustifiableHomicideCircumstances" foreignKey="AdditionalJustifiableHomicideCircumstancesTypeID"/>
+    <DimensionUsage source="CompletionStatus" name="CompletionStatus" foreignKey="CompletionStatusIndicator"/>
+    <Dimension name="Premises Entered">
+      <Hierarchy hasAll="true" name="Premises Entered" primaryKey="NumberOfPremisesEnteredDim">
+        <Table name="FullVictimOffenseView"/>
+        <Level name="Premises Entered" column="NumberOfPremisesEnteredDim" table="FullVictimOffenseView" caption="# Premises Entered"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="TypeOfCriminalActivity" name="TypeOfCriminalActivity" foreignKey="TypeOfCriminalActivityTypeID"/>
+    <DimensionUsage source="AggravatedAssaultHomicideCircumstances" name="AggravatedAssaultHomicideCircumstances" foreignKey="AggravatedAssaultHomicideCircumstancesTypeID"/>
+    <DimensionUsage source="OffenderSuspectedOfUsing" name="OffenderSuspectedOfUsing" foreignKey="OffenderSuspectedOfUsingTypeID"/>
+    <DimensionUsage source="TypeOfWeaponForceInvolved" name="TypeOfWeaponForceInvolved" foreignKey="TypeOfWeaponForceInvolvedTypeID"/>
+    <Dimension name="VictimRace" caption="Victim Race" foreignKey="RaceOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Races" name="RaceOfPerson" caption="Victim Race" primaryKey="RaceOfPersonTypeID">
+        <Table name="RaceOfPersonType"/>
+        <Level name="RaceOfPersonTypeDescription" column="StateDescription" caption="Victim Race (State Code)"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="VictimEthnicity" caption="Victim Ethnicity" foreignKey="EthnicityOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Ethnicities" name="EthnicityOfPerson" caption="Victim Ethnicity" primaryKey="EthnicityOfPersonTypeID">
+        <Table name="EthnicityOfPersonType"/>
+        <Level name="EthnicityOfPersonDescription" column="StateDescription" caption="Victim Ethnicity"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="VictimSex" caption="Victim Sex" foreignKey="SexOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Sexes" name="SexOfPerson" caption="Victim Sex" primaryKey="SexOfPersonTypeID">
+        <Table name="SexOfPersonType"/>
+        <Level name="SexOfPersonDescription" column="StateDescription" caption="Victim Sex"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="Victim Age">
+      <Hierarchy hasAll="true" name="Victim Age" primaryKey="VictimAge">
+        <Table name="FullVictimOffenseView"/>
+        <Level name="VictimAgeGroup" column="VictimAgeGroup" ordinalColumn="VictimAgeGroupSort" table="FullVictimOffenseView" caption="Victim Age Group"/>
+        <Level name="VictimAge" column="VictimAgeDim" ordinalColumn="VictimAgeDimSort" table="FullVictimOffenseView" caption="Victim Age"/>
+      </Hierarchy>
+      <Hierarchy hasAll="true" name="Victim Age (UCR)" primaryKey="VictimAge">
+        <Table name="FullVictimOffenseView"/>
+        <Level name="VictimUcrAgeGroup" column="VictimUcrAgeGroup" ordinalColumn="VictimUcrAgeGroupSort" table="FullVictimOffenseView" caption="Victim Age Group (UCR)"/>
+        <Level name="VictimAge" column="VictimAgeDim" ordinalColumn="VictimAgeDimSort" table="FullVictimOffenseView" caption="Victim Age"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="Clearance" name="Clearance" foreignKey="ClearanceType"/>
+    <DimensionUsage source="State" name="State" foreignKey="StateID"/>
+    <Measure name="Incident Count" column="AdministrativeSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Incident Count" formatString="#,###"/>
+    <Measure name="Victim Count" column="VictimSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Victim Count" formatString="#,###"/>
+    <Measure name="Offense Count" column="OffenseSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Offense Count" formatString="#,###"/>
+    <Measure name="Victim-Offense Count" column="VictimOffenseAssociationID" aggregator="distinct-count" visible="true" caption="Victim+Offense Count" formatString="#,###"/>
+    <Measure name="Clearance Rate" column="ClearedIndicator" aggregator="avg" visible="true" caption="Clearance Rate" formatString="#0.0 %"/>
+  </Cube>
+  <Cube name="VictimOffender" caption="Victim/Offender" description="Victim/Offender">
+    <Table name="FullVictimOffenderView"/>
+    <DimensionUsage source="TypeInjury" name="TypeInjury" foreignKey="TypeInjuryTypeID"/>
+    <DimensionUsage source="Hour" name="Hour" foreignKey="IncidentHour"/>
+    <DimensionUsage source="Date" name="Date" foreignKey="IncidentDateID"/>
+    <DimensionUsage source="Agency" name="Agency" foreignKey="ORI"/>
+    <DimensionUsage source="TypeOfVictim" name="TypeOfVictim" foreignKey="TypeOfVictimTypeID"/>
+    <DimensionUsage source="OfficerActivityCircumstance" name="OfficerActivityCircumstance" foreignKey="OfficerActivityCircumstanceTypeID"/>
+    <DimensionUsage source="OfficerAssignmentType" name="OfficerAssignmentType" foreignKey="OfficerAssignmentTypeTypeID"/>
+    <DimensionUsage source="ResidentStatusOfPerson" name="ResidentStatusOfPerson" foreignKey="VictimResidentStatusOfPersonTypeID"/>
+    <DimensionUsage source="AdditionalJustifiableHomicideCircumstances" name="AdditionalJustifiableHomicideCircumstances" foreignKey="AdditionalJustifiableHomicideCircumstancesTypeID"/>
+    <DimensionUsage source="AggravatedAssaultHomicideCircumstances" name="AggravatedAssaultHomicideCircumstances" foreignKey="AggravatedAssaultHomicideCircumstancesTypeID"/>
+    <Dimension name="VictimRace" caption="Victim Race" foreignKey="VictimRaceOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Races" name="RaceOfPerson" caption="Victim Race" primaryKey="RaceOfPersonTypeID">
+        <Table name="RaceOfPersonType"/>
+        <Level name="RaceOfPersonTypeDescription" column="StateDescription" caption="Victim Race (State Code)"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="VictimEthnicity" caption="Victim Ethnicity" foreignKey="VictimEthnicityOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Ethnicities" name="EthnicityOfPerson" caption="Victim Ethnicity" primaryKey="EthnicityOfPersonTypeID">
+        <Table name="EthnicityOfPersonType"/>
+        <Level name="EthnicityOfPersonDescription" column="StateDescription" caption="Victim Ethnicity"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="VictimSex" caption="Victim Sex" foreignKey="VictimSexOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Sexes" name="SexOfPerson" caption="Victim Sex" primaryKey="SexOfPersonTypeID">
+        <Table name="SexOfPersonType"/>
+        <Level name="SexOfPersonDescription" column="StateDescription" caption="Victim Sex"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="OffenderRace" caption="Offender Race" foreignKey="OffenderRaceOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Races" name="RaceOfPerson" caption="Offender Race" primaryKey="RaceOfPersonTypeID">
+        <Table name="RaceOfPersonType"/>
+        <Level name="RaceOfPersonTypeDescription" column="StateDescription" caption="Offender Race (State Code)"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="OffenderEthnicity" caption="Offender Ethnicity" foreignKey="OffenderEthnicityOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Ethnicities" name="EthnicityOfPerson" caption="Offender Ethnicity" primaryKey="EthnicityOfPersonTypeID">
+        <Table name="EthnicityOfPersonType"/>
+        <Level name="EthnicityOfPersonDescription" column="StateDescription" caption="Offender Ethnicity"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="OffenderSex" caption="Offender Sex" foreignKey="OffenderSexOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Sexes" name="SexOfPerson" caption="Offender Sex" primaryKey="SexOfPersonTypeID">
+        <Table name="SexOfPersonType"/>
+        <Level name="SexOfPersonDescription" column="StateDescription" caption="Offender Sex"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="Victim Age">
+      <Hierarchy hasAll="true" name="Victim Age" primaryKey="VictimAge">
+        <Table name="FullVictimOffenderView"/>
+        <Level name="VictimAgeGroup" column="VictimAgeGroup" ordinalColumn="VictimAgeGroupSort" table="FullVictimOffenderView" caption="Victim Age Group"/>
+        <Level name="VictimAge" column="VictimAgeDim" ordinalColumn="AgeOfVictimMin" table="FullVictimOffenderView" caption="Victim Age"/>
+      </Hierarchy>
+      <Hierarchy hasAll="true" name="Victim Age (UCR)" primaryKey="VictimAge">
+        <Table name="FullVictimOffenderView"/>
+        <Level name="VictimUcrAgeGroup" column="VictimUcrAgeGroup" ordinalColumn="VictimUcrAgeGroupSort" table="FullVictimOffenderView" caption="Victim Age Group (UCR)"/>
+        <Level name="VictimAge" column="VictimAgeDim" ordinalColumn="AgeOfVictimMin" table="FullVictimOffenderView" caption="Victim Age"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="Offender Age">
+      <Hierarchy hasAll="true" name="Offender Age" primaryKey="OffenderAge">
+        <Table name="FullVictimOffenderView"/>
+        <Level name="OffenderAgeGroup" column="OffenderAgeGroup" ordinalColumn="OffenderAgeGroupSort" table="FullVictimOffenderView" caption="Offender Age Group"/>
+        <Level name="OffenderAge" column="OffenderAgeDim" ordinalColumn="AgeOfOffenderMin" table="FullVictimOffenderView" caption="Offender Age"/>
+      </Hierarchy>
+      <Hierarchy hasAll="true" name="Offender Age (UCR)" primaryKey="OffenderAge">
+        <Table name="FullVictimOffenderView"/>
+        <Level name="OffenderUcrAgeGroup" column="OffenderUcrAgeGroup" ordinalColumn="OffenderUcrAgeGroupSort" table="FullVictimOffenderView" caption="Offender Age Group (UCR)"/>
+        <Level name="OffenderAge" column="OffenderAgeDim" ordinalColumn="AgeOfOffenderMin" table="FullVictimOffenderView" caption="Offender Age"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="VictimOffenderRelationship" name="VictimOffenderRelationship" foreignKey="VictimOffenderRelationshipTypeID"/>
+    <DimensionUsage source="Clearance" name="Clearance" foreignKey="ClearanceType"/>
+    <DimensionUsage source="State" name="State" foreignKey="StateID"/>
+    <Measure name="Incident Count" column="AdministrativeSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Incident Count" formatString="#,###"/>
+    <Measure name="Victim Count" column="VictimSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Victim Count" formatString="#,###"/>
+    <Measure name="Offender Count" column="OffenderSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Offender Count" formatString="#,###"/>
+    <Measure name="Victim-Offender Count" column="VictimOffenderAssociationID" aggregator="distinct-count" visible="true" caption="Victim+Offender Count" formatString="#,###"/>
+    <Measure name="Clearance Rate" column="ClearedIndicator" aggregator="avg" visible="true" caption="Clearance Rate" formatString="#0.0 %"/>
+  </Cube>
+  <Cube name="GroupA" caption="Group A Arrestee" description="Group A Arrestee">
+    <Table name="FullGroupAArrestView"/>
+    <DimensionUsage source="Date" name="IncidentDate" foreignKey="IncidentDateID"/>
+    <DimensionUsage source="Date" name="ArrestDate" foreignKey="ArrestDateID"/>
+    <DimensionUsage source="Hour" name="Hour" foreignKey="IncidentHour"/>
+    <DimensionUsage source="Agency" name="Agency" foreignKey="ORI"/>
+    <Dimension name="ArresteeRace" caption="Arrestee Race" foreignKey="RaceOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Races" name="RaceOfPerson" caption="Arrestee Race" primaryKey="RaceOfPersonTypeID">
+        <Table name="RaceOfPersonType"/>
+        <Level name="RaceOfPersonTypeDescription" column="StateDescription" caption="Arrestee Race (State Code)"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="ArresteeEthnicity" caption="Arrestee Ethnicity" foreignKey="EthnicityOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Ethnicities" name="EthnicityOfPerson" caption="Arrestee Ethnicity" primaryKey="EthnicityOfPersonTypeID">
+        <Table name="EthnicityOfPersonType"/>
+        <Level name="EthnicityOfPersonDescription" column="StateDescription" caption="Arrestee Ethnicity"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="ArresteeSex" caption="Arrestee Sex" foreignKey="SexOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Sexes" name="SexOfPerson" caption="Arrestee Sex" primaryKey="SexOfPersonTypeID">
+        <Table name="SexOfPersonType"/>
+        <Level name="SexOfPersonDescription" column="StateDescription" caption="Arrestee Sex"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="ResidentStatusOfPerson" name="ResidentStatusOfPerson" foreignKey="ResidentStatusOfPersonTypeID"/>
+    <Dimension name="Arrestee Age">
+      <Hierarchy hasAll="true" name="Arrestee Age" primaryKey="ArresteeAge">
+        <Table name="FullGroupAArrestView"/>
+        <Level name="ArresteeAgeGroup" column="ArresteeAgeGroup" ordinalColumn="ArresteeAgeGroupSort" table="FullGroupAArrestView" caption="Arrestee Age Group"/>
+        <Level name="ArresteeAge" column="ArresteeAgeDim" ordinalColumn="AgeOfArresteeMin" table="FullGroupAArrestView" caption="Arrestee Age"/>
+      </Hierarchy>
+      <Hierarchy hasAll="true" name="Arrestee Age (UCR)" primaryKey="ArresteeAge">
+        <Table name="FullGroupAArrestView"/>
+        <Level name="ArresteeUcrAgeGroup" column="ArresteeUcrAgeGroup" ordinalColumn="ArresteeUcrAgeGroupSort" table="FullGroupAArrestView" caption="Arrestee Age Group (UCR)"/>
+        <Level name="ArresteeAge" column="ArresteeAgeDim" ordinalColumn="AgeOfArresteeMin" table="FullGroupAArrestView" caption="Arrestee Age"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="ArresteeWasArmedWith" name="ArresteeWasArmedWith" foreignKey="ArresteeWasArmedWithTypeID"/>
+    <DimensionUsage source="TypeOfArrest" name="TypeOfArrest" foreignKey="TypeOfArrestTypeID"/>
+    <DimensionUsage source="DispositionOfArresteeUnder18" name="DispositionOfArresteeUnder18" foreignKey="DispositionOfArresteeUnder18TypeID"/>
+    <DimensionUsage source="UCROffenseCode" name="UCROffenseCode" foreignKey="UCROffenseCodeTypeID"/>
+    <DimensionUsage source="State" name="State" foreignKey="StateID"/>
+    <Measure name="Incident Count" column="AdministrativeSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Incident Count" formatString="#,###"/>
+    <Measure name="Arrestee Count" column="ArresteeSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Arrestee Count" formatString="#,###"/>
+    <Measure name="Arrestee-Weapon Count" column="ArresteeSegmentWasArmedWithID" aggregator="distinct-count" visible="true" caption="Arrestee+Weapon Count" formatString="#,###"/>
+  </Cube>
+  <Cube name="GroupB" caption="Group B Arrestee" description="Group B Arrestee">
+    <Table name="FullGroupBArrestView"/>
+    <DimensionUsage source="Date" name="ArrestDate" foreignKey="ArrestDateID"/>
+    <DimensionUsage source="Agency" name="Agency" foreignKey="ORI"/>
+    <Dimension name="ArresteeRace" caption="Arrestee Race" foreignKey="RaceOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Races" name="RaceOfPerson" caption="Arrestee Race" primaryKey="RaceOfPersonTypeID">
+        <Table name="RaceOfPersonType"/>
+        <Level name="RaceOfPersonTypeDescription" column="StateDescription" caption="Arrestee Race (State Code)"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="ArresteeEthnicity" caption="Arrestee Ethnicity" foreignKey="EthnicityOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Ethnicities" name="EthnicityOfPerson" caption="Arrestee Ethnicity" primaryKey="EthnicityOfPersonTypeID">
+        <Table name="EthnicityOfPersonType"/>
+        <Level name="EthnicityOfPersonDescription" column="StateDescription" caption="Arrestee Ethnicity"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="ArresteeSex" caption="Arrestee Sex" foreignKey="SexOfPersonTypeID">
+      <Hierarchy hasAll="true" allMemberName="All Sexes" name="SexOfPerson" caption="Arrestee Sex" primaryKey="SexOfPersonTypeID">
+        <Table name="SexOfPersonType"/>
+        <Level name="SexOfPersonDescription" column="StateDescription" caption="Arrestee Sex"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="ResidentStatusOfPerson" name="ResidentStatusOfPerson" foreignKey="ResidentStatusOfPersonTypeID"/>
+    <Dimension name="Arrestee Age">
+      <Hierarchy hasAll="true" name="Arrestee Age" primaryKey="ArresteeAge">
+        <Table name="FullGroupBArrestView"/>
+        <Level name="ArresteeAgeGroup" column="ArresteeAgeGroup" ordinalColumn="ArresteeAgeGroupSort" table="FullGroupBArrestView" caption="Arrestee Age Group"/>
+        <Level name="ArresteeAge" column="ArresteeAgeDim" ordinalColumn="AgeOfArresteeMin" table="FullGroupBArrestView" caption="Arrestee Age"/>
+      </Hierarchy>
+      <Hierarchy hasAll="true" name="Arrestee Age (UCR)" primaryKey="ArresteeAge">
+        <Table name="FullGroupBArrestView"/>
+        <Level name="ArresteeUcrAgeGroup" column="ArresteeUcrAgeGroup" ordinalColumn="ArresteeAgeGroupSort" table="FullGroupBArrestView" caption="Arrestee Age Group (UCR)"/>
+        <Level name="ArresteeAge" column="ArresteeAgeDim" ordinalColumn="AgeOfArresteeMin" table="FullGroupBArrestView" caption="Arrestee Age"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="TypeOfArrest" name="TypeOfArrest" foreignKey="TypeOfArrestTypeID"/>
+    <DimensionUsage source="DispositionOfArresteeUnder18" name="DispositionOfArresteeUnder18" foreignKey="DispositionOfArresteeUnder18TypeID"/>
+    <DimensionUsage source="ArresteeWasArmedWith" name="ArresteeWasArmedWith" foreignKey="ArresteeWasArmedWithTypeID"/>
+    <DimensionUsage source="UCROffenseCode" name="UCROffenseCode" foreignKey="UCROffenseCodeTypeID"/>
+    <DimensionUsage source="State" name="State" foreignKey="StateID"/>
+    <Measure name="Arrestee Count" column="ArrestReportSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Arrestee Count" formatString="#,###"/>
+    <Measure name="Arrestee-Weapon Count" column="ArrestReportSegmentWasArmedWithID" aggregator="distinct-count" visible="true" caption="Arrestee+Weapon Count" formatString="#,###"/>
+  </Cube>
+  <Cube name="Property" caption="Property" description="Property">
+    <Table name="FullPropertyView"/>
+    <DimensionUsage source="Date" name="Date" foreignKey="IncidentDateID"/>
+    <DimensionUsage source="Hour" name="Hour" foreignKey="IncidentHour"/>
+    <DimensionUsage source="Agency" name="Agency" foreignKey="ORI"/>
+    <Dimension name="Stolen Motor Vehicles">
+      <Hierarchy hasAll="true" name="Stolen Motor Vehicles" primaryKey="StolenMotorVehiclesDim">
+        <Table name="FullPropertyView"/>
+        <Level name="Stolen Motor Vehicles" column="StolenMotorVehiclesDim" table="FullPropertyView" caption="# Stolen Motor Vehicles"/>
+      </Hierarchy>
+    </Dimension>
+    <Dimension name="Recovered Motor Vehicles">
+      <Hierarchy hasAll="true" name="Recovered Motor Vehicles" primaryKey="RecoveredMotorVehiclesDim">
+        <Table name="FullPropertyView"/>
+        <Level name="Recovered Motor Vehicles" column="RecoveredMotorVehiclesDim" table="FullPropertyView" caption="# Recovered Motor Vehicles"/>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="TypePropertyLossEtc" name="TypePropertyLossEtc" foreignKey="TypePropertyLossEtcTypeID"/>
+    <DimensionUsage source="PropertyDescription" name="PropertyDescription" foreignKey="PropertyDescriptionTypeID"/>
+    <DimensionUsage source="SuspectedDrugType" name="SuspectedDrugType" foreignKey="SuspectedDrugTypeTypeID"/>
+    <DimensionUsage source="Clearance" name="Clearance" foreignKey="ClearanceType"/>
+    <DimensionUsage source="State" name="State" foreignKey="StateID"/>
+    <Measure name="Incident Count" column="AdministrativeSegmentID" aggregator="distinct-count" visible="true" caption="Distinct Incident Count" formatString="#,###"/>
+    <Measure name="Property Item Count" column="PropertyTypeID" aggregator="distinct-count" visible="true" caption="Distinct Property Item Count" formatString="#,###"/>
+    <Measure name="Drug Item Count" column="SuspectedDrugTypeID" aggregator="distinct-count" visible="true" caption="Distinct Drug Item Count" formatString="#,###"/>
+    <Measure name="Property Value" column="ValueOfProperty" aggregator="sum" visible="true" caption="Property Value" formatString="$ #,###"/>
+    <Measure name="Clearance Rate" column="ClearedIndicator" aggregator="avg" visible="true" caption="Clearance Rate" formatString="#0.0 %"/>
+  </Cube> -->
+</Schema>
