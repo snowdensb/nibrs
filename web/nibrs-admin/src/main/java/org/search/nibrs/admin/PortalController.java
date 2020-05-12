@@ -41,6 +41,12 @@ public class PortalController {
 	    return "index";
 	}
 	
+	@GetMapping("/index")
+	public String getSplashPage(Model model) throws IOException {
+		
+		return "splash";
+	}
+	
 	@GetMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
 	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();

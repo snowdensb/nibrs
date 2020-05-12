@@ -1,0 +1,69 @@
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>NIBRS Services Toolset</title>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
+  </head>
+	<body>
+	  <div class="container-fluid" th:include="fragments/splashPageHeader ::headerIamge">
+	  </div>
+	  <div id="mainContent">
+	    <div id="content" class="container">
+	      <div class="p-4">
+				  <div align="center">
+			        <h3><strong>Welcome to the NIBRS Services Toolset</strong></h3>
+				  </div>
+	        <p>The NIBRS Services Toolset provides law enforcement agencies, state Uniform Crime Reporting (UCR) programs, and other users with two important capabilities to assist users with processing and understanding NIBRS data: </p> 
+	        <div>
+	          <ol>
+	            <li>NIBRS Pre-Certification Tool (PCT) </li>
+	            <li>NIBRS to Summary Reporting Tool (N2S)</li>
+	          </ol>
+	        </div>
+	         
+	        <p><strong>NIBRS Pre-Certification Tool (PCT)</strong><br>
+	           The NIBRS Pre-Certification Tool (PCT) can be used by state and local law enforcement agencies to “pre-check” their NIBRS records to identify potential data submission or validation errors.  The tool accepts NIBRS data in either the legacy flat file format or XML format.  The tool processes NIBRS records interactively using the FBI’s 2019.1 NIBRS rules and provides a list of errors following the standard FBI error file format, which can be downloaded for resolution in a variety of formats (Excel, CSV or PDF).  Once records are processed, they are deleted and not retained in any fashion.  There are limitations to the tool which are explained on the <strong>PCT/Save for Summary</strong> Reports page.
+	        </p>  
+	        <p><strong>NIBRS to Summary Reporting Tool (N2S)</strong><br>
+	          The NIBRS to Summary Reporting Tool (N2S) converts NIBRS data to Summary UCR data, and enables users to produce 8 standard Summary Reports from NIBRS data submissions.  This conversion of NIBRS data to Summary Reports enables users to compare NIBRS crime counts to what would have been reported under the rules for Summary UCR reporting, and provides users with crime counts to support legacy Summary Report time series analyses. Reports are produced interactively and the user has several options for filtering report contents.  More information about the summary reporting capabilities provided on the <strong>N2S/Summary Reports</strong> page. 
+	        </p>
+	        <p><strong>Create an Account</strong>
+	          The NIBRS Services Toolset is free to use; however, users are required to create an account in order to access the tools so we know who is using the tools and are able to contact users when updates or changes are made. Account information will not be shared with third parties and will not be used for any other purposes. 
+	        </p>
+		      <div align="center">
+		        <p><a th:href="@{/}" class="btn btn-warning btn-small"> Create an Account or Log In to the NIBRS PCT</a></p>
+		      </div>
+	      <p/>
+	      <p/>
+	      <p/>
+	      <p/>
+	      <div align="center" style="padding:2px 10px;">
+	        <p>The NIBRS PCT is licensed under the open source <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2.0 </a>.  The source code is available <a href="https://goo.gl/9my95o">here</a> and we welcome contributions to the codebase!</p>
+	        <p>Do you have questions or just want to talk about NIBRS? Contact SEARCH at <a href="mailto:nibrs@search.org?Subject=NIBRS%20PCT%20Question">nibrs@search.org</a></p>
+	      </div>
+	      
+	    </div>
+	  </div>
+    <footer th:replace="fragments/general.html :: footer"></footer> 
+    <!-- /.container -->
+    <th:block th:include="fragments/general.html :: javascripts"></th:block>
+    </div>
+	</body>
+</html>
