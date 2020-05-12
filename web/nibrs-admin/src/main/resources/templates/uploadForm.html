@@ -32,14 +32,14 @@
 	       </ol>
 		 	</nav>
  	 		<div style="padding: 5px;">
- 	 			<p>The <strong>NIBRS Pre-Certification Tool (PCT)</strong> provides law enforcement agencies, responsible for submitting Incident-Based Reports (IBR) data to State Uniform Crime Reporting (UCR) programs, the ability to test their submissions in advance of its formal delivery. State UCR programs may also use the NIBRS PCT to test their IBR submissions before beginning the NIBRS certification process with the FBI. 
-				The NIBRS PCT exercises the NIBRS data edit and validation rules and provides formatted output of errors, so that submitters may correct their data submissions and, ultimately, speed the FBI CJIS and/or state IBR certification process.  Through this tool, users can validate NIBRS submissions in "flat file" or XML formats.  
+ 	 			<p>The <strong>NIBRS Pre-Certification Tool (PCT)</strong> provides law enforcement agencies responsible for submitting incident records to State Uniform Crime Reporting (UCR) programs the ability to test their records before submitting them to either their state UCR program or the FBI. The PCT, however, only performs standard NIBRS edit and validation checks and cannot validate state-specific data reporting requirements. State UCR programs may also use the PCT to test their NIBRS submissions before beginning the NIBRS certification process with the FBI or at any time to validate their FBI submissions. The PCT applies the NIBRS 2019.1 data edit and validation rules and provides an error listing following the FBI error reporting format.  The error listing can be downloaded in a variety of formats so records can be corrected which should speed the NIBRS certification process.  The tool supports NIBRS records submission in either in the legacy "flat file" or XML format.  
 				</p>
-				<p><strong>Important notes:</strong></p>
+				<p><strong>PCT Limitations:</strong></p>
 				<div>
 					<ul>
-						<li>The validation rules implemented by the NIBRS PCT only reflect the FBI’s NIBRS rules and do not include state-specific data elements and rules. Likewise, the NIBRS PCT cannot validate some NIBRS rules specific to the submitting agency. See <a th:href="@{/toolLimitations}">Tool Limitations</a> for specific details.</li>
-						<li>The NIBRS PCT is intended to assist the user in understanding how well its data aligns with the <a href=" https://www.fbi.gov/file-repository/ucr/ucr-2019-1-nibrs-technical-specification.pdf/view">FBI NIBRS standard version 2019.1</a>. It is not intended to substitute for FBI NIBRS or State certification.</li>
+						<li>The validation rules implemented by the NIBRS PCT only reflect the FBI’s NIBRS rules and do not include state-specific data elements and rules.</li>
+						<li>The NIBRS PCT cannot validate some NIBRS rules specific to the submitting agency. See <a href="#" id="toolLimitations" data-toggle="modal" data-target="#toolLimitationModal">Tool Limitations</a> for specific details.</li>
+						<li>The NIBRS PCT is intended to help identify potential NIBRS data validation rule errors and provide guidance in aligning data submissions with the <a href=" https://www.fbi.gov/file-repository/ucr/ucr-2019-1-nibrs-technical-specification.pdf/view">FBI NIBRS standard version 2019.1</a>. It is not intended to substitute for FBI NIBRS or State certification.</li>
 					</ul>
 				</div>
 				<p>The NIBRS PCT is licensed under the open source <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2.0 </a>.  The source code is available <a href="https://goo.gl/9my95o">here</a>.</p>
@@ -62,6 +62,90 @@
 			
 			<script th:inline="javascript">
 			</script>
+			
+      <div class="modal ojbc-modal" id="toolLimitationModal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h6 class="modal-title">TOOL LIMITATIONS</h6>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+			        <p>There are some NIBRS rules that the NIBRS PCT cannot enforce because the validation relies on access to previously submitted incidents or specific FBI information on the submitting agency. There are other differences between the NIBRS PCT Report and FBI Error Data Set (EDS) due to different interpretations of the rules. These are being addressed with the FBI and the NIBRS PCT will be updated to be consistent with the FBI Report. </p>
+			        <p><strong>GROUP A INCIDENT REPORT</strong></p>
+			        <ul>
+			          <li>
+			          Structure Check Errors
+			            <ul>
+			              <li>930: Invalid ORI – ORI marked for historical reference</li>
+			              <li>931: Invalid ORI – ORI marked for historical reference</li>
+			              <li>932: Invalid ORI – ORI information is duplicated</li>
+			              <li>933: Invalid ORI – ORI not found in reference data</li>
+			              <li>934: Invalid ORI – ORI is covered by another agency</li>
+			              <li>952: Invalid ORI – ORI is not in UCR file</li>
+			            </ul>
+			          </li>
+			          <li>
+			            Administrative Segment Errors – Level 1
+			            <ul>
+			              <li>118: Date cannot be on or after the inactive date of the ORI</li>
+			              <li>173: Incident date cannot be before date ORI went IBR</li>
+			            </ul>
+			          </li>
+			          <li>
+			            Offense Segment Errors – Level 2 
+			            <ul>
+			              <li>All errors are validated</li>
+			            </ul>
+			          </li>
+			          <li>
+			            Property Segment Errors – Level 3
+			            <ul>
+			              <li>All errors are validated</li>
+			            </ul>
+			          </li>
+			          <li>
+			            Victim Segment Errors – Level 4
+			            <ul>
+			              <li>All errors are validated</li>
+			            </ul>
+			          </li>
+			          <li>
+			            Offender Segment Errors – Level 5
+			            <ul>
+			              <li>All errors are validated</li>
+			            </ul>
+			          </li>
+			          <li>
+			            Arrest Segment Errors – Level 6
+			            <ul>
+			              <li>618: Arrest date cannot on or after the inactive date of the ORI</li>
+			            </ul>
+			          </li>
+			        </ul>
+			        
+			        <p><strong>GROUP B ARREST REPORTS</strong></p>
+			        <ul>
+			          <li>718: Arrest date cannot be on or after the inactive date of the ORI</li>
+			          <li>759: Duplicate Group B arrest report segment on file</li>
+			          <li>798: Missing arrest date for delete, duplicate match</li>
+			          <li>799: Missing arrest date for delete, multiple matches</li>
+			        </ul>
+			        
+			        <p><strong>ZERO REPORTS</strong></p>
+			        <ul>
+			          <li>028: Cannot add zero report – Group A incident report on file for this month</li>
+			          <li>029: Cannot add zero report – Group B Arrest report on file for this month</li>
+			          <li>093: Zero report month/year is prior to agency conversion to NIBRS</li>
+			          <li>096: Zero report month/year cannot be on or after date agency is placed on covered-by status</li>
+			        </ul>
+            </div>
+          </div>
+        </div>
+      </div>
 			
 			<script type="text/javascript" th:src="@{/js/uploadFile.js}"></script>
 			
