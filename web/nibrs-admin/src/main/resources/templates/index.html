@@ -18,8 +18,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<title>NIBRS ADMIN Tool</title>
-		<th:block th:include="fragments/general.html :: headerfiles"></th:block>
+    <title>PCT Tool Set</title>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
 	</head>
 	<body data-spy="scroll" data-target=".navbar">
 		<header th:replace="fragments/general.html :: header"> </header>
@@ -28,7 +28,12 @@
     <div class="container-fluid small">
 	    <div id="loadingAjaxPane"><div class="loading-text d-none" id='loadingText'>One moment while we generate your summary report</div></div>
 	    <div id="portalContent">
-	      <div th:replace="homepage::homepageContent"></div>
+	       <div th:if="${privateSummaryReportSite}">
+			      <div th:replace="homepage::homepageContent" ></div>
+	       </div>
+	       <div th:unless="${privateSummaryReportSite}">
+			      <div th:replace="homepage::publicHomepageContent"></div>
+	       </div>
 	    </div>
 	  </div>
 		<footer th:replace="fragments/general.html :: footer"></footer>	

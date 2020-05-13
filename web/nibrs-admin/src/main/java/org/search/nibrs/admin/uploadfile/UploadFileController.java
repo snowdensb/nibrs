@@ -211,12 +211,6 @@ public class UploadFileController {
 	    return "about";
 	}
 	
-	@GetMapping("/toolLimitations")
-	public String getToolLimitations(Model model){
-		
-		return "toolLimitations";
-	}
-	
 	@GetMapping("/resources")
 	public String getResources(Model model){
 		

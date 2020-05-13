@@ -1,0 +1,50 @@
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <!-- this is header-css -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="#" />
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/datatables/1.10.19/css/dataTables.bootstrap4.min.css}" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/5.2.0/css/all.css}" />
+  <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css" />
+  <title>NIBRS Pre-Certification Tool (PCT) Set</title>
+</head>
+<body>
+	<!-- this is the image header -->
+    <!-- this is navbar header -->
+		<div class="container-fluid" th:fragment="headerIamge">
+			<div class="row" style="background-color: #f5f5f5">
+			  <div class="col-2"><img th:src="@{/images/search.png}" height="60px"/></div>
+			  <div class="col-8" align="center">
+		  			<a href="https://nibrs.search.org"><img th:src="@{/images/ncsxlogo.jpeg}" height="60px" style="padding-top: 3px;"/></a><br/>
+					<strong>The National Incident-Based Reporting System</strong> 
+			  </div>
+			  <div class="col-2"><img th:src="@{/images/bjs.png}" height="60px"/></div>
+			</div>
+		</div>
+</body>
+</html>
