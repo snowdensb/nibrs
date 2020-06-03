@@ -59,7 +59,9 @@ public class SubmissionFileValidator {
 		switch (fileContentType){
 		case "text/xml":
 		case "application/xml":
-			xmlIncidentBuilder.addIncidentListener(validatorListener);
+			if (!xmlIncidentBuilder.getListeners().contains(validatorListener)) {
+				xmlIncidentBuilder.addIncidentListener(validatorListener);
+			}
 			xmlIncidentBuilder.buildIncidents(stream, readerLocationName);
 
 			break; 
@@ -67,8 +69,9 @@ public class SubmissionFileValidator {
 		case "application/octet-stream": 
 			Reader inputReader = new BufferedReader(new InputStreamReader(stream));
 
-			incidentBuilder.addIncidentListener(validatorListener);
-
+			if (!incidentBuilder.getListeners().contains(validatorListener)) {
+				incidentBuilder.addIncidentListener(validatorListener);
+			}
 			incidentBuilder.buildIncidents(inputReader, readerLocationName);
 			inputReader.close();
 			break;
