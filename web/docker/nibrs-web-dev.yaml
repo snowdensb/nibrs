@@ -17,7 +17,7 @@ services:
 
   nibrs-web:
     container_name: nibrs-web
-    image: searchncjis/nibrs-web:2.0.1
+    image: searchncjis/nibrs-web:2.0.2
     build:
        context: ./nibrs-web    
     restart: always
