@@ -76,7 +76,7 @@ public class UploadFileController {
 	SubmissionFileValidator submissionFileValidator;
 
 	final List<String> acceptedFileTypes = 
-			Arrays.asList("application/zip", "text/plain", "application/octet-stream", "text/xml", "application/xml");
+			Arrays.asList("application/zip", "text/plain", "application/octet-stream", "text/xml", "application/xml", "application/x-zip-compressed");
 
 	@GetMapping("/upload")
 	public String getFileUploadForm(HttpServletRequest request, Map<String, Object> model) throws IOException {
@@ -192,7 +192,7 @@ public class UploadFileController {
 				throw new IllegalArgumentException("The file type is not supported"); 
 			}
 			
-			if (multipartFile.getContentType().equals("application/zip")){
+			if (multipartFile.getContentType().equals("application/zip") || multipartFile.getContentType().equals("application/x-zip-compressed")){
 				validateZippedFile( validatorListener, multipartFile.getInputStream());
 			}
 			else {
