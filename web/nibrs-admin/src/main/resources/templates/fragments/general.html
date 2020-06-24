@@ -39,7 +39,7 @@
           <div class="text-white pl-3 align-middle pb-1">
             <img th:src="@{${brandImagePath}}" height="72px" /> 
             <span class="initials align-bottom" aria-hidden="true">NIBRS</span>
-            <span class="fullname align-middle">Record of NIBRS Submissions</span>
+            <span class="fullname align-middle">Services Toolset</span>
           </div>
         </div>
 	      <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top fh-fixedHeader">
@@ -57,11 +57,13 @@
 	            <li class="nav-item" th:if="${privateSummaryReportSite && !agencyMapping.empty}">
 	              <a class="nav-link" href="#" id="errors">Errors</a>
 	            </li>
-	            <li class="nav-item" th:unless="${agencyMapping.empty}">
-	              <a class="nav-link" href="#" id="summaryReportInputForm">N2S/Summary Reports</a>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#" id="summaryReportInputForm" th:unless="${agencyMapping.empty}">N2S/Summary Reports</a>
+	              <a class="nav-link disabled" href="#" id="summaryReportInputForm" th:if="${agencyMapping.empty}">N2S/Summary Reports</a>
 	            </li>
-	            <li class="nav-item" th:unless="${agencyMapping.empty}">
-	              <a class="nav-link" href="#" id="incidents">Incident Record Search</a>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#" id="incidents" th:unless="${agencyMapping.empty}">Incident Record Search</a>
+	              <a class="nav-link disabled" href="#" id="incidents" th:if="${agencyMapping.empty}">Incident Record Search</a>
 	            </li>
 	            <li class="nav-item" th:if="${allowSubmitToFbi && !agencyMapping.empty}">
 	              <a class="nav-link" href="#" id="submitToFbi">Submit to FBI</a>
