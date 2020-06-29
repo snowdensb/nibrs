@@ -29,15 +29,32 @@
 	    </script>
     </div>
     <div th:fragment="publicHomepageContent" class="container mt-3">
-	    <h3 class='mb-3'>Welcome to the NIBRS Services Toolset</h3>
-	    <p>The NIBRS Services Toolset is made avaiable for use by law enforcement through funding by the U. S. Department of Justice, Office of Justice Programs, Bureau of Justice Statistics in conjunction with the F.B.I. to provide services and capabilities to assist law enforcement agencies in their transition to the National Incident Based Reporting System (NIBRS).  This toolset is free to use.
-	    </p>
-	    <p>The toolset currently offers two capabilities: The NIBRS Pre-Certification Tool (PCT) and NIBRS to Summary Reports (N2S).
-	    </p>
-	    <p>The NIBRS Pre-Certification Tool (PCT) can be used by state and local law enforcement agencies to “pre-check” their NIBRS records to identify potential data submission or validation errors.  The tool accepts NIBRS data in either the legacy flat file format or the XML format.  The tool processes NIBRS records interactively using the FBI’s 2019.1 NIBRS rules and provides a list of errors following the standard FBI error file format, which can be downloaded for resolution in a variety of formats (Excel, CSV or PDF).  Once records are processed, they are deleted and not retained in any fashion.  There are limitations to the tool which are explained on the PCT page.  
-	    </p>
-	    <p>The NIBRS to Summary Reports (N2S) capability allows users to produce 8 standard Summary reports from NIBRS data submissions.  This allows users to compare NIBRS crime counts against their legacy Summary reports.  Reports are produced interactively and the user has several options for filtering report contents.  More information about the summary reporting capabilities provided on the N2S/Summary Reports page. 
-	    </p>  
+          <div align="center">
+              <h3><strong>Welcome to the NIBRS Services Toolset</strong></h3>
+          </div>
+          <div>The <strong>NIBRS Services Toolset provides law enforcement agencies, state Uniform Crime Reporting (UCR) programs, and other users with two important capabilities to assist users with processing and understanding NIBRS data:</strong>  
+            <ol>
+              <li>NIBRS Pre-Certification Tool (PCT) </li>
+              <li>NIBRS to Summary Reporting Tool (N2S)</li>
+              <li>Incident Record Search</li>
+            </ol>
+          </div>
+           
+          <p><strong>NIBRS Pre-Certification Tool (PCT)</strong><br>
+             The NIBRS Pre-Certification Tool (PCT) can be used by state and local law enforcement agencies to “pre-check” their NIBRS records to identify potential data submission or validation errors.  The tool accepts NIBRS data in either the legacy flat file format or XML format.  
+          </p>
+          <p>
+             The PCT tool processes records interactively applying the FBI’s 2019.1 NIBRS validation rules and produces a list of any errors following the standard FBI error file format. The  errors can be downloaded for resolution in a variety of formats (Excel, CSV or PDF). 
+          </p>
+          <p>
+             Once records are processed, they are deleted and not retained in any fashion unless they are explicitly saved by the user to produce NIBRS to Summary reports.  There are limitations to the tool which are explained on the <strong>PCT/Save for Summary Reports</strong> page.
+          </p>  
+          <p><strong>NIBRS to Summary Reporting Tool (N2S)</strong><br>
+            The NIBRS to Summary Reporting Tool (N2S) processes NIBRS data to produce eight (8) standard Summary UCR Reports based on NIBRS data submissions.  This  enables users to compare crime counts based on NIBRS data to prior crime counts reported under the Summary Reporting System and maintain established trend and time series analyses. Reports are produced interactively, and the user has several options for filtering report contents.  More information about the summary reporting capabilities is provided on the <strong>N2S/Summary Reports</strong> page. 
+          </p>
+          <p><strong>Incident Record Search</strong><br>
+            The Incident Record Search feature allows the user to view all records saved for N2S processing.  Records can be selected by Incident Date Range, Submission Date Range, Incident Report Identifier, Reporting Agency or UCR Offense Type.  This feature can be used to confirm the contents of NIBRS records processed to produce the various summary reports. 
+          </p>
 	    <script th:inline="javascript">
 	    </script>
     </div>

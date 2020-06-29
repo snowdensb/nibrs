@@ -15,29 +15,72 @@
     limitations under the License.
 
 -->
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-	<head>
-    <title>PCT Tool Set</title>
-    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
-	</head>
-	<body data-spy="scroll" data-target=".navbar">
-		<header th:replace="fragments/general.html :: header"> </header>
-    <!-- Begin page content -->
-    
-    <div class="container-fluid small">
-	    <div id="loadingAjaxPane"><div class="loading-text d-none" id='loadingText'>One moment while we generate your summary report</div></div>
-	    <div id="portalContent">
-	       <div th:if="${privateSummaryReportSite}">
-			      <div th:replace="homepage::homepageContent" ></div>
-	       </div>
-	       <div th:unless="${privateSummaryReportSite}">
-			      <div th:replace="homepage::publicHomepageContent"></div>
-	       </div>
-	    </div>
-	  </div>
-		<footer th:replace="fragments/general.html :: footer"></footer>	
-		<!-- /.container -->
-		<th:block th:include="fragments/general.html :: javascripts"></th:block>
-	</body>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>NIBRS Services Toolset</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="#" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/datatables/1.10.19/css/dataTables.bootstrap4.min.css}" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/5.2.0/css/all.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body class="small">
+    <div class="container-fluid" th:include="fragments/splashPageHeader ::headerIamge"></div>
+    <div id="mainContent">
+      <div id="content" class="container">
+        <div class="p-4">
+          <div align="center">
+              <h3><strong>Welcome to the NIBRS Services Toolset</strong></h3>
+          </div>
+          <div>The <strong>NIBRS Services Toolset provides law enforcement agencies, state Uniform Crime Reporting (UCR) programs, and other users with two important capabilities to assist users with processing and understanding NIBRS data:</strong>  
+            <ol>
+              <li>NIBRS Pre-Certification Tool (PCT) </li>
+              <li>NIBRS to Summary Reporting Tool (N2S)</li>
+            </ol>
+          </div>
+           
+          <p><strong>NIBRS Pre-Certification Tool (PCT)</strong><br>
+             The NIBRS Pre-Certification Tool (PCT) can be used by state and local law enforcement agencies to “pre-check” their NIBRS records to identify potential data submission or validation errors.  The tool accepts NIBRS data in either the legacy flat file format or XML format.  
+          </p>
+          <p>
+             The PCT tool processes records interactively applying the FBI’s 2019.1 NIBRS validation rules and produces a list of any errors following the standard FBI error file format. The  errors can be downloaded for resolution in a variety of formats (Excel, CSV or PDF). 
+          </p>
+          <p>
+             Once records are processed, they are deleted and not retained in any fashion unless they are explicitly saved by the user to produce NIBRS to Summary reports.  There are limitations to the tool which are explained on the <strong>PCT/Save for Summary Reports</strong> page.
+          </p>  
+          <p><strong>NIBRS to Summary Reporting Tool (N2S)</strong><br>
+            The NIBRS to Summary Reporting Tool (N2S) processes NIBRS data to produce eight (8) standard Summary UCR Reports based on NIBRS data submissions.  This  enables users to compare crime counts based on NIBRS data to prior crime counts reported under the Summary Reporting System and maintain established trend and time series analyses. Reports are produced interactively, and the user has several options for filtering report contents.  More information about the summary reporting capabilities is provided on the <strong>N2S/Summary Reports</strong> page. 
+          </p>
+          <p><strong>Create an Account</strong>
+            The NIBRS Services Toolset is free to use, but users are required to create an account in order to access the tools. Registration ensures that only authorized users have access to their NIBRS data, and enables SEARCH to contact users when updates, enhancements, and other changes are made. Account information will not be shared with any third parties, nor will we use registration information for marketing purposes. 
+          </p>
+          <div align="center">
+            <p><a th:href="@{/home}" class="btn btn-warning btn-small"> Create an Account or Log In to the NIBRS PCT</a></p>
+          </div>
+        <p/>
+        <p/>
+        <p/>
+        <p/>
+        <div align="center" style="padding:2px 10px;">
+          <p>The NIBRS PCT is licensed under the open source <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2.0 </a>.  The source code is available <a href="https://goo.gl/9my95o">here</a> and we welcome contributions to the codebase!</p>
+          <p>Any questions or just want to talk about NIBRS? Contact SEARCH at <a href="mailto:nibrs@search.org?Subject=NIBRS%20PCT%20Question">nibrs@search.org</a></p>
+        </div>
+        
+      </div>
+    </div>
+    <footer class="footer"style="background-color: #f5f5f5" >
+      <div class="container-fluid">
+        <p class="text-muted footerText" style="padding:0; margin:1em;">This website was funded by the Bureau of Justice Statistics (BJS), Office of Justice Programs, U.S. Department of Justice, under Cooperative Agreement No. 2012-MU-MU-K003, awarded to RTI International, 3040 Cornwallis Road Research Triangle Park, NC 27709-2194 and subawarded to SEARCH Group, Incorporated, 1900 Point West Way, Suite 275, Sacramento, California 95815. Contents of this document do not necessarily reflect the views or policies of BJS, the FBI, or the U.S. Department of Justice. This tool is not a substitute for FBI NIBRS or state UCR Program certification.</p>
+      </div>
+    </footer>
+    <!-- /.container -->
+    <th:block th:include="fragments/general.html :: javascripts"></th:block>
+    </div>
+  </body>
 </html>

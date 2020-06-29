@@ -36,15 +36,15 @@ public class PortalController {
 	AppProperties appProperties;
 
 	@GetMapping("/")
-	public String getFileUploadForm(Model model) throws IOException {
+	public String getSplashPage(Model model) throws IOException {
 	
 	    return "index";
 	}
 	
-	@GetMapping("/welcome")
-	public String getSplashPage(Model model) throws IOException {
+	@GetMapping("/home")
+	public String getHomePage(Model model) throws IOException {
 		
-		return "splash";
+		return "home";
 	}
 	
 	@GetMapping("/logout")
