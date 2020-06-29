@@ -16,6 +16,8 @@
 package org.search.nibrs.model.reports;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -94,6 +96,18 @@ public class ReturnAForm implements Serializable{
 	
 	public String getMonthString() {
 		return StringUtils.leftPad(String.valueOf(month), 2, '0');
+	}
+	
+	public String getMonthYearString() {
+		List<String> stringList = new ArrayList<>();
+		if (month > 0) {
+			stringList.add(getMonthString()); 
+		}
+		if (year > 0) {
+			stringList.add(String.valueOf(year)); 
+		}
+		
+		return StringUtils.join(stringList, "/");
 	}
 
 	public void setMonth(int month) {

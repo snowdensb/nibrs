@@ -78,6 +78,18 @@ public class SupplementaryHomicideReport implements Serializable{
 		return StringUtils.leftPad(String.valueOf(month), 2, '0');
 	}
 
+	public String getMonthYearString() {
+		List<String> stringList = new ArrayList<>();
+		if (month > 0) {
+			stringList.add(getMonthString()); 
+		}
+		if (year > 0) {
+			stringList.add(String.valueOf(year)); 
+		}
+		
+		return StringUtils.join(stringList, "/");
+	}
+
 	public void setMonth(int month) {
 		this.month = month;
 	}

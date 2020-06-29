@@ -347,7 +347,7 @@ public class SupplementaryHomicideReportExporter {
 		
 		cell = row.createCell(0); 
 		cell.setCellStyle(centeredStyle); 
-		cell.setCellValue(supplementaryHomicideReport.getMonthString() + "/" + supplementaryHomicideReport.getYear());
+		cell.setCellValue(supplementaryHomicideReport.getMonthYearString());
 		mergedRegions = new CellRangeAddress(rowNum, rowNum, 0, 1);
 		sheet.addMergedRegion(mergedRegions);
         RegionUtil.setBorderBottom(BorderStyle.THIN, mergedRegions, sheet);

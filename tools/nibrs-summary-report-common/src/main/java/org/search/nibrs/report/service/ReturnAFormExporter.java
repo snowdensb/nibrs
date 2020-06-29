@@ -833,7 +833,8 @@ public class ReturnAFormExporter {
 		rowNum = 44; 
 		row = sheet.createRow(rowNum);
 		cell = row.createCell(0);
-		cell.setCellValue(returnAForm.getMonthString() + "/" + returnAForm.getYear());
+		
+		cell.setCellValue(returnAForm.getMonthYearString());
 		CellStyle thinBorderBottom = workbook.createCellStyle();
 		thinBorderBottom.setBorderBottom(BorderStyle.THIN);
 		thinBorderBottom.setAlignment(HorizontalAlignment.CENTER);
