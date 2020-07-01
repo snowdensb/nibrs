@@ -305,9 +305,24 @@ public class UploadFileController {
 			validationResults.getReportsWithoutErrors().add(report);
 		}
 		else{
-			NIBRSError nibrsError = validationResults.getErrorList().get(validationResults.getErrorList().size()-1);
-			if (report.getIdentifier() != null && 
-					!report.getIdentifier().equals(nibrsError.getReportUniqueIdentifier())) {
+			boolean isReportWithoutError = true; 
+			for (int i=validationResults.getErrorList().size()-1; i>=0 ; i--) {
+				NIBRSError nibrsError = validationResults.getErrorList().get(i);
+				
+				if (report.getIdentifier() != null && 
+						!report.getIdentifier().equals(nibrsError.getReportUniqueIdentifier())) {
+					break;
+				}
+				else if (nibrsError.isWarning()){
+					continue; 
+				}
+				else {
+					isReportWithoutError = false; 
+					break;
+				}
+			}
+			
+			if (isReportWithoutError) {
 				validationResults.getReportsWithoutErrors().add(report);
 			}
 		}

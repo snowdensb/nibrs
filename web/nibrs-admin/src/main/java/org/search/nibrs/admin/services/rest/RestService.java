@@ -219,7 +219,10 @@ public class RestService{
 				.map(nibrsError -> new PreCertificationError(nibrsError))
 				.collect(Collectors.toList());
 		
-		preCertificationErrors.forEach(error -> error.setOwnerId(authUser.getUserId()));
+		if (authUser != null) {
+			preCertificationErrors.forEach(error -> error.setOwnerId(authUser.getUserId()));
+		}
+		
 		Integer savedCount = webClient.post().uri("/preCertificationErrors")
 			.body(BodyInserters.fromObject(preCertificationErrors))
 			.retrieve()
