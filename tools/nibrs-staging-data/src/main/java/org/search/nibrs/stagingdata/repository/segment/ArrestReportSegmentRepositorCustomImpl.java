@@ -33,9 +33,12 @@ import javax.persistence.criteria.Subquery;
 import org.apache.commons.lang3.StringUtils;
 import org.search.nibrs.stagingdata.model.ArrestReportSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.Submission;
+import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
+import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
+import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -203,5 +206,70 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
 
 		return entityManager.createQuery(arrestReportSegmentDelete).executeUpdate();
 	}
+
+	@Override
+	public int deleteByIncidentDeleteRequest(IncidentDeleteRequest incidentDeleteRequest) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaDelete<ArrestReportSegmentWasArmedWith> arrestReportWasArmedWithDelete = criteriaBuilder.createCriteriaDelete(ArrestReportSegmentWasArmedWith.class);
+		Root<ArrestReportSegmentWasArmedWith> arrestReportWasArmedWithRoot = arrestReportWasArmedWithDelete.from(ArrestReportSegmentWasArmedWith.class);
+		
+        Subquery<Integer> armedWithArrestReportSubQuery = createArrestReportSubquery(incidentDeleteRequest, criteriaBuilder,
+				arrestReportWasArmedWithDelete);
+    	
+    	arrestReportWasArmedWithDelete.where(arrestReportWasArmedWithRoot.get("arrestReportSegment").get("arrestReportSegmentId").in(armedWithArrestReportSubQuery));
+    	entityManager.createQuery(arrestReportWasArmedWithDelete).executeUpdate();
+    	
+    	CriteriaDelete<ArrestReportSegment> arrestReportSegmentDelete = criteriaBuilder.createCriteriaDelete(ArrestReportSegment.class);
+    	Root<ArrestReportSegment> arrestReportRoot = arrestReportSegmentDelete.from(ArrestReportSegment.class);
+    	
+    	List<Predicate> predicates = new ArrayList<>();
+        if (incidentDeleteRequest.getOwnerId() != null) {
+        	predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("owner").get("ownerId"), incidentDeleteRequest.getOwnerId())));
+        }
+//        if (incidentDeleteRequest.getStateCode() != null) {
+//        	predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("agency").get("stateCode"), incidentDeleteRequest.getStateCode())));
+//        }
+        if (incidentDeleteRequest.getAgencyId() != null) {
+        	predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("agency").get("agencyId"), incidentDeleteRequest.getAgencyId())));
+        }
+        if (StringUtils.isNotBlank(incidentDeleteRequest.getSubmissionYear())) {
+        	predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("yearOfTape"), incidentDeleteRequest.getSubmissionYear())));
+        }
+        if (StringUtils.isNotBlank(incidentDeleteRequest.getSubmissionMonth())) {
+        	predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("monthOfTape"), incidentDeleteRequest.getSubmissionMonth())));
+        }
+    	
+    	arrestReportSegmentDelete.where(predicates.toArray(new Predicate[predicates.size()])); 
+
+		return entityManager.createQuery(arrestReportSegmentDelete).executeUpdate();
+	}
+
+	private Subquery<Integer> createArrestReportSubquery(IncidentDeleteRequest incidentDeleteRequest, CriteriaBuilder criteriaBuilder,
+			CriteriaDelete<?> arrestReportWasArmedWithDelete) {
+		Subquery<Integer> arrestReportSubQuery = arrestReportWasArmedWithDelete.subquery(Integer.class);
+        Root<ArrestReportSegment> arrestReportSubQueryRoot = arrestReportSubQuery.from(ArrestReportSegment.class);
+        arrestReportSubQuery.select(arrestReportSubQueryRoot.get("arrestReportSegmentId"));
+        Join<AdministrativeSegment, OffenseSegment> subAgencyJoin = arrestReportSubQueryRoot.join("agency", JoinType.LEFT);
+        List<Predicate> armedWithPredicates = new ArrayList<>();
+        
+        if (incidentDeleteRequest.getOwnerId() != null) {
+        	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportSubQueryRoot.get("owner").get("ownerId"), incidentDeleteRequest.getOwnerId())));
+        }
+        if (incidentDeleteRequest.getStateCode() != null) {
+        	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(subAgencyJoin.get("stateCode"), incidentDeleteRequest.getStateCode())));
+        }
+        if (incidentDeleteRequest.getAgencyId() != null) {
+        	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportSubQueryRoot.get("agency").get("agencyId"), incidentDeleteRequest.getAgencyId())));
+        }
+        if (StringUtils.isNotBlank(incidentDeleteRequest.getSubmissionYear())) {
+        	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportSubQueryRoot.get("yearOfTape"), incidentDeleteRequest.getSubmissionYear())));
+        }
+        if (StringUtils.isNotBlank(incidentDeleteRequest.getSubmissionMonth())) {
+        	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportSubQueryRoot.get("monthOfTape"), incidentDeleteRequest.getSubmissionMonth())));
+        }
+        arrestReportSubQuery.where(armedWithPredicates.toArray(new Predicate[armedWithPredicates.size()]));
+		return arrestReportSubQuery;
+	}
+
 
 }

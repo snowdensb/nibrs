@@ -20,6 +20,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
+import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 
 @Transactional
@@ -28,4 +29,5 @@ public interface ArrestReportSegmentRepositoryCustom{
 	long countAllByCriteria(IncidentSearchRequest incidentSearchRequest);
 	int updateSubmissionId(Integer arrestReportSegmentId, Integer submissionId);
 	int deleteByOriAndSubmissionDate(String ori, String yearOfTape, String monthOfTape);
+	int deleteByIncidentDeleteRequest(IncidentDeleteRequest incidentDeleteRequest);
 }

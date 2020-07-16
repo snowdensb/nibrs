@@ -16,6 +16,7 @@
 package org.search.nibrs.stagingdata.service;
 
 import static org.search.nibrs.stagingdata.util.ObjectUtils.getInteger;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,6 +47,7 @@ import org.search.nibrs.stagingdata.model.SegmentActionTypeType;
 import org.search.nibrs.stagingdata.model.SexOfPersonType;
 import org.search.nibrs.stagingdata.model.TypeOfArrestType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
+import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
@@ -367,5 +369,10 @@ public class ArrestReportService {
 	@Transactional
 	public int deleteByOriAndSubmissionDate(String ori, String yearOfTape, String monthOfTape) {
 		return arrestReportSegmentRepositoryCustom.deleteByOriAndSubmissionDate(ori, yearOfTape, monthOfTape);
+	}
+	
+	@Transactional
+	public int deleteIncidentDeleteRequest(IncidentDeleteRequest incidentDeleteRequest) {
+		return arrestReportSegmentRepositoryCustom.deleteByIncidentDeleteRequest(incidentDeleteRequest);
 	}
 }

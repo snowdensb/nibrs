@@ -18,6 +18,7 @@ package org.search.nibrs.stagingdata.controller;
 import java.util.List;
 
 import org.search.nibrs.model.GroupBArrestReport;
+import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.search.nibrs.stagingdata.service.ArrestReportService;
 import org.search.nibrs.stagingdata.util.BaselineIncidentFactory;
@@ -58,6 +59,12 @@ public class ArrestReportController {
 	public @ResponseBody String deleteByOriAndSubmissionDate(@PathVariable("ori") String ori, @PathVariable("yearOfTape") String yearOfTape,
 			@PathVariable("monthOfTape") String monthOfTape){
 		int deletedCount = arrestReportService.deleteByOriAndSubmissionDate(ori, yearOfTape, monthOfTape);
+		return String.valueOf(deletedCount) + " arrest reports are deleted. ";
+	}
+	
+	@RequestMapping(value="/arrestReports", method=RequestMethod.DELETE)
+	public @ResponseBody String deleteByIncidentDeleteRequest(@RequestBody IncidentDeleteRequest incidentDeleteRequest){
+		int deletedCount = arrestReportService.deleteIncidentDeleteRequest(incidentDeleteRequest);
 		return String.valueOf(deletedCount) + " arrest reports are deleted. ";
 	}
 	
