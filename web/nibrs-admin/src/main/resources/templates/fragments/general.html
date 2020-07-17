@@ -65,6 +65,10 @@
 	              <a class="nav-link" href="#" id="incidents" th:unless="${agencyMapping.empty}">Incident Record Search</a>
 	              <a class="nav-link disabled" href="#" id="incidents" th:if="${agencyMapping.empty}">Incident Record Search</a>
 	            </li>
+	            <li class="nav-item">
+	              <a class="nav-link" href="#" id="incidentDeleteForm" th:unless="${agencyMapping.empty && privateSummaryReportSite}">Delete Incident Records</a>
+	              <a class="nav-link disabled" href="#" th:if="${agencyMapping.empty && !privateSummaryReportSite}">Delete Incident Records</a>
+	            </li>
 	            <li class="nav-item" th:if="${allowSubmitToFbi && !agencyMapping.empty}">
 	              <a class="nav-link" href="#" id="submitToFbi">Submit to FBI</a>
 	            </li>
@@ -189,6 +193,13 @@
 					});
 					$('body').on('click', 'a#summaryReportInputForm', function() {   
 						xhr = $.get(context + 'summaryReports/searchForm', function(data) {
+						   $('#portalContent').html(data); 
+						 }).fail(ojbc.displayFailMessage);
+						return false; 
+					});
+			    	  
+					$('body').on('click', 'a#incidentDeleteForm', function() {   
+						xhr = $.get(context + 'incidents/incidentDeleteForm', function(data) {
 						   $('#portalContent').html(data); 
 						 }).fail(ojbc.displayFailMessage);
 						return false; 

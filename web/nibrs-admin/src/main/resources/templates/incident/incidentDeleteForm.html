@@ -1,0 +1,89 @@
+<!--
+
+    Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>OJBC Web Portal</title>
+		<th:block th:include="fragments/general.html :: headerfiles"></th:block>
+		<link rel="stylesheet" type="text/css" th:href="@{/webjars/datatables/1.10.19/css/dataTables.bootstrap4.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/5.2.0/css/all.css}" />
+		<link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+     <!-- Begin page content -->
+     <div th:fragment="incidentDeleteFormPage" class="container">
+        <nav aria-label="breadcrumb">
+             <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a th:href="@{/home}">Home</a></li>
+             <li class="breadcrumb-item active" aria-current="page">Incident Delete Form</li>
+           </ol>
+        </nav>
+        
+	     <form action="#" th:action="@{/incident/incidentDelete}" th:object="${incidentDeleteRequest}" id="incidentDeleteForm" method="post" th:fragment="incidentDeleteFormContent">
+	       <div id="incidentDeleteFormContent">
+	         <div class="form-row">
+							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
+							<div class="col-8 col-xl-3">
+	     			    <select th:field="*{agencyId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="All">
+	    					  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
+			    			</select>
+					    </div>
+	         </div>
+	         <div class="form-row mt-2">
+	            <div class="col-4 col-xl-2"></div>
+	            <div class="col-8 col-xl-3">
+	                <button type="button" class="btn-primary" id="submit">Delete</button>
+	                <button type="reset" class="btn-secondary" id="reset">Reset</button>
+	            </div>
+	          </div>
+	       </div>
+	       
+	       <script th:inline="javascript">
+	          $(function(){
+	            $(".chosen-select").chosen();  
+	            $('[data-toggle="popover"]').popover(); 
+	            
+	            $('#searchForm input').keypress(function (e) {
+	              if (e.which == 13) {
+	                $('#submit').click();
+	                return false;    
+	              }
+	            });
+	            
+	            $('#submit').click (function(){
+	              var formData = $('#searchForm').serialize();
+	               
+	              xhr = $.post(context + "incidents/delete",formData,function(data) {
+	                $('#portalContent').html(data); 
+	              }).fail(ojbc.displayFailMessage);
+	            });
+	            
+	            $('#reset').click (function(){
+	              xhr = $.get(context + "incidents/incidentDeleteForm/reset", function(data) {
+	                $('#incidentDeleteForm').replaceWith(data); 
+	              }).fail(ojbc.displayFailMessage);
+	            });
+	
+	          });
+	        </script>
+       
+      </form>
+      
+      </div>
+	</body>
+</html>

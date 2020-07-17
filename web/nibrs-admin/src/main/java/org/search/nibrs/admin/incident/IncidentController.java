@@ -28,6 +28,7 @@ import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.stagingdata.model.search.FbiSubmissionStatus;
+import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
@@ -147,6 +148,15 @@ public class IncidentController {
 			return "incident/groupBArrestDetail::detail";
 		}
 	}
+
+	@GetMapping("/incidentDeleteForm")
+	public String getIncidentDeleteForm(Map<String, Object> model) throws IOException {
+		IncidentDeleteRequest incidentDeleteRequest = new IncidentDeleteRequest();
+		
+		model.put("incidentDeleteRequest", incidentDeleteRequest);
+	    return "/incident/incidentDeleteForm::incidentDeleteFormPage";
+	}
+	
 
 }
 

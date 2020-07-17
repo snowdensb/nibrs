@@ -30,10 +30,9 @@
 	      <nav aria-label="breadcrumb">
 	           <ol class="breadcrumb">
 	           <li class="breadcrumb-item"><a th:href="@{/home}">Home</a></li>
-	           <li class="breadcrumb-item active" aria-current="page">Incident Search Results</li>
+	           <li class="breadcrumb-item active" aria-current="page">Incident Search Form and Results</li>
 	         </ol>
 	      </nav>
-	      <h3>Incident Search Results</h3>
 	      <form th:replace="incident/incidentSearchForm.html :: incidentSearchFormContent" th:object="${incidentSearchRequest}">
 	      </form>
 	      <hr/>
