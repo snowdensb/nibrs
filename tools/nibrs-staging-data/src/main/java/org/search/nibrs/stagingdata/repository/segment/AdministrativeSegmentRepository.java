@@ -175,4 +175,17 @@ public interface AdministrativeSegmentRepository
 			+ "GROUP BY a.incidentNumber ")
 	List<Integer> findCargoTheftIdsByOriAndIncidentDate(String ori, Integer year, Integer month, Integer ownerId);
 	
+	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
+			+ "WHERE (?1 = null OR ?1 = 0 OR a.owner.ownerId = ?1) AND "
+			+ "     ( ?2 = null OR a.agency.stateCode = ?2 ) AND "
+			+ "		(?3 = null OR ?3 = 0 OR a.agency.agencyId = ?3 ) ")
+	List<Integer> findIdsByOwnerStateAndAgency(Integer ownerId, String stateCode, Integer agencyId);
+	
+	@Query("SELECT count(a.administrativeSegmentId) from AdministrativeSegment a "
+			+ "LEFT JOIN a.owner ao "
+			+ "LEFT JOIN a.agency ag "
+			+ "WHERE (?1 = null OR ?1 = 0 OR ao.ownerId = ?1) AND "
+			+ "		(?3 = null OR ?3 = 0 OR ag.agencyId = ?3 OR ?2 = null OR ag.stateCode = ?2) ")
+	Integer countIdsByOwnerStateAndAgency(Integer ownerId, String stateCode, Integer agencyId);
+	
 }

@@ -74,7 +74,7 @@ public class OffenderSegment {
 	@JoinColumn(name="ethnicityOfPersonTypeId")
 	private EthnicityOfPersonType ethnicityOfPersonType;
 	
-	@OneToMany(mappedBy = "offenderSegment", fetch=FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "offenderSegment", fetch=FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private Set<VictimOffenderAssociation> victimOffenderAssociations;
 	
 	public String toString(){

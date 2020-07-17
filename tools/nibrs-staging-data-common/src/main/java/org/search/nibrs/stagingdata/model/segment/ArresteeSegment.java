@@ -100,7 +100,7 @@ public class ArresteeSegment {
 	@JoinColumn(name="ucrOffenseCodeTypeId")
 	private UcrOffenseCodeType ucrOffenseCodeType;
 	
-	@OneToMany(mappedBy = "arresteeSegment", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "arresteeSegment", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<ArresteeSegmentWasArmedWith> arresteeSegmentWasArmedWiths;
 	
 	public String getArrestTransactionNumber() {

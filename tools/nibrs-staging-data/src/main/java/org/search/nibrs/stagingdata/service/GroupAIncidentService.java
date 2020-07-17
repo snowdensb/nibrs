@@ -73,6 +73,7 @@ import org.search.nibrs.stagingdata.model.TypePropertyLossEtcType;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.model.VictimOffenderAssociation;
 import org.search.nibrs.stagingdata.model.VictimOffenderRelationshipType;
+import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenderSegment;
@@ -110,6 +111,7 @@ import org.search.nibrs.stagingdata.repository.TypePropertyLossEtcTypeRepository
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.VictimOffenderRelationshipTypeRepository;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
+import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepositoryCustom;
 import org.search.nibrs.stagingdata.repository.segment.OffenseSegmentRepository;
 import org.search.nibrs.stagingdata.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +127,8 @@ public class GroupAIncidentService {
 	private static final String BAD_DELETE_REQUEST = "The incident number is required to delete an incident";
 	@Autowired
 	AdministrativeSegmentRepository administrativeSegmentRepository;
+	@Autowired
+	AdministrativeSegmentRepositoryCustom administrativeSegmentRepositoryCustom;
 	@Autowired
 	OffenseSegmentRepository offenseSegmentRepository;
 	@Autowired
@@ -841,5 +845,16 @@ public class GroupAIncidentService {
 		return administrativeSegmentRepository.deleteByOriAndYearOfTapeAndMonthOfTape(ori, yearOfTape, monthOfTape);
 	}
 	
+	public List<Integer> findAdministrativeSegmentIdsByIncidentDeleteRequest(IncidentDeleteRequest incidentDeleteRequest){
+		return administrativeSegmentRepository.findIdsByOwnerStateAndAgency(incidentDeleteRequest.getOwnerId(), incidentDeleteRequest.getStateCode(), incidentDeleteRequest.getAgencyId());
+	}
+
+	@Transactional
+	public Integer deleteGroupAIncidentReportsByRequest(IncidentDeleteRequest incidentDeleteRequest) {
+		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
+				.findIdsByOwnerStateAndAgency(incidentDeleteRequest.getOwnerId(), 
+						incidentDeleteRequest.getStateCode(), incidentDeleteRequest.getAgencyId());
+		return administrativeSegmentRepositoryCustom.deleteByIds(administrativeSegmentIds);
+	}
 
 }

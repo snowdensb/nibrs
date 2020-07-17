@@ -18,6 +18,7 @@ package org.search.nibrs.stagingdata.controller;
 import java.util.List;
 
 import org.search.nibrs.model.GroupAIncidentReport;
+import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.service.GroupAIncidentService;
 import org.search.nibrs.stagingdata.util.BaselineIncidentFactory;
@@ -58,6 +59,20 @@ public class GroupAIncidentReportController {
 	@RequestMapping(value="/groupAIncidentReports/{ori}/{yearOfTape}/{monthOfTape}", method=RequestMethod.DELETE)
 	public @ResponseBody String deleteReportBySubmissionDate(@PathVariable("ori") String ori, @PathVariable("yearOfTape") String yearOfTape, @PathVariable("monthOfTape") String monthOfTape){
 		Integer count = groupAIncidentService.deleteGroupAIncidentReports(ori, yearOfTape, monthOfTape);
+		
+		return String.valueOf(count) + " records are deleted";
+	}
+	
+	@RequestMapping(value="/groupAIncidentReports/administrativeSegmentIds", method=RequestMethod.GET)
+	public @ResponseBody List<Integer> getAdministrativeSegmentIdsByIncidentDeleteRequest(@RequestBody IncidentDeleteRequest incidentDeleteRequest){
+		List<Integer> administrativeSegmentIds = groupAIncidentService.findAdministrativeSegmentIdsByIncidentDeleteRequest(incidentDeleteRequest);
+		
+		return administrativeSegmentIds;
+	}
+	
+	@RequestMapping(value="/groupAIncidentReports", method=RequestMethod.DELETE)
+	public @ResponseBody String deleteByIncidentDeleteRequest(@RequestBody IncidentDeleteRequest incidentDeleteRequest){
+		Integer count = groupAIncidentService.deleteGroupAIncidentReportsByRequest(incidentDeleteRequest);
 		
 		return String.valueOf(count) + " records are deleted";
 	}

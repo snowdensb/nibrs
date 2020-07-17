@@ -22,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
@@ -29,12 +30,21 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.search.nibrs.stagingdata.model.ArresteeSegmentWasArmedWith;
+import org.search.nibrs.stagingdata.model.PropertyType;
 import org.search.nibrs.stagingdata.model.Submission;
+import org.search.nibrs.stagingdata.model.SuspectedDrugType;
+import org.search.nibrs.stagingdata.model.TypeOfWeaponForceInvolved;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
+import org.search.nibrs.stagingdata.model.VictimOffenderAssociation;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
+import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
+import org.search.nibrs.stagingdata.model.segment.OffenderSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
+import org.search.nibrs.stagingdata.model.segment.PropertySegment;
+import org.search.nibrs.stagingdata.model.segment.VictimSegment;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -169,5 +179,157 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
 	      int rowsUpdated = query.executeUpdate();
 	      return rowsUpdated;
 	  }
+
+	@Override
+	public Integer deleteByIds(List<Integer> administrativeSegmentIds) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		deletePropertySegments(administrativeSegmentIds, criteriaBuilder);
+		deleteOffenseSegments(administrativeSegmentIds, criteriaBuilder);
+		deleteOffenderSegments(administrativeSegmentIds, criteriaBuilder);
+		deleteVictimSegments(administrativeSegmentIds, criteriaBuilder);
+		deleteArresteeSegments(administrativeSegmentIds, criteriaBuilder);
+		return deleteAdministrativeSegments(administrativeSegmentIds, criteriaBuilder);
+	}
+
+	private Integer deleteAdministrativeSegments(List<Integer> administrativeSegmentIds,
+			CriteriaBuilder criteriaBuilder) {
+		CriteriaDelete<AdministrativeSegment> administrativeSegmentDelete = criteriaBuilder.createCriteriaDelete(AdministrativeSegment.class);
+		Root<AdministrativeSegment> administrativeSegmentRoot = administrativeSegmentDelete.from(AdministrativeSegment.class);
+		administrativeSegmentDelete.where(administrativeSegmentRoot.get("administrativeSegmentId").in(administrativeSegmentIds));
+		
+		return entityManager.createQuery(administrativeSegmentDelete).executeUpdate();
+	}
+
+	private Integer deleteArresteeSegments(List<Integer> administrativeSegmentIds, CriteriaBuilder criteriaBuilder) {
+		CriteriaDelete<ArresteeSegmentWasArmedWith> arresteeSegmentWasArmedWithDelete = criteriaBuilder.createCriteriaDelete(ArresteeSegmentWasArmedWith.class);
+		Root<ArresteeSegmentWasArmedWith> arresteeSegmentWasArmedWithRoot = arresteeSegmentWasArmedWithDelete.from(ArresteeSegmentWasArmedWith.class);
+		
+		Subquery<Integer> victimOffenderAssociationSubQuery = createArresteeSegmentSubquery(administrativeSegmentIds, criteriaBuilder,
+				arresteeSegmentWasArmedWithDelete);
+		
+		arresteeSegmentWasArmedWithDelete.where(arresteeSegmentWasArmedWithRoot.get("arresteeSegment").get("arresteeSegmentId").in(victimOffenderAssociationSubQuery));
+		entityManager.createQuery(arresteeSegmentWasArmedWithDelete).executeUpdate();
+
+		CriteriaDelete<ArresteeSegment> arresteeSegmentDelete = criteriaBuilder.createCriteriaDelete(ArresteeSegment.class);
+		Root<ArresteeSegment> arresteeSegmentRoot = arresteeSegmentDelete.from(ArresteeSegment.class);
+		arresteeSegmentDelete.where(arresteeSegmentRoot.get("administrativeSegment").get("administrativeSegmentId").in(administrativeSegmentIds));
+		
+		return entityManager.createQuery(arresteeSegmentDelete).executeUpdate();
+	}
+
+	private Subquery<Integer> createArresteeSegmentSubquery(List<Integer> administrativeSegmentIds,
+			CriteriaBuilder criteriaBuilder,
+			CriteriaDelete<ArresteeSegmentWasArmedWith> criteriaDelete) {
+		Subquery<Integer> arresteeSegmentSubQuery = criteriaDelete.subquery(Integer.class);
+        Root<ArresteeSegment> arresteeSegmentSubQueryRoot = arresteeSegmentSubQuery.from(ArresteeSegment.class);
+        arresteeSegmentSubQuery.select(arresteeSegmentSubQueryRoot.get("arresteeSegmentId"));
+        
+        arresteeSegmentSubQuery.where(arresteeSegmentSubQueryRoot.get("administrativeSegment").get("administrativeSegmentId").in(administrativeSegmentIds));
+		return arresteeSegmentSubQuery;
+	}
+
+	private Integer deleteVictimSegments(List<Integer> administrativeSegmentIds, CriteriaBuilder criteriaBuilder) {
+		CriteriaDelete<VictimSegment> victimSegmentDelete = criteriaBuilder.createCriteriaDelete(VictimSegment.class);
+		Root<VictimSegment> victimSegmentRoot = victimSegmentDelete.from(VictimSegment.class);
+		victimSegmentDelete.where(victimSegmentRoot.get("administrativeSegment").get("administrativeSegmentId").in(administrativeSegmentIds));
+		
+		
+		return entityManager.createQuery(victimSegmentDelete).executeUpdate();
+	}
+
+	private Integer deleteOffenderSegments(List<Integer> administrativeSegmentIds, CriteriaBuilder criteriaBuilder) {
+		CriteriaDelete<VictimOffenderAssociation> victimOffenderAssociationDelete = criteriaBuilder.createCriteriaDelete(VictimOffenderAssociation.class);
+		Root<VictimOffenderAssociation> victimOffenderAssociationRoot = victimOffenderAssociationDelete.from(VictimOffenderAssociation.class);
+		
+		Subquery<Integer> victimOffenderAssociationSubQuery = createOffenderSegmentSubquery(administrativeSegmentIds, criteriaBuilder,
+				victimOffenderAssociationDelete);
+		
+		victimOffenderAssociationDelete.where(victimOffenderAssociationRoot.get("offenderSegment").get("offenderSegmentId").in(victimOffenderAssociationSubQuery));
+		entityManager.createQuery(victimOffenderAssociationDelete).executeUpdate();
+		
+		CriteriaDelete<OffenderSegment> offenderSegmentDelete = criteriaBuilder.createCriteriaDelete(OffenderSegment.class);
+		Root<OffenderSegment> offenderSegmentRoot = offenderSegmentDelete.from(OffenderSegment.class);
+		offenderSegmentDelete.where(offenderSegmentRoot.get("administrativeSegment").get("administrativeSegmentId").in(administrativeSegmentIds));
+		
+		
+		return entityManager.createQuery(offenderSegmentDelete).executeUpdate();
+	}
+
+	private Subquery<Integer> createOffenderSegmentSubquery(List<Integer> administrativeSegmentIds,
+			CriteriaBuilder criteriaBuilder,
+			CriteriaDelete<VictimOffenderAssociation> criteriaDelete) {
+		Subquery<Integer> offenderSegmentSubQuery = criteriaDelete.subquery(Integer.class);
+        Root<OffenderSegment> offenderSegmentSubQueryRoot = offenderSegmentSubQuery.from(OffenderSegment.class);
+        offenderSegmentSubQuery.select(offenderSegmentSubQueryRoot.get("offenderSegmentId"));
+        
+        offenderSegmentSubQuery.where(offenderSegmentSubQueryRoot.get("administrativeSegment").get("administrativeSegmentId").in(administrativeSegmentIds));
+		return offenderSegmentSubQuery;
+	}
+
+	private Integer deletePropertySegments(List<Integer> administrativeSegmentIds, CriteriaBuilder criteriaBuilder) {
+		CriteriaDelete<PropertyType> propertyTypeDelete = criteriaBuilder.createCriteriaDelete(PropertyType.class);
+		Root<PropertyType> propertyTypeRoot = propertyTypeDelete.from(PropertyType.class);
+		
+        Subquery<Integer> propertyTypeSubQuery = createPropertySegmentSubquery(administrativeSegmentIds, criteriaBuilder,
+        		propertyTypeDelete);
+    	
+        propertyTypeDelete.where(propertyTypeRoot.get("propertySegment").get("propertySegmentId").in(propertyTypeSubQuery));
+        entityManager.createQuery(propertyTypeDelete).executeUpdate();
+        
+        CriteriaDelete<SuspectedDrugType> suspectedDrugTypeDelete = criteriaBuilder.createCriteriaDelete(SuspectedDrugType.class);
+        Root<SuspectedDrugType> suspectedDrugTypeRoot = suspectedDrugTypeDelete.from(SuspectedDrugType.class);
+        
+        Subquery<Integer> suspectedDrugTypeSubQuery = createPropertySegmentSubquery(administrativeSegmentIds, criteriaBuilder,
+        		suspectedDrugTypeDelete);
+        
+        suspectedDrugTypeDelete.where(suspectedDrugTypeRoot.get("propertySegment").get("propertySegmentId").in(suspectedDrugTypeSubQuery));
+        entityManager.createQuery(suspectedDrugTypeDelete).executeUpdate();
+        
+		CriteriaDelete<PropertySegment> propertySegmentDelete = criteriaBuilder.createCriteriaDelete(PropertySegment.class);
+		Root<PropertySegment> propertySegmentRoot = propertySegmentDelete.from(PropertySegment.class);
+		propertySegmentDelete.where(propertySegmentRoot.get("administrativeSegment").get("administrativeSegmentId").in(administrativeSegmentIds));
+        
+        
+		return entityManager.createQuery(propertySegmentDelete).executeUpdate();
+	}
+
+	private Integer deleteOffenseSegments(List<Integer> administrativeSegmentIds, CriteriaBuilder criteriaBuilder) {
+		CriteriaDelete<TypeOfWeaponForceInvolved> typeOfWeaponForceInvolvedDelete = criteriaBuilder.createCriteriaDelete(TypeOfWeaponForceInvolved.class);
+		Root<TypeOfWeaponForceInvolved> typeOfWeaponForceInvolvedRoot = typeOfWeaponForceInvolvedDelete.from(TypeOfWeaponForceInvolved.class);
+		
+        Subquery<Integer> typeOfWeaponForceInvolvedSubQuery = createOffenseSegmentSubquery(administrativeSegmentIds, criteriaBuilder,
+        		typeOfWeaponForceInvolvedDelete);
+    	
+        typeOfWeaponForceInvolvedDelete.where(typeOfWeaponForceInvolvedRoot.get("offenseSegment").get("offenseSegmentId").in(typeOfWeaponForceInvolvedSubQuery));
+        entityManager.createQuery(typeOfWeaponForceInvolvedDelete).executeUpdate();
+        
+		CriteriaDelete<OffenseSegment> offenseSegmentDelete = criteriaBuilder.createCriteriaDelete(OffenseSegment.class);
+		Root<OffenseSegment> offenseSegmentRoot = offenseSegmentDelete.from(OffenseSegment.class);
+		offenseSegmentDelete.where(offenseSegmentRoot.get("administrativeSegment").get("administrativeSegmentId").in(administrativeSegmentIds));
+		
+		
+		return entityManager.createQuery(offenseSegmentDelete).executeUpdate();
+	}
+	
+	private Subquery<Integer> createOffenseSegmentSubquery(List<Integer> administrativeSegmentIds,
+			CriteriaBuilder criteriaBuilder,
+			CriteriaDelete<?> criteriaDelete) {
+		Subquery<Integer> offenseSegmentSubQuery = criteriaDelete.subquery(Integer.class);
+        Root<OffenseSegment> offenseSegmentSubQueryRoot = offenseSegmentSubQuery.from(OffenseSegment.class);
+        offenseSegmentSubQuery.select(offenseSegmentSubQueryRoot.get("offenseSegmentId"));
+        
+        offenseSegmentSubQuery.where(offenseSegmentSubQueryRoot.get("administrativeSegment").get("administrativeSegmentId").in(administrativeSegmentIds));
+		return offenseSegmentSubQuery;
+	}
+
+	private Subquery<Integer> createPropertySegmentSubquery(List<Integer> administrativeSegmentIds,
+			CriteriaBuilder criteriaBuilder, CriteriaDelete<?> criteriaDelete) {
+		Subquery<Integer> propertySegmentSubQuery = criteriaDelete.subquery(Integer.class);
+        Root<PropertySegment> propertySegmentSubQueryRoot = propertySegmentSubQuery.from(PropertySegment.class);
+        propertySegmentSubQuery.select(propertySegmentSubQueryRoot.get("propertySegmentId"));
+        
+        propertySegmentSubQuery.where(propertySegmentSubQueryRoot.get("administrativeSegment").get("administrativeSegmentId").in(administrativeSegmentIds));
+		return propertySegmentSubQuery;
+	}
 
 }

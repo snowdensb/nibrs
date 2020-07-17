@@ -19,12 +19,13 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 
 @Transactional
 public interface AdministrativeSegmentRepositoryCustom{
 	List<IncidentPointer> findAllByCriteria(IncidentSearchRequest incidentSearchRequest);
 	long countAllByCriteria(IncidentSearchRequest incidentSearchRequest);
 	int updateSubmissionId(Integer adminstrativeSegmentId, Integer submissionId);
+	Integer deleteByIds(List<Integer> administrativeSegmentIds);
 }
