@@ -31,6 +31,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.lang3.StringUtils;
+import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.ArrestReportSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.Submission;
 import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
@@ -226,11 +227,16 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         if (incidentDeleteRequest.getOwnerId() != null) {
         	predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("owner").get("ownerId"), incidentDeleteRequest.getOwnerId())));
         }
-//        if (incidentDeleteRequest.getStateCode() != null) {
-//        	predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("agency").get("stateCode"), incidentDeleteRequest.getStateCode())));
-//        }
         if (incidentDeleteRequest.getAgencyId() != null) {
         	predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("agency").get("agencyId"), incidentDeleteRequest.getAgencyId())));
+        }
+        else if(StringUtils.isNotBlank(incidentDeleteRequest.getStateCode())) {
+        	Subquery<Integer> agencyIdSubQuery = arrestReportSegmentDelete.subquery(Integer.class); 
+        	Root<Agency> agencyIdSubQueryRoot = agencyIdSubQuery.from(Agency.class);
+        	agencyIdSubQuery.select(agencyIdSubQueryRoot.get("agencyId"));
+        	agencyIdSubQuery.where(criteriaBuilder.equal(agencyIdSubQueryRoot.get("stateCode"), incidentDeleteRequest.getStateCode()));
+        	predicates.add(criteriaBuilder.and(arrestReportRoot.get("agency").get("agencyId").in(agencyIdSubQuery))); 
+        	
         }
         if (StringUtils.isNotBlank(incidentDeleteRequest.getSubmissionYear())) {
         	predicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportRoot.get("yearOfTape"), incidentDeleteRequest.getSubmissionYear())));
