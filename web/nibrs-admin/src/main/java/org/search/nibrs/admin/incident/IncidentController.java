@@ -17,6 +17,7 @@ package org.search.nibrs.admin.incident;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -158,19 +159,36 @@ public class IncidentController {
 	}
 	
 
+	@GetMapping("/incidentDeleteForm/reset")
+	public String resetIncidentDeleteForm(Map<String, Object> model) throws IOException {
+		IncidentDeleteRequest incidentDeleteRequest = new IncidentDeleteRequest();
+		model.put("incidentDeleteRequest", incidentDeleteRequest);
+		AuthUser authUser =(AuthUser) model.get("authUser");  
+		Integer ownerId = authUser.getUserId();
+		incidentDeleteRequest.setOwnerId(ownerId);
+		model.put("agencyMapping", restService.getAgencies(Objects.toString(authUser.getUserId())));
+		return "/incident/incidentDeleteForm::incidentDeleteFormPage";
+	}
+	
 	@PostMapping("/delete")
 	public @ResponseBody String delete(HttpServletRequest request, @Valid @ModelAttribute IncidentDeleteRequest 
 			incidentDeleteRequest, BindingResult bindingResult, 
 			Map<String, Object> model) throws Throwable {
+		
+		String response = "The feature is not available for the setting.";
 		if (!appProperties.getPrivateSummaryReportSite()) {
 			AuthUser authUser =(AuthUser) model.get("authUser");  
 			Integer ownerId = authUser.getUserId();
 			incidentDeleteRequest.setOwnerId(ownerId);
+		
+			log.info("incidentDeleteRequest:" + incidentDeleteRequest );
+			
+			response = restService.deleteByIncidentDeleteRequest(incidentDeleteRequest);
+			
+			model.put("agencyMapping", restService.getAgencies(Objects.toString(authUser.getUserId())));
+			
 		}
 		
-		log.info("incidentDeleteRequest:" + incidentDeleteRequest );
-		
-		String response = restService.deleteByIncidentDeleteRequest(incidentDeleteRequest);
 		return response;
 	}
 

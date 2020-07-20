@@ -34,15 +34,21 @@
            </ol>
         </nav>
         
-	     <form action="#" th:action="@{/incident/incidentDelete}" th:object="${incidentDeleteRequest}" id="incidentDeleteForm" method="post" th:fragment="incidentDeleteFormContent">
-	       <div id="incidentDeleteFormContent">
+	      <form th:action="@{/incidents/delete}" th:object="${incidentDeleteRequest}" id="incidentDeleteForm" method="post" th:fragment="incidentDeleteFormContent">
 	         <div class="form-row">
 							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
 							<div class="col-8 col-xl-3">
 	     			    <select th:field="*{agencyId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="All">
+	     			      <option value="">All</option>
 	    					  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
 			    			</select>
 					    </div>
+	         </div>
+	         <div class="form-row">
+							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Owner</label>
+							<div class="col-8 col-xl-3">
+                 <input type="text" th:field="*{ownerId}" width="250" placeholder="owner Id" th:errorclass="is-invalid"/>					    
+              </div>
 	         </div>
 	         <div class="form-row mt-2">
 	            <div class="col-4 col-xl-2"></div>
@@ -51,8 +57,8 @@
 	                <button type="reset" class="btn-secondary" id="reset">Reset</button>
 	            </div>
 	          </div>
-	       </div>
-         <div class="alert alert-info d-none" id="responseInfo"></div>	       
+       
+        </form>
 				<script th:inline="javascript" sec:authorize="isAuthenticated()">
 					 /*<![CDATA[*/
 					   var _csrf_token = /*[[${_csrf.token}]]*/ '';
@@ -73,28 +79,29 @@
 	            
 	            $('#submit').click (function(){
 	            	$('#responseInfo').html("").addClass('d-none');
-	            	var formData = $('#searchForm').serialize();
+	            	
+                var requestData = {agencyId: $("#agencyId").val()}; 
                 if (typeof _csrf_param_name !== 'undefined'){
-                  formData += '&'+_csrf_param_name+'='+_csrf_token;
+                    requestData[_csrf_param_name] = _csrf_token;
                 }
-	               
-	              xhr = $.post(context + "incidents/delete",formData,function(data) {
+
+	              xhr = $.post(context + "incidents/delete",requestData,function(data) {
 	            	  $('#responseInfo').removeClass('d-none').html(data);  
+	            	  $('#agencyId option:selected').remove();
+	                $('#agencyId').trigger("chosen:updated");
 	              }).fail(ojbc.displayFailMessage);
 	            });
 	            
 	            $('#reset').click (function(){
 	            	$('#responseInfo').html("").addClass('d-none');
 	              xhr = $.get(context + "incidents/incidentDeleteForm/reset", function(data) {
-	                $('#incidentDeleteForm').replaceWith(data); 
+	                $('#portalContent').replaceWith(data); 
 	              }).fail(ojbc.displayFailMessage);
 	            });
 	
 	          });
 	        </script>
-       
-      </form>
-      
+          <div class="alert alert-info d-none mt-2" id="responseInfo"></div>   
       </div>
 	</body>
 </html>
