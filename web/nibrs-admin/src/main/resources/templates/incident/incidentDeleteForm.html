@@ -16,7 +16,7 @@
 
 -->
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 	<head>
 		<title>OJBC Web Portal</title>
 		<th:block th:include="fragments/general.html :: headerfiles"></th:block>
@@ -52,7 +52,13 @@
 	            </div>
 	          </div>
 	       </div>
-	       
+         <div class="alert alert-info d-none" id="responseInfo"></div>	       
+				<script th:inline="javascript" sec:authorize="isAuthenticated()">
+					 /*<![CDATA[*/
+					   var _csrf_token = /*[[${_csrf.token}]]*/ '';
+					   var _csrf_param_name = /*[[${_csrf.parameterName}]]*/ '';
+					 /*]]>*/
+				</script>     
 	       <script th:inline="javascript">
 	          $(function(){
 	            $(".chosen-select").chosen();  
@@ -66,14 +72,19 @@
 	            });
 	            
 	            $('#submit').click (function(){
-	              var formData = $('#searchForm').serialize();
+	            	$('#responseInfo').html("").addClass('d-none');
+	            	var formData = $('#searchForm').serialize();
+                if (typeof _csrf_param_name !== 'undefined'){
+                  formData += '&'+_csrf_param_name+'='+_csrf_token;
+                }
 	               
 	              xhr = $.post(context + "incidents/delete",formData,function(data) {
-	                $('#portalContent').html(data); 
+	            	  $('#responseInfo').removeClass('d-none').html(data);  
 	              }).fail(ojbc.displayFailMessage);
 	            });
 	            
 	            $('#reset').click (function(){
+	            	$('#responseInfo').html("").addClass('d-none');
 	              xhr = $.get(context + "incidents/incidentDeleteForm/reset", function(data) {
 	                $('#incidentDeleteForm').replaceWith(data); 
 	              }).fail(ojbc.displayFailMessage);

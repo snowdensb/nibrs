@@ -158,5 +158,22 @@ public class IncidentController {
 	}
 	
 
+	@PostMapping("/delete")
+	public @ResponseBody String delete(HttpServletRequest request, @Valid @ModelAttribute IncidentDeleteRequest 
+			incidentDeleteRequest, BindingResult bindingResult, 
+			Map<String, Object> model) throws Throwable {
+		if (!appProperties.getPrivateSummaryReportSite()) {
+			AuthUser authUser =(AuthUser) model.get("authUser");  
+			Integer ownerId = authUser.getUserId();
+			incidentDeleteRequest.setOwnerId(ownerId);
+		}
+		
+		log.info("incidentDeleteRequest:" + incidentDeleteRequest );
+		
+		String response = restService.deleteByIncidentDeleteRequest(incidentDeleteRequest);
+		return response;
+	}
+
+
 }
 

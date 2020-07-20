@@ -32,6 +32,7 @@ import org.search.nibrs.model.GroupBArrestReport;
 import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.stagingdata.model.PreCertificationError;
 import org.search.nibrs.stagingdata.model.SubmissionTrigger;
+import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.search.PrecertErrorSearchRequest;
@@ -41,6 +42,7 @@ import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
@@ -173,6 +175,35 @@ public class RestService{
 		}
 		catch(Throwable e) {
 			log.error("Got error when calling the service /submissions/trigger", e);
+			response = "Failed to process the request, please report the error or check back later."; 
+		}
+		
+		return response; 
+	}
+	
+	public String deleteByIncidentDeleteRequest(IncidentDeleteRequest incidentDeleteRequest) {
+		
+		String response = ""; 
+		String deleteGroupAIncidentsResponse = "";
+		String deleteGroupBArrestsResponse = "";
+		try { 
+			deleteGroupAIncidentsResponse = webClient.method(HttpMethod.DELETE)
+					.uri("/groupAIncidentReports")
+					.body(BodyInserters.fromObject(incidentDeleteRequest))
+					.retrieve()
+					.bodyToMono(String.class)
+					.block();
+			deleteGroupBArrestsResponse = webClient.method(HttpMethod.DELETE)
+					.uri("/arrestReports")
+					.body(BodyInserters.fromObject(incidentDeleteRequest))
+					.retrieve()
+					.bodyToMono(String.class)
+					.block();
+			
+			response = deleteGroupAIncidentsResponse + "\n" + deleteGroupBArrestsResponse;
+		}
+		catch(Throwable e) {
+			log.error("Got error when calling the delete services of /groupAIncidentReports or /arrestReports ", e);
 			response = "Failed to process the request, please report the error or check back later."; 
 		}
 		

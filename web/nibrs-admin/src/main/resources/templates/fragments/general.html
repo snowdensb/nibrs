@@ -66,7 +66,7 @@
 	              <a class="nav-link disabled" href="#" id="incidents" th:if="${agencyMapping.empty}">Incident Record Search</a>
 	            </li>
 	            <li class="nav-item">
-	              <a class="nav-link" href="#" id="incidentDeleteForm" th:unless="${agencyMapping.empty && privateSummaryReportSite}">Delete Incident Records</a>
+	              <a class="nav-link" href="#" id="incidentDeleteForm" th:unless="${agencyMapping.empty || privateSummaryReportSite}">Delete Incident Records</a>
 	              <a class="nav-link disabled" href="#" th:if="${agencyMapping.empty && !privateSummaryReportSite}">Delete Incident Records</a>
 	            </li>
 	            <li class="nav-item" th:if="${allowSubmitToFbi && !agencyMapping.empty}">
