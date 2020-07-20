@@ -854,7 +854,13 @@ public class GroupAIncidentService {
 		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
 				.findIdsByOwnerStateAndAgency(incidentDeleteRequest.getOwnerId(), 
 						incidentDeleteRequest.getStateCode(), incidentDeleteRequest.getAgencyId());
-		return administrativeSegmentRepositoryCustom.deleteByIds(administrativeSegmentIds);
+		
+		if (administrativeSegmentIds.isEmpty()) {
+			return 0;
+		}
+		else {
+			return administrativeSegmentRepositoryCustom.deleteByIds(administrativeSegmentIds);
+		}
 	}
 
 }

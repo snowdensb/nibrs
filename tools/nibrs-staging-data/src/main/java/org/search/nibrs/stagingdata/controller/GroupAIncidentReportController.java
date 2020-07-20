@@ -74,7 +74,7 @@ public class GroupAIncidentReportController {
 	public @ResponseBody String deleteByIncidentDeleteRequest(@RequestBody IncidentDeleteRequest incidentDeleteRequest){
 		Integer count = groupAIncidentService.deleteGroupAIncidentReportsByRequest(incidentDeleteRequest);
 		
-		return String.valueOf(count) + " records are deleted";
+		return String.valueOf(count) + " group A incident reports are deleted.";
 	}
 	
 }
