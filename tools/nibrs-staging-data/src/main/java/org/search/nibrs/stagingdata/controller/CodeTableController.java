@@ -34,6 +34,7 @@ import org.search.nibrs.stagingdata.model.NibrsErrorCodeType;
 import org.search.nibrs.stagingdata.model.Owner;
 import org.search.nibrs.stagingdata.model.UcrOffenseCodeType;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
+import org.search.nibrs.stagingdata.repository.AgencyRepositoryCustom;
 import org.search.nibrs.stagingdata.repository.NibrsErrorCodeTypeRepository;
 import org.search.nibrs.stagingdata.repository.OwnerRepository;
 import org.search.nibrs.stagingdata.repository.UcrOffenseCodeTypeRepository;
@@ -56,6 +57,8 @@ public class CodeTableController {
 	private static final Log log = LogFactory.getLog(CodeTableController.class);
 	@Autowired
 	private AgencyRepository agencyRepository;
+	@Autowired
+	private AgencyRepositoryCustom agencyRepositoryCustom;
 	@Autowired
 	private OwnerRepository ownerRepository;
 	@Autowired
@@ -110,6 +113,12 @@ public class CodeTableController {
 					.collect(Collectors.toMap(Agency::getAgencyId, Agency::getAgencyName, (u, v) -> u,
 						      LinkedHashMap::new));
 		return agencyMap;
+	}
+	
+	@GetMapping("/states/{ownerId}")
+	public Map<String, String> statesByOwnerId(@PathVariable Integer ownerId){
+		
+		return agencyRepositoryCustom.findAllStatesByOwnerId(ownerId);
 	}
 	
 	@GetMapping("/agenciesHavingData")
