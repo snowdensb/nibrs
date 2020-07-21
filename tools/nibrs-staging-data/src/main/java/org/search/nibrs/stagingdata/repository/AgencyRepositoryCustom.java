@@ -22,4 +22,5 @@ import javax.transaction.Transactional;
 @Transactional
 public interface AgencyRepositoryCustom{
 	Map<String, String> findAllStatesByOwnerId(Integer ownerId);
+	Map<Integer, String> findAllAgenciesByStateAndOwnerId(Integer ownerId, String stateCode);
 }

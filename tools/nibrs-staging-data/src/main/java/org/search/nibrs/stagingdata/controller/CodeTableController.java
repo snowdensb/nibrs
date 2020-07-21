@@ -115,6 +115,12 @@ public class CodeTableController {
 		return agencyMap;
 	}
 	
+	@GetMapping("/states/{stateCode}/agencies/{ownerId}") 
+	public Map<Integer, String> agenciesByStateAndOwnerId(@PathVariable String stateCode, @PathVariable Integer ownerId){
+		
+		return agencyRepositoryCustom.findAllAgenciesByStateAndOwnerId(ownerId, stateCode);
+	}
+	
 	@GetMapping("/states/{ownerId}")
 	public Map<String, String> statesByOwnerId(@PathVariable Integer ownerId){
 		

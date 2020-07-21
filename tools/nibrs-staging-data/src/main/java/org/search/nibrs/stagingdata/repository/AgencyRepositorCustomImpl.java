@@ -60,6 +60,38 @@ public class AgencyRepositorCustomImpl implements AgencyRepositoryCustom{
 		
 		return stateCodeMapping;
 	}
+
+	@Override
+	public Map<Integer, String> findAllAgenciesByStateAndOwnerId(Integer ownerId, String stateCode) {
+		Map<Integer, String> agencyIdMapping = entityManager
+				.createQuery(
+				    "select " +
+				    "   agencyId as agencyId , " +
+				    "   agencyName as agencyName " +
+				    "from Agency a " +
+				    "where stateCode = ?2 AND (exists (select adminSegment from AdministrativeSegment adminSegment " + 
+				    "				where adminSegment.agency.agencyId = a.agencyId " + 
+				    "				AND (?1 = null OR adminSegment.owner.ownerId = ?1 )) " + 
+				    "	OR exists (select arrestReportSegment from ArrestReportSegment arrestReportSegment " + 
+				    "				where arrestReportSegment.agency.agencyId = a.agencyId " + 
+				    "				AND (?1 = null OR arrestReportSegment.owner.ownerId = ?1))) " + 
+				    "order by agencyName ", Tuple.class)
+				.setParameter( 1, ownerId)
+				.setParameter( 2, stateCode)
+				.getResultList()
+				.stream()
+				.collect(
+				    Collectors.toMap(
+				        tuple -> (Integer)tuple.get("agencyId"),
+				        entry -> (String)entry.get("agencyName"), 
+			             (stateCode1, stateCode2) -> {
+			                 System.out.println("duplicate key found!");
+			                 return stateCode1;
+			             }
+				 ));
+		
+		return agencyIdMapping;
+	}
 	
 
 
