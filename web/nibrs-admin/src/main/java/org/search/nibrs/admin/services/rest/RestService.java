@@ -63,6 +63,23 @@ public class RestService{
 	
 	public Map<Integer, String> getAgencies(String ownerId) {
 		return this.webClient.get().uri("/codeTables/agencies/"+ownerId)
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
+				.block();
+	}
+	
+	public Map<Integer, String> getAgenciesNoChache(String ownerId) {
+		return this.webClient.get().uri("/codeTables/agencies/"+ownerId)
+				.header("Expires", "0")
+				.header("Pragma", "no-cache")
+				.header("Cache-Control", "private",  "no-store", "max-age=0")
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
+				.block();
+	}
+	
+	public Map<Integer, String> getAgenciesByOwnerAndState(String ownerId, String stateCode) {
+		return this.webClient.get().uri("/codeTables/states/" + stateCode + "/agencies/"+ownerId)
 				.header("Expires", "0")
 				.header("Pragma", "no-cache")
 				.header("Cache-Control", "private",  "no-store", "max-age=0")
@@ -272,6 +289,16 @@ public class RestService{
 				.body(BodyInserters.fromObject(precertErrorSearchRequest))
 				.retrieve()
 				.bodyToMono(new ParameterizedTypeReference<SearchResult<PreCertificationError>>() {})
+				.block();
+	}
+
+	public Map<String, String> getStatesNoChache(String ownerId) {
+		return this.webClient.get().uri("/codeTables/states/"+ownerId)
+				.header("Expires", "0")
+				.header("Pragma", "no-cache")
+				.header("Cache-Control", "private",  "no-store", "max-age=0")
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<String, String>>() {})
 				.block();
 	}
 	

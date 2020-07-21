@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @ControllerAdvice
-@SessionAttributes({"authUser"})
+@SessionAttributes({"authUser", "ownerId"})
 public class GlobalControllerAdvice {
 	
 	@Resource
@@ -55,6 +55,7 @@ public class GlobalControllerAdvice {
         if (authentication != null) {
 	        authUser = (AuthUser) authentication.getPrincipal();
 	        model.addAttribute("authUser", authUser);
+	        model.addAttribute("ownerId", authUser.getUserId().toString());
         }
         
 		if (appProperties.getPrivateSummaryReportSite()) {

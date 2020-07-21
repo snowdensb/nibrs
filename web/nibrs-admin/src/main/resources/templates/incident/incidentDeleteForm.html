@@ -36,6 +36,15 @@
         
 	      <form th:action="@{/incidents/delete}" th:object="${incidentDeleteRequest}" id="incidentDeleteForm" method="post" th:fragment="incidentDeleteFormContent">
 	         <div class="form-row">
+							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting State</label>
+							<div class="col-8 col-xl-3">
+	     			    <select th:field="*{stateCode}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="All">
+	     			      <option value="">All</option>
+	    					  <option th:each="item: ${stateCodeMappingByOwner}" th:value="${item.key}" th:text="${item.value}" />
+			    			</select>
+					    </div>
+	         </div>
+	         <div class="form-row">
 							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
 							<div class="col-8 col-xl-3">
 	     			    <select th:field="*{agencyId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="All">
@@ -43,12 +52,6 @@
 	    					  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
 			    			</select>
 					    </div>
-	         </div>
-	         <div class="form-row">
-							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Owner</label>
-							<div class="col-8 col-xl-3">
-                 <input type="text" th:field="*{ownerId}" width="250" placeholder="owner Id" th:errorclass="is-invalid"/>					    
-              </div>
 	         </div>
 	         <div class="form-row mt-2">
 	            <div class="col-4 col-xl-2"></div>
@@ -77,10 +80,32 @@
 	              }
 	            });
 	            
+	            refreshAgencyDropDown();
+	            
+	            $('#portalContent').on('change', '#incidentDeleteForm #stateCode', function(){
+	            	refreshAgencyDropDown();
+	            });
+	            
+	            function refreshAgencyDropDown(){
+	                stateCode = $('#stateCode').val(); 
+                  xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
+                    $('#agencyId').empty();
+                    $('#agencyId').append('<option value="">All</option>');
+                    
+                    $.each( data, function( key, value ) {
+                    	$('#agencyId').append($('<option></option>').attr('value', key).text(value));
+                   	});
+                    $('#agencyId').trigger("chosen:updated");
+                  }).fail(ojbc.displayFailMessage);
+	            }
+	            
 	            $('#submit').click (function(){
 	            	$('#responseInfo').html("").addClass('d-none');
 	            	
-                var requestData = {agencyId: $("#agencyId").val()}; 
+                var requestData = {
+                		agencyId: $("#agencyId").val(),
+                		stateCode: $("#stateCode").val() 		
+                }; 
                 if (typeof _csrf_param_name !== 'undefined'){
                     requestData[_csrf_param_name] = _csrf_token;
                 }

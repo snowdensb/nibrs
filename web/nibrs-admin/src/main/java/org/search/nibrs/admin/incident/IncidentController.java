@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.admin.AppProperties;
@@ -44,11 +45,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"incidentSearchRequest", "offenseCodeMapping", "incidentSearchResult", "fbiSubmissionStatuses", "authUser"})
+@SessionAttributes({"incidentSearchRequest", "offenseCodeMapping", "incidentSearchResult", "fbiSubmissionStatuses", "authUser", "stateCodeMappingByOwner", "ownerId"})
 @RequestMapping("/incidents")
 public class IncidentController {
 	private final Log log = LogFactory.getLog(this.getClass());
@@ -152,7 +154,13 @@ public class IncidentController {
 
 	@GetMapping("/incidentDeleteForm")
 	public String getIncidentDeleteForm(Map<String, Object> model) throws IOException {
+		AuthUser authUser =(AuthUser) model.get("authUser");  
+		Integer ownerId = authUser.getUserId();
+		
+		model.put("stateCodeMappingByOwner", restService.getStatesNoChache(Objects.toString(authUser.getUserId())));
+		
 		IncidentDeleteRequest incidentDeleteRequest = new IncidentDeleteRequest();
+		incidentDeleteRequest.setOwnerId(ownerId);
 		
 		model.put("incidentDeleteRequest", incidentDeleteRequest);
 	    return "/incident/incidentDeleteForm::incidentDeleteFormPage";
@@ -166,7 +174,7 @@ public class IncidentController {
 		AuthUser authUser =(AuthUser) model.get("authUser");  
 		Integer ownerId = authUser.getUserId();
 		incidentDeleteRequest.setOwnerId(ownerId);
-		model.put("agencyMapping", restService.getAgencies(Objects.toString(authUser.getUserId())));
+		model.put("agencyMapping", restService.getAgenciesNoChache(Objects.toString(authUser.getUserId())));
 		return "/incident/incidentDeleteForm::incidentDeleteFormPage";
 	}
 	
@@ -185,11 +193,24 @@ public class IncidentController {
 			
 			response = restService.deleteByIncidentDeleteRequest(incidentDeleteRequest);
 			
-			model.put("agencyMapping", restService.getAgencies(Objects.toString(authUser.getUserId())));
+			model.put("agencyMapping", restService.getAgenciesNoChache(Objects.toString(authUser.getUserId())));
 			
 		}
 		
 		return response;
+	}
+	
+	@GetMapping("/agencies")
+	public @ResponseBody Map<Integer, String> getAgencyIdMapping(@RequestParam String stateCode, Map<String, Object> model) throws IOException{
+		String ownerId = (String) model.get("ownerId");
+		
+		if (StringUtils.isBlank(stateCode)) {
+			return restService.getAgencies(ownerId); 
+		}
+		else {
+			return restService.getAgenciesByOwnerAndState(ownerId, stateCode);
+		}
+		
 	}
 
 

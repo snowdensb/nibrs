@@ -33,4 +33,15 @@ public interface AgencyRepository extends JpaRepository<Agency, Integer>{
 		+ "						  AND (?1 = null OR arrestReportSegment.owner.ownerId = ?1)) "
 		+ "Order BY a.agencyName ")
 	public List<Agency> findAllHavingData(Integer ownerId);
+	
+	@Query("SELECT distinct(a.agencyId) from Agency a "
+			+ "WHERE exists (select adminSegment from AdministrativeSegment adminSegment "
+			+ "					where adminSegment.agency.agencyId = a.agencyId "
+			+ "						  AND (?1 = null OR adminSegment.owner.ownerId = ?1 )) "
+			+ "		OR exists (select arrestReportSegment from ArrestReportSegment arrestReportSegment "
+			+ "					where arrestReportSegment.agency.agencyId = a.agencyId "
+			+ "						  AND (?1 = null OR arrestReportSegment.owner.ownerId = ?1)) "
+			+ "Order BY a.agencyName ")
+	public List<Integer> findAllAgencyIdsByOwner(Integer ownerId);
+	
 }
