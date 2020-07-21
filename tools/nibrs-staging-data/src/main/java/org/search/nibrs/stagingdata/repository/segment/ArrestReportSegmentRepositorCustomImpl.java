@@ -261,7 +261,7 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         if (incidentDeleteRequest.getOwnerId() != null) {
         	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(arrestReportSubQueryRoot.get("owner").get("ownerId"), incidentDeleteRequest.getOwnerId())));
         }
-        if (incidentDeleteRequest.getStateCode() != null) {
+        if (StringUtils.isNotBlank(incidentDeleteRequest.getStateCode())) {
         	armedWithPredicates.add(criteriaBuilder.and(criteriaBuilder.equal(subAgencyJoin.get("stateCode"), incidentDeleteRequest.getStateCode())));
         }
         if (incidentDeleteRequest.getAgencyId() != null) {

@@ -853,7 +853,7 @@ public class GroupAIncidentService {
 	public Integer deleteGroupAIncidentReportsByRequest(IncidentDeleteRequest incidentDeleteRequest) {
 		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
 				.findIdsByOwnerStateAndAgency(incidentDeleteRequest.getOwnerId(), 
-						incidentDeleteRequest.getStateCode(), incidentDeleteRequest.getAgencyId());
+						StringUtils.trimToNull(incidentDeleteRequest.getStateCode()), incidentDeleteRequest.getAgencyId());
 		
 		if (administrativeSegmentIds.isEmpty()) {
 			return 0;
