@@ -726,7 +726,7 @@ public class PropertySegmentRulesFactory {
 					else if (notAllNull(subject.getPropertyDescription())){
 						for (int i = 0; i < subject.getPropertyDescription().length; i++) {
 							if (StringUtils.isNotBlank(subject.getPropertyDescription(i)) 
-									&& !PropertyDescriptionCode._10.code.equals(subject.getPropertyDescription(i))
+									&& !PropertyDescriptionCode.allowsBlankPropertyValue(subject.getPropertyDescription(i))
 									&& (subject.getValueOfProperty(i) == null || subject.getValueOfProperty(i).isMissing())){
 								violate = true; 
 								break; 

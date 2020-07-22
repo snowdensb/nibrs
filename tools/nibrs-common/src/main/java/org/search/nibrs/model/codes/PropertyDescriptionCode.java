@@ -331,6 +331,11 @@ public enum PropertyDescriptionCode {
 		return codes.stream().anyMatch(code -> isMotorVehicleCode(code));
 	}
 	
+	public static final boolean allowsBlankPropertyValue(String code) {
+		return Arrays.asList(_10.code, _77.code, 
+				_99.code, _09.code, _22.code, _48.code, _65.code, _66.code ).contains(code);
+	}
+	
 	public static List<String> getIllogicalPropertyDescriptions(String offenseCode){
 		offenseCode = StringUtils.trimToEmpty(offenseCode);
 		
