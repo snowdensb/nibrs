@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.search.nibrs.admin.summaryreport;
+package org.search.nibrs.model.reports;
 
 import java.io.Serializable;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.validator.constraints.Range;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,12 +27,13 @@ public class SummaryReportRequest implements Serializable {
 	
 	private static final long serialVersionUID = 6719873817881739578L;
 
-	@NotBlank
+	private String stateCode;
+	
 	private String ori; 
+	
+	private Integer agencyId;
 
-	@Range(min=1, max=12)
 	private Integer incidentMonth;
-	@NotNull
 	private Integer incidentYear; 
 	
 	@Override
@@ -46,7 +43,9 @@ public class SummaryReportRequest implements Serializable {
 
 	@JsonIgnore
 	public boolean isEmpty() {
-		return StringUtils.isBlank(getOri())
+		return StringUtils.isBlank(stateCode)
+				&& agencyId == null
+				&& StringUtils.isBlank(getOri())
 				&& getIncidentMonth() == null 
 				&& getIncidentYear() == null ;
 	}
@@ -83,5 +82,21 @@ public class SummaryReportRequest implements Serializable {
 	
 	public void setIncidentYear(Integer incidentYear) {
 		this.incidentYear = incidentYear;
+	}
+
+	public String getStateCode() {
+		return stateCode;
+	}
+
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
+	}
+
+	public Integer getAgencyId() {
+		return agencyId;
+	}
+
+	public void setAgencyId(Integer agencyId) {
+		this.agencyId = agencyId;
 	}
 }

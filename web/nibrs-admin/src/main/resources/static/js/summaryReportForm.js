@@ -33,12 +33,18 @@
 	   refreshIncidentYearDropDown();
    });
    
+   $('#portalContent').on('change', '#summaryReportRequestForm #stateCode', function(){
+	   console.log("stateCode changed to " + $('#stateCode').val()); 
+	   refreshIncidentYearDropDown();
+   });
+   
    $('#portalContent').on('change', '#summaryReportRequestForm #incidentYear', function(){
 	   refreshIncidentMonthDropDown()
    });
 
    function refreshIncidentMonthDropDown(){
 	   ori = $('#ori').val(); 
+	   stateCode = $('#stateCode').val(); 
 	   incidentYear = $('#incidentYear').val();
 	   if (ori && incidentYear){
 		   xhr = $.get( context +"months/" + incidentYear + "/" + ori, function(data) {
@@ -50,11 +56,38 @@
 			   $('#incidentMonth').trigger("chosen:updated");
 		   }).fail(ojbc.displayFailMessage);
 	   }
+	   else if (stateCode && incidentYear){
+		   xhr = $.get( context +"state/months/" + incidentYear + "/" + stateCode, function(data) {
+			   $('#incidentMonth').empty();
+			   $('#incidentMonth').append('<option value="0">All months</option>');
+			   data.forEach( function(item, index) {
+				   $('#incidentMonth').append($('<option></option>').attr('value', item).text(item));
+			   });
+			   $('#incidentMonth').trigger("chosen:updated");
+		   }).fail(ojbc.displayFailMessage);
+	   }
    }
+   
    function refreshIncidentYearDropDown(){
-	   ori = $('#ori').val(); 
+	   console.log("in the refreshIncidentYearDropDown method"); 
+	   console.log("stateCode: " + $('#stateCode').val()); 
+	   ori = $('#ori').val();
+	   stateCode = $('#stateCode').val();
 	   if (ori){
+		   console.log("call the getYears method"); 
 		   xhr = $.get( context +"years/" + ori, function(data) {
+			   $('#incidentYear').empty();
+			   $('#incidentYear').append('<option value="">Please select ...</option>');
+			   data.forEach( function(item, index) {
+                   $('#incidentYear').append($('<option></option>').attr('value', item).text(item));
+               });
+			   $('#incidentYear').trigger("chosen:updated");
+	       }).fail(ojbc.displayFailMessage);
+	   }
+	   else if (stateCode){
+		   console.log("call the getYearsByState method"); 
+		   xhr = $.get( context +"state/years/" + stateCode, function(data) {
+			   console.log("years: " + data); 
 			   $('#incidentYear').empty();
 			   $('#incidentYear').append('<option value="">Please select ...</option>');
 			   data.forEach( function(item, index) {

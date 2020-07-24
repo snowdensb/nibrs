@@ -16,6 +16,7 @@
 package org.search.nibrs.stagingdata.controller;
 
 import org.search.nibrs.model.reports.ReturnAForm;
+import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
@@ -29,6 +30,8 @@ import org.search.nibrs.stagingdata.service.summary.ReturnAFormService;
 import org.search.nibrs.stagingdata.service.summary.SupplementaryHomicideReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,6 +64,11 @@ public class SummaryFormController {
 	@RequestMapping("/arsonReport/{ownerId}/{ori}/{year}/{month}")
 	public ArsonReport getArsonReport(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
 		return arsonFormService.createArsonSummaryReports(ownerId, ori, year, month);
+	}
+	
+	@PostMapping("/arsonReport")
+	public ArsonReport getArsonReportByRequest(@RequestBody SummaryReportRequest summaryReportRequest){
+		return arsonFormService.createArsonSummaryReportsByRequest(summaryReportRequest);
 	}
 	@RequestMapping("/humanTraffickingReport/{ownerId}/{ori}/{year}/{month}")
 	public HumanTraffickingForm getHumanTraffickingReport(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){

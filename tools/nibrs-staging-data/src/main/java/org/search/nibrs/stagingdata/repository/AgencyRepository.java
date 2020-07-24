@@ -44,4 +44,6 @@ public interface AgencyRepository extends JpaRepository<Agency, Integer>{
 			+ "Order BY a.agencyName ")
 	public List<Integer> findAllAgencyIdsByOwner(Integer ownerId);
 	
+	public Agency findFirstByStateCode(String stateCode);
+	
 }

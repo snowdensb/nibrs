@@ -187,5 +187,15 @@ public interface AdministrativeSegmentRepository
 			+ "WHERE (?1 = null OR ?1 = 0 OR ao.ownerId = ?1) AND "
 			+ "		(?3 = null OR ?3 = 0 OR ag.agencyId = ?3 OR ?2 = null OR ag.stateCode = ?2) ")
 	Integer countIdsByOwnerStateAndAgency(Integer ownerId, String stateCode, Integer agencyId);
+
+	@Query("SELECT DISTINCT year(a.incidentDate) as incidentYear from AdministrativeSegment a "
+			+ "WHERE a.agency.stateCode = ?1 AND (?2 = null OR ?2=0 OR a.owner.ownerId = ?2)"
+			+ "ORDER BY incidentYear ")
+	List<Integer> findDistinctYearsByStateCode(String stateCode, Integer integer);
+
+	@Query("SELECT DISTINCT month(a.incidentDate) as incidentMonth from AdministrativeSegment a "
+			+ "WHERE a.agency.stateCode = ?1 AND year(a.incidentDate) = ?2 AND (?3 = null OR ?3 = 0 OR a.owner.ownerId = ?3)"
+			+ "ORDER BY incidentMonth ")
+	List<Integer> findDistinctMonthsByStateCode(String stateCode, Integer year, Integer integer);
 	
 }

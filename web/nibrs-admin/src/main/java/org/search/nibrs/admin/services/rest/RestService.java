@@ -95,20 +95,6 @@ public class RestService{
 				.block();
 	}
 	
-	public List<Integer> getYears(String ori, String ownerId) {
-		return this.webClient.get().uri("/codeTables/years/"+ ownerId + "/" + ori)
-				.retrieve()
-				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
-				.block();
-	}
-	
-	public List<Integer> getMonths(String ori, Integer year, String ownerId) {
-		return this.webClient.get().uri("/codeTables/months/" + year + "/" + ownerId + "/"+ ori)
-				.retrieve()
-				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
-				.block();
-	}
-	
 	public Map<Integer, String> getOffenseCodes() {
 		return this.webClient.get().uri("/codeTables/offenseCodes")
 				.retrieve()
@@ -301,6 +287,34 @@ public class RestService{
 				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<String, String>>() {})
 				.block();
 	}
+
+	public List<Integer> getYearsByStateCode(String stateCode, String ownerId) {
+		return this.webClient.get().uri("/codeTables/state/years/"+ ownerId + "/" + stateCode)
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
+				.block();
+	}
 	
+	
+	public List<Integer> getYears(String ori, String ownerId) {
+		return this.webClient.get().uri("/codeTables/years/"+ ownerId + "/" + ori)
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
+				.block();
+	}
+
+	public List<Integer> getMonths(String ori, Integer year, String ownerId) {
+		return this.webClient.get().uri("/codeTables/months/" + year + "/" + ownerId + "/"+ ori)
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
+				.block();
+	}
+	
+	public List<Integer> getMonthsByStateCode(String stateCode, Integer year, String ownerId) {
+		return this.webClient.get().uri("/codeTables/state/months/" + year + "/" + ownerId + "/"+ stateCode)
+				.retrieve()
+				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
+				.block();
+	}
 	
 }

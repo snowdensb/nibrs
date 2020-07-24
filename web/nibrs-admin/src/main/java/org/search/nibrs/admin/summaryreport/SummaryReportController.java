@@ -35,6 +35,7 @@ import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.model.reports.ReturnAForm;
+import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
@@ -86,16 +87,18 @@ public class SummaryReportController {
     	
     	log.info("Add ModelAtrributes");
 		
-		if (!model.containsKey("oriMapping")) {
-			if (appProperties.getPrivateSummaryReportSite()) {
+		if (appProperties.getPrivateSummaryReportSite()) {
+			if (!model.containsKey("oriMapping")){
 				model.put("oriMapping", restService.getOris(StringUtils.EMPTY));
+				model.put("agencyMapping", restService.getAgencies(StringUtils.EMPTY));
 			}
-			else {
-				AuthUser authUser =(AuthUser) model.get("authUser");  
-				String ownerId = Objects.toString(authUser.getUserId());
-				model.put("oriMapping", restService.getOris(ownerId));
-
-			}
+		}
+		else {
+			AuthUser authUser =(AuthUser) model.get("authUser");  
+			String ownerId = Objects.toString(authUser.getUserId());
+			model.put("oriMapping", restService.getOris(ownerId));
+			model.put("agencyMapping", restService.getAgencies(ownerId));
+			model.put("stateCodeMappingByOwner", restService.getStatesNoChache(ownerId));
 		}
     	log.debug("Model: " + model);
     }
@@ -198,8 +201,7 @@ public class SummaryReportController {
 	public void getArsonReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get arson report");
-		ArsonReport arsonReport = restClient.getArsonReport(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
+		ArsonReport arsonReport = restClient.getArsonReportByRequest(summaryReportRequest);
 		XSSFWorkbook workbook = arsonExcelExporter.createWorkBook(arsonReport);
 		String fileName = getFileName("ARSON-Report", arsonReport.getOri(), arsonReport.getYear(), arsonReport.getMonth());
 		
@@ -257,6 +259,16 @@ public class SummaryReportController {
 		String ownerId = getOwnerId(model);
 		return restService.getYears(ori, ownerId);
 	}
+	
+	@GetMapping("/state/years/{stateCode}")
+	public @ResponseBody List<Integer> getDistinctYearsByStateCode(@PathVariable String stateCode, Map<String, Object> model) throws IOException{
+		log.info("stateCode:" + stateCode); 
+		String ownerId = getOwnerId(model);
+		log.info("ownerId:" + ownerId); 
+		List<Integer> years = restService.getYearsByStateCode(stateCode, ownerId);
+		log.info("years:" + years);
+		return years;
+	}
 
 	private String getOwnerId(Map<String, Object> model) {
 		String ownerId = "0";
@@ -272,6 +284,12 @@ public class SummaryReportController {
 	public @ResponseBody List<Integer> getDistinctMonths(@PathVariable String ori, @PathVariable Integer year, Map<String, Object> model) throws IOException{
 		String ownerId = getOwnerId(model);
 		return restService.getMonths(ori, year, ownerId);
+	}
+	
+	@GetMapping("state/months/{year}/{stateCode}")
+	public @ResponseBody List<Integer> getDistinctMonthsByStateCode(@PathVariable String stateCode, @PathVariable Integer year, Map<String, Object> model) throws IOException{
+		String ownerId = getOwnerId(model);
+		return restService.getMonthsByStateCode(stateCode, year, ownerId);
 	}
 	
 	@RequestMapping("/arsonReport/{ori}/{year}/{month}")

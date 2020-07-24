@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.search.nibrs.model.reports.ReturnAForm;
+import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
 import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
@@ -30,6 +31,7 @@ import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.report.SummaryReportProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
@@ -55,7 +57,6 @@ public class StagingDataRestClient {
 				"returnAForm/", ownerId, ori, year, month); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the ReturnAForm object from the url " + url);
-
 		ReturnAForm returnAForm = restTemplate.getForObject( url, ReturnAForm.class);
 		log.info("returnAForm: " + returnAForm);
 		return returnAForm;
@@ -79,6 +80,19 @@ public class StagingDataRestClient {
 		log.info("Getting the Arson Report object from the url " + url);
 		
 		ArsonReport arsonReport = restTemplate.getForObject( url, ArsonReport.class);
+		log.info("arsonReport: " + arsonReport);
+		return arsonReport;
+	}
+	
+	public ArsonReport getArsonReportByRequest(SummaryReportRequest summaryReportRequest) {
+		
+		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
+		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
+				"arsonReport"); 
+		String url = StringUtils.join(urlParts, '/');
+		log.info("Getting the Arson Report object from the url " + url);
+		
+		ArsonReport arsonReport = restTemplate.postForObject( url, request, ArsonReport.class);
 		log.info("arsonReport: " + arsonReport);
 		return arsonReport;
 	}

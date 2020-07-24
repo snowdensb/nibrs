@@ -21,10 +21,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.model.codes.TypeOfPropertyLossCode;
+import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.arson.ArsonRow;
 import org.search.nibrs.model.reports.arson.ArsonRowName;
@@ -218,6 +220,35 @@ public class ArsonFormService {
 		return arsonReport;
 	}
 
+	public ArsonReport createArsonSummaryReportsByRequest(SummaryReportRequest summaryReportRequest ) {
+		
+		ArsonReport arsonReport = new ArsonReport(summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth());
+		
+		if (summaryReportRequest.getAgencyId() != null){
+			Optional<Agency> agency = agencyRepository.findById(summaryReportRequest.getAgencyId()); 
+			if (agency.isPresent()){
+				arsonReport.setAgencyName(agency.get().getAgencyName());
+				arsonReport.setStateName(agency.get().getStateName());
+				arsonReport.setStateCode(agency.get().getStateCode());
+				arsonReport.setPopulation(agency.get().getPopulation());
+			}
+			else{
+				return arsonReport; 
+			}
+		}
+		else{
+			Agency agency = agencyRepository.findFirstByStateCode(summaryReportRequest.getStateCode());
+			arsonReport.setAgencyName("");
+			arsonReport.setStateName(agency.getStateName());
+			arsonReport.setStateCode(summaryReportRequest.getStateCode());
+			arsonReport.setPopulation(null);
+		}
+//		processReportedOffenses(ori, year, month, arsonReport, ownerId);
+//		processClearedOffenses(ori, year, month, arsonReport, ownerId);
+		log.debug("arsonReport: " + arsonReport);
+		return arsonReport;
+	}
+	
 	private void processClearedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport, String ownerId) {
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findArsonIncidentByOriAndAClearanceDate(ori, year, month, ownerId);
 
@@ -348,4 +379,5 @@ public class ArsonFormService {
 		ArsonRowName arsonRowName = propertyDescriptionArsonRowNameMap.get(currentPropertyDescription); 
 		return arsonRowName;
 	}
+
 }

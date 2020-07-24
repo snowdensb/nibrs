@@ -146,15 +146,27 @@ public class CodeTableController {
 	}
 	
 	@GetMapping("/years/{ownerId}/{ori}") 
-	public List<Integer> getYearsByOriAndOwner(@PathVariable String ori, @PathVariable String ownerId){
+	public List<Integer> getYearsByStateCodeAndOwner(@PathVariable String ori, @PathVariable String ownerId){
 		List<Integer> years = administrativeSegmentRepository.findDistinctYears(ori, ObjectUtils.getInteger(ownerId));
 		log.debug("Years from the database for ORI " + ori + " and ownerId " + ownerId + " : " + years);
+		return years;
+	}
+	
+	@GetMapping("/state/years/{ownerId}/{stateCode}") 
+	public List<Integer> getYearsByOriAndOwner(@PathVariable String stateCode, @PathVariable String ownerId){
+		List<Integer> years = administrativeSegmentRepository.findDistinctYearsByStateCode(stateCode, ObjectUtils.getInteger(ownerId));
+		log.debug("Years from the database for State " + stateCode + " and ownerId " + ownerId + " : " + years);
 		return years;
 	}
 	
 	@GetMapping("/months/{year}/{ownerId}/{ori}") 
 	public List<Integer> getMonths(@PathVariable String ori, @PathVariable Integer year, @PathVariable String ownerId){
 		return administrativeSegmentRepository.findDistinctMonths(ori, year, ObjectUtils.getInteger(ownerId));
+	}
+	
+	@GetMapping("/state/months/{year}/{ownerId}/{stateCode}") 
+	public List<Integer> getMonthsByStateCode(@PathVariable String stateCode, @PathVariable Integer year, @PathVariable String ownerId){
+		return administrativeSegmentRepository.findDistinctMonthsByStateCode(stateCode, year, ObjectUtils.getInteger(ownerId));
 	}
 	
 	@GetMapping("/offenseCodes")
