@@ -53,7 +53,7 @@ public class GlobalControllerAdvice {
         if (authentication != null) {
 	        authUser = (AuthUser) authentication.getPrincipal();
 	        model.addAttribute("authUser", authUser);
-	        model.addAttribute("ownerId", authUser.getUserId().toString());
+	        model.addAttribute("ownerId", authUser.getUserId());
         }
         
 		if (appProperties.getPrivateSummaryReportSite()) {
