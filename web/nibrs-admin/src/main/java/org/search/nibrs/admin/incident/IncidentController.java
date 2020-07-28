@@ -202,7 +202,7 @@ public class IncidentController {
 	
 	@GetMapping("/agencies")
 	public @ResponseBody Map<Integer, String> getAgencyIdMapping(@RequestParam String stateCode, Map<String, Object> model) throws IOException{
-		String ownerId = (String) model.get("ownerId");
+		Integer ownerId = (Integer) model.get("ownerId");
 		
 		if (StringUtils.isBlank(stateCode)) {
 			return restService.getAgencies(ownerId); 

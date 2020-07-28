@@ -90,14 +90,14 @@ public class SummaryReportController {
 		if (appProperties.getPrivateSummaryReportSite()) {
 			if (!model.containsKey("oriMapping")){
 				model.put("oriMapping", restService.getOris(StringUtils.EMPTY));
-				model.put("agencyMapping", restService.getAgencies(StringUtils.EMPTY));
+				model.put("agencyMapping", restService.getAgencies(null));
 			}
 		}
 		else {
 			AuthUser authUser =(AuthUser) model.get("authUser");  
 			String ownerId = Objects.toString(authUser.getUserId());
 			model.put("oriMapping", restService.getOris(ownerId));
-			model.put("agencyMapping", restService.getAgencies(ownerId));
+			model.put("agencyMapping", restService.getAgencies(authUser.getUserId()));
 			model.put("stateCodeMappingByOwner", restService.getStatesNoChache(ownerId));
 		}
     	log.debug("Model: " + model);

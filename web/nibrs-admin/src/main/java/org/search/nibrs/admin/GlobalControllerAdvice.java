@@ -16,12 +16,10 @@
 package org.search.nibrs.admin;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.springframework.security.core.Authentication;
@@ -59,10 +57,10 @@ public class GlobalControllerAdvice {
         }
         
 		if (appProperties.getPrivateSummaryReportSite()) {
-			model.addAttribute("agencyMapping", restService.getAgencies(StringUtils.EMPTY));
+			model.addAttribute("agencyMapping", restService.getAgencies(null));
 		}
 		else if (authUser != null){
-			model.addAttribute("agencyMapping", restService.getAgencies(Objects.toString(authUser.getUserId())));
+			model.addAttribute("agencyMapping", restService.getAgencies(authUser.getUserId()));
 		}
 		else {
 			model.addAttribute("agencyMapping", new HashMap<Integer, String>());

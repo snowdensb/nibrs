@@ -61,8 +61,11 @@ public class RestService{
 		this.webClient = webClientBuilder.baseUrl(appProperties.getRestServiceBaseUrl()).build();
 	}
 	
-	public Map<Integer, String> getAgencies(String ownerId) {
-		return this.webClient.get().uri("/codeTables/agencies/"+ownerId)
+	public Map<Integer, String> getAgencies(Integer ownerId) {
+		return this.webClient.get().uri(uriBuilder -> uriBuilder
+			    .path("/codeTables/agencies/")
+			    .queryParam("ownerId", ownerId)
+			    .build())
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
 				.block();
@@ -78,7 +81,7 @@ public class RestService{
 				.block();
 	}
 	
-	public Map<Integer, String> getAgenciesByOwnerAndState(String ownerId, String stateCode) {
+	public Map<Integer, String> getAgenciesByOwnerAndState(Integer ownerId, String stateCode) {
 		return this.webClient.get().uri("/codeTables/states/" + stateCode + "/agencies/"+ownerId)
 				.header("Expires", "0")
 				.header("Pragma", "no-cache")

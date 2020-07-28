@@ -58,9 +58,9 @@
 				<div class="form-row">
 					<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Agency</label>
 					<div class="col-8 col-xl-3 form-group">
-						<select th:field="*{ori}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="Please select one">
+						<select th:field="*{agencyId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="Please select one">
 							<option value=''>Please select ...</option>
-							<option th:each="item: ${oriMapping}" th:value="${item.key}" th:text="${item.value}" />
+							<option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
 						</select>
 						<div class="invalid-feedback">Please select one agency</div>
 					</div>

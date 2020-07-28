@@ -31,6 +31,7 @@ public class SummaryReportRequest implements Serializable {
 	
 	private String ori; 
 	
+	private Integer ownerId; 
 	private Integer agencyId;
 
 	private Integer incidentMonth;
@@ -45,6 +46,7 @@ public class SummaryReportRequest implements Serializable {
 	public boolean isEmpty() {
 		return StringUtils.isBlank(stateCode)
 				&& agencyId == null
+				&& ownerId == null
 				&& StringUtils.isBlank(getOri())
 				&& getIncidentMonth() == null 
 				&& getIncidentYear() == null ;
@@ -98,5 +100,13 @@ public class SummaryReportRequest implements Serializable {
 
 	public void setAgencyId(Integer agencyId) {
 		this.agencyId = agencyId;
+	}
+
+	public Integer getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(Integer ownerId) {
+		this.ownerId = ownerId;
 	}
 }

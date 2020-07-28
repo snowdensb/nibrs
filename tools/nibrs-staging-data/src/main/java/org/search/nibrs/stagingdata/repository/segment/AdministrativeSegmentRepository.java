@@ -59,7 +59,7 @@ public interface AdministrativeSegmentRepository
 	boolean existsByIncidentNumberAndOriAndSubmissionDate(String incidentNumber, String ori, Date submissionDate);
 	
 	@Query("SELECT distinct a.agency.agencyId from AdministrativeSegment a "
-			+ "WHERE a.owner.ownerId = ?1 ")
+			+ "WHERE ?1 = null OR a.owner.ownerId = ?1 ")
 	Set<Integer> findAgencyIdsByOwnerId(Integer ownerId);
 	
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
@@ -142,6 +142,19 @@ public interface AdministrativeSegmentRepository
 			+ "		(?3 = 0 OR month(a.incidentDate) = ?3)) "
 			+ "GROUP BY a.incidentNumber ")
 	List<Integer> findIdsByOriAndIncidentDateAndOffenses(String ori, Integer year, Integer month, List<String> offenseCodes, Integer ownerId);
+	
+	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+			+ "LEFT JOIN a.offenseSegments ao "
+			+ "WHERE ao.ucrOffenseCodeType.nibrsCode in (?6)  AND"
+			+ "		(?5 = null OR ?5 = 0 OR a.owner.ownerId = ?5) AND "
+			+ " 	(?1 = null OR ?1 = '' OR a.agency.stateCode = ?1) AND "
+			+ "		(?2 = null OR a.agency.agencyId = ?2) AND "
+			+ "		(year(a.incidentDate) = ?3 AND "
+			+ "		(?4 = 0 OR month(a.incidentDate) = ?4)) "
+			+ "GROUP BY a.incidentNumber ")
+	List<Integer> findIdsBySummaryReportRequestAndOffenses(String stateCode, 
+			Integer agencyId, Integer year, Integer month, Integer ownerId, 
+			List<String> offenseCodes);
 	
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "LEFT JOIN a.offenseSegments ao "

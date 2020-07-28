@@ -32,6 +32,7 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
+import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.cargotheft.CargoTheftFormRow;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -185,6 +186,21 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
+	public List<AdministrativeSegment> findBySummaryReportRequestAndOffenses(SummaryReportRequest summaryReportRequest, List<String> offenseCodes){
+		
+		List<Integer> ids = 
+				administrativeSegmentRepository.findIdsBySummaryReportRequestAndOffenses(
+						summaryReportRequest.getStateCode(), summaryReportRequest.getAgencyId(), 
+						summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), 
+						summaryReportRequest.getOwnerId(), offenseCodes);
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		return administrativeSegments; 
+	}
+	
 	public List<AdministrativeSegment> findArsonIncidentByOriAndIncidentDate(String ori, Integer year, Integer month, String ownerId){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
@@ -292,7 +308,6 @@ public class AdministrativeSegmentService {
 				.collect(Collectors.toList());
 		return cargoTheftFormRows;
 	}
-
 	public List<AdministrativeSegment> findByOriAndClearanceDateAndOffenses(Integer ownerId, String ori, Integer year, Integer month,
 			ArrayList<String> offenseCodes) {
 		if ("StateWide".equalsIgnoreCase(ori)){
@@ -306,5 +321,6 @@ public class AdministrativeSegmentService {
 		
 		return administrativeSegments; 
 	}
+
 	
 }

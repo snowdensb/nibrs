@@ -86,18 +86,8 @@ public class CodeTableController {
 		return savedOwner;
 	}
 
-	@GetMapping("/agencies")
-	public Map<Integer, String> agencies(){
-		Map<Integer, String> agencyMap = 
-			StreamSupport.stream(agencyRepository.findAll(new Sort(Sort.Direction.ASC, "agencyName")).spliterator(), false)
-				.filter(agency-> !"UNKNOWN".equalsIgnoreCase(agency.getAgencyName()) && !"BLANK".equalsIgnoreCase(agency.getAgencyName()))
-				.collect(Collectors.toMap(Agency::getAgencyId, Agency::getAgencyName, (u, v) -> u,
-					      LinkedHashMap::new));
-		return agencyMap;
-	}
-	
-	@GetMapping("/agencies/{ownerId}")
-	public Map<Integer, String> agenciesByOwnerId(@PathVariable Integer ownerId){
+	@GetMapping(value= {"/agencies/{ownerId}", "/agencies"})
+	public Map<Integer, String> agenciesByOwnerId(@PathVariable(required = false) Integer ownerId){
 		
 		Set<Integer> agencyIds = administrativeSegmentRepository.findAgencyIdsByOwnerId(ownerId); 
 		Set<Integer> agencyIdsFromGroupB = arrestReportSegmentRepository.findAgencyIdsByOwnerId(ownerId); 
@@ -115,14 +105,15 @@ public class CodeTableController {
 		return agencyMap;
 	}
 	
-	@GetMapping("/states/{stateCode}/agencies/{ownerId}") 
-	public Map<Integer, String> agenciesByStateAndOwnerId(@PathVariable String stateCode, @PathVariable Integer ownerId){
+	@GetMapping(value={"/states/{stateCode}/agencies/{ownerId}", "/states/{stateCode}/agencies/{ownerId}"}) 
+	public Map<Integer, String> agenciesByStateAndOwnerId(@PathVariable String stateCode, 
+			@PathVariable(required = false) Integer ownerId){
 		
 		return agencyRepositoryCustom.findAllAgenciesByStateAndOwnerId(ownerId, stateCode);
 	}
 	
-	@GetMapping("/states/{ownerId}")
-	public Map<String, String> statesByOwnerId(@PathVariable Integer ownerId){
+	@GetMapping(value = {"/states/{ownerId}", "/states"})
+	public Map<String, String> statesByOwnerId(@PathVariable(required = false)Integer ownerId){
 		
 		return agencyRepositoryCustom.findAllStatesByOwnerId(ownerId);
 	}
@@ -132,6 +123,15 @@ public class CodeTableController {
 		Map<String, String> agencyMap = StreamSupport.stream(agencyRepository.findAllHavingData(null).spliterator(), false)
 				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
 				.collect(Collectors.toMap(Agency::getAgencyOri, Agency::getAgencyName, (u, v) -> u,
+						LinkedHashMap::new));
+		return agencyMap;
+	}
+	
+	@GetMapping("/agencyIdMapping")
+	public Map<Integer, String> getAgencyIdMapping(){
+		Map<Integer, String> agencyMap = StreamSupport.stream(agencyRepository.findAllHavingData(null).spliterator(), false)
+				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
+				.collect(Collectors.toMap(Agency::getAgencyId, Agency::getAgencyName, (u, v) -> u,
 						LinkedHashMap::new));
 		return agencyMap;
 	}
