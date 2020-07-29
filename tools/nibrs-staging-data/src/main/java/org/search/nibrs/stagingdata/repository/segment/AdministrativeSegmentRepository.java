@@ -187,7 +187,7 @@ public interface AdministrativeSegmentRepository
 			+ "WHERE ao.ucrOffenseCodeType.nibrsCode in (?6) AND (aa.arrestDate = (select min (arrestDate) from a.arresteeSegments )) AND "
 			+ "		(?5 = null OR ?5 = 0 OR  a.owner.ownerId = ?5) AND "
 			+ " 	(?1 = null OR ?1 = '' OR a.agency.stateCode = ?1) AND "
-			+ "		(?2 = null OR a.ori = ?2) AND "
+			+ "		(?2 = null OR a.agency.agencyId = ?2) AND "
 			+ "		((year(a.exceptionalClearanceDate) = ?3 AND ( ?4 = 0 OR month(a.exceptionalClearanceDate) = ?4)) "
 			+ "			OR ( year(aa.arrestDate) = ?3 AND ( ?4 = 0 OR month(aa.arrestDate) = ?4 ))) "
 			+ "GROUP BY a.incidentNumber ")

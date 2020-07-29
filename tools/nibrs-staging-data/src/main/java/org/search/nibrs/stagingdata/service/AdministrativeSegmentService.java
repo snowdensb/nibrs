@@ -16,6 +16,7 @@
 package org.search.nibrs.stagingdata.service;
 
 import static org.search.nibrs.stagingdata.util.ObjectUtils.getInteger;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,10 +32,10 @@ import javax.persistence.criteria.Root;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.cargotheft.CargoTheftFormRow;
 import org.search.nibrs.stagingdata.model.search.IncidentPointer;
+import org.search.nibrs.stagingdata.model.search.IncidentSearchRequest;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
@@ -203,6 +204,7 @@ public class AdministrativeSegmentService {
 	
 	public List<AdministrativeSegment> findBySummaryReportRequestClearanceDateAndOffenses(SummaryReportRequest summaryReportRequest,
 			List<String> offenseCodes) {
+		log.info("summaryReportRequest:" + summaryReportRequest);
 		List<Integer> ids = administrativeSegmentRepository.findIdsByStateCodeAndOriAndClearanceDateAndOffenses(
 				summaryReportRequest.getStateCode(), summaryReportRequest.getAgencyId(), 
 				summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), 

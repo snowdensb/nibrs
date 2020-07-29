@@ -48,11 +48,14 @@
      stateCode = $('#stateCode').val(); 
      xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
        $('#agencyId').empty();
-       $('#agencyId').append('<option value="">All</option>');
        
        $.each( data, function( key, value ) {
-       	$('#agencyId').append($('<option></option>').attr('value', key).text(value));
-      	});
+    	   $('#agencyId').append($('<option></option>').attr('value', key).text(value));
+       });
+       
+       if ($('#agencyId option').length > 1){
+    	   $('#agencyId').prepend('<option value="">All</option>');
+       }
        $('#agencyId').trigger("chosen:updated");
      }).fail(ojbc.displayFailMessage);
    }

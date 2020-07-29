@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -201,8 +202,13 @@ public class IncidentController {
 	}
 	
 	@GetMapping("/agencies")
-	public @ResponseBody Map<Integer, String> getAgencyIdMapping(@RequestParam String stateCode, Map<String, Object> model) throws IOException{
-		Integer ownerId = (Integer) model.get("ownerId");
+	public @ResponseBody Map<Integer, String> getAgencyIdMapping(@RequestParam(required = false) String stateCode, Map<String, Object> model) throws IOException{
+		Integer ownerId = null;
+		
+		boolean privateSummaryReportSite = (boolean) model.get("privateSummaryReportSite");
+		if (BooleanUtils.isFalse(privateSummaryReportSite)) {
+			ownerId = (Integer) model.get("ownerId");
+		}
 		
 		if (StringUtils.isBlank(stateCode)) {
 			return restService.getAgencies(ownerId); 

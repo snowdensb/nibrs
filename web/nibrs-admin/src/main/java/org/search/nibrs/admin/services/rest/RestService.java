@@ -18,6 +18,7 @@ package org.search.nibrs.admin.services.rest;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
@@ -62,10 +63,8 @@ public class RestService{
 	}
 	
 	public Map<Integer, String> getAgencies(Integer ownerId) {
-		return this.webClient.get().uri(uriBuilder -> uriBuilder
-			    .path("/codeTables/agencies/")
-			    .queryParam("ownerId", ownerId)
-			    .build())
+		String ownerIdString = Objects.toString(ownerId, "");
+		return this.webClient.get().uri("/codeTables/agencies/"+ownerIdString)
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
 				.block();
@@ -82,7 +81,7 @@ public class RestService{
 	}
 	
 	public Map<Integer, String> getAgenciesByOwnerAndState(Integer ownerId, String stateCode) {
-		return this.webClient.get().uri("/codeTables/states/" + stateCode + "/agencies/"+ownerId)
+		return this.webClient.get().uri("/codeTables/states/" + stateCode + "/agencies/"+ Objects.toString(ownerId, ""))
 				.header("Expires", "0")
 				.header("Pragma", "no-cache")
 				.header("Cache-Control", "private",  "no-store", "max-age=0")
@@ -282,7 +281,9 @@ public class RestService{
 	}
 
 	public Map<String, String> getStatesNoChache(String ownerId) {
-		return this.webClient.get().uri("/codeTables/states/"+ownerId)
+		
+		String ownerIdString = Objects.toString(ownerId, "");
+		return this.webClient.get().uri("/codeTables/states/"+ownerIdString)
 				.header("Expires", "0")
 				.header("Pragma", "no-cache")
 				.header("Cache-Control", "private",  "no-store", "max-age=0")

@@ -88,10 +88,9 @@ public class SummaryReportController {
     	log.info("Add ModelAtrributes");
 		
 		if (appProperties.getPrivateSummaryReportSite()) {
-			if (!model.containsKey("oriMapping")){
-				model.put("oriMapping", restService.getOris(StringUtils.EMPTY));
-				model.put("agencyMapping", restService.getAgencies(null));
-			}
+			model.put("oriMapping", restService.getOris(StringUtils.EMPTY));
+			model.put("agencyMapping", restService.getAgencies(null));
+			model.put("stateCodeMappingByOwner", restService.getStatesNoChache(null));
 		}
 		else {
 			AuthUser authUser =(AuthUser) model.get("authUser");  
@@ -109,8 +108,11 @@ public class SummaryReportController {
 		
 		if (summaryReportRequest == null) {
 			summaryReportRequest = new SummaryReportRequest();
-			Integer ownerId = (Integer) model.get("ownerId");
-			summaryReportRequest.setOwnerId(ownerId);
+			
+			if (!appProperties.getPrivateSummaryReportSite()) {
+				Integer ownerId = (Integer) model.get("ownerId");
+				summaryReportRequest.setOwnerId(ownerId);
+			}
 		}
 		
 		model.put("summaryReportRequest", summaryReportRequest);
@@ -180,11 +182,11 @@ public class SummaryReportController {
 		List<String> nameParts = new ArrayList<>();
 		nameParts.add(reportType);
 		
-		if(StringUtils.isNotBlank(stateName)) {
-			nameParts.add(String.valueOf(stateName));
-		}
 		if (StringUtils.isNotBlank(ori)){
 			nameParts.add(ori); 
+		}
+		else {
+			nameParts.add(String.valueOf(stateName));
 		}
 		nameParts.add(String.valueOf(year)); 
 		if ( month!=null && month!=0) {
@@ -279,7 +281,7 @@ public class SummaryReportController {
 	}
 
 	private String getOwnerId(Map<String, Object> model) {
-		String ownerId = "0";
+		String ownerId = "";
 		if (!appProperties.getPrivateSummaryReportSite()) {
 			AuthUser authUser =(AuthUser) model.get("authUser");  
 			ownerId = Objects.toString(authUser.getUserId());

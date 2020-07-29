@@ -45,11 +45,11 @@
 						<div class="invalid-feedback">report type required</div>
 					</div>
 				</div>
-				<div class="form-row" th:unless="${privateSummaryReportSite}">
+				<div class="form-row">
 					<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">State</label>
 					<div class="col-8 col-xl-3 form-group">
 						<select th:field="*{stateCode}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="Please select one" required>
-							<option value=''>Please select ...</option>
+							<option value='' th:if="${#maps.size(stateCodeMappingByOwner) > 1}">Please select ...</option>
 							<option th:each="item: ${stateCodeMappingByOwner}" th:value="${item.key}" th:text="${item.value}" />
 						</select>
 						<div class="invalid-feedback">Please select one state</div>
@@ -59,7 +59,7 @@
 					<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Agency</label>
 					<div class="col-8 col-xl-3 form-group">
 						<select th:field="*{agencyId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="All Agencies">
-							<option value=''>Please select ...</option>
+							<option value='' th:if="${#maps.size(agencyMapping) > 1}">Please select ...</option>
 							<option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
 						</select>
 						<div class="invalid-feedback">Please select one agency</div>
