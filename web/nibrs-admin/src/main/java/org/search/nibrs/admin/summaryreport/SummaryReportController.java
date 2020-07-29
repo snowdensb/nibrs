@@ -59,7 +59,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes({"summaryReportRequest", "oriMapping", "authUser"})
+@SessionAttributes({"summaryReportRequest", "oriMapping", "authUser", "ownerId", "agencyMapping", "stateCodeMappingByOwner"})
 public class SummaryReportController {
 	private static final Log log = LogFactory.getLog(SummaryReportController.class);
 
@@ -109,6 +109,8 @@ public class SummaryReportController {
 		
 		if (summaryReportRequest == null) {
 			summaryReportRequest = new SummaryReportRequest();
+			Integer ownerId = (Integer) model.get("ownerId");
+			summaryReportRequest.setOwnerId(ownerId);
 		}
 		
 		model.put("summaryReportRequest", summaryReportRequest);
@@ -127,7 +129,7 @@ public class SummaryReportController {
 			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		ReturnAForm returnAForm = restClient.getReturnAForm(ori, year, month, getOwnerId(model));
 		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
-		String fileName = getFileName("ReturnA", returnAForm.getOri(), returnAForm.getYear(), returnAForm.getMonth()); 
+		String fileName = getFileName("ReturnA", returnAForm.getStateName(), returnAForm.getOri(), returnAForm.getYear(), returnAForm.getMonth()); 
 		
 		downloadReport(response, workbook, fileName);
 	}
@@ -168,16 +170,22 @@ public class SummaryReportController {
 		ReturnAForm returnAForm = restClient.getReturnAForm(
 				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
-		String fileName = getFileName("ReturnA", returnAForm.getOri(), returnAForm.getYear(), returnAForm.getMonth());
+		String fileName = getFileName("ReturnA", returnAForm.getStateName(), returnAForm.getOri(), returnAForm.getYear(), returnAForm.getMonth());
 
 		downloadReport(response, workbook, fileName);
 	}
 
-	private String getFileName(String reportType,  String ori, Integer year, Integer month) {
+	private String getFileName(String reportType, String stateName,  String ori, Integer year, Integer month) {
 
 		List<String> nameParts = new ArrayList<>();
-		nameParts.add(reportType); 
-		nameParts.add(ori); 
+		nameParts.add(reportType);
+		
+		if(StringUtils.isNotBlank(stateName)) {
+			nameParts.add(String.valueOf(stateName));
+		}
+		if (StringUtils.isNotBlank(ori)){
+			nameParts.add(ori); 
+		}
 		nameParts.add(String.valueOf(year)); 
 		if ( month!=null && month!=0) {
 			nameParts.add(StringUtils.leftPad(String.valueOf(month), 2, '0')); 
@@ -192,7 +200,7 @@ public class SummaryReportController {
 		ReturnAForm returnAForm = restClient.getReturnAForm(
 				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = returnAFormExporter.createReturnASupplementWorkBook(returnAForm);
-		String fileName = getFileName("ReturnASupplement", returnAForm.getOri(), returnAForm.getYear(), returnAForm.getMonth()); 
+		String fileName = getFileName("ReturnASupplement", returnAForm.getStateName(), returnAForm.getOri(), returnAForm.getYear(), returnAForm.getMonth()); 
 		
 		downloadReport(response, workbook, fileName);
 	}
@@ -203,7 +211,7 @@ public class SummaryReportController {
 		log.info("get arson report");
 		ArsonReport arsonReport = restClient.getArsonReportByRequest(summaryReportRequest);
 		XSSFWorkbook workbook = arsonExcelExporter.createWorkBook(arsonReport);
-		String fileName = getFileName("ARSON-Report", arsonReport.getOri(), arsonReport.getYear(), arsonReport.getMonth());
+		String fileName = getFileName("ARSON-Report", arsonReport.getStateName(), arsonReport.getOri(), arsonReport.getYear(), arsonReport.getMonth());
 		
 		downloadReport(response, workbook, fileName);
 	}
@@ -215,7 +223,7 @@ public class SummaryReportController {
 		HumanTraffickingForm humanTraffickingForm = restClient.getHumanTraffickingForm(
 				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = humanTraffickingExporter.createWorkbook(humanTraffickingForm);
-		String fileName = getFileName("HumanTrafficking", humanTraffickingForm.getOri(), humanTraffickingForm.getYear(), humanTraffickingForm.getMonth());
+		String fileName = getFileName("HumanTrafficking", humanTraffickingForm.getStateName(), humanTraffickingForm.getOri(), humanTraffickingForm.getYear(), humanTraffickingForm.getMonth());
 		downloadReport(response, workbook, fileName);
 	}
 	
@@ -226,7 +234,7 @@ public class SummaryReportController {
 		AsrReports asrReports = restClient.getAsrReports(
 				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = asrExcelExporter.createWorkbook(asrReports);
-		String fileName = getFileName("ASR-REPORTS", asrReports.getOri(), asrReports.getYear(), asrReports.getMonth());
+		String fileName = getFileName("ASR-REPORTS", asrReports.getStateName(), asrReports.getOri(), asrReports.getYear(), asrReports.getMonth());
 		downloadReport(response, workbook, fileName);
 	}
 	
@@ -237,7 +245,7 @@ public class SummaryReportController {
 		SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReport(
 				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = supplementaryHomicideReportExporter.createWorkbook(supplementaryHomicideReport);
-		String fileName = getFileName("SupplementaryHomicideReport", supplementaryHomicideReport.getOri(), 
+		String fileName = getFileName("SupplementaryHomicideReport", supplementaryHomicideReport.getStateName(), supplementaryHomicideReport.getOri(), 
 				supplementaryHomicideReport.getYear(), supplementaryHomicideReport.getMonth());
 		downloadReport(response, workbook, fileName);
 	}
@@ -249,7 +257,7 @@ public class SummaryReportController {
         CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(
         		summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
 		XSSFWorkbook workbook = cargoTheftReportExporter.createWorkbook(cargoTheftReport);
-		String fileName = getFileName("CargoTheftReport", cargoTheftReport.getOri(), 
+		String fileName = getFileName("CargoTheftReport", cargoTheftReport.getStateName(), cargoTheftReport.getOri(), 
 				cargoTheftReport.getYear(), cargoTheftReport.getMonth());
 		downloadReport(response, workbook, fileName);
 	}

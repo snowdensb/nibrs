@@ -131,6 +131,7 @@ public interface AdministrativeSegmentRepository
 			+ "		(year(a.incidentDate) = ?2 AND "
 			+ "		( ?3 = 0 OR month(a.incidentDate) = ?3)) "
 			+ "GROUP BY a.incidentNumber ")
+	@Deprecated
 	List<Integer> findArsonIdsByOriAndIncidentDate(String ori, Integer year, Integer month);
 	
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
@@ -166,6 +167,7 @@ public interface AdministrativeSegmentRepository
 			+ "			OR ( year(aa.arrestDate) = ?2 AND ( ?3 = 0 OR month(aa.arrestDate) = ?3 ))) "
 			+ "GROUP BY a.incidentNumber "
 			+ "order by a.incidentNumber")
+	@Deprecated
 	List<Integer> findArsonIdsByOriAndClearanceDate(String ori, Integer year, Integer month, Integer ownerId);
 
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
@@ -179,6 +181,19 @@ public interface AdministrativeSegmentRepository
 			+ "GROUP BY a.incidentNumber ")
 	List<Integer> findIdsByOriAndClearanceDateAndOffenses(String ori, Integer year, Integer month, List<String> offenseCodes, Integer ownerId);
 
+	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+			+ "LEFT JOIN a.offenseSegments ao "
+			+ "LEFT JOIN a.arresteeSegments aa "
+			+ "WHERE ao.ucrOffenseCodeType.nibrsCode in (?6) AND (aa.arrestDate = (select min (arrestDate) from a.arresteeSegments )) AND "
+			+ "		(?5 = null OR ?5 = 0 OR  a.owner.ownerId = ?5) AND "
+			+ " 	(?1 = null OR ?1 = '' OR a.agency.stateCode = ?1) AND "
+			+ "		(?2 = null OR a.ori = ?2) AND "
+			+ "		((year(a.exceptionalClearanceDate) = ?3 AND ( ?4 = 0 OR month(a.exceptionalClearanceDate) = ?4)) "
+			+ "			OR ( year(aa.arrestDate) = ?3 AND ( ?4 = 0 OR month(aa.arrestDate) = ?4 ))) "
+			+ "GROUP BY a.incidentNumber ")
+	List<Integer> findIdsByStateCodeAndOriAndClearanceDateAndOffenses(String stateCode, Integer agencyId,
+			Integer incidentYear, Integer incidentMonth, Integer ownerId, List<String> offenseCodes);
+	
 	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "WHERE a.cargoTheftIndicatorType.cargoTheftIndicatorTypeId = 1 AND "
 			+ "		(?1 = null OR a.ori = ?1) AND "
@@ -210,5 +225,5 @@ public interface AdministrativeSegmentRepository
 			+ "WHERE a.agency.stateCode = ?1 AND year(a.incidentDate) = ?2 AND (?3 = null OR ?3 = 0 OR a.owner.ownerId = ?3)"
 			+ "ORDER BY incidentMonth ")
 	List<Integer> findDistinctMonthsByStateCode(String stateCode, Integer year, Integer integer);
-	
+
 }

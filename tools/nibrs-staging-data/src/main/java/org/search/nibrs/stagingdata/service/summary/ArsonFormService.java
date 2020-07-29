@@ -244,14 +244,25 @@ public class ArsonFormService {
 			arsonReport.setPopulation(null);
 		}
 		processReportedOffenses(summaryReportRequest, arsonReport);
-//		processClearedOffenses(ori, year, month, arsonReport, ownerId);
+		processClearedOffenses(summaryReportRequest, arsonReport);
 		log.debug("arsonReport: " + arsonReport);
+		log.debug("summaryReportRequest: " + summaryReportRequest);
 		return arsonReport;
 	}
 	
+	private void processClearedOffenses(SummaryReportRequest summaryReportRequest, ArsonReport arsonReport) {
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentService.findBySummaryReportRequestClearanceDateAndOffenses(summaryReportRequest, Arrays.asList("200"));
+		getClearanceRows(arsonReport, administrativeSegments);
+	}
+
 	private void processClearedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport, String ownerId) {
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findArsonIncidentByOriAndAClearanceDate(ori, year, month, ownerId);
 
+		getClearanceRows(arsonReport, administrativeSegments);
+	}
+
+	private void getClearanceRows(ArsonReport arsonReport, List<AdministrativeSegment> administrativeSegments) {
 		ArsonRow[] arsonRows = arsonReport.getArsonRows();
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			String offenseAttemptedIndicator = administrativeSegment.getOffenseSegments()

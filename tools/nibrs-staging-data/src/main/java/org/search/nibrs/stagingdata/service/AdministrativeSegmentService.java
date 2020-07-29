@@ -201,6 +201,20 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
+	public List<AdministrativeSegment> findBySummaryReportRequestClearanceDateAndOffenses(SummaryReportRequest summaryReportRequest,
+			List<String> offenseCodes) {
+		List<Integer> ids = administrativeSegmentRepository.findIdsByStateCodeAndOriAndClearanceDateAndOffenses(
+				summaryReportRequest.getStateCode(), summaryReportRequest.getAgencyId(), 
+				summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), 
+				summaryReportRequest.getOwnerId(), offenseCodes);
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		return administrativeSegments; 
+	}
+
 	public List<AdministrativeSegment> findArsonIncidentByOriAndIncidentDate(String ori, Integer year, Integer month, String ownerId){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
