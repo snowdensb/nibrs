@@ -62,6 +62,19 @@ public class StagingDataRestClient {
 		return returnAForm;
 	}
 
+	public ReturnAForm getReturnAFormByRequest(SummaryReportRequest summaryReportRequest) {
+		
+		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
+		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
+				"returnAForm"); 
+		String url = StringUtils.join(urlParts, '/');
+		log.info("Getting the ReturnAForm from the url " + url);
+		
+		ReturnAForm returnAForm = restTemplate.postForObject( url, request, ReturnAForm.class);
+		log.debug("returnAForm: " + returnAForm);
+		return returnAForm;
+	}
+	
 	public AsrReports getAsrReports(String ori, String year, String month, String ownerId) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"asrReports", ownerId, ori, year, month); 

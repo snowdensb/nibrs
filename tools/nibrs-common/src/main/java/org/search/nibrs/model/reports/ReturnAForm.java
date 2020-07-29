@@ -58,6 +58,12 @@ public class ReturnAForm implements Serializable{
 		this.month = month; 
 	}
 	
+	public ReturnAForm(int year, int month) {
+		this();
+		this.year = year; 
+		this.month = month; 
+	}
+	
 	public ReturnAFormRow[] getRows() {
 		return rows;
 	}

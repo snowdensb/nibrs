@@ -169,8 +169,7 @@ public class SummaryReportController {
 	@PostMapping("/summaryReports/returnAForm")
 	public void getReturnAFormByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response, Map<String, Object> model) throws IOException{
-		ReturnAForm returnAForm = restClient.getReturnAForm(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
+		ReturnAForm returnAForm = restClient.getReturnAFormByRequest(summaryReportRequest);
 		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
 		String fileName = getFileName("ReturnA", returnAForm.getStateName(), returnAForm.getOri(), returnAForm.getYear(), returnAForm.getMonth());
 

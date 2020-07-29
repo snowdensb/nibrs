@@ -61,6 +61,11 @@ public class SummaryFormController {
 		return returnAFormService.createReturnASummaryReport(ownerId, ori, year, month);
 	}
 	
+	@PostMapping("/returnAForm")
+	public ReturnAForm getReturnAFormByRequest(@RequestBody SummaryReportRequest summaryReportRequest){
+		return returnAFormService.createReturnASummaryReportByRequest(summaryReportRequest);
+	}
+	
 	@RequestMapping("/arsonReport/{ownerId}/{ori}/{year}/{month}")
 	public ArsonReport getArsonReport(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
 		return arsonFormService.createArsonSummaryReports(ownerId, ori, year, month);
