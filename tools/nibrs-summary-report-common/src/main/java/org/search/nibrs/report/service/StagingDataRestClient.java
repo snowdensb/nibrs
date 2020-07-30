@@ -144,6 +144,20 @@ public class StagingDataRestClient {
 		return supplementaryHomicideReport;
 	}
 	
+	public SupplementaryHomicideReport getSupplementaryHomicideReportByRequest(
+			SummaryReportRequest summaryReportRequest) {
+		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
+		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
+				"shrReports"); 
+		String url = StringUtils.join(urlParts, '/');
+		log.info("Getting the SupplementaryHomicideReport object from the url " + url);
+		
+		SupplementaryHomicideReport supplementaryHomicideReport = 
+				restTemplate.postForObject( url, request, SupplementaryHomicideReport.class);
+		log.info("supplementaryHomicideReport: " + supplementaryHomicideReport);
+		return supplementaryHomicideReport;
+	}
+
 	public CargoTheftReport getCargoTheftReport(String ori, String year, String month, String ownerId) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"cargoTheftReport", ownerId, ori, year, month); 
@@ -161,5 +175,6 @@ public class StagingDataRestClient {
 	    converters.add(new MappingJackson2HttpMessageConverter());
 	    return converters;
 	}
+
 
 }

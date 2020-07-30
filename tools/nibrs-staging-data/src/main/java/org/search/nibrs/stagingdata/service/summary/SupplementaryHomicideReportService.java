@@ -17,13 +17,16 @@
 
 package org.search.nibrs.stagingdata.service.summary;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.supplementaryhomicide.HomicideSituation;
 import org.search.nibrs.model.reports.supplementaryhomicide.Person;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
@@ -86,9 +89,63 @@ public class SupplementaryHomicideReportService {
 		return supplementaryHomicideReport;
 	}
 
+	public SupplementaryHomicideReport createSupplementaryHomicideReportByRequest(
+			SummaryReportRequest summaryReportRequest) {
+		SupplementaryHomicideReport supplementaryHomicideReport = 
+				new SupplementaryHomicideReport(summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth()); 
+		
+		if (summaryReportRequest.getAgencyId() != null){
+			Optional<Agency> agency = agencyRepository.findById(summaryReportRequest.getAgencyId());
+			if (agency.isPresent()){
+				supplementaryHomicideReport.setAgencyName(agency.get().getAgencyName());
+				supplementaryHomicideReport.setStateName(agency.get().getStateName());
+				supplementaryHomicideReport.setStateCode(agency.get().getStateCode());
+				supplementaryHomicideReport.setPopulation(agency.get().getPopulation());
+			}
+			else{
+				return supplementaryHomicideReport; 
+			}
+		}
+		else{
+			Agency agency = agencyRepository.findFirstByStateCode(summaryReportRequest.getStateCode());
+			supplementaryHomicideReport.setAgencyName("");
+			supplementaryHomicideReport.setStateName(agency.getStateName());
+			supplementaryHomicideReport.setStateCode(agency.getStateCode());
+			supplementaryHomicideReport.setPopulation(null);
+		}
+
+		processMurderAndNonnegligentManslaughter(summaryReportRequest, supplementaryHomicideReport);
+		processNegligentManslaughter(summaryReportRequest, supplementaryHomicideReport);
+		
+
+		log.info("supplementaryHomicideReport: " + supplementaryHomicideReport);
+		return supplementaryHomicideReport;
+	}
+
+
+	private void processNegligentManslaughter(SummaryReportRequest summaryReportRequest,
+			SupplementaryHomicideReport supplementaryHomicideReport) {
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentService.findBySummaryReportRequestAndOffenses(summaryReportRequest, Arrays.asList("09B"));
+		countNegligentManslaughter(supplementaryHomicideReport, administrativeSegments);
+		
+	}
+
+	private void processMurderAndNonnegligentManslaughter(SummaryReportRequest summaryReportRequest,
+			SupplementaryHomicideReport supplementaryHomicideReport) {
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentService.findBySummaryReportRequestAndOffenses(summaryReportRequest, Arrays.asList("09A", "09C"));
+		countMurderAndNonnegligentManslaughter(supplementaryHomicideReport, administrativeSegments);
+	}
+
 	private void processNegligentManslaughter(String ori, Integer year, Integer month, SupplementaryHomicideReport supplementaryHomicideReport, String ownerId) {
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findIncidentByOriAndIncidentDateAndOffenses(ori, year, month, ownerId, "09B");
 		
+		countNegligentManslaughter(supplementaryHomicideReport, administrativeSegments);
+	}
+
+	private void countNegligentManslaughter(SupplementaryHomicideReport supplementaryHomicideReport,
+			List<AdministrativeSegment> administrativeSegments) {
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			
 			OffenseSegment offenseSegment = administrativeSegment.getOffenseSegments()
@@ -185,6 +242,11 @@ public class SupplementaryHomicideReportService {
 	private void processMurderAndNonnegligentManslaughter(String ori, Integer year, Integer month, SupplementaryHomicideReport supplementaryHomicideReport, String ownerId) {
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findIncidentByOriAndIncidentDateAndOffenses(ori, year, month, ownerId, "09A", "09C");
 		
+		countMurderAndNonnegligentManslaughter(supplementaryHomicideReport, administrativeSegments);
+	}
+
+	private void countMurderAndNonnegligentManslaughter(SupplementaryHomicideReport supplementaryHomicideReport,
+			List<AdministrativeSegment> administrativeSegments) {
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			
 			OffenseSegment offenseSegment = getMuderOrNonNegligentManslaughter(administrativeSegment); 

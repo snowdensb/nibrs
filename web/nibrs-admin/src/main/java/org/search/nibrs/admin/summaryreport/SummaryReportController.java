@@ -241,8 +241,7 @@ public class SummaryReportController {
 	public void getSupplementaryHomicideReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get shrReports");
-		SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReport(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
+		SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReportByRequest(summaryReportRequest);
 		XSSFWorkbook workbook = supplementaryHomicideReportExporter.createWorkbook(supplementaryHomicideReport);
 		String fileName = getFileName("SupplementaryHomicideReport", supplementaryHomicideReport.getStateName(), supplementaryHomicideReport.getOri(), 
 				supplementaryHomicideReport.getYear(), supplementaryHomicideReport.getMonth());

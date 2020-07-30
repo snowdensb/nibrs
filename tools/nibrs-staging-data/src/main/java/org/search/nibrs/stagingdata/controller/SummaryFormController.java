@@ -95,6 +95,11 @@ public class SummaryFormController {
 		return supplementaryHomicideReportService.createSupplementaryHomicideReport(ownerId, ori, arrestYear, arrestMonth);
 	}
 	
+	@PostMapping("/shrReports")
+	public SupplementaryHomicideReport getSupplementaryHomicideReports(@RequestBody SummaryReportRequest summaryReportRequest){
+		return supplementaryHomicideReportService.createSupplementaryHomicideReportByRequest(summaryReportRequest);
+	}
+	
 	@RequestMapping("/cargoTheftReport/{ownerId}/{ori}/{incidentYear}/{incidentMonth}")
 	public CargoTheftReport getCargoTheftReport(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer incidentYear, @PathVariable Integer incidentMonth){
 		return cargoTheftReportService.createCargoTheftReport(ownerId, ori, incidentYear, incidentMonth);
