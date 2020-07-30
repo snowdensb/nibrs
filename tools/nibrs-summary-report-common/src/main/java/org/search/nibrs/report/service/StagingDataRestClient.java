@@ -86,6 +86,18 @@ public class StagingDataRestClient {
 		return asrAdult;
 	}
 	
+	public AsrReports getAsrReportsByRequest(SummaryReportRequest summaryReportRequest) {
+		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
+
+		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
+				"asrReports"); 
+		String url = StringUtils.join(urlParts, '/');
+		log.info("Getting the ASR Report object from the url " + url);
+		
+		AsrReports asrReports = restTemplate.postForObject( url, request, AsrReports.class);
+		log.info("asrReports: " + asrReports);
+		return asrReports;
+	}
 	public ArsonReport getArsonReport(String ori, String year, String month, String ownerId) {
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"arsonReport", ownerId, ori, year, month); 
@@ -149,4 +161,5 @@ public class StagingDataRestClient {
 	    converters.add(new MappingJackson2HttpMessageConverter());
 	    return converters;
 	}
+
 }

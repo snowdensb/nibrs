@@ -85,6 +85,11 @@ public class SummaryFormController {
 		return asrFormService.createAsrSummaryReports(ownerId, ori, arrestYear, arrestMonth);
 	}
 	
+	@RequestMapping("/asrReports")
+	public AsrReports getAsrReportsByRequest(@RequestBody SummaryReportRequest summaryReportRequest){
+		return asrFormService.createAsrSummaryReportsByRequest(summaryReportRequest);
+	}
+	
 	@RequestMapping("/shrReports/{ownerId}/{ori}/{arrestYear}/{arrestMonth}")
 	public SupplementaryHomicideReport getSupplementaryHomicideReports(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
 		return supplementaryHomicideReportService.createSupplementaryHomicideReport(ownerId, ori, arrestYear, arrestMonth);

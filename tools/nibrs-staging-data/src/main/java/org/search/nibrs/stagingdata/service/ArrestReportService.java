@@ -33,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.model.ArresteeSegment;
 import org.search.nibrs.model.GroupBArrestReport;
+import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.stagingdata.controller.BadRequestException;
 import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.AgencyType;
@@ -191,6 +192,26 @@ public class ArrestReportService {
 			ori = null;
 		}
 		List<Integer> ids = arrestReportSegmentRepository.findIdsByOriAndArrestDate(ori, arrestYear, arrestMonth, getInteger(ownerId));
+		
+		List<ArrestReportSegment> arrestReportSegments = 
+				arrestReportSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		log.debug("ids size" + ids.size());
+		log.debug("arrestReportSegments size" + arrestReportSegments.size());
+		
+		return arrestReportSegments; 
+		
+	}
+	
+	
+	public List<ArrestReportSegment> findArrestReportSegmentByRequest(SummaryReportRequest summaryReportRequest){
+		List<Integer> ids = arrestReportSegmentRepository.findIdsByStateAndAgencyAndArrestDate(
+				summaryReportRequest.getStateCode(), 
+				summaryReportRequest.getAgencyId(), 
+				summaryReportRequest.getIncidentYear(), 
+				summaryReportRequest.getIncidentMonth(), 
+				summaryReportRequest.getOwnerId());
 		
 		List<ArrestReportSegment> arrestReportSegments = 
 				arrestReportSegmentRepository.findAllById(ids)

@@ -51,6 +51,12 @@ public class AsrReports implements Serializable{
 		this.month = month; 
 	}
 	
+	public AsrReports(int year, int month) {
+		this();
+		this.year = year; 
+		this.month = month; 
+	}
+	
 
 	public String getOri() {
 		return ori;

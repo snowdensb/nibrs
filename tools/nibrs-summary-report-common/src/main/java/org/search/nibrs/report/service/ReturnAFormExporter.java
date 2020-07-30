@@ -904,7 +904,12 @@ public class ReturnAFormExporter {
 		row = sheet.createRow(rowNum);
 		cell = row.createCell(0);
 		cell.setCellStyle(thinBorderBottom);
-		cell.setCellValue(returnAForm.getAgencyName() + ", " + returnAForm.getStateCode());
+		if (StringUtils.isNotBlank(returnAForm.getAgencyName())) {
+			cell.setCellValue(returnAForm.getAgencyName() + ", " + returnAForm.getStateCode());
+		}
+		else {
+			cell.setCellValue(returnAForm.getStateCode());
+		}
 		cell = row.createCell(4);
 		cell.setCellStyle(thinBorderBottom);
 		cell = row.createCell(5);

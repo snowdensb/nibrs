@@ -231,8 +231,7 @@ public class SummaryReportController {
 	public void getAsrReportsByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get asrReports");
-		AsrReports asrReports = restClient.getAsrReports(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
+		AsrReports asrReports = restClient.getAsrReportsByRequest(summaryReportRequest);
 		XSSFWorkbook workbook = asrExcelExporter.createWorkbook(asrReports);
 		String fileName = getFileName("ASR-REPORTS", asrReports.getStateName(), asrReports.getOri(), asrReports.getYear(), asrReports.getMonth());
 		downloadReport(response, workbook, fileName);

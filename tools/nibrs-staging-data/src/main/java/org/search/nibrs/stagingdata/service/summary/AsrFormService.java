@@ -29,6 +29,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.asr.AsrAdultRow;
 import org.search.nibrs.model.reports.asr.AsrAdultRow.AdultAgeGroup;
 import org.search.nibrs.model.reports.asr.AsrAdultRowName;
@@ -236,10 +237,58 @@ public class AsrFormService {
 		return asrReports;
 	}
 
-	private void processGroupBArrests(String ori, Integer arrestYear, Integer arrestMonth, AsrReports asrReports, String ownerId) {
-		AsrAdultRow[] asrAdultRows = asrReports.getAdultRows(); 
-		List<ArrestReportSegment> arrestReportSegments = arrestReportService.findArrestReportSegmentByOriAndArrestDate(ori, arrestYear, arrestMonth, ownerId);
+	public AsrReports createAsrSummaryReportsByRequest(SummaryReportRequest summaryReportRequest) {
+		AsrReports asrReports = new AsrReports(summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth()); 
 		
+		if (summaryReportRequest.getAgencyId() != null){
+			Optional<Agency> agency = agencyRepository.findById(summaryReportRequest.getAgencyId()); 
+			if (agency.isPresent()){
+				asrReports.setAgencyName(agency.get().getAgencyName());
+				asrReports.setStateName(agency.get().getStateName());
+				asrReports.setStateCode(agency.get().getStateCode());
+				asrReports.setPopulation(agency.get().getPopulation());
+			}
+			else{
+				return asrReports; 
+			}
+		}
+		else{
+			Agency agency = agencyRepository.findFirstByStateCode(summaryReportRequest.getStateCode());
+			asrReports.setAgencyName("");
+			asrReports.setStateName(agency.getStateName());
+			asrReports.setStateCode(summaryReportRequest.getStateCode());
+			asrReports.setPopulation(null);
+		}
+
+		processGroupAArrests(summaryReportRequest, asrReports);
+		processGroupBArrests(summaryReportRequest, asrReports);
+		
+		log.debug("asrAdult: " + asrReports);
+		log.debug("asrAdult rows drug grand total "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_ABUSE_VIOLATIONS_GRAND_TOTAL.ordinal()]);
+		log.debug("asrAdult rows drug sale total "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_SALE_MANUFACTURING_SUBTOTAL.ordinal()]);
+		log.debug("asrAdult rows drug possession total "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_POSSESSION_SUBTOTAL.ordinal()]);
+		log.debug("asrAdult rows drug sale opium "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_SALE_MANUFACTURING_OPIUM_COCAINE_DERIVATIVES.ordinal()]);
+		log.debug("asrAdult rows drug sale weed "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_SALE_MANUFACTURING_MARIJUANA.ordinal()]);
+		log.debug("asrAdult rows DRUG_SALE_MANUFACTURING_SYNTHETIC_NARCOTICS "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_SALE_MANUFACTURING_SYNTHETIC_NARCOTICS.ordinal()]);
+		log.debug("asrAdult rows DRUG_SALE_MANUFACTURING_OTHER "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_SALE_MANUFACTURING_OTHER.ordinal()]);
+		log.debug("asrAdult rows drug poSSession opium "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_POSSESSION_OPIUM_COCAINE_DERIVATIVES.ordinal()]);
+		log.debug("asrAdult rows drug DRUG_POSSESSION_MARIJUANA "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_POSSESSION_MARIJUANA.ordinal()]);
+		log.debug("asrAdult rows DRUG_POSSESSION_SYNTHETIC_NARCOTICS "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_POSSESSION_SYNTHETIC_NARCOTICS.ordinal()]);
+		log.debug("asrAdult rows DRUG_POSSESSION_OTHER "  + asrReports.getAdultRows()[AsrAdultRowName.DRUG_POSSESSION_OTHER.ordinal()]);
+		return asrReports;
+	}
+
+	private void processGroupBArrests(SummaryReportRequest summaryReportRequest, AsrReports asrReports) {
+		AsrAdultRow[] asrAdultRows = asrReports.getAdultRows(); 
+		List<ArrestReportSegment> arrestReportSegments = arrestReportService.findArrestReportSegmentByRequest(summaryReportRequest);
+		
+		countGroupBArrests(asrReports, asrAdultRows, arrestReportSegments);
+		
+		
+	}
+
+	private void countGroupBArrests(AsrReports asrReports, AsrAdultRow[] asrAdultRows,
+			List<ArrestReportSegment> arrestReportSegments) {
 		List<ArrestReportSegment> adultArrestReportSegments = arrestReportSegments.stream()
 				.filter( i-> i.isAgeUnknown() || i.getAverageAge() >= 18)
 				.collect(Collectors.toList());
@@ -272,16 +321,30 @@ public class AsrFormService {
 						asrJuvenileRowName.name(), AsrJuvenileRowName.class);
 			}
 		}
+	}
+
+	private void processGroupAArrests(SummaryReportRequest summaryReportRequest, AsrReports asrReports) {
+		List<ArresteeSegment> arresteeSegments = administrativeSegmentService.findArresteeSegmentByRequest(summaryReportRequest); 
+		countAdultFormGroupAArrestees(summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), asrReports, arresteeSegments);
+		countJuvenileFormGroupAArrestees(summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), asrReports, arresteeSegments);
+		
+	}
+
+	private void processGroupBArrests(String ori, Integer arrestYear, Integer arrestMonth, AsrReports asrReports, String ownerId) {
+		AsrAdultRow[] asrAdultRows = asrReports.getAdultRows(); 
+		List<ArrestReportSegment> arrestReportSegments = arrestReportService.findArrestReportSegmentByOriAndArrestDate(ori, arrestYear, arrestMonth, ownerId);
+		
+		countGroupBArrests(asrReports, asrAdultRows, arrestReportSegments);
 		
 	}
 
 	private void processGroupAArrests(String ori, Integer arrestYear, Integer arrestMonth, AsrReports asrReports, String ownerId) {
 		List<ArresteeSegment> arresteeSegments = administrativeSegmentService.findArresteeSegmentByOriAndArrestDate(ori, arrestYear, arrestMonth, ownerId); 
-		countAdultFormGroupAArrestees(ori, arrestYear, arrestMonth, asrReports, arresteeSegments);
-		countJuvenileFormGroupAArrestees(ori, arrestYear, arrestMonth, asrReports, arresteeSegments);
+		countAdultFormGroupAArrestees(arrestYear, arrestMonth, asrReports, arresteeSegments);
+		countJuvenileFormGroupAArrestees(arrestYear, arrestMonth, asrReports, arresteeSegments);
 	}
 
-	private void countJuvenileFormGroupAArrestees(String ori, Integer arrestYear, Integer arrestMonth,
+	private void countJuvenileFormGroupAArrestees(Integer arrestYear, Integer arrestMonth,
 			AsrReports asrReports, List<ArresteeSegment> arresteeSegments) {
 		AsrJuvenileRow[] asrJuvenileRows = asrReports.getJuvenileRows(); 
 		
@@ -312,7 +375,7 @@ public class AsrFormService {
 			
 		}
 	}
-	private void countAdultFormGroupAArrestees(String ori, Integer arrestYear, Integer arrestMonth,
+	private void countAdultFormGroupAArrestees( Integer arrestYear, Integer arrestMonth,
 			AsrReports asrReports, List<ArresteeSegment> arresteeSegments) {
 		AsrAdultRow[] asrAdultRows = asrReports.getAdultRows(); 
 		
@@ -708,5 +771,6 @@ public class AsrFormService {
 		}
 		return ageGroup;
 	}
+
 	
 }

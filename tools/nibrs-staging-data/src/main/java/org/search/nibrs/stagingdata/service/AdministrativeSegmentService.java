@@ -41,6 +41,7 @@ import org.search.nibrs.stagingdata.model.segment.ArresteeSegment;
 import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepositoryCustom;
+import org.search.nibrs.stagingdata.repository.segment.ArresteeSegmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,8 @@ public class AdministrativeSegmentService {
 	AdministrativeSegmentRepository administrativeSegmentRepository;
 	@Autowired
 	AdministrativeSegmentRepositoryCustom administrativeSegmentRepositoryCustom;
+	@Autowired
+	ArresteeSegmentRepository arresteeSegmentRepository;
 	
 	public AdministrativeSegment find(Integer id){
 		return administrativeSegmentRepository.findByAdministrativeSegmentId(id);
@@ -273,6 +276,24 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
+	public List<ArresteeSegment> findArresteeSegmentByRequest(SummaryReportRequest summaryReportRequest) {
+		Integer arrestYear = summaryReportRequest.getIncidentYear();
+		Integer arrestMonth = summaryReportRequest.getIncidentMonth(); 
+		List<Integer> ids = administrativeSegmentRepository.findIdsByStateAndAgencyAndArrestDate(
+				summaryReportRequest.getStateCode(), 
+				summaryReportRequest.getAgencyId(), 
+				arrestYear, 
+				arrestMonth, 
+				summaryReportRequest.getOwnerId());
+		
+		log.info("ids size" + ids.size());
+		
+		List<ArresteeSegment> arresteeSegments = arresteeSegmentRepository
+				.findByAdministrativeSegmentIdsAndArrestDate(arrestYear, arrestMonth, ids);
+		return arresteeSegments; 
+		
+	}
+	
 	public List<ArresteeSegment> findArresteeSegmentByOriAndArrestDate(String ori, Integer arrestYear, Integer arrestMonth, String ownerId){
 		if ("StateWide".equalsIgnoreCase(ori)){
 			ori = null;
@@ -338,5 +359,4 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 
-	
 }

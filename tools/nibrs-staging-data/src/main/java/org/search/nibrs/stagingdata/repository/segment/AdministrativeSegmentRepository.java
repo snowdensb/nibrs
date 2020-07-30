@@ -107,6 +107,17 @@ public interface AdministrativeSegmentRepository
 			+ "GROUP BY a.incidentNumber ")
 	List<Integer> findIdsByOriAndArrestDate(String ori, Integer year, Integer month, Integer ownerId);
 	
+	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+			+ "LEFT JOIN a.arresteeSegments aa "
+			+ "WHERE (?1 = null OR ?1='' OR a.agency.stateCode = ?1 ) AND "
+			+ "		(?2 = null OR a.agency.agencyId = ?2 ) AND "
+			+ "	    (?5 = null OR ?5 = 0 OR a.owner.ownerId = ?5 ) AND "
+			+ "		( year(aa.arrestDate) = ?3 AND ( ?4=null OR ?4=0 OR month(aa.arrestDate) = ?4) ) "
+			+ "GROUP BY a.incidentNumber ")
+	List<Integer> findIdsByStateAndAgencyAndArrestDate(String stateCode, Integer agencyId, Integer arrestYear,
+			Integer arrestMonth, Integer ownerId);
+
+	
 	@Query("SELECT count(DISTINCT a.administrativeSegmentId) from AdministrativeSegment a "
 			+ "WHERE (?1 = null OR a.ori in (?1)) AND "
 			+ "		(?4 = null OR a.agency.agencyId in (?4)) AND "
