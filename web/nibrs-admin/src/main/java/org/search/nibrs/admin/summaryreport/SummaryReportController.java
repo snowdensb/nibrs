@@ -94,7 +94,7 @@ public class SummaryReportController {
 		}
 		else {
 			AuthUser authUser =(AuthUser) model.get("authUser");  
-			String ownerId = Objects.toString(authUser.getUserId());
+			String ownerId = Objects.toString(authUser.getUserId(), "");
 			model.put("oriMapping", restService.getOris(ownerId));
 			model.put("agencyMapping", restService.getAgencies(authUser.getUserId()));
 			model.put("stateCodeMappingByOwner", restService.getStatesNoChache(ownerId));
@@ -198,8 +198,7 @@ public class SummaryReportController {
 	@PostMapping("/summaryReports/returnASupplement")
 	public void getReturnASupplementByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response, Map<String, Object> model) throws IOException{
-		ReturnAForm returnAForm = restClient.getReturnAForm(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
+		ReturnAForm returnAForm = restClient.getReturnAFormByRequest(summaryReportRequest);
 		XSSFWorkbook workbook = returnAFormExporter.createReturnASupplementWorkBook(returnAForm);
 		String fileName = getFileName("ReturnASupplement", returnAForm.getStateName(), returnAForm.getOri(), returnAForm.getYear(), returnAForm.getMonth()); 
 		
