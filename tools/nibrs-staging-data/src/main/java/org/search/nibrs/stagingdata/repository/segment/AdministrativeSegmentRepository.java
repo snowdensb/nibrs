@@ -237,4 +237,15 @@ public interface AdministrativeSegmentRepository
 			+ "ORDER BY incidentMonth ")
 	List<Integer> findDistinctMonthsByStateCode(String stateCode, Integer year, Integer integer);
 
+	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+			+ "WHERE a.cargoTheftIndicatorType.cargoTheftIndicatorTypeId = 1 AND "
+			+ "		(?1 = null OR ?1='' OR a.agency.stateCode = ?1) AND "
+			+ "		(?2 = null OR a.agency.agencyId = ?2) AND "
+			+ "		(?5 = null OR ?5 = 0 OR a.owner.ownerId = ?5) AND "
+			+ "		(year(a.incidentDate) = ?3 AND "
+			+ "		( ?4 = 0 OR month(a.incidentDate) = ?4)) "
+			+ "GROUP BY a.incidentNumber ")
+	List<Integer> findCargoTheftIdsByStateAndAgencyAndIncidentDate(String stateCode, Integer agencyId,
+			Integer incidentYear, Integer incidentMonth, Integer ownerId);
+
 }

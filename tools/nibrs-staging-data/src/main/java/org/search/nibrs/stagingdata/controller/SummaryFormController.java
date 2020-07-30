@@ -105,4 +105,9 @@ public class SummaryFormController {
 		return cargoTheftReportService.createCargoTheftReport(ownerId, ori, incidentYear, incidentMonth);
 	}
 	
+	@PostMapping("/cargoTheftReport")
+	public CargoTheftReport getCargoTheftReport(@RequestBody SummaryReportRequest summaryReportRequest){
+		return cargoTheftReportService.createCargoTheftReportByRequest(summaryReportRequest);
+	}
+	
 }

@@ -18,9 +18,11 @@
 package org.search.nibrs.stagingdata.service.summary;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.cargotheft.CargoTheftFormRow;
 import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
 import org.search.nibrs.stagingdata.AppProperties;
@@ -66,6 +68,41 @@ public class CargoTheftReportService {
 		processCargoTheftIncident(ori, year, month, cargoTheftReport, ownerId);
 		log.debug("cargoTheftReport: " + cargoTheftReport);
 		return cargoTheftReport;
+	}
+
+	public CargoTheftReport createCargoTheftReportByRequest(SummaryReportRequest summaryReportRequest) {
+		CargoTheftReport cargoTheftReport = new CargoTheftReport(summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth()); 
+		
+		if (summaryReportRequest.getAgencyId() != null){
+			Optional<Agency> agency = agencyRepository.findById(summaryReportRequest.getAgencyId()); 
+			if (agency.isPresent()){
+				cargoTheftReport.setAgencyName(agency.get().getAgencyName());
+				cargoTheftReport.setStateName(agency.get().getStateName());
+				cargoTheftReport.setStateCode(agency.get().getStateCode());
+				cargoTheftReport.setPopulation(agency.get().getPopulation());
+			}
+			else{
+				return cargoTheftReport; 
+			}
+		}
+		else{
+			Agency agency = agencyRepository.findFirstByStateCode(summaryReportRequest.getStateCode());
+			cargoTheftReport.setAgencyName("");
+			cargoTheftReport.setStateName(agency.getStateName());
+			cargoTheftReport.setStateCode(agency.getStateCode());
+			cargoTheftReport.setPopulation(null);
+		}
+		processCargoTheftIncident(summaryReportRequest, cargoTheftReport);
+		log.debug("cargoTheftReport: " + cargoTheftReport);
+		return cargoTheftReport;
+	}
+	
+	private void processCargoTheftIncident(SummaryReportRequest summaryReportRequest,
+			CargoTheftReport cargoTheftReport) {
+		List<CargoTheftFormRow> cargoTheftRows = 
+				administrativeSegmentService.findCargoTheftRowsByRequest(summaryReportRequest);
+		cargoTheftReport.setCargoTheftRows(cargoTheftRows);
+		
 	}
 
 	private void processCargoTheftIncident(String ori, Integer year, Integer month, CargoTheftReport cargoTheftReport, String ownerId) {

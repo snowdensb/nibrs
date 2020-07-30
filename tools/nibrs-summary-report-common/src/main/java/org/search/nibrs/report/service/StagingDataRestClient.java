@@ -169,12 +169,22 @@ public class StagingDataRestClient {
 		return cargoTheftReport;
 	}
 	
+	public CargoTheftReport getCargoTheftReportByRequest(SummaryReportRequest summaryReportRequest) {
+		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
+		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
+				"cargoTheftReport"); 
+		String url = StringUtils.join(urlParts, '/');
+		log.info("Getting the CargoTheftReport object from the url " + url);
+		
+		CargoTheftReport cargoTheftReport = restTemplate.postForObject( url, request, CargoTheftReport.class);
+		log.info("cargoTheftReport: " + cargoTheftReport);
+		return cargoTheftReport;
+	}
+	
 	private List<HttpMessageConverter<?>> getMessageConverters() {
 	    List<HttpMessageConverter<?>> converters = 
 	      new ArrayList<HttpMessageConverter<?>>();
 	    converters.add(new MappingJackson2HttpMessageConverter());
 	    return converters;
 	}
-
-
 }

@@ -252,8 +252,7 @@ public class SummaryReportController {
 	public void getCargoTheftReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get cargo theft report");
-        CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(
-        		summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
+        CargoTheftReport cargoTheftReport = restClient.getCargoTheftReportByRequest(summaryReportRequest);
 		XSSFWorkbook workbook = cargoTheftReportExporter.createWorkbook(cargoTheftReport);
 		String fileName = getFileName("CargoTheftReport", cargoTheftReport.getStateName(), cargoTheftReport.getOri(), 
 				cargoTheftReport.getYear(), cargoTheftReport.getMonth());

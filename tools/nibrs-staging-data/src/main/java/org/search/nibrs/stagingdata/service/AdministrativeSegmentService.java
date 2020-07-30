@@ -359,4 +359,21 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 
+	public List<CargoTheftFormRow> findCargoTheftRowsByRequest(SummaryReportRequest summaryReportRequest) {
+		List<Integer> ids = administrativeSegmentRepository.findCargoTheftIdsByStateAndAgencyAndIncidentDate(
+				summaryReportRequest.getStateCode(), 
+				summaryReportRequest.getAgencyId(), 
+				summaryReportRequest.getIncidentYear(), 
+				summaryReportRequest.getIncidentMonth(), 
+				summaryReportRequest.getOwnerId());
+		
+		log.info("ids:" + ids);
+		
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAllById(ids);
+		List<CargoTheftFormRow> cargoTheftFormRows = administrativeSegments.stream()
+				.map(item-> new CargoTheftFormRow(item.getIncidentNumber(), item.getIncidentDate(), item.getSegmentActionType().getNibrsDescription()))
+				.collect(Collectors.toList());
+		return cargoTheftFormRows;
+	}
+
 }

@@ -45,6 +45,12 @@ public class CargoTheftReport implements Serializable{
 		this.month = month; 
 	}
 	
+	public CargoTheftReport( int year, int month) {
+		this();
+		this.year = year; 
+		this.month = month; 
+	}
+	
 
 	public String getOri() {
 		return ori;
