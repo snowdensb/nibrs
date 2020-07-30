@@ -32,6 +32,10 @@ public class NibrsFileUtils {
 		return defaultTika.detect(inStream);
 	}
 	
+	public static final String getMediaType(InputStream inStream, String fileName) throws IOException {
+		return defaultTika.detect(inStream, fileName);
+	}
+	
 	public static final String getMediaType(File file) throws IOException {
 		return defaultTika.detect(file);
 	}

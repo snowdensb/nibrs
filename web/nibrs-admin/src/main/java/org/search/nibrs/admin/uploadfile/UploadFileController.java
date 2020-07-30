@@ -247,7 +247,7 @@ public class UploadFileController {
 			ByteArrayInputStream inStream = new ByteArrayInputStream( bout.toByteArray() );
 			bout.close();
 			
-		    String mediaType = NibrsFileUtils.getMediaType(inStream);
+		    String mediaType = NibrsFileUtils.getMediaType(inStream, zipEntry.getName());
 
 		    try {
 		    	submissionFileValidator.validateInputStream(validatorlistener, mediaType, inStream, "console");
