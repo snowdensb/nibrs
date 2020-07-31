@@ -80,6 +80,11 @@ public class SummaryFormController {
 		return humanTraffickingFormService.createHumanTraffickingReport(ownerId, ori, year, month);
 	}
 	
+	@PostMapping("/humanTraffickingReport")
+	public HumanTraffickingForm getHumanTraffickingReportByRequest(@RequestBody SummaryReportRequest summaryReportRequest){
+		return humanTraffickingFormService.createHumanTraffickingReportByRequest(summaryReportRequest);
+	}
+	
 	@RequestMapping("/asrReports/{ownerId}/{ori}/{arrestYear}/{arrestMonth}")
 	public AsrReports getAsrReports(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
 		return asrFormService.createAsrSummaryReports(ownerId, ori, arrestYear, arrestMonth);

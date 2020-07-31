@@ -262,6 +262,24 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
+	public List<AdministrativeSegment> findHumanTraffickingIncidentByRequest(
+			SummaryReportRequest summaryReportRequest) {
+		List<Integer> ids = administrativeSegmentRepository.findIdsBySummaryReportRequestAndOffenses(
+				summaryReportRequest.getStateCode(),
+				summaryReportRequest.getAgencyId(), 
+				summaryReportRequest.getIncidentYear(), 
+				summaryReportRequest.getIncidentMonth(), 
+				summaryReportRequest.getOwnerId(),
+				Arrays.asList("64A", "64B"));
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		return administrativeSegments; 
+	}
+
+
 	public List<AdministrativeSegment> findArsonIncidentByOriAndAClearanceDate(String ori, Integer year, Integer month, String ownerId){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
@@ -322,6 +340,21 @@ public class AdministrativeSegmentService {
 			ori = null;
 		}
 		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"), getInteger(ownerId));
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(ids)
+				.stream().distinct().collect(Collectors.toList());
+		
+		return administrativeSegments; 
+	}
+
+	public List<AdministrativeSegment> findHumanTraffickingIncidentByRequestAndClearanceDate(
+			SummaryReportRequest summaryReportRequest) {
+		List<Integer> ids = 
+				administrativeSegmentRepository.findIdsByStateCodeAndOriAndClearanceDateAndOffenses(
+						summaryReportRequest.getStateCode(), summaryReportRequest.getAgencyId(), 
+						summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), 
+						summaryReportRequest.getOwnerId(), Arrays.asList("64A", "64B"));
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)

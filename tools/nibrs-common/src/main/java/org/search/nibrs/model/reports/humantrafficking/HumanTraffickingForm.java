@@ -46,6 +46,12 @@ public class HumanTraffickingForm implements Serializable{
 		this.month = month; 
 	}
 	
+	public HumanTraffickingForm(int year, int month) {
+		this();
+		this.year = year; 
+		this.month = month; 
+	}
+	
 	public HumanTraffickingFormRow[] getRows() {
 		return rows;
 	}

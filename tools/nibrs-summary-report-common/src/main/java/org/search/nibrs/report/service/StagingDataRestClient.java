@@ -52,16 +52,6 @@ public class StagingDataRestClient {
 		restTemplate.setMessageConverters(getMessageConverters());
 	}
 	
-	public ReturnAForm getReturnAForm(String ori, String year, String month, String ownerId) {
-		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"returnAForm/", ownerId, ori, year, month); 
-		String url = StringUtils.join(urlParts, '/');
-		log.info("Getting the ReturnAForm object from the url " + url);
-		ReturnAForm returnAForm = restTemplate.getForObject( url, ReturnAForm.class);
-		log.info("returnAForm: " + returnAForm);
-		return returnAForm;
-	}
-
 	public ReturnAForm getReturnAFormByRequest(SummaryReportRequest summaryReportRequest) {
 		
 		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
@@ -73,17 +63,6 @@ public class StagingDataRestClient {
 		ReturnAForm returnAForm = restTemplate.postForObject( url, request, ReturnAForm.class);
 		log.debug("returnAForm: " + returnAForm);
 		return returnAForm;
-	}
-	
-	public AsrReports getAsrReports(String ori, String year, String month, String ownerId) {
-		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"asrReports", ownerId, ori, year, month); 
-		String url = StringUtils.join(urlParts, '/');
-		log.info("Getting the ASR Report object from the url " + url);
-		
-		AsrReports asrAdult = restTemplate.getForObject( url, AsrReports.class);
-		log.info("asrAdult: " + asrAdult);
-		return asrAdult;
 	}
 	
 	public AsrReports getAsrReportsByRequest(SummaryReportRequest summaryReportRequest) {
@@ -98,17 +77,7 @@ public class StagingDataRestClient {
 		log.info("asrReports: " + asrReports);
 		return asrReports;
 	}
-	public ArsonReport getArsonReport(String ori, String year, String month, String ownerId) {
-		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"arsonReport", ownerId, ori, year, month); 
-		String url = StringUtils.join(urlParts, '/');
-		log.info("Getting the Arson Report object from the url " + url);
-		
-		ArsonReport arsonReport = restTemplate.getForObject( url, ArsonReport.class);
-		log.info("arsonReport: " + arsonReport);
-		return arsonReport;
-	}
-	
+
 	public ArsonReport getArsonReportByRequest(SummaryReportRequest summaryReportRequest) {
 		
 		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
@@ -122,28 +91,18 @@ public class StagingDataRestClient {
 		return arsonReport;
 	}
 	
-	public HumanTraffickingForm getHumanTraffickingForm(String ori, String year, String month, String ownerId) {
+	public HumanTraffickingForm getHumanTraffickingFormByRequest(SummaryReportRequest summaryReportRequest) {
+		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"humanTraffickingReport", ownerId, ori, year, month); 
+				"humanTraffickingReport"); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the humanTraffickingForm object from the url " + url);
 		
-		HumanTraffickingForm humanTraffickingForm = restTemplate.getForObject( url, HumanTraffickingForm.class);
+		HumanTraffickingForm humanTraffickingForm = restTemplate.postForObject( url, request, HumanTraffickingForm.class);
 		log.info("humanTraffickingForm: " + humanTraffickingForm);
 		return humanTraffickingForm;
 	}
-	
-	public SupplementaryHomicideReport getSupplementaryHomicideReport(String ori, String year, String month, String ownerId) {
-		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"shrReports", ownerId, ori, year, month); 
-		String url = StringUtils.join(urlParts, '/');
-		log.info("Getting the SupplementaryHomicideReport object from the url " + url);
-		
-		SupplementaryHomicideReport supplementaryHomicideReport = restTemplate.getForObject( url, SupplementaryHomicideReport.class);
-		log.info("supplementaryHomicideReport: " + supplementaryHomicideReport);
-		return supplementaryHomicideReport;
-	}
-	
+
 	public SupplementaryHomicideReport getSupplementaryHomicideReportByRequest(
 			SummaryReportRequest summaryReportRequest) {
 		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
@@ -158,17 +117,6 @@ public class StagingDataRestClient {
 		return supplementaryHomicideReport;
 	}
 
-	public CargoTheftReport getCargoTheftReport(String ori, String year, String month, String ownerId) {
-		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"cargoTheftReport", ownerId, ori, year, month); 
-		String url = StringUtils.join(urlParts, '/');
-		log.info("Getting the CargoTheftReport object from the url " + url);
-		
-		CargoTheftReport cargoTheftReport = restTemplate.getForObject( url, CargoTheftReport.class);
-		log.info("cargoTheftReport: " + cargoTheftReport);
-		return cargoTheftReport;
-	}
-	
 	public CargoTheftReport getCargoTheftReportByRequest(SummaryReportRequest summaryReportRequest) {
 		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
@@ -187,4 +135,5 @@ public class StagingDataRestClient {
 	    converters.add(new MappingJackson2HttpMessageConverter());
 	    return converters;
 	}
+
 }

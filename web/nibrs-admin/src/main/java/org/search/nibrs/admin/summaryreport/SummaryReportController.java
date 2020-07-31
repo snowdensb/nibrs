@@ -26,7 +26,6 @@ import java.util.Objects;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,7 +53,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -126,16 +124,6 @@ public class SummaryReportController {
 	    return "/summaryReports/searchForm::summaryReportForm";
 	}
 	
-	@GetMapping("/returnAForm/{ori}/{year}/{month}")
-	public void getReturnAForm(@PathVariable String ori, @PathVariable String year, @PathVariable String month, 
-			HttpServletResponse response, Map<String, Object> model) throws IOException{
-		ReturnAForm returnAForm = restClient.getReturnAForm(ori, year, month, getOwnerId(model));
-		XSSFWorkbook workbook = returnAFormExporter.createReturnAWorkbook(returnAForm);
-		String fileName = getFileName("ReturnA", returnAForm.getStateName(), returnAForm.getOri(), returnAForm.getYear(), returnAForm.getMonth()); 
-		
-		downloadReport(response, workbook, fileName);
-	}
-
 	private void downloadReport(HttpServletResponse response, XSSFWorkbook workbook, String fileName) throws IOException {
 		String mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 		// set content attributes for the response
@@ -220,8 +208,8 @@ public class SummaryReportController {
 	public void getHumanTraffickingReportByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response, Map<String, Object> model) throws IOException{
 		log.info("get humanTraffickingReport");
-		HumanTraffickingForm humanTraffickingForm = restClient.getHumanTraffickingForm(
-				summaryReportRequest.getOri(), summaryReportRequest.getIncidentYearString(), summaryReportRequest.getIncidentMonthString(), getOwnerId(model));
+		HumanTraffickingForm humanTraffickingForm = 
+				restClient.getHumanTraffickingFormByRequest(summaryReportRequest);
 		XSSFWorkbook workbook = humanTraffickingExporter.createWorkbook(humanTraffickingForm);
 		String fileName = getFileName("HumanTrafficking", humanTraffickingForm.getStateName(), humanTraffickingForm.getOri(), humanTraffickingForm.getYear(), humanTraffickingForm.getMonth());
 		downloadReport(response, workbook, fileName);
@@ -295,25 +283,6 @@ public class SummaryReportController {
 	public @ResponseBody List<Integer> getDistinctMonthsByStateCode(@PathVariable String stateCode, @PathVariable Integer year, Map<String, Object> model) throws IOException{
 		String ownerId = getOwnerId(model);
 		return restService.getMonthsByStateCode(stateCode, year, ownerId);
-	}
-	
-	@RequestMapping("/arsonReport/{ori}/{year}/{month}")
-	public void getArsonReport(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
-		throw new NotImplementedException();
-	}
-	@RequestMapping("/humanTraffickingReport/{ori}/{year}/{month}")
-	public void getHumanTraffickingReport(@PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
-		throw new NotImplementedException();
-	}
-	
-	@RequestMapping("/asrReports/{ori}/{arrestYear}/{arrestMonth}")
-	public void getAsrReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
-		throw new NotImplementedException();
-	}
-	
-	@RequestMapping("/shrReports/{ori}/{arrestYear}/{arrestMonth}")
-	public void getSupplementaryHomicideReports(@PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
-		throw new NotImplementedException();
 	}
 	
 }
