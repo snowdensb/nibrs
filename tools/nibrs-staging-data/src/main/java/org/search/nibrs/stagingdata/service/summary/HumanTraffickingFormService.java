@@ -51,38 +51,6 @@ public class HumanTraffickingFormService {
 		super();
 	}
 	
-	public HumanTraffickingForm createHumanTraffickingReport(String ownerId, String ori, Integer year,  Integer month ) {
-		
-		HumanTraffickingForm humanTraffickingForm = new HumanTraffickingForm(ori, year, month); 
-		
-		if (!"StateWide".equalsIgnoreCase(ori)){
-			Agency agency = agencyRepository.findFirstByAgencyOri(ori); 
-			if (agency!= null){
-				humanTraffickingForm.setAgencyName(agency.getAgencyName());
-				humanTraffickingForm.setStateName(agency.getStateName());
-				humanTraffickingForm.setStateCode(agency.getStateCode());
-				humanTraffickingForm.setPopulation(agency.getPopulation());
-			}
-			else{
-				return humanTraffickingForm; 
-			}
-		}
-		else{
-			humanTraffickingForm.setAgencyName(ori);
-			humanTraffickingForm.setStateName("");
-			humanTraffickingForm.setStateCode("");
-			humanTraffickingForm.setPopulation(null);
-		}
-
-		processReportedOffenses(ori, year, month, humanTraffickingForm, ownerId);
-		processOffenseClearances(ori, year, month, humanTraffickingForm, ownerId);
-		
-		fillTheGrandTotalRow(humanTraffickingForm);
-
-		log.info("humanTraffickingForm: " + humanTraffickingForm);
-		return humanTraffickingForm;
-	}
-
 	public HumanTraffickingForm createHumanTraffickingReportByRequest(SummaryReportRequest summaryReportRequest) {
 		HumanTraffickingForm humanTraffickingForm = new HumanTraffickingForm(summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth()); 
 		
@@ -126,12 +94,6 @@ public class HumanTraffickingFormService {
 	private void processOffenseClearances(SummaryReportRequest summaryReportRequest,
 			HumanTraffickingForm humanTraffickingForm) {
 		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findHumanTraffickingIncidentByRequestAndClearanceDate(summaryReportRequest);
-		countOffenseClearances(humanTraffickingForm, administrativeSegments);
-	}
-
-	private void processOffenseClearances(String ori, Integer year, Integer month, HumanTraffickingForm humanTraffickingForm, String ownerId) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findHumanTraffickingIncidentByOriAndClearanceDate(ori, year, month, ownerId);
-		
 		countOffenseClearances(humanTraffickingForm, administrativeSegments);
 	}
 
@@ -182,13 +144,6 @@ public class HumanTraffickingFormService {
 					.findFirst().orElse(null);
 		}
 		return offense;
-	}
-
-	private void processReportedOffenses(String ori, Integer year, Integer month, HumanTraffickingForm humanTraffickingForm, String ownerId) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findHumanTraffickingIncidentByOriAndIncidentDate(ori, year, month, ownerId);
-
-		countReportedOffenses(humanTraffickingForm, administrativeSegments);
-		
 	}
 
 	private void countReportedOffenses(HumanTraffickingForm humanTraffickingForm,

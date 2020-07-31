@@ -58,37 +58,6 @@ public class SupplementaryHomicideReportService {
 		super();
 	}
 	
-	public SupplementaryHomicideReport createSupplementaryHomicideReport(String ownerId, String ori, Integer year,  Integer month ) {
-		
-		SupplementaryHomicideReport supplementaryHomicideReport = new SupplementaryHomicideReport(ori, year, month); 
-		
-		if (!"StateWide".equalsIgnoreCase(ori)){
-			Agency agency = agencyRepository.findFirstByAgencyOri(ori); 
-			if (agency!= null){
-				supplementaryHomicideReport.setAgencyName(agency.getAgencyName());
-				supplementaryHomicideReport.setStateName(agency.getStateName());
-				supplementaryHomicideReport.setStateCode(agency.getStateCode());
-				supplementaryHomicideReport.setPopulation(agency.getPopulation());
-			}
-			else{
-				return supplementaryHomicideReport; 
-			}
-		}
-		else{
-			supplementaryHomicideReport.setAgencyName(ori);
-			supplementaryHomicideReport.setStateName("");
-			supplementaryHomicideReport.setStateCode("");
-			supplementaryHomicideReport.setPopulation(null);
-		}
-
-		processMurderAndNonnegligentManslaughter(ori, year, month, supplementaryHomicideReport, ownerId);
-		processNegligentManslaughter(ori, year, month, supplementaryHomicideReport, ownerId);
-		
-
-		log.info("supplementaryHomicideReport: " + supplementaryHomicideReport);
-		return supplementaryHomicideReport;
-	}
-
 	public SupplementaryHomicideReport createSupplementaryHomicideReportByRequest(
 			SummaryReportRequest summaryReportRequest) {
 		SupplementaryHomicideReport supplementaryHomicideReport = 
@@ -136,12 +105,6 @@ public class SupplementaryHomicideReportService {
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentService.findBySummaryReportRequestAndOffenses(summaryReportRequest, Arrays.asList("09A", "09C"));
 		countMurderAndNonnegligentManslaughter(supplementaryHomicideReport, administrativeSegments);
-	}
-
-	private void processNegligentManslaughter(String ori, Integer year, Integer month, SupplementaryHomicideReport supplementaryHomicideReport, String ownerId) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findIncidentByOriAndIncidentDateAndOffenses(ori, year, month, ownerId, "09B");
-		
-		countNegligentManslaughter(supplementaryHomicideReport, administrativeSegments);
 	}
 
 	private void countNegligentManslaughter(SupplementaryHomicideReport supplementaryHomicideReport,
@@ -237,12 +200,6 @@ public class SupplementaryHomicideReportService {
 					.findFirst().orElse(null);
 		}
 		return offense;
-	}
-
-	private void processMurderAndNonnegligentManslaughter(String ori, Integer year, Integer month, SupplementaryHomicideReport supplementaryHomicideReport, String ownerId) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findIncidentByOriAndIncidentDateAndOffenses(ori, year, month, ownerId, "09A", "09C");
-		
-		countMurderAndNonnegligentManslaughter(supplementaryHomicideReport, administrativeSegments);
 	}
 
 	private void countMurderAndNonnegligentManslaughter(SupplementaryHomicideReport supplementaryHomicideReport,

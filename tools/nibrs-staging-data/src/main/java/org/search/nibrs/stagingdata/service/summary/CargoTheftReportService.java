@@ -43,33 +43,6 @@ public class CargoTheftReportService {
 	@Autowired
 	public AppProperties appProperties; 
 
-	public CargoTheftReport createCargoTheftReport(String ownerId, String ori, Integer year,  Integer month ) {
-		
-		CargoTheftReport cargoTheftReport = new CargoTheftReport(ori, year, month); 
-		
-		if (!"StateWide".equalsIgnoreCase(ori)){
-			Agency agency = agencyRepository.findFirstByAgencyOri(ori); 
-			if (agency!= null){
-				cargoTheftReport.setAgencyName(agency.getAgencyName());
-				cargoTheftReport.setStateName(agency.getStateName());
-				cargoTheftReport.setStateCode(agency.getStateCode());
-				cargoTheftReport.setPopulation(agency.getPopulation());
-			}
-			else{
-				return cargoTheftReport; 
-			}
-		}
-		else{
-			cargoTheftReport.setAgencyName(ori);
-			cargoTheftReport.setStateName("");
-			cargoTheftReport.setStateCode("");
-			cargoTheftReport.setPopulation(null);
-		}
-		processCargoTheftIncident(ori, year, month, cargoTheftReport, ownerId);
-		log.debug("cargoTheftReport: " + cargoTheftReport);
-		return cargoTheftReport;
-	}
-
 	public CargoTheftReport createCargoTheftReportByRequest(SummaryReportRequest summaryReportRequest) {
 		CargoTheftReport cargoTheftReport = new CargoTheftReport(summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth()); 
 		
@@ -104,12 +77,5 @@ public class CargoTheftReportService {
 		cargoTheftReport.setCargoTheftRows(cargoTheftRows);
 		
 	}
-
-	private void processCargoTheftIncident(String ori, Integer year, Integer month, CargoTheftReport cargoTheftReport, String ownerId) {
-		List<CargoTheftFormRow> cargoTheftRows = 
-				administrativeSegmentService.findCargoTheftRowsByOriAndIncidentDate(ori, year, month, ownerId);
-		cargoTheftReport.setCargoTheftRows(cargoTheftRows);
-	}
-
 
 }

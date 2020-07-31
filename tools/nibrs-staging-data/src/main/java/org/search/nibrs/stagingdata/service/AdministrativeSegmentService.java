@@ -176,20 +176,6 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 	
-	public List<AdministrativeSegment> findByOriAndIncidentDateAndOffenses(Integer ownerId, String ori, Integer year, Integer month, List<String> offenseCodes){
-		
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, offenseCodes, ownerId);
-		
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAllById(ids)
-				.stream().distinct().collect(Collectors.toList());
-		
-		return administrativeSegments; 
-	}
-	
 	public List<AdministrativeSegment> findBySummaryReportRequestAndOffenses(SummaryReportRequest summaryReportRequest, List<String> offenseCodes){
 		
 		List<Integer> ids = 
@@ -220,48 +206,6 @@ public class AdministrativeSegmentService {
 		return administrativeSegments; 
 	}
 
-	public List<AdministrativeSegment> findArsonIncidentByOriAndIncidentDate(String ori, Integer year, Integer month, String ownerId){
-		
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		List<Integer> ids = administrativeSegmentRepository.findArsonIdsByOriAndIncidentDate(ori, year, month);
-		
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAllById(ids)
-				.stream().distinct().collect(Collectors.toList());
-		
-		return administrativeSegments; 
-	}
-	
-	public List<AdministrativeSegment> findHumanTraffickingIncidentByOriAndIncidentDate(String ori, Integer year, Integer month, String ownerId){
-		
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"), getInteger(ownerId));
-		
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAllById(ids)
-				.stream().distinct().collect(Collectors.toList());
-		
-		return administrativeSegments; 
-	}
-	
-	public List<AdministrativeSegment> findIncidentByOriAndIncidentDateAndOffenses(String ori, Integer year, Integer month, String ownerId, String... offenseCodes){
-		
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndIncidentDateAndOffenses(ori, year, month, Arrays.asList(offenseCodes), getInteger(ownerId));
-		
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAllById(ids)
-				.stream().distinct().collect(Collectors.toList());
-		
-		return administrativeSegments; 
-	}
-	
 	public List<AdministrativeSegment> findHumanTraffickingIncidentByRequest(
 			SummaryReportRequest summaryReportRequest) {
 		List<Integer> ids = administrativeSegmentRepository.findIdsBySummaryReportRequestAndOffenses(
@@ -280,20 +224,6 @@ public class AdministrativeSegmentService {
 	}
 
 
-	public List<AdministrativeSegment> findArsonIncidentByOriAndAClearanceDate(String ori, Integer year, Integer month, String ownerId){
-		
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		List<Integer> ids = administrativeSegmentRepository.findArsonIdsByOriAndClearanceDate(ori, year, month, getInteger(ownerId));
-		
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAllById(ids)
-				.stream().distinct().collect(Collectors.toList());
-		
-		return administrativeSegments; 
-	}
-	
 	public List<ArresteeSegment> findArresteeSegmentByRequest(SummaryReportRequest summaryReportRequest) {
 		Integer arrestYear = summaryReportRequest.getIncidentYear();
 		Integer arrestMonth = summaryReportRequest.getIncidentMonth(); 
@@ -334,20 +264,6 @@ public class AdministrativeSegmentService {
 		
 	}
 
-	public List<AdministrativeSegment> findHumanTraffickingIncidentByOriAndClearanceDate(String ori, Integer year,
-			Integer month, String ownerId) {
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, Arrays.asList("64A", "64B"), getInteger(ownerId));
-		
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAllById(ids)
-				.stream().distinct().collect(Collectors.toList());
-		
-		return administrativeSegments; 
-	}
-
 	public List<AdministrativeSegment> findHumanTraffickingIncidentByRequestAndClearanceDate(
 			SummaryReportRequest summaryReportRequest) {
 		List<Integer> ids = 
@@ -355,35 +271,6 @@ public class AdministrativeSegmentService {
 						summaryReportRequest.getStateCode(), summaryReportRequest.getAgencyId(), 
 						summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), 
 						summaryReportRequest.getOwnerId(), Arrays.asList("64A", "64B"));
-		
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAllById(ids)
-				.stream().distinct().collect(Collectors.toList());
-		
-		return administrativeSegments; 
-	}
-
-	public List<CargoTheftFormRow> findCargoTheftRowsByOriAndIncidentDate(String ori, Integer year,
-			Integer month, String ownerId) {
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		List<Integer> ids = administrativeSegmentRepository.findCargoTheftIdsByOriAndIncidentDate(ori, year, month, getInteger(ownerId));
-		
-		log.info("ids:" + ids);
-		
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAllById(ids);
-		List<CargoTheftFormRow> cargoTheftFormRows = administrativeSegments.stream()
-				.map(item-> new CargoTheftFormRow(item.getIncidentNumber(), item.getIncidentDate(), item.getSegmentActionType().getNibrsDescription()))
-				.collect(Collectors.toList());
-		return cargoTheftFormRows;
-	}
-	public List<AdministrativeSegment> findByOriAndClearanceDateAndOffenses(Integer ownerId, String ori, Integer year, Integer month,
-			ArrayList<String> offenseCodes) {
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDateAndOffenses(ori, year, month, offenseCodes, ownerId);
 		
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(ids)

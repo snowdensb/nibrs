@@ -29,7 +29,6 @@ import org.search.nibrs.stagingdata.service.summary.HumanTraffickingFormService;
 import org.search.nibrs.stagingdata.service.summary.ReturnAFormService;
 import org.search.nibrs.stagingdata.service.summary.SupplementaryHomicideReportService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,28 +55,14 @@ public class SummaryFormController {
 	@Autowired
 	private CargoTheftReportService cargoTheftReportService;
 	
-	@RequestMapping("/returnAForm/{ownerId}/{ori}/{year}/{month}")
-	public ReturnAForm getReturnAForm(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
-		return returnAFormService.createReturnASummaryReport(ownerId, ori, year, month);
-	}
-	
 	@PostMapping("/returnAForm")
 	public ReturnAForm getReturnAFormByRequest(@RequestBody SummaryReportRequest summaryReportRequest){
 		return returnAFormService.createReturnASummaryReportByRequest(summaryReportRequest);
 	}
 	
-	@RequestMapping("/arsonReport/{ownerId}/{ori}/{year}/{month}")
-	public ArsonReport getArsonReport(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
-		return arsonFormService.createArsonSummaryReports(ownerId, ori, year, month);
-	}
-	
 	@PostMapping("/arsonReport")
 	public ArsonReport getArsonReportByRequest(@RequestBody SummaryReportRequest summaryReportRequest){
 		return arsonFormService.createArsonSummaryReportsByRequest(summaryReportRequest);
-	}
-	@RequestMapping("/humanTraffickingReport/{ownerId}/{ori}/{year}/{month}")
-	public HumanTraffickingForm getHumanTraffickingReport(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer year, @PathVariable Integer month){
-		return humanTraffickingFormService.createHumanTraffickingReport(ownerId, ori, year, month);
 	}
 	
 	@PostMapping("/humanTraffickingReport")
@@ -85,29 +70,14 @@ public class SummaryFormController {
 		return humanTraffickingFormService.createHumanTraffickingReportByRequest(summaryReportRequest);
 	}
 	
-	@RequestMapping("/asrReports/{ownerId}/{ori}/{arrestYear}/{arrestMonth}")
-	public AsrReports getAsrReports(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
-		return asrFormService.createAsrSummaryReports(ownerId, ori, arrestYear, arrestMonth);
-	}
-	
 	@RequestMapping("/asrReports")
 	public AsrReports getAsrReportsByRequest(@RequestBody SummaryReportRequest summaryReportRequest){
 		return asrFormService.createAsrSummaryReportsByRequest(summaryReportRequest);
 	}
 	
-	@RequestMapping("/shrReports/{ownerId}/{ori}/{arrestYear}/{arrestMonth}")
-	public SupplementaryHomicideReport getSupplementaryHomicideReports(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer arrestYear, @PathVariable Integer arrestMonth){
-		return supplementaryHomicideReportService.createSupplementaryHomicideReport(ownerId, ori, arrestYear, arrestMonth);
-	}
-	
 	@PostMapping("/shrReports")
 	public SupplementaryHomicideReport getSupplementaryHomicideReports(@RequestBody SummaryReportRequest summaryReportRequest){
 		return supplementaryHomicideReportService.createSupplementaryHomicideReportByRequest(summaryReportRequest);
-	}
-	
-	@RequestMapping("/cargoTheftReport/{ownerId}/{ori}/{incidentYear}/{incidentMonth}")
-	public CargoTheftReport getCargoTheftReport(@PathVariable String ownerId, @PathVariable String ori, @PathVariable Integer incidentYear, @PathVariable Integer incidentMonth){
-		return cargoTheftReportService.createCargoTheftReport(ownerId, ori, incidentYear, incidentMonth);
 	}
 	
 	@PostMapping("/cargoTheftReport")

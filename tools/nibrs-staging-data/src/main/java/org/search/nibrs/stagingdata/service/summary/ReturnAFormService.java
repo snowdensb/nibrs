@@ -17,8 +17,6 @@
 
 package org.search.nibrs.stagingdata.service.summary;
 
-import static org.search.nibrs.stagingdata.util.ObjectUtils.getInteger;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -121,45 +119,6 @@ public class ReturnAFormService {
 		larcenyOffenseImportanceMap.put("23H", 9);
 	}
 	
-	public ReturnAForm createReturnASummaryReport(String ownerId, String ori, Integer year,  Integer month ) {
-		
-		ReturnAForm returnAForm = new ReturnAForm(ori, year, month); 
-		
-		propertyTypeIds = new ArrayList<>();
-		incidentNumbers = new ArrayList<>();
-		if (!"StateWide".equalsIgnoreCase(ori)){
-			Agency agency = agencyRepository.findFirstByAgencyOri(ori); 
-			if (agency!= null){
-				returnAForm.setAgencyName(agency.getAgencyName());
-				returnAForm.setStateName(agency.getStateName());
-				returnAForm.setStateCode(agency.getStateCode());
-				returnAForm.setPopulation(agency.getPopulation());
-			}
-			else{
-				return returnAForm; 
-			}
-		}
-		else{
-			returnAForm.setAgencyName(ori);
-			returnAForm.setStateName("");
-			returnAForm.setStateCode("");
-			returnAForm.setPopulation(null);
-		}
-
-		processReportedOffenses(ownerId, ori, year, month, returnAForm);
-		processOffenseClearances(ownerId, ori, year, month, returnAForm);
-		
-		fillTheForcibleRapeTotalRow(returnAForm);
-		fillTheRobberyTotalRow(returnAForm);
-		fillTheAssaultTotalRow(returnAForm);
-		fillTheBurglaryTotalRow(returnAForm);
-		fillTheMotorVehicleTheftTotalRow(returnAForm);
-		fillTheGrandTotalRow(returnAForm);
-
-		log.info("returnAForm: " + returnAForm);
-		return returnAForm;
-	}
-
 	public ReturnAForm createReturnASummaryReportByRequest(SummaryReportRequest summaryReportRequest) {
 		
 		log.info("summaryReportRequest for Return A form: " + summaryReportRequest);
@@ -211,13 +170,6 @@ public class ReturnAFormService {
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentService.findBySummaryReportRequestAndOffenses(summaryReportRequest, new ArrayList(partIOffensesMap.keySet()));
 		getReportedOffenseRows(returnAForm, administrativeSegments);
-	}
-
-	private void processOffenseClearances(String ownerId, String ori, Integer year, Integer month, ReturnAForm returnAForm) {
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentService.findByOriAndClearanceDateAndOffenses(getInteger(ownerId), ori, year, month, new ArrayList<>(partIOffensesMap.keySet()));
-
-		getOffenseClearanceRows(returnAForm, administrativeSegments);
 	}
 
 	private void getOffenseClearanceRows(ReturnAForm returnAForm, List<AdministrativeSegment> administrativeSegments) {
@@ -431,14 +383,6 @@ public class ReturnAFormService {
 			offenses.add(reportingOffense);
 		}
 		return offenses;
-	}
-
-	private void processReportedOffenses(String ownerId, String ori, Integer year, Integer month, ReturnAForm returnAForm) {
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentService.findByOriAndIncidentDateAndOffenses(getInteger(ownerId), ori, year, month, new ArrayList(partIOffensesMap.keySet()));
-		
-		getReportedOffenseRows(returnAForm, administrativeSegments);
-		
 	}
 
 	private void getReportedOffenseRows(ReturnAForm returnAForm, List<AdministrativeSegment> administrativeSegments) {

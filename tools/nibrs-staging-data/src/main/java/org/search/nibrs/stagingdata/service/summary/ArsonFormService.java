@@ -192,34 +192,6 @@ public class ArsonFormService {
 		propertyDescriptionArsonRowNameMap.put("80", ArsonRowName.TOTAL_OTHER);
 	}
 	
-	public ArsonReport createArsonSummaryReports(String ownerId, String ori, Integer year,  Integer month ) {
-		
-		ArsonReport arsonReport = new ArsonReport(ori, year, month); 
-		
-		if (!"StateWide".equalsIgnoreCase(ori)){
-			Agency agency = agencyRepository.findFirstByAgencyOri(ori); 
-			if (agency!= null){
-				arsonReport.setAgencyName(agency.getAgencyName());
-				arsonReport.setStateName(agency.getStateName());
-				arsonReport.setStateCode(agency.getStateCode());
-				arsonReport.setPopulation(agency.getPopulation());
-			}
-			else{
-				return arsonReport; 
-			}
-		}
-		else{
-			arsonReport.setAgencyName(ori);
-			arsonReport.setStateName("");
-			arsonReport.setStateCode("");
-			arsonReport.setPopulation(null);
-		}
-		processReportedOffenses(ori, year, month, arsonReport, ownerId);
-		processClearedOffenses(ori, year, month, arsonReport, ownerId);
-		log.debug("arsonReport: " + arsonReport);
-		return arsonReport;
-	}
-
 	public ArsonReport createArsonSummaryReportsByRequest(SummaryReportRequest summaryReportRequest ) {
 		
 		ArsonReport arsonReport = new ArsonReport(summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth());
@@ -253,12 +225,6 @@ public class ArsonFormService {
 	private void processClearedOffenses(SummaryReportRequest summaryReportRequest, ArsonReport arsonReport) {
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentService.findBySummaryReportRequestClearanceDateAndOffenses(summaryReportRequest, Arrays.asList("200"));
-		getClearanceRows(arsonReport, administrativeSegments);
-	}
-
-	private void processClearedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport, String ownerId) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findArsonIncidentByOriAndAClearanceDate(ori, year, month, ownerId);
-
 		getClearanceRows(arsonReport, administrativeSegments);
 	}
 
@@ -316,12 +282,6 @@ public class ArsonFormService {
 				}
 			}
 		}
-	}
-
-	private void processReportedOffenses(String ori, Integer year, Integer month, ArsonReport arsonReport, String ownerId) {
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService.findArsonIncidentByOriAndIncidentDate(ori, year, month, ownerId);
-
-		getArsonReportRows(arsonReport, administrativeSegments);
 	}
 
 	private void processReportedOffenses(SummaryReportRequest summaryReportRequest, ArsonReport arsonReport) {
