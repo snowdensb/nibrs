@@ -111,6 +111,10 @@ public class ArrestReportSegmentRepositorCustomImpl implements ArrestReportSegme
         		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("owner").get("ownerId"), incidentSearchRequest.getOwnerId())));
         	}
 
+        	if (StringUtils.isNotBlank(incidentSearchRequest.getStateCode())) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("agency").get("stateCode"), incidentSearchRequest.getStateCode())));
+        	}
+        	
         	if (incidentSearchRequest.getAgencyIds() != null && incidentSearchRequest.getAgencyIds().size() > 0) {
         		predicates.add(criteriaBuilder.and(root.get("agency").get("agencyId").in(incidentSearchRequest.getAgencyIds())));
         	}

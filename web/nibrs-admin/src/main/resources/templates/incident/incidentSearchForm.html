@@ -54,23 +54,30 @@
            </div>
          </div>
          <div class="form-row">
+						<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting State</label>
+	          <div class="col-8 col-xl-3 form-group">
+	            <select th:field="*{stateCode}" class="form-control form-control-sm chosen-select" data-placeholder="Please select one">
+	              <option value='' th:if="${#maps.size(stateCodeMappingByOwner) > 1}">All</option>
+	              <option th:each="item: ${stateCodeMappingByOwner}" th:value="${item.key}" th:text="${item.value}" />
+	            </select>
+	          </div>
 						<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
 						<div class="col-8 col-xl-3">
      			    <select th:field="*{agencyIds}" class="form-control form-control-sm chosen-select" multiple th:errorclass="is-invalid" data-placeholder="Please select all that apply...">
     					  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
 		    			</select>
 				    </div>
-				    <label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">UCR Offense Type</label>
-				    <div class="col-8 col-xl-3">
-							<select th:field="*{ucrOffenseCodeTypeId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid">
-							   <option value="" >Please select ...</option>
-							   <option th:each="item: ${offenseCodeMapping}" th:value="${item.key}" th:text="${item.value}" />
-							</select>
-    				</div>
          </div>
-         <div class="form-row" th:if="${allowSubmitToFbi}">
-           <label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">FBI Submission Status</label>
-           <div class="form-check col-8 col-xl-3">
+         <div class="form-row">
+           <label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">UCR Offense Type</label>
+           <div class="col-8 col-xl-3">
+             <select th:field="*{ucrOffenseCodeTypeId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid">
+                <option value="" >Please select ...</option>
+                <option th:each="item: ${offenseCodeMapping}" th:value="${item.key}" th:text="${item.value}" />
+             </select>
+           </div>
+           <label class="col-4 col-xl-2 col-form-label font-weight-bold text-right" th:if="${allowSubmitToFbi}">FBI Submission Status</label>
+           <div class="form-check col-8 col-xl-3"  th:if="${allowSubmitToFbi}">
               <select th:field="*{fbiSubmissionStatus}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid">
                  <option value="" >Please select ...</option>
                  <option th:each="item: ${fbiSubmissionStatuses}" th:value="${item.name}" th:text="${item.description}" />
@@ -98,6 +105,14 @@
             $('[data-toggle="popover"]').popover(); 
             $('.date').mask('99/99/9999');
             
+            refreshAgencyDropDown();
+            
+            $('#portalContent').on('change', '#searchForm #stateCode', function(){
+                console.log("stateCode changed to " + $('#stateCode').val()); 
+                refreshAgencyDropDown();
+              });
+              
+
             $('#searchForm input').keypress(function (e) {
               if (e.which == 13) {
                 $('#submit').click();
@@ -119,6 +134,19 @@
               }).fail(ojbc.displayFailMessage);
             });
 
+            function refreshAgencyDropDown(){
+                stateCode = $('#stateCode').val(); 
+                xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
+                  $('#agencyIds').empty();
+                  $('#agencyIds').append('<option value="">All</option>');
+                  $.each( data, function( key, value ) {
+                    $('#agencyIds').append($('<option></option>').attr('value', key).text(value));
+                  });
+                  
+                  $('#agencyIds').trigger("chosen:updated");
+                }).fail(ojbc.displayFailMessage);
+              }
+            
           });
         </script>
        

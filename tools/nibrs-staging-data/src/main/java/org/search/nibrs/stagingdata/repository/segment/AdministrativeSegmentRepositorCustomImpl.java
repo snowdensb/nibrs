@@ -30,6 +30,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.apache.commons.lang3.StringUtils;
 import org.search.nibrs.stagingdata.model.ArresteeSegmentWasArmedWith;
 import org.search.nibrs.stagingdata.model.PropertyType;
 import org.search.nibrs.stagingdata.model.Submission;
@@ -124,6 +125,10 @@ public class AdministrativeSegmentRepositorCustomImpl implements AdministrativeS
             	}
             }
 
+        	if (StringUtils.isNotBlank(incidentSearchRequest.getStateCode())) {
+        		predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("agency").get("stateCode"), incidentSearchRequest.getStateCode())));
+        	}
+        	
         	if (incidentSearchRequest.getAgencyIds() != null && incidentSearchRequest.getAgencyIds().size() > 0) {
         		predicates.add(criteriaBuilder.and(root.get("agency").get("agencyId").in(incidentSearchRequest.getAgencyIds())));
         	}

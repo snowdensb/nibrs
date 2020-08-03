@@ -17,7 +17,6 @@ package org.search.nibrs.report;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.search.nibrs.model.reports.cargotheft.CargoTheftReport;
 import org.search.nibrs.report.service.ArsonExcelExporter;
 import org.search.nibrs.report.service.AsrExcelExporter;
 import org.search.nibrs.report.service.CargoTheftReportExporter;
@@ -86,8 +85,8 @@ public class NibrsSummaryReportApplication implements CommandLineRunner{
 //        SupplementaryHomicideReport supplementaryHomicideReport = restClient.getSupplementaryHomicideReport(args[0], args[1], args[2]);
 //        supplementaryHomicideReportExporter.exportSupplementaryHomicideReport(supplementaryHomicideReport);
         
-        CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(args[0], args[1], args[2], "0");
-        cargoTheftReportExporter.exportCargoTheftReport(cargoTheftReport);;
+//        CargoTheftReport cargoTheftReport = restClient.getCargoTheftReport(args[0], args[1], args[2], "0");
+//        cargoTheftReportExporter.exportCargoTheftReport(cargoTheftReport);;
         
 //        ReturnAForm returnAForm = restClient.getReturnAForm(args[0], args[1], args[2]);
 //        System.out.println("returnAForm: \n" + returnAForm);

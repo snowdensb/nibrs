@@ -31,6 +31,7 @@ public class IncidentSearchRequest implements Serializable {
 	private static final long serialVersionUID = 7916910066665545067L;
 	private String incidentIdentifier; 
 	private Integer ownerId; 
+	private String stateCode; 
 	private List<Integer> agencyIds; 
 	private List<String> agenycyNames; 
 	@DateTimeFormat(pattern = "MM/dd/yyyy")
@@ -89,6 +90,7 @@ public class IncidentSearchRequest implements Serializable {
 	@JsonIgnore
 	public boolean isEmpty() {
 		return StringUtils.isBlank(incidentIdentifier)
+				&& (StringUtils.isBlank(stateCode))  
 				&& (agencyIds == null || agencyIds.isEmpty())  
 				&& incidentDateRangeStartDate == null
 				&& incidentDateRangeEndDate == null
@@ -195,6 +197,12 @@ public class IncidentSearchRequest implements Serializable {
 	}
 	public void setOwnerId(Integer ownerId) {
 		this.ownerId = ownerId;
+	}
+	public String getStateCode() {
+		return stateCode;
+	}
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
 	}
 	
 }

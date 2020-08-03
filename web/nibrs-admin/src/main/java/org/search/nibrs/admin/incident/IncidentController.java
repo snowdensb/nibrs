@@ -38,7 +38,6 @@ import org.search.nibrs.stagingdata.model.search.IncidentSearchResult;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
 import org.search.nibrs.stagingdata.model.segment.ArrestReportSegment;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -62,15 +61,25 @@ public class IncidentController {
 	RestService restService;
 	
     @ModelAttribute
-    public void addModelAttributes(Model model) {
+    public void addModelAttributes(Map<String, Object> model) {
     	
     	log.info("Add ModelAtrributes");
 		
-		if (!model.containsAttribute("offenseCodeMapping")) {
-			model.addAttribute("offenseCodeMapping", restService.getOffenseCodes());
+		if (model.get("offenseCodeMapping")== null) {
+			model.put("offenseCodeMapping", restService.getOffenseCodes());
 		}
-		if (!model.containsAttribute("fbiSubmissionStatuses")) {
-			model.addAttribute("fbiSubmissionStatuses", FbiSubmissionStatus.values());
+		if (model.get("fbiSubmissionStatuses") == null) {
+			model.put("fbiSubmissionStatuses", FbiSubmissionStatus.values());
+		}
+		if (appProperties.getPrivateSummaryReportSite()) {
+			model.put("agencyMapping", restService.getAgencies(null));
+			model.put("stateCodeMappingByOwner", restService.getStatesNoChache(null));
+		}
+		else {
+			AuthUser authUser =(AuthUser) model.get("authUser");   
+			String ownerId = Objects.toString(authUser.getUserId(), ""); 
+			model.put("agencyMapping", restService.getAgencies(authUser.getUserId()));
+			model.put("stateCodeMappingByOwner", restService.getStatesNoChache(ownerId));
 		}
 		
     	log.info("Added ModelAtrributes");
