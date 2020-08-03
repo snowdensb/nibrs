@@ -247,10 +247,10 @@ public class SummaryReportController {
 		downloadReport(response, workbook, fileName);
 	}
 	
-	@GetMapping("/years/{ori}")
-	public @ResponseBody List<Integer> getDistinctYears(@PathVariable String ori, Map<String, Object> model) throws IOException{
+	@GetMapping("/years/{agencyId}")
+	public @ResponseBody List<Integer> getDistinctYears(@PathVariable Integer agencyId, Map<String, Object> model) throws IOException{
 		String ownerId = getOwnerId(model);
-		return restService.getYears(ori, ownerId);
+		return restService.getYears(agencyId, ownerId);
 	}
 	
 	@GetMapping("/state/years/{stateCode}")
@@ -273,10 +273,10 @@ public class SummaryReportController {
 		return ownerId;
 	}
 	
-	@GetMapping("/months/{year}/{ori}")
-	public @ResponseBody List<Integer> getDistinctMonths(@PathVariable String ori, @PathVariable Integer year, Map<String, Object> model) throws IOException{
+	@GetMapping("/months/{year}/{agencyId}")
+	public @ResponseBody List<Integer> getDistinctMonths(@PathVariable Integer agencyId, @PathVariable Integer year, Map<String, Object> model) throws IOException{
 		String ownerId = getOwnerId(model);
-		return restService.getMonths(ori, year, ownerId);
+		return restService.getMonths(agencyId, year, ownerId);
 	}
 	
 	@GetMapping("state/months/{year}/{stateCode}")

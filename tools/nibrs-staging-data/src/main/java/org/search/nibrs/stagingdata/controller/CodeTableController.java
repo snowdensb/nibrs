@@ -145,23 +145,23 @@ public class CodeTableController {
 		return agencyMap;
 	}
 	
-	@GetMapping("/years/{ownerId}/{ori}") 
-	public List<Integer> getYearsByStateCodeAndOwner(@PathVariable String ori, @PathVariable String ownerId){
-		List<Integer> years = administrativeSegmentRepository.findDistinctYears(ori, ObjectUtils.getInteger(ownerId));
-		log.debug("Years from the database for ORI " + ori + " and ownerId " + ownerId + " : " + years);
+	@GetMapping(value= {"/years/{ownerId}/{agencyId}", "/years/{agencyId}"}) 
+	public List<Integer> getYearsByAgencyAndOwner(@PathVariable Integer agencyId, @PathVariable(required = false) String ownerId){
+		List<Integer> years = administrativeSegmentRepository.findDistinctYears(agencyId, ObjectUtils.getInteger(ownerId));
+		log.debug("Years from the database for agency " + agencyId + " and ownerId " + ownerId + " : " + years);
 		return years;
 	}
 	
 	@GetMapping(value={"/state/years/{ownerId}/{stateCode}", "/state/years/{stateCode}"}) 
-	public List<Integer> getYearsByOriAndOwner(@PathVariable String stateCode, @PathVariable(required=false) String ownerId){
+	public List<Integer> getYearsByStateCodeAndOwner(@PathVariable String stateCode, @PathVariable(required=false) String ownerId){
 		List<Integer> years = administrativeSegmentRepository.findDistinctYearsByStateCode(stateCode, ObjectUtils.getInteger(ownerId));
 		log.debug("Years from the database for State " + stateCode + " and ownerId " + ownerId + " : " + years);
 		return years;
 	}
 	
-	@GetMapping("/months/{year}/{ownerId}/{ori}") 
-	public List<Integer> getMonths(@PathVariable String ori, @PathVariable Integer year, @PathVariable String ownerId){
-		return administrativeSegmentRepository.findDistinctMonths(ori, year, ObjectUtils.getInteger(ownerId));
+	@GetMapping(value= {"/months/{year}/{ownerId}/{agencyId}", "/months/{year}/{agencyId}"}) 
+	public List<Integer> getMonths(@PathVariable Integer agencyId, @PathVariable Integer year, @PathVariable(required = false) String ownerId){
+		return administrativeSegmentRepository.findDistinctMonths(agencyId, year, ObjectUtils.getInteger(ownerId));
 	}
 	
 	@GetMapping(value= {"/state/months/{year}/{ownerId}/{stateCode}", "/state/months/{year}/{stateCode}"}) 

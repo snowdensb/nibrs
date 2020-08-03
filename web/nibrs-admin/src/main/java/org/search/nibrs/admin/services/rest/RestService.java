@@ -300,15 +300,15 @@ public class RestService{
 	}
 	
 	
-	public List<Integer> getYears(String ori, String ownerId) {
-		return this.webClient.get().uri("/codeTables/years/"+ ownerId + "/" + ori)
+	public List<Integer> getYears(Integer agencyId, String ownerId) {
+		return this.webClient.get().uri("/codeTables/years/"+ ownerId + "/" + agencyId)
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
 				.block();
 	}
 
-	public List<Integer> getMonths(String ori, Integer year, String ownerId) {
-		return this.webClient.get().uri("/codeTables/months/" + year + "/" + ownerId + "/"+ ori)
+	public List<Integer> getMonths(Integer agencyId, Integer year, String ownerId) {
+		return this.webClient.get().uri("/codeTables/months/" + year + "/" + ownerId + "/"+ agencyId)
 				.retrieve()
 				.bodyToMono( new ParameterizedTypeReference<List<Integer>>() {})
 				.block();

@@ -30,7 +30,7 @@
    refreshIncidentYearDropDown();
    refreshIncidentMonthDropDown();
    
-   $('#portalContent').on('change', '#summaryReportRequestForm #ori', function(){
+   $('#portalContent').on('change', '#summaryReportRequestForm #agencyId', function(){
 	   refreshIncidentYearDropDown();
    });
    
@@ -58,11 +58,11 @@
    }
 
    function refreshIncidentMonthDropDown(){
-	   ori = $('#ori').val(); 
+	   agencyId = $('#agencyId').val(); 
 	   stateCode = $('#stateCode').val(); 
 	   incidentYear = $('#incidentYear').val();
-	   if (ori && incidentYear){
-		   xhr = $.get( context +"months/" + incidentYear + "/" + ori, function(data) {
+	   if (agencyId && incidentYear){
+		   xhr = $.get( context +"months/" + incidentYear + "/" + agencyId, function(data) {
 			   $('#incidentMonth').empty();
 			   $('#incidentMonth').append('<option value="0">All months</option>');
 			   data.forEach( function(item, index) {
@@ -86,11 +86,11 @@
    function refreshIncidentYearDropDown(){
 	   console.log("in the refreshIncidentYearDropDown method"); 
 	   console.log("stateCode: " + $('#stateCode').val()); 
-	   ori = $('#ori').val();
+	   agencyId = $('#agencyId').val();
 	   stateCode = $('#stateCode').val();
-	   if (ori){
+	   if (agencyId){
 		   console.log("call the getYears method"); 
-		   xhr = $.get( context +"years/" + ori, function(data) {
+		   xhr = $.get( context +"years/" + agencyId, function(data) {
 			   $('#incidentYear').empty();
 			   $('#incidentYear').append('<option value="">Please select ...</option>');
 			   data.forEach( function(item, index) {
