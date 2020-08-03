@@ -31,11 +31,23 @@
    refreshIncidentMonthDropDown();
    
    $('#portalContent').on('change', '#summaryReportRequestForm #agencyId', function(){
+	   if ($('#agencyId').val()){
+		   $('#stateCode').attr('required', false);
+	   }
+	   else{
+		   $('#stateCode').attr('required', true);
+	   }
 	   refreshIncidentYearDropDown();
    });
    
    $('#portalContent').on('change', '#summaryReportRequestForm #stateCode', function(){
 	   console.log("stateCode changed to " + $('#stateCode').val()); 
+	   if ($('#stateCode').val()){
+		   $('#agencyId').attr('required', false);
+	   }
+	   else{
+		   $('#agencyId').attr('required', true);
+	   }
 	   refreshAgencyDropDown();
 	   refreshIncidentYearDropDown();
    });
