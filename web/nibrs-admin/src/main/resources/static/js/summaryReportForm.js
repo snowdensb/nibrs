@@ -26,36 +26,46 @@
      }
    });
    
+   setAgencyIdRequiredAttr();
+   setStateCodeRequiredAttr();
    refreshAgencyDropDown();
    refreshIncidentYearDropDown();
    refreshIncidentMonthDropDown();
    
    $('#portalContent').on('change', '#summaryReportRequestForm #agencyId', function(){
-	   if ($('#agencyId').val()){
-		   $('#stateCode').attr('required', false);
-	   }
-	   else{
-		   $('#stateCode').attr('required', true);
-	   }
+	   setStateCodeRequiredAttr();
 	   refreshIncidentYearDropDown();
    });
    
    $('#portalContent').on('change', '#summaryReportRequestForm #stateCode', function(){
-	   console.log("stateCode changed to " + $('#stateCode').val()); 
+	   //console.log("stateCode changed to " + $('#stateCode').val());
+	   setAgencyIdRequiredAttr();
+	   refreshAgencyDropDown();
+	   refreshIncidentYearDropDown();
+   });
+
+   $('#portalContent').on('change', '#summaryReportRequestForm #incidentYear', function(){
+	   refreshIncidentMonthDropDown()
+   });
+   
+   function setAgencyIdRequiredAttr(){
 	   if ($('#stateCode').val()){
 		   $('#agencyId').attr('required', false);
 	   }
 	   else{
 		   $('#agencyId').attr('required', true);
 	   }
-	   refreshAgencyDropDown();
-	   refreshIncidentYearDropDown();
-   });
-   
-   $('#portalContent').on('change', '#summaryReportRequestForm #incidentYear', function(){
-	   refreshIncidentMonthDropDown()
-   });
+   }
 
+   function setStateCodeRequiredAttr(){
+	   if ($('#agencyId').val()){
+		   $('#stateCode').attr('required', false);
+	   }
+	   else{
+		   $('#stateCode').attr('required', true);
+	   }
+   }
+   
    function refreshAgencyDropDown(){
      stateCode = $('#stateCode').val(); 
      xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
