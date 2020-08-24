@@ -508,6 +508,12 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 		case ArresteeSegment.GROUP_A_ARRESTEE_SEGMENT_TYPE_IDENTIFIER:
 			currentIncident.addArrestee(buildGroupAArresteeSegment(s, currentIncident, newErrorList));
 			break;
+		case '8':
+			log.info("Skip the State Specific segment 8");
+			break; 
+		case '9':
+			log.info("Skip the State Specific segment 9");
+			break; 
 		default:
 			NIBRSError error = new NIBRSError();
 			error.setContext(s.getReportSource());
