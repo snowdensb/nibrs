@@ -51,7 +51,7 @@ public class TestIncidentBuilderErrors {
             "00712I022003    TN006000002-000895   220CN  20  N            88        \n" +
             "03073I022003    TN006000002-000895   713000000020                                                                                                                                                                                                                                                                  \n" +
             "01414I022003    TN006000002-000895   001220                           I46  FWNR                                                              \n" +
-            "00468I022003    TN006000002-000895   0124  MW \n";
+            "0046eI022003    TN006000002-000895   0124  MW \n";
     	
     	DefaultReportListener incidentListener = new DefaultReportListener();
         List<NIBRSError> errorList = getErrorsForTestData(testData, incidentListener);
@@ -59,7 +59,7 @@ public class TestIncidentBuilderErrors {
         assertEquals(1, errorList.size());
         NIBRSError e = errorList.get(0);
         assertEquals(NIBRSErrorCode._051, e.getNIBRSErrorCode());
-        assertEquals('8', e.getValue());
+        assertEquals('e', e.getValue());
         ReportSource reportSource = (ReportSource) e.getContext();
         assertEquals("5", reportSource.getSourceLocation());
         
