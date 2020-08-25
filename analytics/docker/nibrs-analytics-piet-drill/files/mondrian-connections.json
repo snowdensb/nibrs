@@ -1,0 +1,11 @@
+{
+	"nibrs" : {
+		"JdbcDriver" : "org.apache.drill.jdbc.Driver",
+		"Jdbc" : "jdbc:drill:zk=zoo",
+		"JdbcUser" : "",
+		"JdbcPassword" : "",
+		"Catalog" : "/NIBRSAnalyticsMondrianSchema.8.xml",
+		"Description" : "NIBRS CDE",
+		"IsDemo" : false
+	}
+}
