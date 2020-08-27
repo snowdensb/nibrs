@@ -24,6 +24,9 @@
 
 FROM alpine
 
+# pass any value other than Y via --build-arg to skip pre-loading of the pickled (old) dimensional db
+ARG preload=Y
+
 RUN apk add --update bash mariadb mariadb-client
 
 WORKDIR /usr
@@ -33,7 +36,7 @@ RUN bin/mysql_install_db --user=root
 COPY files/server-config.sh /tmp/
 COPY files/search_nibrs_dimensional.sql.gz /tmp/
 RUN chmod a+x /tmp/server-config.sh
-RUN /tmp/server-config.sh
+RUN /tmp/server-config.sh ${preload}
 
 RUN sed -i s/skip-networking/#skip-networking/g /etc/my.cnf.d/mariadb-server.cnf
 
