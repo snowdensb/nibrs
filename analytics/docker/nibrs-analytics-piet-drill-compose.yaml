@@ -1,0 +1,27 @@
+# Docker Compose file that creates a piet instance backed by drill
+# this has to be run once the drill filesystem has been populated by a loading process
+
+version: '3.2'
+
+networks:
+  nibrs_analytics_nw:
+
+services:
+  piet-mongo:
+    image: mongo
+    container_name: mongo
+    networks:
+      - "nibrs_analytics_nw"
+    volumes:
+      - "/opt/data/nibrs/mongo:/data/db"
+    restart: always
+  piet:
+    image: searchncjis/nibrs-analytics-piet-drill
+    container_name: piet
+    networks:
+      - "nibrs_analytics_nw"
+    depends_on:
+      - piet-mongo
+    ports:
+      - "8080:8080"
+    restart: always
