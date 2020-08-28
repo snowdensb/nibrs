@@ -85,7 +85,8 @@ FACT_TABLES <- c(
 loadDimensionalFromStagingDatabase <- function(
   stagingConn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhost", dbname="search_nibrs_staging", username="root"),
   dimensionalConn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhost", dbname="search_nibrs_dimensional", username="root"),
-  writeToDatabase=TRUE, sampleFraction=NULL, seed=12341234) {
+  writeToDatabase=TRUE, ageGroupFunctionFactory=NULL,
+  sampleFraction=NULL, seed=12341234) {
 
   writeLines('Reading dimension tables from staging')
   dimensionTables <- map(DIMENSION_TABLES, function(tableName) {
@@ -99,10 +100,87 @@ loadDimensionalFromStagingDatabase <- function(
 
   dimensionTables$State <- loadStatesForDimensional()
 
+  if (is.null(ageGroupFunctionFactory)) {
+    ageGroupFunctionFactory <- list(
+      createAgeGroup=function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
+        if (is.null(AgeNeonateIndicator)) {
+          AgeNeonateIndicator=rep(0, length(age))
+        }
+        if (is.null(AgeFirstWeekIndicator)) {
+          AgeFirstWeekIndicator=rep(0, length(age))
+        }
+        if (is.null(AgeFirstYearIndicator)) {
+          AgeFirstYearIndicator=rep(0, length(age))
+        }
+        if (is.null(NonNumericAge)) {
+          NonNumericAge=rep('0', length(age))
+        }
+        case_when(
+          AgeNeonateIndicator==1 ~ '1 or less',
+          AgeFirstWeekIndicator==1 ~ '1 or less',
+          AgeFirstYearIndicator==1 ~ '1 or less',
+          age <= 1 ~ '1 or less',
+          age <= 5 ~ '2-5',
+          age <= 10 ~ '6-10',
+          age <= 13 ~ '11-13',
+          age <= 17 ~ '14-17',
+          age <= 20 ~ '18-20',
+          age <= 25 ~ '21-25',
+          age <= 30 ~ '26-30',
+          age <= 40 ~ '31-40',
+          age <= 50 ~ '41-50',
+          age <= 60 ~ '51-60',
+          age <= 70 ~ '61-70',
+          age <= 80 ~ '71-80',
+          age >= 81 ~ '81+',
+          NonNumericAge == '00' ~ 'Unknown',
+          is.na(age) ~ 'Blank',
+          TRUE ~ 'N/A'
+        )
+      },
+      createAgeGroupSort=function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
+        if (is.null(AgeNeonateIndicator)) {
+          AgeNeonateIndicator=rep(0, length(age))
+        }
+        if (is.null(AgeFirstWeekIndicator)) {
+          AgeFirstWeekIndicator=rep(0, length(age))
+        }
+        if (is.null(AgeFirstYearIndicator)) {
+          AgeFirstYearIndicator=rep(0, length(age))
+        }
+        if (is.null(NonNumericAge)) {
+          NonNumericAge=rep('0', length(age))
+        }
+        case_when(
+          AgeNeonateIndicator==1 ~ 1,
+          AgeFirstWeekIndicator==1 ~ 1,
+          AgeFirstYearIndicator==1 ~ 1,
+          age <= 1 ~ 1,
+          age <= 5 ~ 2,
+          age <= 10 ~ 3,
+          age <= 13 ~ 4,
+          age <= 17 ~ 5,
+          age <= 20 ~ 6,
+          age <= 25 ~ 7,
+          age <= 30 ~ 8,
+          age <= 40 ~ 9,
+          age <= 50 ~ 10,
+          age <= 60 ~ 11,
+          age <= 70 ~ 12,
+          age <= 80 ~ 13,
+          age >= 81 ~ 14,
+          NonNumericAge == '00' ~ 99,
+          is.na(age) ~ 98,
+          TRUE ~ 100
+        )
+      }
+    )
+  }
+
   if (writeToDatabase) {
-    ret <- loadDimensionalFromObjectLists(dimensionTables, factTables, dimensionalConn, sampleFraction, seed)
+    ret <- loadDimensionalFromObjectLists(dimensionTables, factTables, dimensionalConn, ageGroupFunctionFactory, sampleFraction, seed)
   } else {
-    ret <- convertStagingTablesToDimensional(dimensionTables, factTables, sampleFraction, seed)
+    ret <- convertStagingTablesToDimensional(dimensionTables, factTables, ageGroupFunctionFactory, sampleFraction, seed)
   }
 
   ret
@@ -124,7 +202,7 @@ loadDimensionalFromStagingDatabase <- function(
 #' @param seed random seed.  Set this to the same value in subsequent calls to generate the same random sample.
 #' @return a list with all the dimensional database tables, as tibbles
 #' @export
-convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampleFraction=NULL, seed=12341234, writeProgressDetail=TRUE) {
+convertStagingTablesToDimensional <- function(dimensionTables, factTables, ageGroupFunctionFactory, sampleFraction=NULL, seed=12341234, writeProgressDetail=TRUE) {
 
   factTables <- map(factTables, function(factTableDf) {
     if ('SegmentActionTypeTypeID' %in% colnames(factTableDf)) {
@@ -224,42 +302,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     )
   }
 
-  createAgeGroup <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
-    if (is.null(AgeNeonateIndicator)) {
-      AgeNeonateIndicator=rep(0, length(age))
-    }
-    if (is.null(AgeFirstWeekIndicator)) {
-      AgeFirstWeekIndicator=rep(0, length(age))
-    }
-    if (is.null(AgeFirstYearIndicator)) {
-      AgeFirstYearIndicator=rep(0, length(age))
-    }
-    if (is.null(NonNumericAge)) {
-      NonNumericAge=rep('0', length(age))
-    }
-    case_when(
-      AgeNeonateIndicator==1 ~ '1 or less',
-      AgeFirstWeekIndicator==1 ~ '1 or less',
-      AgeFirstYearIndicator==1 ~ '1 or less',
-      age <= 1 ~ '1 or less',
-      age <= 5 ~ '2-5',
-      age <= 10 ~ '6-10',
-      age <= 13 ~ '11-13',
-      age <= 17 ~ '14-17',
-      age <= 20 ~ '18-20',
-      age <= 25 ~ '21-25',
-      age <= 30 ~ '26-30',
-      age <= 40 ~ '31-40',
-      age <= 50 ~ '41-50',
-      age <= 60 ~ '51-60',
-      age <= 70 ~ '61-70',
-      age <= 80 ~ '71-80',
-      age >= 81 ~ '81+',
-      NonNumericAge == '00' ~ 'Unknown',
-      is.na(age) ~ 'Blank',
-      TRUE ~ 'N/A'
-    )
-  }
+  createAgeGroup <- ageGroupFunctionFactory$createAgeGroup
 
   createUcrAgeGroupSort <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
     if (is.null(AgeNeonateIndicator)) {
@@ -297,42 +340,7 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
     )
   }
 
-  createAgeGroupSort <- function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
-    if (is.null(AgeNeonateIndicator)) {
-      AgeNeonateIndicator=rep(0, length(age))
-    }
-    if (is.null(AgeFirstWeekIndicator)) {
-      AgeFirstWeekIndicator=rep(0, length(age))
-    }
-    if (is.null(AgeFirstYearIndicator)) {
-      AgeFirstYearIndicator=rep(0, length(age))
-    }
-    if (is.null(NonNumericAge)) {
-      NonNumericAge=rep('0', length(age))
-    }
-    case_when(
-      AgeNeonateIndicator==1 ~ 1,
-      AgeFirstWeekIndicator==1 ~ 1,
-      AgeFirstYearIndicator==1 ~ 1,
-      age <= 1 ~ 1,
-      age <= 5 ~ 2,
-      age <= 10 ~ 3,
-      age <= 13 ~ 4,
-      age <= 17 ~ 5,
-      age <= 20 ~ 6,
-      age <= 25 ~ 7,
-      age <= 30 ~ 8,
-      age <= 40 ~ 9,
-      age <= 50 ~ 10,
-      age <= 60 ~ 11,
-      age <= 70 ~ 12,
-      age <= 80 ~ 13,
-      age >= 81 ~ 14,
-      NonNumericAge == '00' ~ 99,
-      is.na(age) ~ 98,
-      TRUE ~ 100
-    )
-  }
+  createAgeGroupSort <- ageGroupFunctionFactory$createAgeGroupSort
 
   createMotorVehiclesDim <- function(mv) {
     case_when(
@@ -909,9 +917,9 @@ convertStagingTablesToDimensional <- function(dimensionTables, factTables, sampl
 loadDimensionalFromObjectList <- function(
   stagingTableList,
   dimensionalConn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhost", dbname="search_nibrs_dimensional", username="root"),
-  sampleFraction=NULL, seed=12341234) {
+  ageGroupFunctionFactory, sampleFraction=NULL, seed=12341234) {
 
-  loadDimensionalFromObjectLists(stagingTableList[DIMENSION_TABLES], stagingTableList[FACT_TABLES], dimensionalConn, sampleFraction, seed)
+  loadDimensionalFromObjectLists(stagingTableList[DIMENSION_TABLES], stagingTableList[FACT_TABLES], dimensionalConn, ageGroupFunctionFactory, sampleFraction, seed)
 
 }
 
@@ -935,9 +943,9 @@ loadDimensionalFromObjectList <- function(
 loadDimensionalFromObjectLists <- function(
   dimensionTables, factTables,
   dimensionalConn=DBI::dbConnect(RMariaDB::MariaDB(), host="localhost", dbname="search_nibrs_dimensional", username="root"),
-  sampleFraction=NULL, seed=12341234) {
+  ageGroupFunctionFactory, sampleFraction=NULL, seed=12341234) {
 
-  ret <- convertStagingTablesToDimensional(dimensionTables, factTables, sampleFraction, seed)
+  ret <- convertStagingTablesToDimensional(dimensionTables, factTables, ageGroupFunctionFactory, sampleFraction, seed)
 
   iwalk(ret, function(ddf, tableName) {
     writeLines(paste0('Writing dimensional db table ', tableName))

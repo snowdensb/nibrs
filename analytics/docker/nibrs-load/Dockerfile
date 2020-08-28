@@ -33,12 +33,12 @@
 
 # (Note that if you want to write the whole db rather than a random sample of records, remove the sampleFraction= parameter)
 
-FROM rocker/tidyverse:3.5.3
+FROM rocker/tidyverse:4.0.1
 
 LABEL maintainer="SEARCH" \
   org.label-schema.description="Image that loads NIBRS data from source datasets into mariadb"
 
-RUN apt-get update && apt-get install -y libmariadbclient-dev && R -e 'install.packages("RMariaDB")'
+RUN apt-get update && apt-get install -y libmariadb-dev libmariadbclient-dev && R -e 'install.packages("RMariaDB")'
 RUN R -e 'install.packages(c("furrr","sergeant"))'
 
 COPY files/nibrs_1.0.0.tar.gz /tmp/
