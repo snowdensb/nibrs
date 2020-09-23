@@ -22,10 +22,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AgencyRepositorCustomImpl implements AgencyRepositoryCustom{
+	private static final Log log = LogFactory.getLog(AgencyRepositorCustomImpl.class);
 	@PersistenceContext
     private EntityManager entityManager;
 
@@ -53,7 +56,7 @@ public class AgencyRepositorCustomImpl implements AgencyRepositoryCustom{
 				        tuple -> (String)tuple.get("stateCode"),
 				        entry -> (String)entry.get("stateName"), 
 			             (stateCode1, stateCode2) -> {
-			                 System.out.println("duplicate key found!");
+			                 log.warn("duplicate stateCode found!");
 			                 return stateCode1;
 			             }
 				 ));
@@ -85,7 +88,7 @@ public class AgencyRepositorCustomImpl implements AgencyRepositoryCustom{
 				        tuple -> (Integer)tuple.get("agencyId"),
 				        entry -> (String)entry.get("agencyName"), 
 			             (stateCode1, stateCode2) -> {
-			                 System.out.println("duplicate key found!");
+			                 log.warn("duplicate stateCode found!");
 			                 return stateCode1;
 			             }
 				 ));
