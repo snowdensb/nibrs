@@ -22,6 +22,7 @@ Drop schema if exists search_nibrs_staging;
 CREATE schema search_nibrs_staging;
 use search_nibrs_staging;
 
+
 CREATE TABLE Owner (
                 OwnerId INT AUTO_INCREMENT NOT NULL,
                 FederationId VARCHAR(100) NOT NULL,
@@ -30,7 +31,6 @@ CREATE TABLE Owner (
                 LastName VARCHAR(100) NOT NULL,
                 PRIMARY KEY (OwnerId)
 );
-create unique index owner_federationId_idx on Owner(FederationId); 
 
 
 CREATE TABLE NibrsErrorCodeType (
@@ -68,7 +68,7 @@ CREATE TABLE Violation (
                 ViolationDescription VARCHAR(200) NOT NULL,
                 ViolationLevel VARCHAR(1) NOT NULL,
                 NibrsErrorCodeTypeId INT,
-                ViolationTimestamp TIMESTAMP NOT NULL,
+                ViolationTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 PRIMARY KEY (ViolationID)
 );
 
@@ -462,7 +462,9 @@ CREATE TABLE ArrestReportSegmentWasArmedWith (
                 AutomaticWeaponIndicator VARCHAR(1),
                 PRIMARY KEY (ArrestReportSegmentWasArmedWithID)
 );
-
+CREATE INDEX arrestreportsegment_idx
+ ON ArrestReportSegment
+ ( ORI, ArrestTransactionNumber, MonthOfTape, YearOfTape);
 
 CREATE TABLE AdministrativeSegment (
                 AdministrativeSegmentID INT AUTO_INCREMENT NOT NULL,
@@ -488,6 +490,10 @@ CREATE TABLE AdministrativeSegment (
                 PRIMARY KEY (AdministrativeSegmentID)
 );
 
+
+CREATE INDEX administrativesegment_idx
+ ON AdministrativeSegment
+ ( ORI, IncidentNumber, MonthOfTape, YearOfTape, );
 
 CREATE TABLE ArresteeSegment (
                 ArresteeSegmentID INT AUTO_INCREMENT NOT NULL,
