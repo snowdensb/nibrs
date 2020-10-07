@@ -106,8 +106,8 @@
    }
    
    function refreshIncidentYearDropDown(){
-	   console.log("in the refreshIncidentYearDropDown method"); 
-	   console.log("stateCode: " + $('#stateCode').val()); 
+//	   console.log("in the refreshIncidentYearDropDown method"); 
+//	   console.log("stateCode: " + $('#stateCode').val()); 
 	   agencyId = $('#agencyId').val();
 	   stateCode = $('#stateCode').val();
 	   if (agencyId){
@@ -122,9 +122,9 @@
 	       }).fail(ojbc.displayFailMessage);
 	   }
 	   else if (stateCode){
-		   console.log("call the getYearsByState method"); 
+//		   console.log("call the getYearsByState method"); 
 		   xhr = $.get( context +"state/years/" + stateCode, function(data) {
-			   console.log("years: " + data); 
+//			   console.log("years: " + data); 
 			   $('#incidentYear').empty();
 			   $('#incidentYear').append('<option value="">Please select ...</option>');
 			   data.forEach( function(item, index) {
@@ -157,8 +157,8 @@
     		 console.log("reportType: " + reportType);
     		 xhr[i] = new XMLHttpRequest();
     		 xhr[i].onreadystatechange = function() {
-    			 console.log("i:" + i); 
-    			 console.log("len -1 :" + (len -1)); 
+//    			 console.log("i:" + i); 
+//    			 console.log("len -1 :" + (len -1)); 
 		    	  if( this.readyState === 4){
 		    		if (++j === len ){
 		    			$("#loadingAjaxPane").hide();
@@ -168,16 +168,16 @@
 					var loadingDiv =  $("#loadingAjaxPane");
 					var portalContentDiv = $("#portalContent");
 					
-					loadingDiv.height(portalContentDiv.height() + 20);
-					loadingDiv.width(portalContentDiv.width());
-					
+					loadingDiv.css('height', portalContentDiv.height() + 20);
+					loadingDiv.css('width', portalContentDiv.width());
+
 					$("#loadingAjaxPane").show();
 		    	  }
 		     };
 		     xhr[i].open('POST', context + "summaryReports/"+reportType, true);
 		     xhr[i].setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 		     xhr[i].responseType = 'blob';
-	    	 console.log("xhr[i]: " + xhr[i]); 
+//	    	 console.log("xhr[i]: " + xhr[i]); 
 		
 		     xhr[i].onload = function(e) {
 		         if (this.status === 200) {
