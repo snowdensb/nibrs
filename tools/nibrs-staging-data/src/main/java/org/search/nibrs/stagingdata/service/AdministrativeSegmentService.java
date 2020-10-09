@@ -15,12 +15,9 @@
  */
 package org.search.nibrs.stagingdata.service;
 
-import static org.search.nibrs.stagingdata.util.ObjectUtils.getInteger;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -148,6 +145,13 @@ public class AdministrativeSegmentService {
 		return predicates;
 	}
 
+	/**
+	 * Deprecated
+	 * @param ori
+	 * @param year
+	 * @param month
+	 * @return
+	 */
 	public List<AdministrativeSegment> findByOriAndClearanceDate(String ori, Integer year, Integer month){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
@@ -242,28 +246,6 @@ public class AdministrativeSegmentService {
 		
 	}
 	
-	public List<ArresteeSegment> findArresteeSegmentByOriAndArrestDate(String ori, Integer arrestYear, Integer arrestMonth, String ownerId){
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndArrestDate(ori, arrestYear, arrestMonth, getInteger(ownerId));
-		
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAllById(ids)
-				.stream().distinct().collect(Collectors.toList());
-		
-		log.info("ids size" + ids.size());
-		log.info("administrativeSegments size" + administrativeSegments.size());
-		
-		List<ArresteeSegment> arresteeSegments = administrativeSegments.stream()
-				.flatMap(i->i.getArresteeSegments().stream())
-				.filter(i->Objects.equals(i.getArrestDateType().getYearNum(), arrestYear) &&
-						( arrestMonth == 0 ||Objects.equals(i.getArrestDateType().getMonthNum(),arrestMonth)))
-				.collect(Collectors.toList());
-		return arresteeSegments; 
-		
-	}
-
 	public List<AdministrativeSegment> findHumanTraffickingIncidentByRequestAndClearanceDate(
 			SummaryReportRequest summaryReportRequest) {
 		List<Integer> ids = 

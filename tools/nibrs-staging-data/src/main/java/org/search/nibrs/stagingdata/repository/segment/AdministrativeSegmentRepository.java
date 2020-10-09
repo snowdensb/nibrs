@@ -53,10 +53,11 @@ public interface AdministrativeSegmentRepository
 	@Query("SELECT count(*) > 0 from AdministrativeSegment a "
 			+ "LEFT JOIN a.segmentActionType s "
 			+ "WHERE a.administrativeSegmentId = "
-			+ "		(SELECT max(administrativeSegmentId) FROM AdministrativeSegment "
-			+ "			where incidentNumber = ?1 and ori = ?2) "
+			+ "		(SELECT max(administrativeSegmentId) FROM AdministrativeSegment aa "
+			+ "			where aa.incidentNumber = ?1 and aa.ori = ?2 AND "
+			+ "				(?4 = null OR ?4 = 0 OR aa.owner.ownerId = ?4 )) "
 			+ "		and cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) > ?3")
-	boolean existsByIncidentNumberAndOriAndSubmissionDate(String incidentNumber, String ori, Date submissionDate);
+	boolean existsByIncidentNumberAndOriAndSubmissionDateAndOwnerId(String incidentNumber, String ori, Date submissionDate, Integer ownerId);
 	
 	@Query("SELECT distinct a.agency.agencyId from AdministrativeSegment a "
 			+ "WHERE ?1 = null OR a.owner.ownerId = ?1 ")
@@ -71,13 +72,16 @@ public interface AdministrativeSegmentRepository
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	List<AdministrativeSegment> findAllById(Iterable<Integer> ids);
 	
-	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "LEFT JOIN a.exceptionalClearanceDateType ae "
 			+ "LEFT JOIN a.arresteeSegments aa "
-			+ "WHERE (?1 = null OR a.ori = ?1) AND (aa.arrestDate = (select min (arrestDate) from a.arresteeSegments )) AND "
+			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
+			+ "				FROM AdministrativeSegment aa "
+			+ "				WHERE aa.incidentNumber = a.incidentNumber "
+			+ "				GROUP BY aa.incidentNumber ) AND "
+			+ "		(?1 = null OR a.ori = ?1) AND (aa.arrestDate = (select min (arrestDate) from a.arresteeSegments )) AND "
 			+ "		((year(a.exceptionalClearanceDate) = ?2 AND ( ?3 = 0 OR month(a.exceptionalClearanceDate) = ?3)) "
-			+ "			OR ( year(aa.arrestDate) = ?2 AND ( ?3 = 0 OR month(aa.arrestDate) = ?3 ))) "
-			+ "GROUP BY a.incidentNumber ")
+			+ "			OR ( year(aa.arrestDate) = ?2 AND ( ?3 = 0 OR month(aa.arrestDate) = ?3 ))) ")
 	List<Integer> findIdsByOriAndClearanceDate(String ori, Integer year, Integer month);
 	
 	@Query("SELECT DISTINCT a.administrativeSegmentId from AdministrativeSegment a "
@@ -99,21 +103,27 @@ public interface AdministrativeSegmentRepository
 			+ "ORDER BY incidentMonth ")
 	List<Integer> findDistinctMonths(Integer agencyId, Integer Year, Integer ownerId);
 	
-	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "LEFT JOIN a.arresteeSegments aa "
-			+ "WHERE (?1 = null OR a.ori = ?1 ) AND "
-			+ "	    (?4 = null OR ?4 = 0 OR a.owner.ownerId = ?4 ) AND "
-			+ "		( year(aa.arrestDate) = ?2 AND ( ?3=0 OR month(aa.arrestDate) = ?3) ) "
-			+ "GROUP BY a.incidentNumber ")
+			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
+			+ "				FROM AdministrativeSegment aa "
+			+ "				WHERE aa.incidentNumber = a.incidentNumber AND"
+			+ "					(?4 = null OR ?4 = 0 OR aa.owner.ownerId = ?4 ) "
+			+ "				GROUP BY aa.incidentNumber ) AND "
+			+ "		(?1 = null OR a.ori = ?1 ) AND "
+			+ "		( year(aa.arrestDate) = ?2 AND ( ?3=0 OR month(aa.arrestDate) = ?3) ) ")
 	List<Integer> findIdsByOriAndArrestDate(String ori, Integer year, Integer month, Integer ownerId);
 	
-	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "LEFT JOIN a.arresteeSegments aa "
-			+ "WHERE (?1 = null OR ?1='' OR a.agency.stateCode = ?1 ) AND "
+			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
+			+ "				FROM AdministrativeSegment aa "
+			+ "				WHERE aa.incidentNumber = a.incidentNumber AND"
+			+ "					(?5 = null OR ?5 = 0 OR aa.owner.ownerId = ?5) "
+			+ "				GROUP BY aa.incidentNumber ) AND "
+			+ "		(?1 = null OR ?1='' OR a.agency.stateCode = ?1 ) AND "
 			+ "		(?2 = null OR a.agency.agencyId = ?2 ) AND "
-			+ "	    (?5 = null OR ?5 = 0 OR a.owner.ownerId = ?5 ) AND "
-			+ "		( year(aa.arrestDate) = ?3 AND ( ?4=null OR ?4=0 OR month(aa.arrestDate) = ?4) ) "
-			+ "GROUP BY a.incidentNumber ")
+			+ "		( year(aa.arrestDate) = ?3 AND ( ?4=null OR ?4=0 OR month(aa.arrestDate) = ?4) ) ")
 	List<Integer> findIdsByStateAndAgencyAndArrestDate(String stateCode, Integer agencyId, Integer arrestYear,
 			Integer arrestMonth, Integer ownerId);
 
@@ -126,37 +136,46 @@ public interface AdministrativeSegmentRepository
 			+ "     ( a.submission = null )")
 	long countByOriListAndSubmissionDateRange(List<String> oris, Date startDate, Date endDate, List<Integer> agencyIds);
 	
-	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
-			+ "WHERE (?1 = null OR a.ori = ?1) AND "
-			+ "		(year(a.incidentDate) = ?2 AND ( ?3 = 0 OR month(a.incidentDate) = ?3)) "
-			+ "GROUP BY a.incidentNumber ")
+	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
+			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
+			+ "				FROM AdministrativeSegment aa "
+			+ "				WHERE aa.incidentNumber = a.incidentNumber "
+			+ "				GROUP BY aa.incidentNumber ) AND "
+			+ "		(?1 = null OR a.ori = ?1) AND "
+			+ "		(year(a.incidentDate) = ?2 AND ( ?3 = 0 OR month(a.incidentDate) = ?3)) ")
 	List<Integer> findIdsByOriAndIncidentDate(String ori, Integer year, Integer month);
 	
 	Integer deleteByOriAndYearOfTapeAndMonthOfTape(String ori, String yearOfTape, String monthOfTape);
 	
-	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "LEFT JOIN a.offenseSegments ao "
-			+ "WHERE ao.ucrOffenseCodeType.nibrsCode in (?6)  AND"
-			+ "		(?5 = null OR ?5 = 0 OR a.owner.ownerId = ?5) AND "
+			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
+			+ "				FROM AdministrativeSegment aa "
+			+ "				WHERE aa.incidentNumber = a.incidentNumber AND"
+			+ "					(?5 = null OR ?5 = 0 OR aa.owner.ownerId = ?5) "
+			+ "				GROUP BY aa.incidentNumber ) AND "
+			+ "		ao.ucrOffenseCodeType.nibrsCode in (?6)  AND"
 			+ " 	(?1 = null OR ?1 = '' OR a.agency.stateCode = ?1) AND "
 			+ "		(?2 = null OR a.agency.agencyId = ?2) AND "
 			+ "		(year(a.incidentDate) = ?3 AND "
-			+ "		(?4 = 0 OR month(a.incidentDate) = ?4)) "
-			+ "GROUP BY a.incidentNumber ")
+			+ "		(?4 = 0 OR month(a.incidentDate) = ?4)) ")
 	List<Integer> findIdsBySummaryReportRequestAndOffenses(String stateCode, 
 			Integer agencyId, Integer year, Integer month, Integer ownerId, 
 			List<String> offenseCodes);
 	
-	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
+	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "LEFT JOIN a.offenseSegments ao "
 			+ "LEFT JOIN a.arresteeSegments aa "
-			+ "WHERE ao.ucrOffenseCodeType.nibrsCode in (?6) AND (aa.arrestDate = (select min (arrestDate) from a.arresteeSegments )) AND "
-			+ "		(?5 = null OR ?5 = 0 OR  a.owner.ownerId = ?5) AND "
+			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
+			+ "				FROM AdministrativeSegment aa "
+			+ "				WHERE aa.incidentNumber = a.incidentNumber AND"
+			+ "					(?5 = null OR ?5 = 0 OR aa.owner.ownerId = ?5) "
+			+ "				GROUP BY aa.incidentNumber ) AND "
+			+ "		ao.ucrOffenseCodeType.nibrsCode in (?6) AND (aa.arrestDate = (select min (arrestDate) from a.arresteeSegments )) AND "
 			+ " 	(?1 = null OR ?1 = '' OR a.agency.stateCode = ?1) AND "
 			+ "		(?2 = null OR a.agency.agencyId = ?2) AND "
 			+ "		((year(a.exceptionalClearanceDate) = ?3 AND ( ?4 = 0 OR month(a.exceptionalClearanceDate) = ?4)) "
-			+ "			OR ( year(aa.arrestDate) = ?3 AND ( ?4 = 0 OR month(aa.arrestDate) = ?4 ))) "
-			+ "GROUP BY a.incidentNumber ")
+			+ "			OR ( year(aa.arrestDate) = ?3 AND ( ?4 = 0 OR month(aa.arrestDate) = ?4 ))) ")
 	List<Integer> findIdsByStateCodeAndOriAndClearanceDateAndOffenses(String stateCode, Integer agencyId,
 			Integer incidentYear, Integer incidentMonth, Integer ownerId, List<String> offenseCodes);
 	
@@ -183,14 +202,17 @@ public interface AdministrativeSegmentRepository
 			+ "ORDER BY incidentMonth ")
 	List<Integer> findDistinctMonthsByStateCode(String stateCode, Integer year, Integer integer);
 
-	@Query("SELECT max(a.administrativeSegmentId) from AdministrativeSegment a "
-			+ "WHERE a.cargoTheftIndicatorType.cargoTheftIndicatorTypeId = 1 AND "
+	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
+			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
+			+ "				FROM AdministrativeSegment aa "
+			+ "				WHERE aa.incidentNumber = a.incidentNumber AND"
+			+ "					(?5 = null OR ?5 = 0 OR aa.owner.ownerId = ?5) "
+			+ "				GROUP BY aa.incidentNumber ) AND "
+			+ "		a.cargoTheftIndicatorType.cargoTheftIndicatorTypeId = 1 AND "
 			+ "		(?1 = null OR ?1='' OR a.agency.stateCode = ?1) AND "
 			+ "		(?2 = null OR a.agency.agencyId = ?2) AND "
-			+ "		(?5 = null OR ?5 = 0 OR a.owner.ownerId = ?5) AND "
 			+ "		(year(a.incidentDate) = ?3 AND "
-			+ "		( ?4 = 0 OR month(a.incidentDate) = ?4)) "
-			+ "GROUP BY a.incidentNumber ")
+			+ "		( ?4 = 0 OR month(a.incidentDate) = ?4)) ")
 	List<Integer> findCargoTheftIdsByStateAndAgencyAndIncidentDate(String stateCode, Integer agencyId,
 			Integer incidentYear, Integer incidentMonth, Integer ownerId);
 

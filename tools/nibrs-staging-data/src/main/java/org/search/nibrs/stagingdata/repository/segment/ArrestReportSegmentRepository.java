@@ -45,10 +45,12 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 	@Query("SELECT count(*) > 0 from ArrestReportSegment a "
 			+ "LEFT JOIN a.segmentActionType s "
 			+ "WHERE a.arrestReportSegmentId = "
-			+ "			(SELECT max(arrestReportSegmentId) FROM ArrestReportSegment "
-			+ "				where arrestTransactionNumber = ?1 AND ori = ?2 ) "
+			+ "			(SELECT max(arrestReportSegmentId) FROM ArrestReportSegment aa"
+			+ "				where aa.arrestTransactionNumber = ?1 AND aa.ori = ?2 AND "
+			+ "					(?4 = null OR ?4 = 0 OR aa.owner.ownerId = ?4) ) "
 			+ "		and cast(concat(a.yearOfTape, '-', a.monthOfTape, '-01') as date) > ?3")
-	boolean existsByArrestTransactionNumberAndOriAndSubmissionDate(String arrestTransactionNumber, String ori, Date submissionDate);
+	boolean existsByArrestTransactionNumberAndOriAndSubmissionDateAndOwnerId(
+			String arrestTransactionNumber, String ori, Date submissionDate, Integer ownerId);
 	
 	@Query("SELECT distinct a.agency.agencyId from ArrestReportSegment a "
 			+ "WHERE ?1 = null OR a.owner.ownerId = ?1 ")
@@ -57,11 +59,14 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)
 	ArrestReportSegment findByArrestReportSegmentId(Integer arrestReportSegmentId);
 
-	@Query("SELECT max(a.arrestReportSegmentId) from ArrestReportSegment a "
-			+ "WHERE (?1 = null OR a.ori = ?1) AND "
-			+ "     (?4 = null OR ?4 = 0 OR a.owner.ownerId = ?4) AND "
-			+ "		(year(a.arrestDate) = ?2 AND ( ?3 = 0 OR month(a.arrestDate) = ?3)) "
-			+ "GROUP BY a.arrestTransactionNumber ")
+	@Query("SELECT a.arrestReportSegmentId from ArrestReportSegment a "
+			+ "WHERE a.arrestReportSegmentId = ( SELECT max(arrestReportSegmentId) "
+			+ "				FROM ArrestReportSegment aa "
+			+ "				WHERE aa.arrestTransactionNumber = a.arrestTransactionNumber AND "
+			+ "     			(?4 = null OR ?4 = 0 OR aa.owner.ownerId = ?4) "
+			+ "				GROUP BY aa.arrestTransactionNumber ) AND "
+			+ "		(?1 = null OR a.ori = ?1) AND "
+			+ "		(year(a.arrestDate) = ?2 AND ( ?3 = 0 OR month(a.arrestDate) = ?3)) ")
 	List<Integer> findIdsByOriAndArrestDate(String ori, Integer year, Integer month, Integer ownerId);
 
 	@Query("SELECT DISTINCT a.arrestReportSegmentId from ArrestReportSegment a "
@@ -91,12 +96,15 @@ public interface ArrestReportSegmentRepository extends JpaRepository<ArrestRepor
 	@EntityGraph(value="allArrestReportSegmentJoins", type=EntityGraphType.LOAD)
 	List<ArrestReportSegment> findAllById(Iterable<Integer> ids);
 
-	@Query("SELECT max(a.arrestReportSegmentId) from ArrestReportSegment a "
-			+ " WHERE (?1 = null OR ?1 = '' OR a.agency.stateCode = ?1) AND "
+	@Query("SELECT a.arrestReportSegmentId from ArrestReportSegment a "
+			+ "WHERE a.arrestReportSegmentId = ( SELECT max(arrestReportSegmentId) "
+			+ "				FROM ArrestReportSegment aa "
+			+ "				WHERE aa.arrestTransactionNumber = a.arrestTransactionNumber AND "
+			+ "     			(?5 = null OR ?5 = 0 OR aa.owner.ownerId = ?5) "
+			+ "				GROUP BY aa.arrestTransactionNumber ) AND "
+			+ "		(?1 = null OR ?1 = '' OR a.agency.stateCode = ?1) AND "
 			+ "     (?2 = null OR a.agency.agencyId = ?2) AND  "
-			+ "     (?5 = null OR ?5 = 0 OR a.owner.ownerId = ?5) AND "
-			+ "		(year(a.arrestDate) = ?3 AND ( ?4 = 0 OR month(a.arrestDate) = ?4)) "
-			+ "GROUP BY a.arrestTransactionNumber ")
+			+ "		(year(a.arrestDate) = ?3 AND ( ?4 = 0 OR month(a.arrestDate) = ?4)) ")
 	List<Integer> findIdsByStateAndAgencyAndArrestDate(String stateCode, Integer agencyId, 
 			Integer incidentYear, Integer incidentMonth, Integer ownerId);
 }
