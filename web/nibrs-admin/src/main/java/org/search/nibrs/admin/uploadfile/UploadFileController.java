@@ -269,7 +269,10 @@ public class UploadFileController {
 		
 		PersistReportTask persistReportTask = (PersistReportTask) model.get("persistReportTask");
 		
-		AuthUser authUser = (AuthUser) model.get("authUser"); 
+		AuthUser authUser = null; 
+		if (!appProperties.getPrivateSummaryReportSite()) {
+			authUser = (AuthUser) model.get("authUser"); 
+		}
 		restService.persistValidReportsAsync(persistReportTask, validReports, authUser);
 		
 		log.info("called the aync method"); 
