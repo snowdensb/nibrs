@@ -65,6 +65,10 @@ public class PersistReportTask{
 		this.processedCount ++;
 	}
 
+	public void increaseProcessedCount(int count) {
+		this.processedCount += count ;
+	}
+	
 	public Integer getTotalCount() {
 		return totalCount;
 	}

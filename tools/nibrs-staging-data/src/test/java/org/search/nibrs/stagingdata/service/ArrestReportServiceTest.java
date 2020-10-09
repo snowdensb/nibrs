@@ -206,7 +206,7 @@ public class ArrestReportServiceTest {
 	@DirtiesContext
 	public void processGroupBArrestReportTest(){
 		GroupBArrestReport groupBArrestReport = BaselineIncidentFactory.getBaselineGroupBArrestReport();
-		ArrestReportSegment arrestReportSegment = StreamSupport.stream(arrestReportService.saveGroupBArrestReports(groupBArrestReport).spliterator(), false)
+		ArrestReportSegment arrestReportSegment = StreamSupport.stream(arrestReportService.saveGroupBArrestReports(Arrays.asList(groupBArrestReport)).spliterator(), false)
 				.findFirst().orElse(null);
 		
 		ArrestReportSegment persisted = 
@@ -259,7 +259,7 @@ public class ArrestReportServiceTest {
 		groupBArrestReport.getArrestee().setTypeOfArrest("T");
 		groupBArrestReport.setMonthOfTape(11);
 		
-		Iterable<ArrestReportSegment> saved = arrestReportService.saveGroupBArrestReports(groupBArrestReport); 
+		Iterable<ArrestReportSegment> saved = arrestReportService.saveGroupBArrestReports(Arrays.asList(groupBArrestReport)); 
 		
 		ArrestReportSegment updated = 
 				arrestReportSegmentRepository.findByArrestReportSegmentId(saved.iterator().next().getArrestReportSegmentId());

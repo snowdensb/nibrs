@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.admin.services.rest;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,31 +142,78 @@ public class RestService{
 				.block();
 	}
 	
-	public void persistAbstractReport(AbstractReport abstractReport) {
-		if (abstractReport instanceof GroupAIncidentReport){
-			GroupAIncidentReport groupAIncidentReport = (GroupAIncidentReport) abstractReport; 
-			log.info("About to post for group A incident report " + groupAIncidentReport.getIncidentNumber());
-			log.info("Action category " + groupAIncidentReport.getReportActionType());
-			webClient.post().uri("/groupAIncidentReports")
-				.body(BodyInserters.fromObject(groupAIncidentReport))
-				.retrieve()
-				.bodyToMono(String.class)
-				.block();
-		}
-		else if (abstractReport instanceof GroupBArrestReport){
-			GroupBArrestReport groupBArrestReport = (GroupBArrestReport) abstractReport; 
-			log.info("About to post for group B Arrest Report" + groupBArrestReport.getIdentifier());
-			log.info("Action category " + groupBArrestReport.getReportActionType());
+	public void persistGroupBReport(List<GroupBArrestReport> groupBArrestReports, PersistReportTask persistReportTask) {
+		try{
 			webClient.post().uri("/arrestReports")
-				.body(BodyInserters.fromObject(groupBArrestReport))
+			.body(BodyInserters.fromObject(groupBArrestReports))
+			.retrieve()
+			.bodyToMono(String.class)
+			.block();
+			
+			persistReportTask.increaseProcessedCount(groupBArrestReports.size());
+			log.info("Progress: " + persistReportTask.getProcessedCount() + "/" + persistReportTask.getTotalCount());
+			groupBArrestReports.clear();
+		}
+		catch(ResourceAccessException rae){
+			List<String> identifiers = groupBArrestReports.stream()
+					.map(GroupBArrestReport::getIdentifier)
+					.collect(Collectors.toList());
+			log.error("Failed to connect to the rest service to process the Group B Arrest Reports " + 
+					" with Identifiers " + identifiers);
+			persistReportTask.setAborted(true);
+			throw rae;
+		}
+		catch(Exception e){
+			persistReportTask.increaseProcessedCount(groupBArrestReports.size());
+			groupBArrestReports.stream()
+				.map(GroupBArrestReport::getUniqueReportDescription)
+				.forEach(item->persistReportTask.addFailedToProcess(item));
+			List<String> identifiers = groupBArrestReports.stream()
+					.map(GroupBArrestReport::getIdentifier)
+					.collect(Collectors.toList());
+			log.warn("Failed to persist incident " + identifiers);
+			log.error(e);
+			log.info("Progress: " + persistReportTask.getProcessedCount() + "/" + persistReportTask.getTotalCount());
+			groupBArrestReports.clear();
+		}
+	}
+	
+	public void persistGroupAReport(List<GroupAIncidentReport> groupAIncidentReports, PersistReportTask persistReportTask) {
+		
+		try {
+			log.info("About to post for group A incident report " + groupAIncidentReports.size());
+			webClient.post().uri("/groupAIncidentReports")
+				.body(BodyInserters.fromObject(groupAIncidentReports))
 				.retrieve()
 				.bodyToMono(String.class)
 				.block();
+			persistReportTask.increaseProcessedCount(groupAIncidentReports.size());
+			log.info("Progress: " + persistReportTask.getProcessedCount() + "/" + persistReportTask.getTotalCount());
+			groupAIncidentReports.clear();
 		}
-		else {
-			log.warn("The report type " +  abstractReport.getClass().getName() + "is not supported");
+		catch(ResourceAccessException rae){
+			List<String> identifiers = groupAIncidentReports.stream()
+					.map(GroupAIncidentReport::getIncidentNumber)
+					.collect(Collectors.toList());
+			log.error("Failed to connect to the rest service to process the group A reports " + 
+					"  Identifiers " + identifiers);
+			persistReportTask.setAborted(true);
+			throw rae;
 		}
-		
+		catch(Exception e){
+			persistReportTask.increaseProcessedCount(groupAIncidentReports.size());
+			
+			groupAIncidentReports.stream()
+				.map(GroupAIncidentReport::getUniqueReportDescription)
+				.forEach(item->persistReportTask.addFailedToProcess(item));
+			List<String> identifiers = groupAIncidentReports.stream()
+					.map(GroupAIncidentReport::getIncidentNumber)
+					.collect(Collectors.toList());
+			log.warn("Failed to persist incident " + identifiers);
+			log.error(e);
+			log.info("Progress: " + persistReportTask.getProcessedCount() + "/" + persistReportTask.getTotalCount());
+			groupAIncidentReports.clear();
+		}
 	}
 	
 	public String generateSubmissionFiles(IncidentSearchRequest incidentSearchRequest) {
@@ -222,32 +270,43 @@ public class RestService{
 	public void persistValidReportsAsync(PersistReportTask persistReportTask, List<AbstractReport> validReports, AuthUser authUser) {
 		log.info("Execute method asynchronously. "
 			      + Thread.currentThread().getName());
-		int count = 0; 
 		persistReportTask.setStarted(true);
+		int groupAReportCount = 0;
+		List<GroupAIncidentReport> groupAIncidentReports = new ArrayList<>();
+		int groupBReportCount = 0; 
+		List<GroupBArrestReport> groupBArrestReports = new ArrayList<>();
 		for(AbstractReport abstractReport: validReports){
 			if (authUser != null) {
 				abstractReport.setOwnerId(authUser.getUserId());
 			}
-			try{
-				this.persistAbstractReport(abstractReport);
-				persistReportTask.increaseProcessedCount();
-				log.info("Progress: " + (++count) + "/" + persistReportTask.getTotalCount());
+			
+			if (abstractReport instanceof GroupAIncidentReport) {
+				groupAIncidentReports.add((GroupAIncidentReport) abstractReport);
+				groupAReportCount ++;
 			}
-			catch(ResourceAccessException rae){
-				log.error("Failed to connect to the rest service to process the " + abstractReport.getAdminSegmentLevel() + 
-						"level report with Identifier " + abstractReport.getIdentifier());
-				persistReportTask.setAborted(true);
-				throw rae;
+			else if(abstractReport instanceof GroupBArrestReport) {
+				groupBArrestReports.add((GroupBArrestReport) abstractReport);
+				groupBReportCount ++;
 			}
-			catch(Exception e){
-				persistReportTask.increaseProcessedCount();
-				persistReportTask.addFailedToProcess(abstractReport.getUniqueReportDescription());
-				log.warn("Failed to persist incident " + abstractReport.getIdentifier());
-				log.error(e);
-				log.info("Progress: " + (++count) + "/" + persistReportTask.getTotalCount());
+			
+			if (groupAReportCount == 30) {
+				groupAReportCount = 0;
+				this.persistGroupAReport(groupAIncidentReports, persistReportTask);
+			}
+			if (groupBReportCount == 30) {
+				groupBReportCount = 0;
+				this.persistGroupBReport(groupBArrestReports, persistReportTask);
 			}
 		}
 		
+		if (groupAReportCount > 0) {
+			groupAReportCount = 0;
+			this.persistGroupAReport(groupAIncidentReports, persistReportTask);
+		}
+		if (groupBReportCount > 0) {
+			groupBReportCount = 0;
+			this.persistGroupBReport(groupBArrestReports, persistReportTask);
+		}
 	}
 	
 	public String persistPreCertificationErrors(List<NIBRSError> nibrsErrors, AuthUser authUser) {
