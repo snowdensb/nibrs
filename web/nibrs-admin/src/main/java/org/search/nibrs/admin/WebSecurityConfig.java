@@ -70,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	if (appProperties.getSecurityEnabled()) {
 	    	http
 			    .authorizeRequests()
+			    .antMatchers("/**").hasAuthority("AUTHZ_PORTAL")
 			    .anyRequest().authenticated()
 			    .and()
 			    	.logout().logoutUrl("/logout").deleteCookies("JSESSIONID").clearAuthentication(true).permitAll()
