@@ -31,6 +31,7 @@ public class AppProperties {
 	private Map<String, String> propertyCodeMapping = new HashMap<>();
 	private Map<String, String> locationCodeMapping = new HashMap<>();
 	private Integer reportSearchResultsLimit = 10000;
+	private Integer summaryReportProcessingBatchSize = 500;
 
 	public AppProperties() {
 		super();
@@ -208,6 +209,14 @@ public class AppProperties {
 
 	public void setReportSearchResultsLimit(Integer reportSearchResultsLimit) {
 		this.reportSearchResultsLimit = reportSearchResultsLimit;
+	}
+
+	public Integer getSummaryReportProcessingBatchSize() {
+		return summaryReportProcessingBatchSize;
+	}
+
+	public void setSummaryReportProcessingBatchSize(Integer summaryReportProcessingBatchSize) {
+		this.summaryReportProcessingBatchSize = summaryReportProcessingBatchSize;
 	}
 
 }

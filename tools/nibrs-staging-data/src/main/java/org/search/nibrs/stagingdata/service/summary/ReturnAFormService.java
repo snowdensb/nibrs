@@ -51,6 +51,7 @@ import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.search.nibrs.stagingdata.model.segment.PropertySegment;
 import org.search.nibrs.stagingdata.model.segment.VictimSegment;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
+import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.search.nibrs.stagingdata.service.AdministrativeSegmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,8 @@ public class ReturnAFormService {
 	private final Log log = LogFactory.getLog(this.getClass());
 	@Autowired
 	AdministrativeSegmentService administrativeSegmentService;
+	@Autowired
+	AdministrativeSegmentRepository administrativeSegmentRepository;
 	@Autowired
 	public AgencyRepository agencyRepository; 
 	@Autowired
@@ -161,19 +164,49 @@ public class ReturnAFormService {
 	}
 	
 	private void processOffenseClearances(SummaryReportRequest summaryReportRequest, ReturnAForm returnAForm) {
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentService.findBySummaryReportRequestClearanceDateAndOffenses(summaryReportRequest, new ArrayList(partIOffensesMap.keySet()));
-		getOffenseClearanceRows(returnAForm, administrativeSegments);
+		List<Integer> administrativeSegmentIds = 
+				administrativeSegmentRepository.findIdsByStateCodeAndOriAndClearanceDateAndOffenses(
+						summaryReportRequest.getStateCode(), summaryReportRequest.getAgencyId(), 
+						summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), 
+						summaryReportRequest.getOwnerId(), new ArrayList(partIOffensesMap.keySet()));
+		int i; 
+		int batchSize = appProperties.getSummaryReportProcessingBatchSize();
+		for (i = 0; i+ batchSize < administrativeSegmentIds.size(); i+=batchSize ) {
+			log.info("processing offense Clearances " + i + " to " + String.valueOf(i+batchSize));
+			getOffenseClearanceRows(returnAForm, administrativeSegmentIds.subList(i, i+batchSize));
+		}
+		
+		if (i < administrativeSegmentIds.size()) {
+			log.info("processing offense Clearances " + i + " to " + administrativeSegmentIds.size());
+			getOffenseClearanceRows(returnAForm, administrativeSegmentIds.subList(i, administrativeSegmentIds.size()));
+		}
 	}
 
 	private void processReportedOffenses(SummaryReportRequest summaryReportRequest, ReturnAForm returnAForm) {
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentService.findBySummaryReportRequestAndOffenses(summaryReportRequest, new ArrayList(partIOffensesMap.keySet()));
-		getReportedOffenseRows(returnAForm, administrativeSegments);
+		List<Integer> administrativeSegmentIds = 
+				administrativeSegmentRepository.findIdsBySummaryReportRequestAndOffenses(
+						summaryReportRequest.getStateCode(), summaryReportRequest.getAgencyId(), 
+						summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), 
+						summaryReportRequest.getOwnerId(), new ArrayList(partIOffensesMap.keySet()));
+		int i ; 
+		int batchSize = appProperties.getSummaryReportProcessingBatchSize();
+		for (i = 0; i+batchSize < administrativeSegmentIds.size(); i+=batchSize ) {
+			log.info("processing Reported offenses " + i + " to " + String.valueOf(i+batchSize));
+			getReportedOffenseRows(returnAForm, administrativeSegmentIds.subList(i, i+batchSize));
+		}
+		
+		if (i < administrativeSegmentIds.size()) {
+			log.info("processing Reported offenses " + i + " to " + administrativeSegmentIds.size());
+			getReportedOffenseRows(returnAForm, administrativeSegmentIds.subList(i, administrativeSegmentIds.size()));
+		}
 	}
 
-	private void getOffenseClearanceRows(ReturnAForm returnAForm, List<AdministrativeSegment> administrativeSegments) {
+	private void getOffenseClearanceRows(ReturnAForm returnAForm, List<Integer> administrativeSegmentIds) {
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(administrativeSegmentIds)
+					.stream().distinct().collect(Collectors.toList());; 
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
+			
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue;
 			
 			boolean isClearanceInvolvingOnlyJuvenile = administrativeSegment.isClearanceInvolvingOnlyJuvenile();
@@ -238,6 +271,7 @@ public class ReturnAFormService {
 			}
 
 		}
+		administrativeSegments.clear();
 	}
 
 	private void countClearedMotorVehicleTheftOffense(ReturnAForm returnAForm, OffenseSegment offense,
@@ -385,8 +419,12 @@ public class ReturnAFormService {
 		return offenses;
 	}
 
-	private void getReportedOffenseRows(ReturnAForm returnAForm, List<AdministrativeSegment> administrativeSegments) {
+	private void getReportedOffenseRows(ReturnAForm returnAForm, List<Integer> administrativeSegmentIds) {
 		PropertyStolenByClassification[] stolenProperties = returnAForm.getPropertyStolenByClassifications();
+		
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentRepository.findAllById(administrativeSegmentIds)
+					.stream().distinct().collect(Collectors.toList());; 
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue; 
 			
@@ -483,6 +521,7 @@ public class ReturnAFormService {
 			}
 			
 		}
+		administrativeSegments.clear();
 	}
 
 	private int getOffenseCountByConnectedVictim(AdministrativeSegment administrativeSegment, OffenseSegment offense) {
