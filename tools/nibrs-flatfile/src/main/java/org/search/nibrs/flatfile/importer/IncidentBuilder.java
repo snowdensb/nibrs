@@ -402,8 +402,8 @@ public class IncidentBuilder extends AbstractIncidentBuilder {
 					e.setNIBRSErrorCode(NIBRSErrorCode._105);
 					e.setDataElementIdentifier("5");
 					newErrorList.add(e);
-					incidentDate.setInvalid(true);
-					incidentDate.setValidationError(e);
+					clearanceDate.setInvalid(true);
+					clearanceDate.setValidationError(e);
 				}
 			}
 			newIncident.setExceptionalClearanceDate(clearanceDate);
