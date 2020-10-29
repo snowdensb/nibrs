@@ -195,17 +195,87 @@ public class ReturnAFormService {
 		processReportedOffenses(summaryReportRequest, returnARecordCard);
 //		processOffenseClearances(summaryReportRequest, returnARecordCard);
 		
-//		fillTheForcibleRapeTotalRow(returnAForm);
-//		fillTheRobberyTotalRow(returnAForm);
-//		fillTheAssaultTotalRow(returnAForm);
-//		fillTheBurglaryTotalRow(returnAForm);
-//		fillTheMotorVehicleTheftTotalRow(returnAForm);
-//		fillTheGrandTotalRow(returnAForm);
+		fillTheMurderSubtotalRow(returnARecordCard);
+		fillTheRapeSubtotalRow(returnARecordCard);
+		fillTheRobberySubtotalRow(returnARecordCard);
+		fillTheAssaultSubtotalRow(returnARecordCard);
+		fillTheViolentTotalRow(returnARecordCard);
+		fillTheBurglarySubotalRow(returnARecordCard);
+		fillTheLarcenySubotalRow(returnARecordCard);
+		fillTheMotorVehicleTheftSubotalRow(returnARecordCard);
+		fillThePropertyTotalRow(returnARecordCard);
+		fillTheReportedOffenseGrandTotalRow(returnARecordCard);
 		
 		log.info("returnARecordCard: " + returnARecordCard);
 		return returnARecordCard;
 	}
 	
+	private void fillTheReportedOffenseGrandTotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.GRAND_TOTAL, 
+				ReturnARecordCardRowName.VIOLENT_TOTAL,
+				ReturnARecordCardRowName.PROPERTY_TOTAL);
+	}
+
+	private void fillThePropertyTotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.PROPERTY_TOTAL, 
+				ReturnARecordCardRowName.BURGLARY_SUBTOTAL,
+				ReturnARecordCardRowName.LARCENY_THEFT_SUBTOTAL, 
+				ReturnARecordCardRowName.MOTOR_VEHICLE_THEFT_SUBTOTAL);
+	}
+
+	private void fillTheMotorVehicleTheftSubotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.MOTOR_VEHICLE_THEFT_SUBTOTAL, 
+				ReturnARecordCardRowName.AUTOS_THEFT,
+				ReturnARecordCardRowName.TRUCKS_BUSES_THEFT, 
+				ReturnARecordCardRowName.OTHER_VEHICLES_THEFT);
+	}
+
+	private void fillTheLarcenySubotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.LARCENY_THEFT_SUBTOTAL, 
+				ReturnARecordCardRowName.LARCENY_THEFT);
+	}
+
+	private void fillTheBurglarySubotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.BURGLARY_SUBTOTAL, 
+				ReturnARecordCardRowName.FORCIBLE_ENTRY_BURGLARY, 
+				ReturnARecordCardRowName.UNLAWFUL_ENTRY_NO_FORCE_BURGLARY, 
+				ReturnARecordCardRowName.ATTEMPTED_FORCIBLE_ENTRY_BURGLARY);
+	}
+
+	private void fillTheViolentTotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.VIOLENT_TOTAL, 
+				ReturnARecordCardRowName.MURDER_SUBTOTAL, 
+				ReturnARecordCardRowName.RAPE_SUBTOTAL, 
+				ReturnARecordCardRowName.ROBBERY_SUBTOTAL, 
+				ReturnARecordCardRowName.ASSAULT_SUBTOTAL);
+	}
+
+	private void fillTheAssaultSubtotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.ASSAULT_SUBTOTAL, 
+				ReturnARecordCardRowName.FIREARM_ASSAULT, 
+				ReturnARecordCardRowName.KNIFE_CUTTING_INSTRUMENT_ASSAULT, 
+				ReturnARecordCardRowName.OTHER_DANGEROUS_WEAPON_ASSAULT, 
+				ReturnARecordCardRowName.HANDS_FISTS_FEET_AGGRAVATED_INJURY_ASSAULT);
+	}
+
+	private void fillTheRobberySubtotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.ROBBERY_SUBTOTAL, 
+				ReturnARecordCardRowName.FIREARM_ROBBERY, 
+				ReturnARecordCardRowName.KNIFE_CUTTING_INSTRUMENT_ROBBERY, 
+				ReturnARecordCardRowName.OTHER_DANGEROUS_WEAPON_ROBBERY, 
+				ReturnARecordCardRowName.STRONG_ARM_ROBBERY);
+	}
+
+	private void fillTheRapeSubtotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.RAPE_SUBTOTAL, 
+				ReturnARecordCardRowName.RAPE_BY_FORCE, 
+				ReturnARecordCardRowName.ATTEMPTS_TO_COMMIT_FORCIBLE_RAPE);
+	}
+
+	private void fillTheMurderSubtotalRow(ReturnARecordCard returnARecordCard) {
+		fillRecordCardTotalRow(returnARecordCard, ReturnARecordCardRowName.MURDER_SUBTOTAL, ReturnARecordCardRowName.MURDER_MURDER);
+	}
+
 	private void processReportedOffenses(SummaryReportRequest summaryReportRequest,
 			ReturnARecordCard returnARecordCard) {
 		List<String> offenseCodes = new ArrayList(partIOffensesMap.keySet()); 
@@ -276,7 +346,7 @@ public class ReturnAFormService {
 				case _23F: 
 				case _23G: 
 				case _23H: 
-					returnARecordCardRowName = ReturnARecordCardRowName.LARCENY_THEFT_SUBTOTAL;
+					returnARecordCardRowName = ReturnARecordCardRowName.LARCENY_THEFT;
 					break; 
 				case _240: 
 					hasMotorVehicleTheftOffense = countRecordCardMotorVehicleTheftOffense(returnARecordCard, offense, incidentMonth);
@@ -1080,6 +1150,38 @@ public class ReturnAFormService {
 		returnAForm.getRows()[totalRow.ordinal()].setClearanceInvolvingOnlyJuvenile(totalClearanceInvolvingJuvenile);
 	}
 
+	private void fillRecordCardTotalRow(ReturnARecordCard returnARecordCard, ReturnARecordCardRowName totalRow, 
+			ReturnARecordCardRowName... rowsArray) {
+		List<ReturnARecordCardRowName> rows = Arrays.asList(rowsArray);
+		int totalReportedOffense = 
+				rows.stream()
+				.mapToInt(row -> returnARecordCard.getRows()[row.ordinal()].getTotal())
+				.sum(); 
+		returnARecordCard.getRows()[totalRow.ordinal()].setTotal(totalReportedOffense);
+		
+		int firstHalfTotalReportedOffense = 
+				rows.stream()
+				.mapToInt(row -> returnARecordCard.getRows()[row.ordinal()].getFirstHalfSubtotal())
+				.sum(); 
+		returnARecordCard.getRows()[totalRow.ordinal()].setFirstHalfSubtotal(firstHalfTotalReportedOffense);
+		
+		int secondHalfTotalReportedOffense = 
+				rows.stream()
+				.mapToInt(row -> returnARecordCard.getRows()[row.ordinal()].getSecondHalfSubtotal())
+				.sum(); 
+		returnARecordCard.getRows()[totalRow.ordinal()].setSecondHalfSubtotal(secondHalfTotalReportedOffense);
+		
+		for (int i=0; i<12; i++) {
+			final int j = i; 
+			int monthTotal = 
+					rows.stream()
+					.mapToInt(row -> returnARecordCard.getRows()[row.ordinal()].getMonths()[j])
+					.sum();  
+			returnARecordCard.getRows()[totalRow.ordinal()].getMonths()[j] = monthTotal;
+		}
+		
+	}
+	
 	private void fillTheRobberyTotalRow(ReturnAForm returnAForm) {
 		ReturnARowName totalRow = ReturnARowName.ROBBERY_TOTAL; 
 		
