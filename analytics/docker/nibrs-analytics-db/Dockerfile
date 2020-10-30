@@ -24,6 +24,12 @@
 
 FROM alpine
 
+# by default, the image includes a demo dataset so that containers can start with a test/demo set of data, ready to go.
+# however, in a production environment, you typically want to bring up an empty database that will subsequently be loaded
+# with real NIBRS data, using the loading process in the nibrs-load image. passing any value other than Y via --build-arg
+# will skip the loading of the demo/test database.
+ARG preload=Y
+
 RUN apk add --update bash mariadb mariadb-client
 
 WORKDIR /usr
@@ -33,7 +39,7 @@ RUN bin/mysql_install_db --user=root
 COPY files/server-config.sh /tmp/
 COPY files/search_nibrs_dimensional.sql.gz /tmp/
 RUN chmod a+x /tmp/server-config.sh
-RUN /tmp/server-config.sh
+RUN /tmp/server-config.sh ${preload}
 
 RUN sed -i s/skip-networking/#skip-networking/g /etc/my.cnf.d/mariadb-server.cnf
 

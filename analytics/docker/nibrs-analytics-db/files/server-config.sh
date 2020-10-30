@@ -15,7 +15,11 @@ echo "create database search_nibrs_dimensional" | mysql -u root
 mysql -u root -e "CREATE USER 'analytics';"
 mysql -u root -e "GRANT ALL PRIVILEGES ON search_nibrs_dimensional.* TO 'analytics'@'%';"
 
-gunzip search_nibrs_dimensional.sql.gz
+if [ "$1" = "Y" ]
+then
+  echo "Pre-loading pickled dimensional db"
+  gunzip search_nibrs_dimensional.sql.gz
+  mysql -u root search_nibrs_dimensional < /tmp/search_nibrs_dimensional.sql
+  rm -f /tmp/search_nibrs_dimensional.sql
+fi
 
-mysql -u root search_nibrs_dimensional < /tmp/search_nibrs_dimensional.sql
-rm -f /tmp/search_nibrs_dimensional.sql

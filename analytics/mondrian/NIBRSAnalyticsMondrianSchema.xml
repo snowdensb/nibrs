@@ -409,7 +409,7 @@
   <Dimension visible="true" name="UCROffenseCode" table="UCROffenseCodeType" key="UCROffenseCodeTypeID" caption="Offense">
     <Attributes>
       <Attribute name="UCROffenseCodeTypeID" keyColumn="UCROffenseCodeTypeID" hasHierarchy="false"/>
-      <Attribute name="UCROffenseCodeDescription" keyColumn="StateDescription" hasHierarchy="false"/>
+      <Attribute name="UCROffenseCodeDescription" keyColumn="StateDescription" hasHierarchy="false" orderByColumn="StateCode"/>
       <Attribute name="OffenseCategory1" keyColumn="OffenseCategory1" hasHierarchy="false"/>
       <Attribute name="OffenseCategory3" keyColumn="OffenseCategory3" hasHierarchy="false"/>
       <Attribute name="OffenseCategory4" keyColumn="OffenseCategory4" hasHierarchy="false"/>
