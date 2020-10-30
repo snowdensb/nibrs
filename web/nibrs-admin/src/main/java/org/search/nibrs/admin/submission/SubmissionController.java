@@ -66,7 +66,7 @@ public class SubmissionController {
 		}
 		
     	log.info("Added ModelAtrributes");
-    	log.info("Model: " + model);
+    	log.debug("Model: " + model);
 		
     }
     

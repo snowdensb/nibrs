@@ -233,7 +233,7 @@ public class ArrestReportService {
 		return arrestReportSegmentRepository.deleteByArrestTransactionNumber(identifier);
 	}
 	
-	public Iterable<ArrestReportSegment> saveGroupBArrestReports(GroupBArrestReport... groupBArrestReports){
+	public Iterable<ArrestReportSegment> saveGroupBArrestReports(List<GroupBArrestReport> groupBArrestReports){
 		
 		List<ArrestReportSegment> arrestReportSegments = new ArrayList<>(); 
 		
@@ -257,9 +257,10 @@ public class ArrestReportService {
 			arrestReportSegment.setOri(groupBArrestReport.getOri());
 			
 			if (groupBArrestReport.getYearOfTape() != null && groupBArrestReport.getMonthOfTape() != null) {
-				boolean havingNewerSubmission = arrestReportSegmentRepository.existsByArrestTransactionNumberAndOriAndSubmissionDate
+				boolean havingNewerSubmission = arrestReportSegmentRepository.existsByArrestTransactionNumberAndOriAndSubmissionDateAndOwnerId
 						(arrestReportSegment.getArrestTransactionNumber(), arrestReportSegment.getOri(), 
-								DateUtils.getStartDate(groupBArrestReport.getYearOfTape(), groupBArrestReport.getMonthOfTape()));
+								DateUtils.getStartDate(groupBArrestReport.getYearOfTape(), 
+										groupBArrestReport.getMonthOfTape()), groupBArrestReport.getOwnerId());
 				
 				if (havingNewerSubmission) {
 					continue;
@@ -267,7 +268,8 @@ public class ArrestReportService {
 			}
 			
 			String reportActionType = String.valueOf(groupBArrestReport.getReportActionType()).trim();
-			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
+			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)
+					&& groupBArrestReport.getOwnerId() == null){
 				if (arrestReportSegmentRepository
 						.existsByArrestTransactionNumberAndOri(groupBArrestReport.getIdentifier(), groupBArrestReport.getOri())){
 					reportActionType = "R"; 

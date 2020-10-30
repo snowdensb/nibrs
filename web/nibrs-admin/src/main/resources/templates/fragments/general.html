@@ -216,8 +216,8 @@
 								console.log("modalDialog.height() + parseInt( modalDialog.css('margin-top'), 10):" + modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10)); 
 								console.log("modalDialog.css('margin-top'):" + modalDialog.css("margin-top")); 
 								console.log("visibleOjbcModal.width():" + visibleOjbcModal.width()); 
-								loadingDiv.height(modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10));
-								loadingDiv.width(visibleOjbcModal.width());
+								loadingDiv.css('height', modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10));
+								loadingDiv.css('width', visibleOjbcModal.width());
 								
 								loadingDiv.show();           
 				          
@@ -226,12 +226,13 @@
 							  $("#loadingFileAjaxPane").css({"display": "block"}); 
 						  }
 						  else {
+							  console.log("showing loading Pane for " + settings.url); 
+							  console.log("loadingAjaxPane exists: " + $("#loadingAjaxPane").length); 
 								var loadingDiv =  $("#loadingAjaxPane");
 								var portalContentDiv = $("#portalContent");
 								
-								loadingDiv.height(portalContentDiv.height() + 20);
-								loadingDiv.width(portalContentDiv.width());
-								
+								loadingDiv.css('height',portalContentDiv.height() + 20);
+								loadingDiv.css('width', portalContentDiv.width());
 							  $("#loadingAjaxPane").show();           
 						  }        
 	       	  }

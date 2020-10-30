@@ -83,7 +83,6 @@ public class IncidentController {
 		}
 		
     	log.info("Added ModelAtrributes");
-    	log.info("Model: " + model);
 		
     }
     
@@ -131,7 +130,8 @@ public class IncidentController {
 		}
 		model.put("incidentSearchRequest", incidentSearchRequest); 
 		IncidentSearchResult incidentSearchResult = restService.getIncidents(incidentSearchRequest);
-		log.debug("incidentSearchResult" + incidentSearchResult);
+		log.debug("incidentSearchResult returned count " + incidentSearchResult.getReturnedCount());
+		log.debug("incidentSearchResult returned count " + incidentSearchResult.getTotalCount());
 		model.put("incidentSearchResult", incidentSearchResult); 
 	}	
 
@@ -139,7 +139,8 @@ public class IncidentController {
 	public @ResponseBody Data<IncidentPointer> getIncidentPointers(
 			Map<String, Object> model) throws Throwable {
 		IncidentSearchResult incidentSearchResult = (IncidentSearchResult) model.get("incidentSearchResult");
-		log.debug("incidentSearchResult" + incidentSearchResult);
+		log.debug("incidentSearchResult returned count " + incidentSearchResult.getReturnedCount());
+		log.debug("incidentSearchResult returned count " + incidentSearchResult.getTotalCount());
 		
 		return new Data<IncidentPointer>(incidentSearchResult.getIncidentPointers());
 	}	

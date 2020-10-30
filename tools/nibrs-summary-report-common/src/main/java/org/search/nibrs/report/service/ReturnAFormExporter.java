@@ -85,6 +85,7 @@ public class ReturnAFormExporter {
     	
         int rowNum = 0;
         log.info("Write to the excel file");
+        log.debug("return A form " + returnAForm);
         CellStyle wrappedStyle = workbook.createCellStyle();
         wrappedStyle.setWrapText(true);
         wrappedStyle.setBorderBottom(BorderStyle.THIN);
@@ -725,6 +726,7 @@ public class ReturnAFormExporter {
     	
         int rowNum = 0;
         log.info("Write to the excel file");
+        log.debug("return A form " + returnAForm);
         CellStyle wrappedStyle = workbook.createCellStyle();
         wrappedStyle.setWrapText(true);
         Font boldFont = workbook.createFont();

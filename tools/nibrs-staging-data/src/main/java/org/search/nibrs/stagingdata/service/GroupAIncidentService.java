@@ -258,9 +258,10 @@ public class GroupAIncidentService {
 			administrativeSegment.setIncidentNumber(groupAIncidentReport.getIncidentNumber());
 			
 			if (groupAIncidentReport.getYearOfTape() != null && groupAIncidentReport.getMonthOfTape() != null) {
-				boolean havingNewerSubmission = administrativeSegmentRepository.existsByIncidentNumberAndOriAndSubmissionDate
+				boolean havingNewerSubmission = administrativeSegmentRepository.existsByIncidentNumberAndOriAndSubmissionDateAndOwnerId
 						(administrativeSegment.getIncidentNumber(), administrativeSegment.getOri(), 
-								DateUtils.getStartDate(groupAIncidentReport.getYearOfTape(), groupAIncidentReport.getMonthOfTape()));
+								DateUtils.getStartDate(groupAIncidentReport.getYearOfTape(), 
+										groupAIncidentReport.getMonthOfTape()), groupAIncidentReport.getOwnerId());
 				
 				if (havingNewerSubmission) {
 					continue;
@@ -268,7 +269,8 @@ public class GroupAIncidentService {
 			}
 			
 			String reportActionType = String.valueOf(groupAIncidentReport.getReportActionType()).trim();
-			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)){
+			if (!Objects.equals("D", reportActionType) && !Objects.equals("R", reportActionType)
+					&& groupAIncidentReport.getOwnerId() == null){
 				if (administrativeSegmentRepository
 						.existsByIncidentNumberAndOri(groupAIncidentReport.getIncidentNumber(), groupAIncidentReport.getOri())){
 					reportActionType = "R"; 
@@ -346,10 +348,6 @@ public class GroupAIncidentService {
 				Integer numberOfStolenMotorVehicles = Optional.ofNullable(property.getNumberOfStolenMotorVehicles())
 						.map(ParsedObject::getValue).orElse(null);
 				propertySegment.setNumberOfStolenMotorVehicles(numberOfStolenMotorVehicles);
-//				3 PropertySegment Segments:
-//				PropertySegment [typeOfPropertyLoss=7, propertyDescription=[20, null, null, null, null, null, null, null, null, null], valueOfProperty=[5000, null, null, null, null, null, null, null, null, null], dateRecovered=[null, null, null, null, null, null, null, null, null, null], numberOfStolenMotorVehicles=null, numberOfRecoveredMotorVehicles=null, suspectedDrugType=[null, null, null], estimatedDrugQuantity=[null, null, null], typeDrugMeasurement=[null, null, null], populatedPropertyDescriptionCount=1, populatedSuspectedDrugTypeCount=0]
-//				PropertySegment [typeOfPropertyLoss=5, propertyDescription=[20, null, null, null, null, null, null, null, null, null], valueOfProperty=[5000, null, null, null, null, null, null, null, null, null], dateRecovered=[Thu Jan 08 00:00:00 CST 2015, null, null, null, null, null, null, null, null, null], numberOfStolenMotorVehicles=null, numberOfRecoveredMotorVehicles=null, suspectedDrugType=[null, null, null], estimatedDrugQuantity=[null, null, null], typeDrugMeasurement=[null, null, null], populatedPropertyDescriptionCount=1, populatedSuspectedDrugTypeCount=0]
-//				PropertySegment [typeOfPropertyLoss=6, propertyDescription=[10, 11, null, null, null, null, null, null, null, null], valueOfProperty=[null, 100, null, null, null, null, null, null, null, null], dateRecovered=[null, null, null, null, null, null, null, null, null, null], numberOfStolenMotorVehicles=null, numberOfRecoveredMotorVehicles=null, suspectedDrugType=[E, E, X], estimatedDrugQuantity=[0.001, 0.001, null], typeDrugMeasurement=[LB, OZ, null], populatedPropertyDescriptionCount=2, populatedSuspectedDrugTypeCount=3]
 				processPropertyType(propertySegment, property); 
 				processSuspectedDrugType(propertySegment, property); 
 

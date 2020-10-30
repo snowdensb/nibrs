@@ -17,6 +17,8 @@ package org.search.nibrs.stagingdata.controller;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.search.nibrs.model.GroupAIncidentReport;
 import org.search.nibrs.stagingdata.model.search.IncidentDeleteRequest;
 import org.search.nibrs.stagingdata.model.segment.AdministrativeSegment;
@@ -32,6 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class GroupAIncidentReportController {
+	@SuppressWarnings("unused")
+	private static final Log log = LogFactory.getLog(GroupAIncidentReportController.class);
 
 	@Autowired
 	private GroupAIncidentService groupAIncidentService;
@@ -47,8 +51,8 @@ public class GroupAIncidentReportController {
 	}
 	
 	@RequestMapping(value="/groupAIncidentReports", method=RequestMethod.POST)
-	public void save(@RequestBody GroupAIncidentReport groupAIncidentReports){
-		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReports);
+	public void save(@RequestBody List<GroupAIncidentReport> groupAIncidentReports){
+		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReports.toArray(new GroupAIncidentReport[groupAIncidentReports.size()]));
 	}
 	
 	@RequestMapping(value="/groupAIncidentReports/{incidentNumber}", method=RequestMethod.DELETE)

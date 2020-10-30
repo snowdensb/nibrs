@@ -141,7 +141,7 @@ public class XmlReportGeneratorTest {
 	@Test
 	public void testCreateGroupBArrestReport() throws Exception {
 		GroupBArrestReport groupBArrestReport = BaselineIncidentFactory.getBaselineGroupBArrestReport();
-		arrestReportService.saveGroupBArrestReports(groupBArrestReport);
+		arrestReportService.saveGroupBArrestReports(Arrays.asList(groupBArrestReport));
 		
 		ArrestReportSegment arrestReportSegment = arrestReportSegmentFactory.getBasicArrestReportSegment();
 		arrestReportSegment = arrestReportSegmentRepository.save(arrestReportSegment);
@@ -168,7 +168,7 @@ public class XmlReportGeneratorTest {
 	@Test
 	public void testCreateGroupBArrestReportWithUnknownAge() throws Exception {
 		GroupBArrestReport groupBArrestReport = BaselineIncidentFactory.getBaselineGroupBArrestReportWithUnknownAge();
-		arrestReportService.saveGroupBArrestReports(groupBArrestReport);
+		arrestReportService.saveGroupBArrestReports(Arrays.asList(groupBArrestReport));
 		
 		List<ArrestReportSegment> arrestReportSegments =  arrestReportSegmentRepository.findByArrestTransactionNumber("45678");
 		assertThat(arrestReportSegments.size(), not(equalTo(0)));

@@ -51,7 +51,7 @@ public class ArrestReportSegmentRepositoryTest {
 	@Before
 	public void setup() {
 		GroupBArrestReport groupBArrestReport = BaselineIncidentFactory.getBaselineGroupBArrestReport();
-		arrestReportService.saveGroupBArrestReports(groupBArrestReport);
+		arrestReportService.saveGroupBArrestReports(Arrays.asList(groupBArrestReport));
 	}
 	
 	@Test

@@ -15,7 +15,6 @@
  */
 package org.search.nibrs.report.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,109 +30,128 @@ import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingForm;
 import org.search.nibrs.model.reports.supplementaryhomicide.SupplementaryHomicideReport;
 import org.search.nibrs.report.SummaryReportProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class StagingDataRestClient {
 
 	private static final Log log = LogFactory.getLog(StagingDataRestClient.class);
 
-	private RestTemplate restTemplate;
+	private final WebClient webClient;
 	@Autowired
 	private SummaryReportProperties appProperties;
 
-	public StagingDataRestClient() {
-		super();
-		restTemplate = new RestTemplate(); 
-		restTemplate.setMessageConverters(getMessageConverters());
+	@Autowired
+	public StagingDataRestClient(WebClient.Builder webClientBuilder, SummaryReportProperties appProperties) {
+		this.webClient = webClientBuilder.baseUrl(appProperties.getStagingDataRestServiceBaseUrl()).build();
 	}
 	
 	public ReturnAForm getReturnAFormByRequest(SummaryReportRequest summaryReportRequest) {
 		
-		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
-		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
-				"returnAForm"); 
-		String url = StringUtils.join(urlParts, '/');
-		log.info("Getting the ReturnAForm from the url " + url);
+		log.info("Getting the ReturnAForm from the url " + appProperties.getStagingDataRestServiceBaseUrl() + "/returnAForm");
 		
-		ReturnAForm returnAForm = restTemplate.postForObject( url, request, ReturnAForm.class);
+		ReturnAForm returnAForm =
+				webClient.post().uri("/returnAForm")
+				.body(BodyInserters.fromObject(summaryReportRequest))
+				.retrieve()
+				.bodyToMono(ReturnAForm.class)
+				.block();
+
 		log.debug("returnAForm: " + returnAForm);
 		return returnAForm;
 	}
 	
 	public AsrReports getAsrReportsByRequest(SummaryReportRequest summaryReportRequest) {
-		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
 
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"asrReports"); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the ASR Report object from the url " + url);
 		
-		AsrReports asrReports = restTemplate.postForObject( url, request, AsrReports.class);
+		AsrReports asrReports =
+				webClient.post().uri("/asrReports")
+				.body(BodyInserters.fromObject(summaryReportRequest))
+				.retrieve()
+				.bodyToMono(AsrReports.class)
+				.block();
+
 		log.info("asrReports: " + asrReports);
 		return asrReports;
 	}
 
 	public ArsonReport getArsonReportByRequest(SummaryReportRequest summaryReportRequest) {
 		
-		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"arsonReport"); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the Arson Report object from the url " + url);
 		
-		ArsonReport arsonReport = restTemplate.postForObject( url, request, ArsonReport.class);
+		ArsonReport arsonReport = 
+				webClient.post().uri("/arsonReport")
+				.body(BodyInserters.fromObject(summaryReportRequest))
+				.retrieve()
+				.bodyToMono(ArsonReport.class)
+				.block();
 		log.info("arsonReport: " + arsonReport);
 		return arsonReport;
 	}
 	
 	public HumanTraffickingForm getHumanTraffickingFormByRequest(SummaryReportRequest summaryReportRequest) {
-		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"humanTraffickingReport"); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the humanTraffickingForm object from the url " + url);
 		
-		HumanTraffickingForm humanTraffickingForm = restTemplate.postForObject( url, request, HumanTraffickingForm.class);
+		HumanTraffickingForm humanTraffickingForm = 
+				webClient.post().uri("/humanTraffickingReport")
+				.body(BodyInserters.fromObject(summaryReportRequest))
+				.retrieve()
+				.bodyToMono(HumanTraffickingForm.class)
+				.block();
 		log.info("humanTraffickingForm: " + humanTraffickingForm);
 		return humanTraffickingForm;
 	}
 
 	public SupplementaryHomicideReport getSupplementaryHomicideReportByRequest(
 			SummaryReportRequest summaryReportRequest) {
-		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"shrReports"); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the SupplementaryHomicideReport object from the url " + url);
 		
 		SupplementaryHomicideReport supplementaryHomicideReport = 
-				restTemplate.postForObject( url, request, SupplementaryHomicideReport.class);
+				webClient.post().uri("/shrReports")
+				.body(BodyInserters.fromObject(summaryReportRequest))
+				.retrieve()
+				.bodyToMono(SupplementaryHomicideReport.class)
+				.block();
 		log.info("supplementaryHomicideReport: " + supplementaryHomicideReport);
 		return supplementaryHomicideReport;
 	}
 
 	public CargoTheftReport getCargoTheftReportByRequest(SummaryReportRequest summaryReportRequest) {
-		HttpEntity<SummaryReportRequest> request = new HttpEntity<>(summaryReportRequest);
 		List<String> urlParts = Arrays.asList(appProperties.getStagingDataRestServiceBaseUrl(), 
 				"cargoTheftReport"); 
 		String url = StringUtils.join(urlParts, '/');
 		log.info("Getting the CargoTheftReport object from the url " + url);
 		
-		CargoTheftReport cargoTheftReport = restTemplate.postForObject( url, request, CargoTheftReport.class);
+		CargoTheftReport cargoTheftReport = 
+				webClient.post().uri("/cargoTheftReport")
+				.body(BodyInserters.fromObject(summaryReportRequest))
+				.retrieve()
+				.bodyToMono(CargoTheftReport.class)
+				.block();
 		log.info("cargoTheftReport: " + cargoTheftReport);
 		return cargoTheftReport;
 	}
 	
-	private List<HttpMessageConverter<?>> getMessageConverters() {
-	    List<HttpMessageConverter<?>> converters = 
-	      new ArrayList<HttpMessageConverter<?>>();
-	    converters.add(new MappingJackson2HttpMessageConverter());
-	    return converters;
-	}
+//	private List<HttpMessageConverter<?>> getMessageConverters() {
+//	    List<HttpMessageConverter<?>> converters = 
+//	      new ArrayList<HttpMessageConverter<?>>();
+//	    converters.add(new MappingJackson2HttpMessageConverter());
+//	    return converters;
+//	}
 
 }

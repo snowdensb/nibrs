@@ -65,7 +65,7 @@ public class PrecertErrorAdminController {
 			model.addAttribute("nibrsErrorCodeMapping", restService.getNibrsErrorCodes());
 		}
     	log.info("Added ModelAtrributes");
-    	log.info("Model: " + model);
+    	log.debug("Model: " + model);
     }
     
 	@GetMapping("/searchForm")
