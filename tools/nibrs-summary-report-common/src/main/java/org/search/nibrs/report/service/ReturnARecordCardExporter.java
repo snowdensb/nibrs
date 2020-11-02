@@ -30,10 +30,11 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -55,10 +56,10 @@ public class ReturnARecordCardExporter {
 	private CellStyle rightAlignedStyle;
 	private CellStyle wrappedStyle;
 	private CellStyle bottomBorderStyle;
-	private CellStyle defaultStyle;
-	private CellStyle grayForeGround;
-	private CellStyle blueForeGround;
-	private CellStyle blueBoldForeGround;
+	private XSSFCellStyle defaultStyle;
+	private XSSFCellStyle grayForeGround;
+	private XSSFCellStyle blueForeGround;
+	private XSSFCellStyle blueBoldForeGround;
 	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM dd, YYYY"); 
     public void exportReturnARecordCard(ReturnARecordCard returnARecordCard){
         XSSFWorkbook workbook = createReturnARecordCardWorkbook(returnARecordCard);
@@ -109,17 +110,19 @@ public class ReturnARecordCardExporter {
         
         grayForeGround = workbook.createCellStyle();
         grayForeGround.cloneStyleFrom(defaultStyle);
-        grayForeGround.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        XSSFColor greyColor = new XSSFColor(new java.awt.Color(220,220,220));
+        grayForeGround.setFillForegroundColor(greyColor);
         grayForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         grayForeGround.setFont(boldFont);
         
         blueForeGround = workbook.createCellStyle(); 
         blueForeGround.cloneStyleFrom(defaultStyle);
-        blueForeGround.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        XSSFColor blueColor = new XSSFColor(new java.awt.Color(207,224,241));
+        blueForeGround.setFillForegroundColor(blueColor);
         blueForeGround.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         
         blueBoldForeGround = workbook.createCellStyle(); 
-        blueBoldForeGround.cloneStyleFrom(blueBoldForeGround);
+        blueBoldForeGround.cloneStyleFrom(blueForeGround);
         blueBoldForeGround.setFont(boldFont);
         
         XSSFFont normalWeightFont = workbook.createFont();
@@ -228,14 +231,15 @@ public class ReturnARecordCardExporter {
 		blueBoldCenteredStyle.setAlignment(HorizontalAlignment.CENTER);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+15, 0, 0));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 1, 2));
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(0); 
 		cell.setCellValue("Violent");
 		cell.setCellStyle(blueBoldCenteredStyle);
-		
 		cell = row.createCell(1); 
 		cell.setCellValue("Total");
 		cell.setCellStyle(grayForeGround);
+		
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+1, 1, 1));
 		row = sheet.createRow(rowNum ++); 
@@ -333,15 +337,17 @@ public class ReturnARecordCardExporter {
 		cell.setCellStyle(blueBoldCenteredStyle);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+10, 0, 0));
-		row = sheet.createRow(rowNum ++); 
+		row = sheet.createRow(rowNum); 
 		cell = row.createCell(0); 
 		cell.setCellValue("Property");
 		cell.setCellStyle(blueBoldCenteredStyle);
 		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 1, 2));
 		cell = row.createCell(1); 
 		cell.setCellValue("Total");
 		cell.setCellStyle(grayForeGround);
-		
+
+		rowNum++;
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+3, 1, 1));
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(1);
