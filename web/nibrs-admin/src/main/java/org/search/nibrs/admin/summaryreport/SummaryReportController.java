@@ -34,6 +34,7 @@ import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.model.reports.ReturnAForm;
+import org.search.nibrs.model.reports.ReturnARecordCard;
 import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
@@ -45,6 +46,7 @@ import org.search.nibrs.report.service.AsrExcelExporter;
 import org.search.nibrs.report.service.CargoTheftReportExporter;
 import org.search.nibrs.report.service.HumanTraffickingExporter;
 import org.search.nibrs.report.service.ReturnAFormExporter;
+import org.search.nibrs.report.service.ReturnARecordCardExporter;
 import org.search.nibrs.report.service.StagingDataRestClient;
 import org.search.nibrs.report.service.SupplementaryHomicideReportExporter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,8 @@ public class SummaryReportController {
 	public StagingDataRestClient restClient; 
 	@Autowired 
 	public ReturnAFormExporter returnAFormExporter;
+	@Autowired 
+	public ReturnARecordCardExporter returnARecordCardExporter;
 	@Autowired 
 	public AsrExcelExporter asrExcelExporter;
 	@Autowired 
@@ -164,6 +168,16 @@ public class SummaryReportController {
 		downloadReport(response, workbook, fileName);
 	}
 
+	@PostMapping("/summaryReports/returnARecordCard")
+	public void getReturnARecordCardByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
+			HttpServletResponse response, Map<String, Object> model) throws IOException{
+		ReturnARecordCard returnARecordCard = restClient.getReturnARecordCardByRequest(summaryReportRequest);
+		XSSFWorkbook workbook = returnARecordCardExporter.createReturnARecordCardWorkbook(returnARecordCard);
+		String fileName = getFileName("ReturnARecordCard", returnARecordCard.getStateName(), returnARecordCard.getOri(), returnARecordCard.getYear(), 0);
+		
+		downloadReport(response, workbook, fileName);
+	}
+	
 	private String getFileName(String reportType, String stateName,  String ori, Integer year, Integer month) {
 
 		List<String> nameParts = new ArrayList<>();

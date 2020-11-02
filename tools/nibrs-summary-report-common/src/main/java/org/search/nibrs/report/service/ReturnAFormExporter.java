@@ -108,6 +108,7 @@ public class ReturnAFormExporter {
         createPropertyStolenByClassificationSheet(returnAForm, workbook, wrappedStyle, centeredStyle, boldFont, normalWeightFont);
 		return workbook;
 	}
+	
 	private void createPropertyStolenByClassificationSheet(ReturnAForm returnAForm, XSSFWorkbook workbook,
 			CellStyle wrappedStyle, CellStyle centeredStyle, Font boldFont, XSSFFont normalWeightFont) {
 		int rowNum = 0;
@@ -724,9 +725,10 @@ public class ReturnAFormExporter {
         
         XSSFSheet sheet = workbook.createSheet("Return A Form");
     	
-        int rowNum = 0;
         log.info("Write to the excel file");
-        log.debug("return A form " + returnAForm);
+        log.debug("return A form in ReturnAFormExporter" + returnAForm!=null? returnAForm:"null");
+
+        int rowNum = 0;
         CellStyle wrappedStyle = workbook.createCellStyle();
         wrappedStyle.setWrapText(true);
         Font boldFont = workbook.createFont();
@@ -958,6 +960,7 @@ public class ReturnAFormExporter {
 		}
 		
 		RegionUtil.setBorderRight(BorderStyle.THIN, new CellRangeAddress(31, 42, 5, 5), sheet);
+		log.debug("return A form workbook created");
 		return workbook;
 	}
 

@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.search.nibrs.model.reports.ReturnAForm;
+import org.search.nibrs.model.reports.ReturnARecordCard;
 import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
@@ -145,6 +146,20 @@ public class StagingDataRestClient {
 				.block();
 		log.info("cargoTheftReport: " + cargoTheftReport);
 		return cargoTheftReport;
+	}
+
+	public ReturnARecordCard getReturnARecordCardByRequest(SummaryReportRequest summaryReportRequest) {
+		log.info("Getting the ReturnARecordCard from the url " + appProperties.getStagingDataRestServiceBaseUrl() + "/returnARecordCard");
+		
+		ReturnARecordCard returnARecordCard =
+				webClient.post().uri("/returnARecordCard")
+				.body(BodyInserters.fromObject(summaryReportRequest))
+				.retrieve()
+				.bodyToMono(ReturnARecordCard.class)
+				.block();
+
+		log.debug("returnAForm: " + returnARecordCard);
+		return returnARecordCard;
 	}
 	
 //	private List<HttpMessageConverter<?>> getMessageConverters() {

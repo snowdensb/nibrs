@@ -202,6 +202,9 @@
 		                 document.body.removeChild(downloadLink);
 		            }
 		        }
+		        else{
+		              bootpopup.alert("Got Error Downloading the report " + this.status + ": " + this.statusText, "Error");
+		        }
 		      }
 		     xhr[i].send(formData);
     	 }

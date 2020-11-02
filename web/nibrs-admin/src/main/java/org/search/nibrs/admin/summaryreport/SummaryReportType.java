@@ -21,6 +21,7 @@ public enum SummaryReportType {
 	cargoTheftReport("Cargo Theft"),
 	humanTraffickingReport("Human Trafficking"),
     returnAForm("Return A"), 
+    returnARecordCard("Return A Record Card"), 
     returnASupplement("Return A Supplement"), 
     shrReports("SHR Negligent/Non Negligent");
 	
