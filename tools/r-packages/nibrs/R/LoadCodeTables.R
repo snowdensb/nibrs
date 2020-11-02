@@ -36,6 +36,8 @@ loadCodeTables <- function(spreadsheetFile=NULL, conn=NULL, quiet=FALSE) {
                         'OffenseCategory2', 'OffenseCategory3', 'OffenseCategory4')
     } else if (codeTableName=='BiasMotivationType') {
       colnames(ct) <- c('BiasMotivationTypeID', 'StateCode', 'StateDescription', 'BiasMotivationCategory')
+    } else if (codeTableName=='TypeOfWeaponForceInvolvedType') {
+      colnames(ct) <- c('TypeOfWeaponForceInvolvedTypeID', 'StateCode', 'StateDescription', 'TypeOfWeaponForceInvolvedCategory')
     } else if (codeTableName=='AgencyType') {
       colnames(ct) <- c('AgencyTypeID', 'StateCode', 'StateDescription')
     } else {
