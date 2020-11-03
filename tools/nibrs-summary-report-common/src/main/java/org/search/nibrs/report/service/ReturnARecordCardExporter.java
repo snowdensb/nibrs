@@ -60,6 +60,9 @@ public class ReturnARecordCardExporter {
 	private XSSFCellStyle grayForeGround;
 	private XSSFCellStyle blueForeGround;
 	private XSSFCellStyle blueBoldForeGround;
+	private XSSFCellStyle blueLeftStyle;
+	private XSSFCellStyle blueBoldCenteredStyle;
+	private XSSFCellStyle blueBoldTopCenteredStyle;
 	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM dd, YYYY"); 
     public void exportReturnARecordCard(ReturnARecordCard returnARecordCard){
         XSSFWorkbook workbook = createReturnARecordCardWorkbook(returnARecordCard);
@@ -80,16 +83,27 @@ public class ReturnARecordCardExporter {
     
 	public XSSFWorkbook createReturnARecordCardWorkbook(ReturnARecordCard returnARecordCard) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFFont normalWeightFont = workbook.createFont();
+        normalWeightFont.setBold(false);
+        normalWeightFont.setFontName("Tahoma");
+        normalWeightFont.setFontHeightInPoints(Short.valueOf("8"));
         
+        XSSFFont normalCalibriFont = workbook.createFont();
+        normalCalibriFont.setBold(false);
+        normalCalibriFont.setFontName("Calibri");
+        normalCalibriFont.setFontHeightInPoints(Short.valueOf("8"));
+
         int rowNum = 0;
         log.info("Write to the excel file");
         log.debug("Return A record card " + returnARecordCard);
-        wrappedStyle = workbook.createCellStyle();
-        wrappedStyle.setWrapText(true);
-        wrappedStyle.setBorderBottom(BorderStyle.THIN);
-        wrappedStyle.setBorderTop(BorderStyle.THIN);
-        wrappedStyle.setBorderRight(BorderStyle.THIN);
-        wrappedStyle.setBorderLeft(BorderStyle.THIN);
+        defaultStyle = workbook.createCellStyle();
+        defaultStyle.setWrapText(true);
+        defaultStyle.setBorderBottom(BorderStyle.THIN);
+        defaultStyle.setBorderTop(BorderStyle.THIN);
+        defaultStyle.setBorderRight(BorderStyle.THIN);
+        defaultStyle.setBorderLeft(BorderStyle.THIN);
+        defaultStyle.setFont(normalWeightFont);
+        
         bottomBorderStyle = workbook.createCellStyle(); 
         bottomBorderStyle.setAlignment(HorizontalAlignment.CENTER);
         bottomBorderStyle.setBorderBottom(BorderStyle.THIN);
@@ -98,14 +112,9 @@ public class ReturnARecordCardExporter {
         rightAlignedStyle = workbook.createCellStyle();
         rightAlignedStyle.setAlignment(HorizontalAlignment.RIGHT);
         
-    	defaultStyle = workbook.createCellStyle();
-    	defaultStyle.setWrapText(true);
-    	defaultStyle.setBorderBottom(BorderStyle.THIN);
-    	defaultStyle.setBorderTop(BorderStyle.THIN);
-    	defaultStyle.setBorderRight(BorderStyle.THIN);
-    	defaultStyle.setBorderLeft(BorderStyle.THIN);
-    	
         Font boldFont = workbook.createFont();
+        boldFont.setFontName("Tahoma");
+        boldFont.setFontHeightInPoints(Short.parseShort("8"));
         boldFont.setBold(true);
         
         grayForeGround = workbook.createCellStyle();
@@ -125,9 +134,18 @@ public class ReturnARecordCardExporter {
         blueBoldForeGround.cloneStyleFrom(blueForeGround);
         blueBoldForeGround.setFont(boldFont);
         
-        XSSFFont normalWeightFont = workbook.createFont();
-        normalWeightFont.setBold(false);
-        
+		blueBoldCenteredStyle = workbook.createCellStyle();
+		blueBoldCenteredStyle.cloneStyleFrom(blueBoldForeGround);
+		blueBoldCenteredStyle.setAlignment(HorizontalAlignment.CENTER);
+		
+		blueLeftStyle = workbook.createCellStyle();
+		blueLeftStyle.cloneStyleFrom(blueForeGround);
+		blueLeftStyle.setAlignment(HorizontalAlignment.LEFT);
+		
+		blueBoldTopCenteredStyle = workbook.createCellStyle();
+		blueBoldTopCenteredStyle.cloneStyleFrom(blueBoldCenteredStyle);
+		blueBoldTopCenteredStyle.setVerticalAlignment(VerticalAlignment.TOP);
+		
         Font underlineFont = workbook.createFont();
         underlineFont.setUnderline(Font.U_SINGLE);
         
@@ -226,16 +244,16 @@ public class ReturnARecordCardExporter {
 		cell.setCellValue("Grand Total");
 		cell.setCellStyle(grayForeGround);
 		
-		CellStyle blueBoldCenteredStyle = sheet.getWorkbook().createCellStyle();
-		blueBoldCenteredStyle.cloneStyleFrom(blueBoldForeGround);
-		blueBoldCenteredStyle.setAlignment(HorizontalAlignment.CENTER);
+		CellStyle blueBoldCenteredCenteredStyle = sheet.getWorkbook().createCellStyle();
+		blueBoldCenteredCenteredStyle.cloneStyleFrom(blueBoldCenteredStyle);
+		blueBoldCenteredCenteredStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+15, 0, 0));
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 1, 2));
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(0); 
 		cell.setCellValue("Violent");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueBoldTopCenteredStyle);
 		cell = row.createCell(1); 
 		cell.setCellValue("Total");
 		cell.setCellStyle(grayForeGround);
@@ -245,7 +263,7 @@ public class ReturnARecordCardExporter {
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(1);
 		cell.setCellValue("Murder");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueBoldCenteredCenteredStyle);
 		
 		cell = row.createCell(2);
 		cell.setCellValue("Subtotal");
@@ -254,13 +272,13 @@ public class ReturnARecordCardExporter {
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue("Murder");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+2, 1, 1));
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(1);
 		cell.setCellValue("Rape");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueBoldCenteredCenteredStyle);
 		
 		cell = row.createCell(2);
 		cell.setCellValue("Subtotal");
@@ -269,18 +287,18 @@ public class ReturnARecordCardExporter {
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue("Rape");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue("Attempted Rape");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+4, 1, 1));
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(1);
 		cell.setCellValue("Robbery");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueBoldCenteredCenteredStyle);
 		
 		cell = row.createCell(2);
 		cell.setCellValue("Subtotal");
@@ -289,28 +307,28 @@ public class ReturnARecordCardExporter {
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.FIREARM_ROBBERY.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.KNIFE_CUTTING_INSTRUMENT_ROBBERY.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.OTHER_DANGEROUS_WEAPON_ROBBERY.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.STRONG_ARM_ROBBERY.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+4, 1, 1));
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(1);
 		cell.setCellValue("Assault");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueBoldCenteredCenteredStyle);
 		
 		cell = row.createCell(2);
 		cell.setCellValue("Subtotal");
@@ -319,28 +337,28 @@ public class ReturnARecordCardExporter {
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.FIREARM_ASSAULT.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.KNIFE_CUTTING_INSTRUMENT_ASSAULT.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.OTHER_DANGEROUS_WEAPON_ASSAULT.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.HANDS_FISTS_FEET_AGGRAVATED_INJURY_ASSAULT.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+10, 0, 0));
 		row = sheet.createRow(rowNum); 
 		cell = row.createCell(0); 
 		cell.setCellValue("Property");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueBoldTopCenteredStyle);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 1, 2));
 		cell = row.createCell(1); 
@@ -352,7 +370,7 @@ public class ReturnARecordCardExporter {
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(1);
 		cell.setCellValue("Burglary");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueBoldCenteredCenteredStyle);
 		
 		cell = row.createCell(2);
 		cell.setCellValue("Subtotal");
@@ -361,23 +379,23 @@ public class ReturnARecordCardExporter {
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.FORCIBLE_ENTRY_BURGLARY.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.UNLAWFUL_ENTRY_NO_FORCE_BURGLARY.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.ATTEMPTED_FORCIBLE_ENTRY_BURGLARY.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+1, 1, 1));
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(1);
 		cell.setCellValue("Larceny");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueBoldCenteredCenteredStyle);
 		
 		cell = row.createCell(2);
 		cell.setCellValue("Subtotal");
@@ -386,13 +404,13 @@ public class ReturnARecordCardExporter {
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.LARCENY_THEFT.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+3, 1, 1));
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(1);
-		cell.setCellValue("Motor Vehicle Theft");
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellValue("Motor Vehicle\n Theft");
+		cell.setCellStyle(blueBoldCenteredCenteredStyle);
 		
 		cell = row.createCell(2);
 		cell.setCellValue("Subtotal");
@@ -401,17 +419,17 @@ public class ReturnARecordCardExporter {
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.AUTOS_THEFT.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.TRUCKS_BUSES_THEFT.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 		
 		row = sheet.createRow(rowNum ++); 
 		cell = row.createCell(2);
 		cell.setCellValue(ReturnARecordCardRowName.OTHER_VEHICLES_THEFT.getLabel());
-		cell.setCellStyle(blueBoldCenteredStyle);
+		cell.setCellStyle(blueLeftStyle);
 
 	}
 
@@ -437,6 +455,14 @@ public class ReturnARecordCardExporter {
 		boldTopStyle.cloneStyleFrom(boldStyle);
 		boldTopStyle.setVerticalAlignment(VerticalAlignment.TOP);
 		
+		XSSFCellStyle blueBoldLeftStyle = sheet.getWorkbook().createCellStyle();
+		blueBoldLeftStyle.cloneStyleFrom(blueLeftStyle);
+		blueBoldLeftStyle.setFont(boldFont);
+		
+		XSSFCellStyle greyBoldCenteredStyle = sheet.getWorkbook().createCellStyle();
+		greyBoldCenteredStyle.cloneStyleFrom(grayForeGround);
+		greyBoldCenteredStyle.setAlignment(HorizontalAlignment.CENTER);;
+		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+1, 0, 2));
 		Row row = sheet.createRow(rowNum);
 		Cell cell = row.createCell(0);
@@ -444,17 +470,17 @@ public class ReturnARecordCardExporter {
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,3,9));
 		Cell cell1 = row.createCell(3);
-		cell1.setCellStyle(boldLeftStyle);
+		cell1.setCellStyle(blueBoldLeftStyle);
 		cell1.setCellValue("First Half");
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,10,16));
 		Cell cell2 = row.createCell(10);
-		cell2.setCellStyle(boldLeftStyle);
+		cell2.setCellStyle(blueBoldLeftStyle);
 		cell2.setCellValue("Second Half");
 		
 		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum+1, 17, 17));
 		Cell cell3 = row.createCell(17);
-		cell3.setCellStyle(boldTopStyle);
+		cell3.setCellStyle(blueBoldTopCenteredStyle);
 		cell3.setCellValue("Total");
 		
 		row = sheet.createRow(++rowNum);
@@ -463,8 +489,14 @@ public class ReturnARecordCardExporter {
 
 		for(int i=3, j=0; j < headers.size(); i++, j++) {
 			Cell cell5 = row.createCell(i);
-			cell5.setCellStyle(normalStyle);
 			cell5.setCellValue(headers.get(j));
+			
+			if (!headers.get(j).contentEquals("Subtotal")) {
+				cell5.setCellStyle(blueForeGround);
+			}
+			else {
+				cell5.setCellStyle(greyBoldCenteredStyle);
+			}
 		}
 
 		return ++rowNum;
