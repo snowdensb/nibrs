@@ -40,6 +40,7 @@ import org.search.nibrs.model.reports.PropertyStolenByClassificationRowName;
 import org.search.nibrs.model.reports.PropertyTypeValueRowName;
 import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.ReturnARecordCard;
+import org.search.nibrs.model.reports.ReturnARecordCardReport;
 import org.search.nibrs.model.reports.ReturnARecordCardRowName;
 import org.search.nibrs.model.reports.ReturnARowName;
 import org.search.nibrs.model.reports.SummaryReportRequest;
@@ -53,6 +54,7 @@ import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.search.nibrs.stagingdata.model.segment.PropertySegment;
 import org.search.nibrs.stagingdata.model.segment.VictimSegment;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
+import org.search.nibrs.stagingdata.repository.AgencyRepositoryCustom;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.search.nibrs.stagingdata.service.AdministrativeSegmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,8 @@ public class ReturnAFormService {
 	AdministrativeSegmentRepository administrativeSegmentRepository;
 	@Autowired
 	public AgencyRepository agencyRepository; 
+	@Autowired
+	private AgencyRepositoryCustom agencyRepositoryCustom;
 	@Autowired
 	public AppProperties appProperties; 
 	
@@ -165,49 +169,32 @@ public class ReturnAFormService {
 		return returnAForm;
 	}
 	
-	public ReturnARecordCard createReturnARecordCardByRequest(SummaryReportRequest summaryReportRequest) {
+	public ReturnARecordCardReport createReturnARecordCardReportByRequest(SummaryReportRequest summaryReportRequest) {
 		
 		log.info("summaryReportRequest for Return A Record Card: " + summaryReportRequest);
-		ReturnARecordCard returnARecordCard = new ReturnARecordCard(summaryReportRequest.getIncidentYear()); 
+		ReturnARecordCardReport returnARecordCardReport = new ReturnARecordCardReport(summaryReportRequest.getIncidentYear()); 
 		
 //		propertyTypeIds = new ArrayList<>();
 //		incidentNumbers = new ArrayList<>();
-		if (summaryReportRequest.getAgencyId() != null){
-			Optional<Agency> agency = agencyRepository.findById(summaryReportRequest.getAgencyId());
-			if (agency.isPresent()){
-				returnARecordCard.setAgencyName(agency.get().getAgencyName());
-				returnARecordCard.setStateName(agency.get().getStateName());
-				returnARecordCard.setStateCode(agency.get().getStateCode());
-				returnARecordCard.setPopulation(agency.get().getPopulation());
-			}
-			else{
-				return returnARecordCard; 
-			}
-		}
-		else{
-			Agency agency = agencyRepository.findFirstByStateCode(summaryReportRequest.getStateCode());
-			returnARecordCard.setAgencyName("");
-			returnARecordCard.setStateName(agency.getStateName());
-			returnARecordCard.setStateCode(agency.getStateCode());
-			returnARecordCard.setPopulation(null);
-		}
 		
-		processReportedOffenses(summaryReportRequest, returnARecordCard);
+		processReportedOffenses(summaryReportRequest, returnARecordCardReport);
 //		processOffenseClearances(summaryReportRequest, returnARecordCard);
 		
-		fillTheMurderSubtotalRow(returnARecordCard);
-		fillTheRapeSubtotalRow(returnARecordCard);
-		fillTheRobberySubtotalRow(returnARecordCard);
-		fillTheAssaultSubtotalRow(returnARecordCard);
-		fillTheViolentTotalRow(returnARecordCard);
-		fillTheBurglarySubotalRow(returnARecordCard);
-		fillTheLarcenySubotalRow(returnARecordCard);
-		fillTheMotorVehicleTheftSubotalRow(returnARecordCard);
-		fillThePropertyTotalRow(returnARecordCard);
-		fillTheReportedOffenseGrandTotalRow(returnARecordCard);
+		for (ReturnARecordCard returnARecordCard: returnARecordCardReport.getReturnARecordCards().values()) {
+			fillTheMurderSubtotalRow(returnARecordCard);
+			fillTheRapeSubtotalRow(returnARecordCard);
+			fillTheRobberySubtotalRow(returnARecordCard);
+			fillTheAssaultSubtotalRow(returnARecordCard);
+			fillTheViolentTotalRow(returnARecordCard);
+			fillTheBurglarySubotalRow(returnARecordCard);
+			fillTheLarcenySubotalRow(returnARecordCard);
+			fillTheMotorVehicleTheftSubotalRow(returnARecordCard);
+			fillThePropertyTotalRow(returnARecordCard);
+			fillTheReportedOffenseGrandTotalRow(returnARecordCard);
+		}
 		
-		log.info("returnARecordCard: " + returnARecordCard);
-		return returnARecordCard;
+		log.debug("returnARecordCardReport: " + returnARecordCardReport);
+		return returnARecordCardReport;
 	}
 	
 	private void fillTheReportedOffenseGrandTotalRow(ReturnARecordCard returnARecordCard) {
@@ -277,7 +264,7 @@ public class ReturnAFormService {
 	}
 
 	private void processReportedOffenses(SummaryReportRequest summaryReportRequest,
-			ReturnARecordCard returnARecordCard) {
+			ReturnARecordCardReport returnARecordCardReport) {
 		List<String> offenseCodes = new ArrayList(partIOffensesMap.keySet()); 
 //		offenseCodes.remove("09B");
 //		offenseCodes.remove("13B");
@@ -291,21 +278,22 @@ public class ReturnAFormService {
 		int batchSize = appProperties.getSummaryReportProcessingBatchSize();
 		for (i = 0; i+batchSize < administrativeSegmentIds.size(); i+=batchSize ) {
 			log.info("processing Reported offenses " + i + " to " + String.valueOf(i+batchSize));
-			getRecordCardReportedOffenseRows(returnARecordCard, administrativeSegmentIds.subList(i, i+batchSize));
+			getRecordCardReportedOffenseRows(returnARecordCardReport, administrativeSegmentIds.subList(i, i+batchSize));
 		}
 		
 		if (i < administrativeSegmentIds.size()) {
 			log.info("processing Reported offenses " + i + " to " + administrativeSegmentIds.size());
-			getRecordCardReportedOffenseRows(returnARecordCard, administrativeSegmentIds.subList(i, administrativeSegmentIds.size()));
+			getRecordCardReportedOffenseRows(returnARecordCardReport, administrativeSegmentIds.subList(i, administrativeSegmentIds.size()));
 		}
 		
 	}
 
-	private void getRecordCardReportedOffenseRows(ReturnARecordCard returnARecordCard, List<Integer> administrativeSegmentIds) {
+	private void getRecordCardReportedOffenseRows(ReturnARecordCardReport returnARecordCardReport, List<Integer> administrativeSegmentIds) {
 		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentRepository.findAllById(administrativeSegmentIds)
 					.stream().distinct().collect(Collectors.toList());; 
 		for (AdministrativeSegment administrativeSegment: administrativeSegments){
+			ReturnARecordCard returnARecordCard = getReturnARecordCard(returnARecordCardReport, administrativeSegment);
 			if (administrativeSegment.getOffenseSegments().size() == 0) continue; 
 			
 			int incidentMonth = administrativeSegment.getIncidentDate().getMonthValue(); 
@@ -362,6 +350,30 @@ public class ReturnAFormService {
 		}
 		administrativeSegments.clear();
 		
+	}
+
+	private ReturnARecordCard getReturnARecordCard(ReturnARecordCardReport returnARecordCardReport,
+			AdministrativeSegment administrativeSegment) {
+		
+		Agency agency = administrativeSegment.getAgency(); 
+		
+		if (StringUtils.isBlank(returnARecordCardReport.getStateName())) {
+			returnARecordCardReport.setStateName(agency.getStateName());
+		}
+		
+		ReturnARecordCard returnARecordCard = returnARecordCardReport.getReturnARecordCards().get(agency.getAgencyId()); 
+		
+		if (returnARecordCard == null) {
+			returnARecordCard = 
+					new ReturnARecordCard(agency.getAgencyOri(), administrativeSegment.getIncidentDateType().getYearNum());
+			returnARecordCard.setAgencyName(agency.getAgencyName());
+			returnARecordCard.setPopulation(agency.getPopulation());
+			returnARecordCard.setStateCode(agency.getStateCode());
+			returnARecordCard.setStateName(agency.getStateName());
+			
+			returnARecordCardReport.getReturnARecordCards().put(agency.getAgencyId(), returnARecordCard);
+		}
+		return returnARecordCard;
 	}
 
 	private void increaseRowCount(ReturnARecordCard returnARecordCard, int incidentMonth,

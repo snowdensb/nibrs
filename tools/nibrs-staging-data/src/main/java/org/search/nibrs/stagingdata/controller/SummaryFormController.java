@@ -16,7 +16,7 @@
 package org.search.nibrs.stagingdata.controller;
 
 import org.search.nibrs.model.reports.ReturnAForm;
-import org.search.nibrs.model.reports.ReturnARecordCard;
+import org.search.nibrs.model.reports.ReturnARecordCardReport;
 import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
@@ -62,8 +62,8 @@ public class SummaryFormController {
 	}
 	
 	@PostMapping("/returnARecordCard")
-	public ReturnARecordCard getReturnARecordCardByRequest(@RequestBody SummaryReportRequest summaryReportRequest){
-		return returnAFormService.createReturnARecordCardByRequest(summaryReportRequest);
+	public ReturnARecordCardReport getReturnARecordCardByRequest(@RequestBody SummaryReportRequest summaryReportRequest){
+		return returnAFormService.createReturnARecordCardReportByRequest(summaryReportRequest);
 	}
 	
 	@PostMapping("/arsonReport")

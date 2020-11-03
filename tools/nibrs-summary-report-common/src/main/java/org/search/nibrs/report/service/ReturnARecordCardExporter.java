@@ -45,6 +45,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder.BorderSide;
 import org.search.nibrs.model.reports.ReturnARecordCard;
+import org.search.nibrs.model.reports.ReturnARecordCardReport;
 import org.search.nibrs.model.reports.ReturnARecordCardRow;
 import org.search.nibrs.model.reports.ReturnARecordCardRowName;
 import org.search.nibrs.report.SummaryReportProperties;
@@ -71,11 +72,12 @@ public class ReturnARecordCardExporter {
 	private XSSFFont normalWeightFont;
 	private XSSFFont normalCalibriFont;
 	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM dd, YYYY"); 
-    public void exportReturnARecordCard(ReturnARecordCard returnARecordCard){
-        XSSFWorkbook workbook = createReturnARecordCardWorkbook(returnARecordCard);
+    public void exportReturnARecordCardReport(ReturnARecordCardReport returnARecordCardReport){
+        XSSFWorkbook workbook = createReturnARecordCardWorkbook(returnARecordCardReport);
 		
         try {
-        	String fileName = appProperties.getSummaryReportOutputPath() + "/ReturnARecordCard-" + returnARecordCard.getOri() + "-" + returnARecordCard.getYear()  + ".xlsx"; 
+        	String fileName = appProperties.getSummaryReportOutputPath() + "/ReturnARecordCard-" + 
+        			returnARecordCardReport.getStateName() + "-" + returnARecordCardReport.getYear()  + ".xlsx"; 
             FileOutputStream outputStream = new FileOutputStream(fileName);
             workbook.write(outputStream);
             workbook.close();
@@ -88,7 +90,7 @@ public class ReturnARecordCardExporter {
 
     }
     
-	public XSSFWorkbook createReturnARecordCardWorkbook(ReturnARecordCard returnARecordCard) {
+	public XSSFWorkbook createReturnARecordCardWorkbook(ReturnARecordCardReport returnARecordCardReport) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
         normalWeightFont = workbook.createFont();
         normalWeightFont.setBold(false);
@@ -105,9 +107,8 @@ public class ReturnARecordCardExporter {
         normalCalibriFont.setFontName("Calibri");
         normalCalibriFont.setFontHeightInPoints(Short.valueOf("8"));
 
-        int rowNum = 0;
         log.info("Write to the excel file");
-        log.debug("Return A record card " + returnARecordCard);
+        log.debug("Return A record card " + returnARecordCardReport);
         defaultStyle = workbook.createCellStyle();
         defaultStyle.setWrapText(true);
         defaultStyle.setBorderBottom(BorderStyle.THIN);
@@ -173,66 +174,71 @@ public class ReturnARecordCardExporter {
         Font underlineFont = workbook.createFont();
         underlineFont.setUnderline(Font.U_SINGLE);
         
-    	createReturnARecordCardSheet(workbook, rowNum, boldFont, normalWeightFont, returnARecordCard);
+    	createReturnARecordCardSheet(workbook, boldFont, normalWeightFont, returnARecordCardReport);
 		return workbook;
 	}
 
-	private void createReturnARecordCardSheet(XSSFWorkbook workbook, int rowNum, Font boldFont, 
-			XSSFFont normalWeightFont, ReturnARecordCard returnARecordCard) {
-        XSSFSheet sheet = workbook.createSheet();
-		sheet.setFitToPage(true);
-		PrintSetup ps = sheet.getPrintSetup();
-		ps.setLandscape(true);
-		ps.setFitWidth( (short) 1);
-		ps.setFitHeight( (short) 0);
-
-        sheet.setColumnWidth(2, 750 * sheet.getDefaultColumnWidth());
-        CellStyle wrappedStyle = workbook.createCellStyle();
-        wrappedStyle.setWrapText(true);
+	private void createReturnARecordCardSheet(XSSFWorkbook workbook, Font boldFont, 
+			XSSFFont normalWeightFont, ReturnARecordCardReport returnARecordCardReport) {
+		
+		for (ReturnARecordCard returnARecordCard: returnARecordCardReport.getReturnARecordCards().values()) {
+			int rowNum = 0;
+	        XSSFSheet sheet = workbook.createSheet(returnARecordCard.getOri());
+			sheet.setFitToPage(true);
+			PrintSetup ps = sheet.getPrintSetup();
+			ps.setLandscape(true);
+			ps.setFitWidth( (short) 1);
+			ps.setFitHeight( (short) 0);
+	
+	        sheet.setColumnWidth(2, 750 * sheet.getDefaultColumnWidth());
+	        CellStyle wrappedStyle = workbook.createCellStyle();
+	        wrappedStyle.setWrapText(true);
+	        
+	    	rowNum = createReturnARecordTitleRow(sheet, rowNum);
+	    	rowNum = createMetaDataRows(sheet, rowNum, returnARecordCard);
+	    	rowNum = createHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
+	    	
+	    	int grandTotalRowNum = rowNum; 
+	    	
+	    	creatRowHeaders(sheet, rowNum, boldFont, normalWeightFont);
+	
+	    	rowNum = grandTotalRowNum; 
+	    	
+	        for (ReturnARecordCardRowName rowName: ReturnARecordCardRowName.values()){
+	        	writeReportedOffensesRow(sheet, rowName, returnARecordCard.getRows()[rowName.ordinal()], rowNum, boldFont);
+	        	rowNum ++;
+	        }
+	
+	        RegionUtil.setBorderTop(BorderStyle.THIN, new CellRangeAddress(4, 4, 0, 17), sheet);
+	        
+	        XSSFColor borderColor = new XSSFColor(IndexedColors.GREY_50_PERCENT, new DefaultIndexedColorMap());
+	        CellRangeAddress tableTop = new CellRangeAddress(5, 5, 0, 17);
+	        RegionUtil.setBorderTop(BorderStyle.THIN, tableTop, sheet);
+	        RegionUtil.setTopBorderColor(borderColor.getIndex(), tableTop, sheet);
+	        
+	        CellRangeAddress grandTotalCell = new CellRangeAddress(7, 7, 0, 3);
+	        RegionUtil.setBorderTop(BorderStyle.THIN, grandTotalCell, sheet);
+	        RegionUtil.setTopBorderColor(borderColor.getIndex(), grandTotalCell, sheet);
+	        RegionUtil.setBorderBottom(BorderStyle.THIN, grandTotalCell, sheet);
+	        RegionUtil.setBottomBorderColor(borderColor.getIndex(), grandTotalCell, sheet);
+	        
+	        CellRangeAddress tableFirstLeft = new CellRangeAddress(5, 34, 0, 0);
+	        RegionUtil.setBorderLeft(BorderStyle.THIN, tableFirstLeft, sheet);
+	        RegionUtil.setLeftBorderColor(borderColor.getIndex(), tableFirstLeft, sheet);
+	        
+	        CellRangeAddress tableViolentAndProperty = new CellRangeAddress(8, 34, 0, 0);
+	        RegionUtil.setBorderRight(BorderStyle.THIN, tableViolentAndProperty, sheet);
+	        RegionUtil.setRightBorderColor(borderColor.getIndex(), tableViolentAndProperty, sheet);
+	        
+	        CellRangeAddress tableBottom = new CellRangeAddress(34, 34, 0, 2);
+	        RegionUtil.setBorderBottom(BorderStyle.THIN, tableBottom, sheet);
+	        RegionUtil.setBottomBorderColor(borderColor.getIndex(), tableBottom, sheet);
+	        
+	        CellRangeAddress tableUpperRight = new CellRangeAddress(5, 6, 17, 17);
+	        RegionUtil.setBorderRight(BorderStyle.THIN, tableUpperRight, sheet);
+	        RegionUtil.setRightBorderColor(borderColor.getIndex(), tableUpperRight, sheet);
+		}
         
-    	rowNum = createReturnARecordTitleRow(sheet, rowNum);
-    	rowNum = createMetaDataRows(sheet, rowNum, returnARecordCard);
-    	rowNum = createHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
-    	
-    	int grandTotalRowNum = rowNum; 
-    	
-    	creatRowHeaders(sheet, rowNum, boldFont, normalWeightFont);
-
-    	rowNum = grandTotalRowNum; 
-    	
-        for (ReturnARecordCardRowName rowName: ReturnARecordCardRowName.values()){
-        	writeReportedOffensesRow(sheet, rowName, returnARecordCard.getRows()[rowName.ordinal()], rowNum, boldFont);
-        	rowNum ++;
-        }
-
-        RegionUtil.setBorderTop(BorderStyle.THIN, new CellRangeAddress(4, 4, 0, 17), sheet);
-        
-        XSSFColor borderColor = new XSSFColor(IndexedColors.GREY_50_PERCENT, new DefaultIndexedColorMap());
-        CellRangeAddress tableTop = new CellRangeAddress(5, 5, 0, 17);
-        RegionUtil.setBorderTop(BorderStyle.THIN, tableTop, sheet);
-        RegionUtil.setTopBorderColor(borderColor.getIndex(), tableTop, sheet);
-        
-        CellRangeAddress grandTotalCell = new CellRangeAddress(7, 7, 0, 3);
-        RegionUtil.setBorderTop(BorderStyle.THIN, grandTotalCell, sheet);
-        RegionUtil.setTopBorderColor(borderColor.getIndex(), grandTotalCell, sheet);
-        RegionUtil.setBorderBottom(BorderStyle.THIN, grandTotalCell, sheet);
-        RegionUtil.setBottomBorderColor(borderColor.getIndex(), grandTotalCell, sheet);
-        
-        CellRangeAddress tableFirstLeft = new CellRangeAddress(5, 34, 0, 0);
-        RegionUtil.setBorderLeft(BorderStyle.THIN, tableFirstLeft, sheet);
-        RegionUtil.setLeftBorderColor(borderColor.getIndex(), tableFirstLeft, sheet);
-        
-        CellRangeAddress tableViolentAndProperty = new CellRangeAddress(8, 34, 0, 0);
-        RegionUtil.setBorderRight(BorderStyle.THIN, tableViolentAndProperty, sheet);
-        RegionUtil.setRightBorderColor(borderColor.getIndex(), tableViolentAndProperty, sheet);
-        
-        CellRangeAddress tableBottom = new CellRangeAddress(34, 34, 0, 2);
-        RegionUtil.setBorderBottom(BorderStyle.THIN, tableBottom, sheet);
-        RegionUtil.setBottomBorderColor(borderColor.getIndex(), tableBottom, sheet);
-        
-        CellRangeAddress tableUpperRight = new CellRangeAddress(5, 6, 17, 17);
-        RegionUtil.setBorderRight(BorderStyle.THIN, tableUpperRight, sheet);
-        RegionUtil.setRightBorderColor(borderColor.getIndex(), tableUpperRight, sheet);
 	}
 	
 	private void writeReportedOffensesRow(XSSFSheet sheet, ReturnARecordCardRowName rowName,
@@ -560,7 +566,7 @@ public class ReturnARecordCardExporter {
 		centeredNormalTahoma.cloneStyleFrom(centeredStyle);
 		centeredNormalTahoma.setFont(normalWeightFont);
 		
-		Row row = sheet.createRow(rowNum++);
+		Row row = sheet.createRow(rowNum);
 		Cell cell = row.createCell(0);
 		cell.setCellValue(returnARecordCard.getYear());
 		cell.setCellStyle(centeredNormalTahoma);
@@ -569,6 +575,7 @@ public class ReturnARecordCardExporter {
 		cell.setCellValue(returnARecordCard.getStateName());
 		cell.setCellStyle(centeredNormalTahoma);
 		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 4));
 		cell=row.createCell(2); 
 		cell.setCellValue(returnARecordCard.getAgencyName());
 		cell.setCellStyle(centeredNormalTahoma);
@@ -597,6 +604,7 @@ public class ReturnARecordCardExporter {
 		cell.setCellValue("");
 		cell.setCellStyle(centeredNormalTahoma);
 		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 16, 17));
 		cell=row.createCell(16); 
 		cell.setCellValue("Revised");
 		cell.setCellStyle(centeredNormalTahoma);
@@ -606,7 +614,7 @@ public class ReturnARecordCardExporter {
 		centeredNormalCalibri.setVerticalAlignment(VerticalAlignment.TOP);
 		centeredNormalCalibri.setFont(normalCalibriFont);
 		
-		row = sheet.createRow(rowNum++);
+		row = sheet.createRow(++rowNum);
 		cell = row.createCell(0);
 		cell.setCellValue("Year");
 		cell.setCellStyle(centeredNormalCalibri);
@@ -615,6 +623,7 @@ public class ReturnARecordCardExporter {
 		cell.setCellValue("State");
 		cell.setCellStyle(centeredNormalCalibri);
 		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 4));
 		cell=row.createCell(2); 
 		cell.setCellValue("Agency");
 		cell.setCellStyle(centeredNormalCalibri);
@@ -643,11 +652,12 @@ public class ReturnARecordCardExporter {
 		cell.setCellValue("Months Submitted");
 		cell.setCellStyle(centeredNormalCalibri);
 		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 16, 17));
 		cell=row.createCell(16); 
 		cell.setCellValue("Rape Definition");
 		cell.setCellStyle(centeredNormalCalibri);
 		
-		return rowNum;
+		return ++rowNum;
 	}
 
 	private int createReturnARecordTitleRow(XSSFSheet sheet, int rowNum) {

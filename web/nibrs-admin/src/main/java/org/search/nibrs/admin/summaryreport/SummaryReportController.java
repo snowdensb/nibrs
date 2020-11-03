@@ -34,7 +34,7 @@ import org.search.nibrs.admin.AppProperties;
 import org.search.nibrs.admin.security.AuthUser;
 import org.search.nibrs.admin.services.rest.RestService;
 import org.search.nibrs.model.reports.ReturnAForm;
-import org.search.nibrs.model.reports.ReturnARecordCard;
+import org.search.nibrs.model.reports.ReturnARecordCardReport;
 import org.search.nibrs.model.reports.SummaryReportRequest;
 import org.search.nibrs.model.reports.arson.ArsonReport;
 import org.search.nibrs.model.reports.asr.AsrReports;
@@ -171,9 +171,9 @@ public class SummaryReportController {
 	@PostMapping("/summaryReports/returnARecordCard")
 	public void getReturnARecordCardByRequest(@ModelAttribute SummaryReportRequest summaryReportRequest,
 			HttpServletResponse response, Map<String, Object> model) throws IOException{
-		ReturnARecordCard returnARecordCard = restClient.getReturnARecordCardByRequest(summaryReportRequest);
-		XSSFWorkbook workbook = returnARecordCardExporter.createReturnARecordCardWorkbook(returnARecordCard);
-		String fileName = getFileName("ReturnARecordCard", returnARecordCard.getStateName(), returnARecordCard.getOri(), returnARecordCard.getYear(), 0);
+		ReturnARecordCardReport returnARecordCardReport = restClient.getReturnARecordCardByRequest(summaryReportRequest);
+		XSSFWorkbook workbook = returnARecordCardExporter.createReturnARecordCardWorkbook(returnARecordCardReport);
+		String fileName = getFileName("ReturnARecordCard", returnARecordCardReport.getStateName(), null, returnARecordCardReport.getYear(), 0);
 		
 		downloadReport(response, workbook, fileName);
 	}
