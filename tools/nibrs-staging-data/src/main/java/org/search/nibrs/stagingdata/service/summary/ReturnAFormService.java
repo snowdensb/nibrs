@@ -54,7 +54,6 @@ import org.search.nibrs.stagingdata.model.segment.OffenseSegment;
 import org.search.nibrs.stagingdata.model.segment.PropertySegment;
 import org.search.nibrs.stagingdata.model.segment.VictimSegment;
 import org.search.nibrs.stagingdata.repository.AgencyRepository;
-import org.search.nibrs.stagingdata.repository.AgencyRepositoryCustom;
 import org.search.nibrs.stagingdata.repository.segment.AdministrativeSegmentRepository;
 import org.search.nibrs.stagingdata.service.AdministrativeSegmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +69,6 @@ public class ReturnAFormService {
 	AdministrativeSegmentRepository administrativeSegmentRepository;
 	@Autowired
 	public AgencyRepository agencyRepository; 
-	@Autowired
-	private AgencyRepositoryCustom agencyRepositoryCustom;
 	@Autowired
 	public AppProperties appProperties; 
 	
@@ -323,6 +320,10 @@ public class ReturnAFormService {
 					returnARecordCardRowName = getRowNameForAssault(offense, ReturnARecordCardRowName.class);
 					offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
 					break;
+				case _13B: 
+				case _13C: 
+					returnARecordCardRowName = getRowNameFor13B13COffense(offense, ReturnARecordCardRowName.class);
+					offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, "13B", "13C");
 				case _220: 
 					burglaryOffenseCount = countRecordCardBurglaryOffense(returnARecordCard, offense, incidentMonth);
 					break;

@@ -22,7 +22,8 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 public class ReturnARecordCard implements Serializable{
 	private static final long serialVersionUID = -2340194364781985383L;
-	private ReturnARecordCardRow[] rows = new ReturnARecordCardRow[ReturnARecordCardRowName.values().length]; 
+	private ReturnARecordCardRow[] rows = new ReturnARecordCardRow[ReturnARecordCardRowName.values().length];
+	private ReturnARecordCardRow simpleAssault = new ReturnARecordCardRow(); 
 	private String ori; 
 	private String agencyName; 
 	private String stateName;
@@ -110,6 +111,14 @@ public class ReturnARecordCard implements Serializable{
 	
 	public void setPopulation(Integer population) {
 		this.population = population;
+	}
+
+	public ReturnARecordCardRow getSimpleAssault() {
+		return simpleAssault;
+	}
+
+	public void setSimpleAssault(ReturnARecordCardRow simpleAssault) {
+		this.simpleAssault = simpleAssault;
 	}
 
 }

@@ -45,7 +45,8 @@ public enum ReturnARecordCardRowName{
 	MOTOR_VEHICLE_THEFT_SUBTOTAL("Subtotal"), 
 	AUTOS_THEFT("Auto Theft"), 
 	TRUCKS_BUSES_THEFT("Truck and Bus Theft"), 
-	OTHER_VEHICLES_THEFT("Other Vehicle Theft");
+	OTHER_VEHICLES_THEFT("Other Vehicle Theft"),
+	OTHER_ASSAULT_NOT_AGGRAVATED("Simple Assault");
 	
 	private String label;
 	
