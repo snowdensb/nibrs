@@ -191,6 +191,22 @@ public class ReturnAFormService {
 			fillTheReportedOffenseGrandTotalRow(returnARecordCard);
 		}
 		
+		for(Integer agencyId: returnARecordCardReport.getReturnARecordCards().keySet()) {
+			ReturnARecordCard returnARecordCard= returnARecordCardReport.getReturnARecordCards().get(agencyId); 
+			for (int i = 1; i <= 12; i++) {
+				int arsonReportedOffenseCount = 
+						administrativeSegmentRepository.countArsonBySummaryReportRequestAndOffenses(summaryReportRequest.getStateCode(), agencyId, summaryReportRequest.getIncidentYear(), i, summaryReportRequest.getOwnerId()) ;
+				returnARecordCard.getArsonRow().getMonths()[i-1] = arsonReportedOffenseCount; 
+				
+				returnARecordCard.getArsonRow().increaseTotal(arsonReportedOffenseCount);
+				if (i<=6) {
+					returnARecordCard.getArsonRow().increaseFirstHalfSubtotal(arsonReportedOffenseCount);
+				}
+				else {
+					returnARecordCard.getArsonRow().increaseSecondHalfSubtotal(arsonReportedOffenseCount);
+				}
+			}
+		}
 		log.debug("returnARecordCardReport: " + returnARecordCardReport);
 		return returnARecordCardReport;
 	}
@@ -320,7 +336,6 @@ public class ReturnAFormService {
 			log.info("processing Reported offenses " + i + " to " + administrativeSegmentIds.size());
 			getRecordCardReportedOffenseRows(returnARecordCardReport, administrativeSegmentIds.subList(i, administrativeSegmentIds.size()));
 		}
-		
 	}
 
 	private void getRecordCardReportedOffenseRows(ReturnARecordCardReport returnARecordCardReport, List<Integer> administrativeSegmentIds) {

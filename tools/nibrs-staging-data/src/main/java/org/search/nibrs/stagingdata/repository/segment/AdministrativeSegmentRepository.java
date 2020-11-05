@@ -147,7 +147,7 @@ public interface AdministrativeSegmentRepository
 	
 	Integer deleteByOriAndYearOfTapeAndMonthOfTape(String ori, String yearOfTape, String monthOfTape);
 	
-	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
+	@Query("SELECT distinct a.administrativeSegmentId from AdministrativeSegment a "
 			+ "LEFT JOIN a.offenseSegments ao "
 			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
 			+ "				FROM AdministrativeSegment aa "
@@ -163,7 +163,25 @@ public interface AdministrativeSegmentRepository
 			Integer agencyId, Integer year, Integer month, Integer ownerId, 
 			List<String> offenseCodes);
 	
-	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
+	@Query("SELECT count(distinct a.administrativeSegmentId) from AdministrativeSegment a "
+			+ "LEFT JOIN a.offenseSegments ao "
+			+ "LEFT JOIN a.propertySegments ap "
+			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
+			+ "				FROM AdministrativeSegment aa "
+			+ "				WHERE aa.incidentNumber = a.incidentNumber AND"
+			+ "					(?5 = null OR ?5 = 0 OR aa.owner.ownerId = ?5) "
+			+ "				GROUP BY aa.incidentNumber ) AND "
+			+ "		ao.ucrOffenseCodeType.ucrOffenseCodeTypeId =200 AND"
+			+ "		(ao.offenseAttemptedCompleted = 'A' OR ao.offenseAttemptedCompleted = 'C') AND"
+			+ "		(ap.typePropertyLossEtcType.typePropertyLossEtcTypeId = 2 ) AND"
+			+ " 	(?1 = null OR ?1 = '' OR a.agency.stateCode = ?1) AND "
+			+ "		(?2 = null OR a.agency.agencyId = ?2) AND "
+			+ "		(year(a.incidentDate) = ?3 AND "
+			+ "		(?4 = 0 OR month(a.incidentDate) = ?4)) ")
+	Integer countArsonBySummaryReportRequestAndOffenses(String stateCode, 
+			Integer agencyId, Integer year, Integer month, Integer ownerId);
+	
+	@Query("SELECT distinct a.administrativeSegmentId from AdministrativeSegment a "
 			+ "LEFT JOIN a.offenseSegments ao "
 			+ "LEFT JOIN a.arresteeSegments aa "
 			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
