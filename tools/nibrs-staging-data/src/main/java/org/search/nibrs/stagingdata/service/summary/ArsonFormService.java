@@ -244,9 +244,7 @@ public class ArsonFormService {
 				if (administrativeSegment.isClearanceInvolvingOnlyJuvenile()) {
 					arsonRows[ArsonRowName.GRAND_TOTAL.ordinal()].increaseClearanceInvolvingOnlyJuvenile(1);
 				}
-				else {
-					arsonRows[ArsonRowName.GRAND_TOTAL.ordinal()].increaseActualOffenses(1);
-				}
+				arsonRows[ArsonRowName.GRAND_TOTAL.ordinal()].increaseClearedOffenses(1);
 				
 				if ("C".equalsIgnoreCase(offenseAttemptedIndicator)) {
 					ArsonRowName arsonRowName = getArsonRowName(burnedProperty);
