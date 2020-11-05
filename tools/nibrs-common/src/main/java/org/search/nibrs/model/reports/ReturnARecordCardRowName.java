@@ -40,7 +40,7 @@ public enum ReturnARecordCardRowName{
 	/**
 	 * Larceny-Theft Total (Except Motor Vehicle Theft) 
 	 */
-	LARCENY_THEFT_SUBTOTAL("Subtotal"),
+	LARCENY_THEFT_TOTAL("Subtotal"),
 	LARCENY_THEFT("LARCENCY - THEFT"),
 	MOTOR_VEHICLE_THEFT_SUBTOTAL("Subtotal"), 
 	AUTOS_THEFT("Auto Theft"), 
