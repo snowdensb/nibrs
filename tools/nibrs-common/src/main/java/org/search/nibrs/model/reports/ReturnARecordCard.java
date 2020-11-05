@@ -19,11 +19,15 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.search.nibrs.model.reports.arson.ArsonRow;
+import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingFormRow;
 
 public class ReturnARecordCard implements Serializable{
 	private static final long serialVersionUID = -2340194364781985383L;
 	private ReturnARecordCardRow[] rows = new ReturnARecordCardRow[ReturnARecordCardRowName.values().length];
-	private ReturnAFormRow[] returnAFormRows = new ReturnAFormRow[ReturnARecordCardRowName.values().length]; 
+	private ReturnAFormRow[] returnAFormRows = new ReturnAFormRow[ReturnARecordCardRowName.values().length];
+	private ReturnARecordCardRow arsonRow;
+	private ReturnARecordCardRow[] humanTraffickingFormRows = new ReturnARecordCardRow[2]; 
 	private String ori; 
 	private String agencyName; 
 	private String stateName;
@@ -36,6 +40,11 @@ public class ReturnARecordCard implements Serializable{
 		for (int i = 0; i < getRows().length; i++){
 			getRows()[i] = new ReturnARecordCardRow(); 
 			getReturnAFormRows()[i] = new ReturnAFormRow(); 
+		}
+		
+		arsonRow = new ReturnARecordCardRow(); 
+		for (int i = 0; i < 2; i++) {
+			humanTraffickingFormRows[i] = new ReturnARecordCardRow();
 		}
 	}
 	
@@ -120,6 +129,22 @@ public class ReturnARecordCard implements Serializable{
 
 	public void setReturnAFormRows(ReturnAFormRow[] returnAFormRows) {
 		this.returnAFormRows = returnAFormRows;
+	}
+
+	public ReturnARecordCardRow getArsonRow() {
+		return arsonRow;
+	}
+
+	public void setArsonRow(ReturnARecordCardRow arsonRow) {
+		this.arsonRow = arsonRow;
+	}
+
+	public ReturnARecordCardRow[] getHumanTraffickingFormRows() {
+		return humanTraffickingFormRows;
+	}
+
+	public void setHumanTraffickingFormRows(ReturnARecordCardRow[] humanTraffickingFormRows) {
+		this.humanTraffickingFormRows = humanTraffickingFormRows;
 	}
 
 }

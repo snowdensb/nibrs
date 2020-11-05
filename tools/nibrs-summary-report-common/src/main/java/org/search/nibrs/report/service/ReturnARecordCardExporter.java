@@ -243,10 +243,85 @@ public class ReturnARecordCardExporter {
 	    	rowNum = createMetaDataRows(sheet, rowNum, returnARecordCard);
 	    	
 	    	createReportedOffenseTable(boldFont, normalWeightFont, returnARecordCard, rowNum, sheet);
+	    	createHumanTraffickingTable(boldFont, normalWeightFont, returnARecordCard, sheet);
 	    	createSimpleAssaultTable(boldFont, normalWeightFont, returnARecordCard, sheet);
+	    	createArsonTable(boldFont, normalWeightFont, returnARecordCard, sheet);
 	    	createTotalOffensesAndClearancesTable(boldFont, normalWeightFont, returnARecordCard, sheet);
 		}
         
+	}
+
+	private void createArsonTable(Font boldFont, XSSFFont normalWeightFont2, ReturnARecordCard returnARecordCard,
+			XSSFSheet sheet) {
+		int rowNum = 42; 
+		rowNum = createSimpleTableTitle(sheet, rowNum, "Arson");
+		rowNum = createHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
+		
+		writeSimpleRecordCardRow(returnARecordCard.getArsonRow(), sheet, rowNum, "Arson");
+		
+		CellRangeAddress bottomRow = new CellRangeAddress(rowNum, rowNum, 1, 2);
+		RegionUtil.setBorderTop(BorderStyle.THIN, bottomRow, sheet);
+		RegionUtil.setTopBorderColor(borderColor.getIndex(), bottomRow, sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, bottomRow, sheet);
+		RegionUtil.setBottomBorderColor(borderColor.getIndex(), bottomRow, sheet);
+		
+		CellRangeAddress firstRow = new CellRangeAddress(rowNum - 2, rowNum - 2, 0, 17);
+		RegionUtil.setBorderTop(BorderStyle.THIN, firstRow, sheet);
+		RegionUtil.setTopBorderColor(borderColor.getIndex(), firstRow, sheet);
+		
+		CellRangeAddress tableUpperRight = new CellRangeAddress(rowNum - 2, rowNum - 1, 17, 17);
+		RegionUtil.setBorderRight(BorderStyle.THIN, tableUpperRight, sheet);
+		RegionUtil.setRightBorderColor(borderColor.getIndex(), tableUpperRight, sheet);
+
+		CellRangeAddress firstLeftCell = new CellRangeAddress(rowNum - 2, rowNum -1, 0, 0);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, firstLeftCell, sheet);
+		RegionUtil.setLeftBorderColor(borderColor.getIndex(), firstLeftCell, sheet);
+		
+		
+	}
+
+	private void createHumanTraffickingTable(Font boldFont, XSSFFont normalWeightFont2,
+			ReturnARecordCard returnARecordCard, XSSFSheet sheet) {
+		int rowNum = 37; 
+		rowNum = createSimpleTableTitle(sheet, rowNum, "Human Trafficking");
+		rowNum = createHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
+		
+		writeSimpleRecordCardRow(returnARecordCard.getHumanTraffickingFormRows()[0], sheet, rowNum, "Commercial Sex Acts");
+		writeSimpleRecordCardRow(returnARecordCard.getHumanTraffickingFormRows()[1], sheet, rowNum + 1, "Involuntary Servitude");
+		
+		CellRangeAddress middleRow = new CellRangeAddress(rowNum, rowNum, 1, 2);
+		RegionUtil.setBorderTop(BorderStyle.THIN, middleRow, sheet);
+		RegionUtil.setTopBorderColor(borderColor.getIndex(), middleRow, sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, middleRow, sheet);
+		RegionUtil.setBottomBorderColor(borderColor.getIndex(), middleRow, sheet);
+		
+		CellRangeAddress bottomRow = new CellRangeAddress(rowNum+1, rowNum+1, 1, 2);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, bottomRow, sheet);
+		RegionUtil.setBottomBorderColor(borderColor.getIndex(), bottomRow, sheet);
+		
+		CellRangeAddress firstRow = new CellRangeAddress(rowNum - 2, rowNum - 2, 0, 17);
+		RegionUtil.setBorderTop(BorderStyle.THIN, firstRow, sheet);
+		RegionUtil.setTopBorderColor(borderColor.getIndex(), firstRow, sheet);
+		
+		CellRangeAddress tableUpperRight = new CellRangeAddress(rowNum - 2, rowNum - 1, 17, 17);
+		RegionUtil.setBorderRight(BorderStyle.THIN, tableUpperRight, sheet);
+		RegionUtil.setRightBorderColor(borderColor.getIndex(), tableUpperRight, sheet);
+
+		CellRangeAddress firstLeftCell = new CellRangeAddress(rowNum - 2, rowNum -1, 0, 0);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, firstLeftCell, sheet);
+		RegionUtil.setLeftBorderColor(borderColor.getIndex(), firstLeftCell, sheet);
+		
+	}
+
+	private void writeSimpleRecordCardRow(ReturnARecordCardRow returnARecordCardRow, XSSFSheet sheet, int rowNum, String header) {
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 2));
+		Row row = sheet.createRow(rowNum);
+		Cell cell = row.createCell(0); 
+		cell.setCellValue(header);
+		cell.setCellStyle(blueLeftFont8NoWrapStyle);
+		
+		writeMonthlyCounts(returnARecordCardRow, rightDefaultStyle, row);
+		writeSubtotalAndTotalColumns(returnARecordCardRow, rightGrayStyle, row);
 	}
 
 	private void createTotalOffensesAndClearancesTable(Font boldFont, XSSFFont normalWeightFont2,
@@ -411,17 +486,9 @@ public class ReturnARecordCardExporter {
 		rowNum = createSimpleTableTitle(sheet, rowNum, "Simple Assault");
 		rowNum = createHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
 		
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 2));
-		Row row = sheet.createRow(rowNum);
-		Cell cell = row.createCell(0); 
-		cell.setCellValue("Simple Assault");
-		cell.setCellStyle(blueLeftFont8NoWrapStyle);
-		
-		ReturnARecordCardRow returnARecordCardRow = 
-				returnARecordCard.getRows()[ReturnARecordCardRowName.OTHER_ASSAULT_NOT_AGGRAVATED.ordinal()]; 
-		writeMonthlyCounts(returnARecordCardRow, rightDefaultStyle, row);
-		writeSubtotalAndTotalColumns(returnARecordCardRow, rightGrayStyle, row);
-		
+		writeSimpleRecordCardRow(returnARecordCard.getRows()[ReturnARecordCardRowName.OTHER_ASSAULT_NOT_AGGRAVATED.ordinal()],
+				sheet, rowNum, "Simple Assault");
+
 		CellRangeAddress bottomRow = new CellRangeAddress(rowNum, rowNum, 1, 2);
 		RegionUtil.setBorderTop(BorderStyle.THIN, bottomRow, sheet);
 		RegionUtil.setTopBorderColor(borderColor.getIndex(), bottomRow, sheet);
