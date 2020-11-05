@@ -278,6 +278,57 @@ public class ReturnARecordCardExporter {
 			rowNum ++;
 		}
 		
+		CellRangeAddress bottomRow = new CellRangeAddress(rowNum, rowNum, 1, 2);
+		RegionUtil.setBorderTop(BorderStyle.THIN, bottomRow, sheet);
+		RegionUtil.setTopBorderColor(borderColor.getIndex(), bottomRow, sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, bottomRow, sheet);
+		RegionUtil.setBottomBorderColor(borderColor.getIndex(), bottomRow, sheet);
+		
+		CellRangeAddress firstRow1 = new CellRangeAddress(57, 57, 0, 2);
+		RegionUtil.setBorderTop(BorderStyle.THIN, firstRow1, sheet);
+		RegionUtil.setTopBorderColor(borderColor.getIndex(), firstRow1, sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, firstRow1, sheet);
+		RegionUtil.setBottomBorderColor(borderColor.getIndex(), firstRow1, sheet);
+		
+		CellRangeAddress firstRow2 = new CellRangeAddress(57, 57, 7, 11);
+		RegionUtil.setBorderTop(BorderStyle.THIN, firstRow2, sheet);
+		RegionUtil.setTopBorderColor(borderColor.getIndex(), firstRow2, sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, firstRow2, sheet);
+		RegionUtil.setBottomBorderColor(borderColor.getIndex(), firstRow2, sheet);
+		
+		CellRangeAddress bottomLeftCell1 = new CellRangeAddress(58, 73, 0, 0);
+		RegionUtil.setBorderRight(BorderStyle.THIN, bottomLeftCell1, sheet);
+		RegionUtil.setRightBorderColor(borderColor.getIndex(), bottomLeftCell1, sheet);
+
+		CellRangeAddress bottomLeftCell2 = new CellRangeAddress(58, 73, 0, 1);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, bottomLeftCell2, sheet);
+		RegionUtil.setLeftBorderColor(borderColor.getIndex(), bottomLeftCell2, sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, bottomLeftCell2, sheet);
+		RegionUtil.setBottomBorderColor(borderColor.getIndex(), bottomLeftCell2, sheet);
+		
+		CellRangeAddress bottomLeftCell3 = new CellRangeAddress(58, 68, 7, 7);
+		RegionUtil.setBorderLeft(BorderStyle.THIN, bottomLeftCell3, sheet);
+		RegionUtil.setLeftBorderColor(borderColor.getIndex(), bottomLeftCell3, sheet);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, bottomLeftCell3, sheet);
+		RegionUtil.setBottomBorderColor(borderColor.getIndex(), bottomLeftCell3, sheet);
+		RegionUtil.setBorderRight(BorderStyle.THIN, bottomLeftCell3, sheet);
+		RegionUtil.setRightBorderColor(borderColor.getIndex(), bottomLeftCell3, sheet);
+		
+		CellRangeAddress bottomCell8 = new CellRangeAddress(68, 68, 8, 8);
+		RegionUtil.setBorderBottom(BorderStyle.THIN, bottomCell8, sheet);
+		RegionUtil.setBottomBorderColor(borderColor.getIndex(), bottomCell8, sheet);
+		
+		for (int i = 59; i < 69;  i++) {
+			CellRangeAddress cellRangeAddress = new CellRangeAddress(i, i, 10, 11);
+			RegionUtil.setBorderBottom(BorderStyle.THIN, cellRangeAddress, sheet);
+			RegionUtil.setBottomBorderColor(borderColor.getIndex(), cellRangeAddress, sheet);
+			
+			if (i==59) {
+				RegionUtil.setBorderTop(BorderStyle.THIN, cellRangeAddress, sheet);
+				RegionUtil.setTopBorderColor(borderColor.getIndex(), cellRangeAddress, sheet);
+			}
+		}
+
 	}
 
 	private void writeOffensesAndClearancesTotalRow(XSSFSheet sheet, ReturnARecordCardRowName rowName,
@@ -328,7 +379,7 @@ public class ReturnARecordCardExporter {
 		rightCalibri.setFont(boldCalibriFont);
 		
 		Row row = sheet.createRow(rowNum);
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 3));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 4));
 		Cell cell = row.createCell(0);
 		cell.setCellValue("A = Actual Count");
 		cell.setCellStyle(rightCalibri);
@@ -337,8 +388,8 @@ public class ReturnARecordCardExporter {
 		centeredCalibri.cloneStyleFrom(centeredStyle);
 		centeredCalibri.setFont(boldCalibriFont);
 		
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 4, 8));
-		cell=row.createCell(4); 
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 5, 10));
+		cell=row.createCell(5); 
 		cell.setCellValue("C = Cleared Count");
 		cell.setCellStyle(centeredCalibri);
 		
@@ -346,8 +397,8 @@ public class ReturnARecordCardExporter {
 		leftCalibri.setAlignment(HorizontalAlignment.LEFT);;
 		leftCalibri.setFont(boldCalibriFont);
 		
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 9, 14));
-		cell=row.createCell(10); 
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 11, 17));
+		cell=row.createCell(11); 
 		cell.setCellValue("JC = Juvenile Cleared Count");
 		cell.setCellStyle(leftCalibri);
 		
@@ -404,7 +455,7 @@ public class ReturnARecordCardExporter {
 		XSSFRichTextString s1 = new XSSFRichTextString(title);
 		s1.applyFont(boldWeightFont);
 		cell.setCellValue(s1);
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 14));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 17));
 		return ++rowNum;
 	}
 
