@@ -341,23 +341,36 @@ public class ReturnARecordCardExporter {
 		
 		rowNum = startRowNum;
 		for (int i = 1; i <= ReturnARecordCardRowName.HANDS_FISTS_FEET_AGGRAVATED_INJURY_ASSAULT.ordinal();  i++){
-			ReturnARecordCardRowName rowName = ReturnARecordCardRowName.values()[i];
-			writeOffensesAndClearancesTotalRow(sheet, rowName, returnARecordCard.getReturnAFormRows()[i], rowNum, 3);
+			writeOffensesAndClearancesTotalRow(sheet, returnARecordCard.getReturnAFormRows()[i], rowNum, 3);
 			rowNum ++;
 		}
 		
 		rowNum = startRowNum;
 		for (int i = ReturnARecordCardRowName.PROPERTY_TOTAL.ordinal(); i < ReturnARecordCardRowName.OTHER_ASSAULT_NOT_AGGRAVATED.ordinal();  i++){
-			ReturnARecordCardRowName rowName = ReturnARecordCardRowName.values()[i];
-			writeOffensesAndClearancesTotalRow(sheet, rowName, returnARecordCard.getReturnAFormRows()[i], rowNum, 12);
+			writeOffensesAndClearancesTotalRow(sheet, returnARecordCard.getReturnAFormRows()[i], rowNum, 12);
 			rowNum ++;
 		}
 		
-		CellRangeAddress bottomRow = new CellRangeAddress(rowNum, rowNum, 1, 2);
-		RegionUtil.setBorderTop(BorderStyle.THIN, bottomRow, sheet);
-		RegionUtil.setTopBorderColor(borderColor.getIndex(), bottomRow, sheet);
-		RegionUtil.setBorderBottom(BorderStyle.THIN, bottomRow, sheet);
-		RegionUtil.setBottomBorderColor(borderColor.getIndex(), bottomRow, sheet);
+		row = sheet.getRow(rowNum++);
+		createOffenseAndClearanceTableHeaders(sheet, row, 7);
+		createSimpleOffenseClearanceRowHeader(sheet, rowNum, 7, "Commercial Sex Acts");
+		writeOffensesAndClearancesTotalRow(sheet,returnARecordCard.getHumanTraffickingFormRows()[0], rowNum, 12);
+		row = sheet.getRow(++rowNum);
+		createSimpleOffenseClearanceRowHeader(sheet, rowNum, 7, "Involuntary Servitude");
+		writeOffensesAndClearancesTotalRow(sheet,returnARecordCard.getHumanTraffickingFormRows()[1], rowNum, 12);
+
+		row = sheet.getRow(++rowNum);
+		createOffenseAndClearanceTableHeaders(sheet, row, 7);
+		createSimpleOffenseClearanceRowHeader(sheet, ++rowNum, 7, "Simple Assault");
+		writeOffensesAndClearancesTotalRow(sheet,
+				returnARecordCard.getReturnAFormRows()[ReturnARecordCardRowName.OTHER_ASSAULT_NOT_AGGRAVATED.ordinal()], 
+				rowNum, 12);
+
+		row = sheet.createRow(++rowNum);
+		createOffenseAndClearanceTableHeaders(sheet, row, 7);
+		createSimpleOffenseClearanceRowHeader(sheet, ++rowNum, 7, "Arson");
+		writeOffensesAndClearancesTotalRow(sheet,
+				returnARecordCard.getArsonRow(), rowNum, 12);
 		
 		CellRangeAddress firstRow1 = new CellRangeAddress(57, 57, 0, 2);
 		RegionUtil.setBorderTop(BorderStyle.THIN, firstRow1, sheet);
@@ -404,9 +417,15 @@ public class ReturnARecordCardExporter {
 			}
 		}
 
+		for (int i = 69; i < 76;  i++) {
+			CellRangeAddress cellRangeAddress = new CellRangeAddress(i, i, 8, 11);
+			RegionUtil.setBorderBottom(BorderStyle.THIN, cellRangeAddress, sheet);
+			RegionUtil.setBottomBorderColor(borderColor.getIndex(), cellRangeAddress, sheet);
+		}
+		
 	}
 
-	private void writeOffensesAndClearancesTotalRow(XSSFSheet sheet, ReturnARecordCardRowName rowName,
+	private void writeOffensesAndClearancesTotalRow(XSSFSheet sheet,
 			ReturnAFormRow returnAFormRow, int rowNum, int cellNum) {
 		Row row = sheet.getRow(rowNum);
 		Cell cell = row.createCell(cellNum);
@@ -422,6 +441,22 @@ public class ReturnARecordCardExporter {
 		cell.setCellStyle(rightGrayStyle);
 	}
 
+	private void writeOffensesAndClearancesTotalRow(XSSFSheet sheet, ReturnARecordCardRow returnARecordCardRow,
+			int rowNum, int cellNum) {
+		Row row = sheet.getRow(rowNum);
+		Cell cell = row.createCell(cellNum);
+		cell.setCellValue(returnARecordCardRow.getTotal());
+		cell.setCellStyle(rightGrayStyle);
+		
+		cell = row.createCell(cellNum + 1);
+		cell.setCellValue(returnARecordCardRow.getClearedOffenses());
+		cell.setCellStyle(rightGrayStyle);
+		
+		cell = row.createCell(cellNum + 2);
+		cell.setCellValue(returnARecordCardRow.getClearanceInvolvingOnlyJuvenile());
+		cell.setCellStyle(rightGrayStyle);
+	}
+	
 	private void createOffenseAndClearanceTableHeaders(XSSFSheet sheet, Row row, int cellNum) {
 		int nextCellNum = cellNum + 3; 
 		if (cellNum > 0) {
@@ -634,6 +669,20 @@ public class ReturnARecordCardExporter {
 		rowNum = createViolentRowHeaders(sheet, rowNum);
 		createPropertyRowHeaders(sheet, rowNum, 0);
 
+	}
+
+	private void createSimpleOffenseClearanceRowHeader(XSSFSheet sheet, int rowNum, int cellNum, String header) {
+		Row row;
+		Cell cell;
+		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, cellNum, cellNum + 4));
+		row = sheet.getRow(rowNum); 
+		if (row == null) {
+			row = sheet.createRow(rowNum); 
+		}
+		cell = row.createCell(cellNum); 
+		cell.setCellValue(header);
+		cell.setCellStyle(blueLeftNoWrapStyle);
 	}
 
 	private void createPropertyRowHeaders(XSSFSheet sheet, int rowNum, int cellNum) {
