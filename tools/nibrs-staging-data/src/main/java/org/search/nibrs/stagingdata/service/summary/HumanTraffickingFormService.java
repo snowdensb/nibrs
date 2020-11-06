@@ -130,18 +130,22 @@ public class HumanTraffickingFormService {
 		}
 	}
 
-	private OffenseSegment getHumanTraffickingOffense(AdministrativeSegment administrativeSegment) {
+	public OffenseSegment getHumanTraffickingOffense(AdministrativeSegment administrativeSegment) {
 
 		OffenseSegment offense = administrativeSegment.getOffenseSegments()
 				.stream()
-				.filter(offenseSegment->offenseSegment.getUcrOffenseCodeType().getNibrsCode().contentEquals("64A"))
+				.filter(offenseSegment->
+					Arrays.asList("A", "C").contains(offenseSegment.getOffenseAttemptedCompleted()) &&
+					offenseSegment.getUcrOffenseCodeType().getNibrsCode().contentEquals("64A"))
 				.findFirst().orElse(null);
 		
 		if (offense == null) {
 			offense = administrativeSegment.getOffenseSegments()
-					.stream()
-					.filter(offenseSegment->offenseSegment.getUcrOffenseCodeType().getNibrsCode().contentEquals("64B"))
-					.findFirst().orElse(null);
+				.stream()
+				.filter(offenseSegment->
+					Arrays.asList("A", "C").contains(offenseSegment.getOffenseAttemptedCompleted()) &&
+					offenseSegment.getUcrOffenseCodeType().getNibrsCode().contentEquals("64B"))
+				.findFirst().orElse(null);
 		}
 		return offense;
 	}

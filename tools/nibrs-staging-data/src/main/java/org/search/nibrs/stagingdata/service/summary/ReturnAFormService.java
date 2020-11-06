@@ -46,6 +46,7 @@ import org.search.nibrs.model.reports.ReturnARecordCardRow;
 import org.search.nibrs.model.reports.ReturnARecordCardRowName;
 import org.search.nibrs.model.reports.ReturnARowName;
 import org.search.nibrs.model.reports.SummaryReportRequest;
+import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingRowName;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.PropertyType;
@@ -71,6 +72,8 @@ public class ReturnAFormService {
 	AdministrativeSegmentRepository administrativeSegmentRepository;
 	@Autowired
 	public AgencyRepository agencyRepository; 
+	@Autowired
+	public HumanTraffickingFormService humanTraffickingFormService; 
 	@Autowired
 	public AppProperties appProperties; 
 	
@@ -195,10 +198,79 @@ public class ReturnAFormService {
 		processArsonReportedOffenses(summaryReportRequest, returnARecordCardReport); 
 		processArsonOffenseClearances(summaryReportRequest, returnARecordCardReport); 
 		
+		processHumanTraffickingReportedOffenses(summaryReportRequest, returnARecordCardReport); 
+		processHumanTraffickingOffenseClearances(summaryReportRequest, returnARecordCardReport); 
+		
 		log.debug("returnARecordCardReport: " + returnARecordCardReport);
 		return returnARecordCardReport;
 	}
 	
+	private void processHumanTraffickingOffenseClearances(SummaryReportRequest summaryReportRequest,
+			ReturnARecordCardReport returnARecordCardReport) {
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentService.findHumanTraffickingIncidentByRequestAndClearanceDate(summaryReportRequest);
+		for (AdministrativeSegment administrativeSegment: administrativeSegments){
+			if (administrativeSegment.getOffenseSegments().size() == 0) continue;
+			ReturnARecordCard returnARecordCard = getReturnARecordCard(returnARecordCardReport, administrativeSegment);
+			
+			boolean isClearanceInvolvingOnlyJuvenile = administrativeSegment.isClearanceInvolvingOnlyJuvenile();
+			
+			OffenseSegment offense = humanTraffickingFormService.getHumanTraffickingOffense(administrativeSegment);
+			ReturnARecordCardRow returnARecordCardRow = null; 
+			int offenseCount = 1; 
+			switch (OffenseCode.forCode(offense.getUcrOffenseCodeType().getNibrsCode())){
+			case _64A:
+				returnARecordCardRow = returnARecordCard.getHumanTraffickingFormRows()[0];
+				offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
+				break; 
+			case _64B: 
+				returnARecordCardRow = returnARecordCard.getHumanTraffickingFormRows()[1];
+				offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
+				break; 
+			default: 
+			}
+			
+			if (returnARecordCardRow != null){
+				returnARecordCardRow.increaseClearedOffenses(offenseCount);
+				if (isClearanceInvolvingOnlyJuvenile){
+					returnARecordCardRow.increaseClearanceInvolvingOnlyJuvenile(offenseCount);
+				}
+			}
+		}
+	}
+
+	private void processHumanTraffickingReportedOffenses(SummaryReportRequest summaryReportRequest,
+			ReturnARecordCardReport returnARecordCardReport) {
+		List<AdministrativeSegment> administrativeSegments = 
+				administrativeSegmentService.findHumanTraffickingIncidentByRequest(summaryReportRequest);
+		for (AdministrativeSegment administrativeSegment: administrativeSegments){
+			if (administrativeSegment.getOffenseSegments().size() == 0) continue; 
+			ReturnARecordCard returnARecordCard = getReturnARecordCard(returnARecordCardReport, administrativeSegment);
+			int incidentMonth = administrativeSegment.getIncidentDate().getMonthValue(); 
+
+			OffenseSegment offense = humanTraffickingFormService.getHumanTraffickingOffense(administrativeSegment); 
+			ReturnARecordCardRow returnARecordCardRow = null; 
+			int offenseCount = 1; 
+			OffenseCode offenseCode = OffenseCode.forCode(offense.getUcrOffenseCodeType().getNibrsCode()); 
+			switch (offenseCode){
+			case _64A:
+				returnARecordCardRow = returnARecordCard.getHumanTraffickingFormRows()[0];
+				offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
+				break; 
+			case _64B: 
+				returnARecordCardRow = returnARecordCard.getHumanTraffickingFormRows()[1];
+				offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, offense);
+				break; 
+			default: 
+			}
+			
+			if (returnARecordCardRow != null){
+				increaseRecordCardRowCount(returnARecordCardRow, incidentMonth, offenseCount);
+			}
+			
+		}
+	}
+
 	private void processArsonOffenseClearances(SummaryReportRequest summaryReportRequest,
 			ReturnARecordCardReport returnARecordCardReport) {
 		List<Integer> ids = administrativeSegmentRepository.findArsonIdsByStateCodeAndOriAndClearanceDate(
