@@ -247,6 +247,7 @@ public class ReturnARecordCardExporter {
 	    	createSimpleAssaultTable(boldFont, normalWeightFont, returnARecordCard, sheet);
 	    	createArsonTable(boldFont, normalWeightFont, returnARecordCard, sheet);
 	    	createTotalOffensesAndClearancesTable(boldFont, normalWeightFont, returnARecordCard, sheet);
+	    	createVersionRow(sheet, 76, "Version 18.17 2018-09-14");
 		}
         
 	}
@@ -561,6 +562,23 @@ public class ReturnARecordCardExporter {
 		return ++rowNum;
 	}
 
+	private int createVersionRow(XSSFSheet sheet, int rowNum, String version) {
+		XSSFFont normalWeightFont = sheet.getWorkbook().createFont();
+		normalWeightFont.setBold(false);
+		normalWeightFont.setFontName("Calibri");
+		normalWeightFont.setFontHeightInPoints(Short.valueOf("10"));
+		
+		Row row = sheet.createRow(rowNum);
+		Cell cell = row.createCell(0);
+		cell.setCellStyle(rightAlignedStyle);
+		
+		XSSFRichTextString s1 = new XSSFRichTextString(version);
+		s1.applyFont(normalWeightFont);
+		cell.setCellValue(s1);
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 17));
+		return ++rowNum;
+	}
+	
 	private void createReportedOffenseTable(Font boldFont, XSSFFont normalWeightFont, ReturnARecordCard returnARecordCard, int rowNum,
 			XSSFSheet sheet) {
 		rowNum = createHeaderRow(sheet, rowNum, boldFont, normalWeightFont);
