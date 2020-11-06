@@ -41,7 +41,6 @@
 	   //console.log("stateCode changed to " + $('#stateCode').val());
 	   setAgencyIdRequiredAttr();
 	   refreshAgencyDropDown();
-	   refreshIncidentYearDropDown();
    });
 
    $('#portalContent').on('change', '#summaryReportRequestForm #incidentYear', function(){
@@ -70,7 +69,6 @@
      stateCode = $('#stateCode').val(); 
      xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
        $('#agencyId').empty();
-       
        if (Object.keys(data).length == 1){
     	   $('#agencyId').append($('<option selected></option>').attr('value', Object.keys(data)[0]).text(Object.values(data)[0]));
        }
@@ -80,8 +78,9 @@
 	    	   $('#agencyId').append($('<option></option>').attr('value', key).text(value));
 	       });
        }
-       
        $('#agencyId').trigger("chosen:updated");
+	   refreshIncidentYearDropDown();
+
      }).fail(ojbc.displayFailMessage);
    }
 
