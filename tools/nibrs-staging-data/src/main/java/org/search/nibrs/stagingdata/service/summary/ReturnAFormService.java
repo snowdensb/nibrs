@@ -42,6 +42,7 @@ import org.search.nibrs.model.reports.ReturnAForm;
 import org.search.nibrs.model.reports.ReturnAFormRow;
 import org.search.nibrs.model.reports.ReturnARecordCard;
 import org.search.nibrs.model.reports.ReturnARecordCardReport;
+import org.search.nibrs.model.reports.ReturnARecordCardRow;
 import org.search.nibrs.model.reports.ReturnARecordCardRowName;
 import org.search.nibrs.model.reports.ReturnARowName;
 import org.search.nibrs.model.reports.SummaryReportRequest;
@@ -191,26 +192,49 @@ public class ReturnAFormService {
 			fillTheReportedOffenseGrandTotalRow(returnARecordCard);
 		}
 		
-		for(Integer agencyId: returnARecordCardReport.getReturnARecordCards().keySet()) {
-			ReturnARecordCard returnARecordCard= returnARecordCardReport.getReturnARecordCards().get(agencyId); 
-			for (int i = 1; i <= 12; i++) {
-				int arsonReportedOffenseCount = 
-						administrativeSegmentRepository.countArsonBySummaryReportRequestAndOffenses(summaryReportRequest.getStateCode(), agencyId, summaryReportRequest.getIncidentYear(), i, summaryReportRequest.getOwnerId()) ;
-				returnARecordCard.getArsonRow().getMonths()[i-1] = arsonReportedOffenseCount; 
-				
-				returnARecordCard.getArsonRow().increaseTotal(arsonReportedOffenseCount);
-				if (i<=6) {
-					returnARecordCard.getArsonRow().increaseFirstHalfSubtotal(arsonReportedOffenseCount);
-				}
-				else {
-					returnARecordCard.getArsonRow().increaseSecondHalfSubtotal(arsonReportedOffenseCount);
-				}
-			}
-		}
+		processArsonReportedOffenses(summaryReportRequest, returnARecordCardReport); 
+		processArsonOffenseClearances(summaryReportRequest, returnARecordCardReport); 
+		
 		log.debug("returnARecordCardReport: " + returnARecordCardReport);
 		return returnARecordCardReport;
 	}
 	
+	private void processArsonOffenseClearances(SummaryReportRequest summaryReportRequest,
+			ReturnARecordCardReport returnARecordCardReport) {
+		List<Integer> ids = administrativeSegmentRepository.findArsonIdsByStateCodeAndOriAndClearanceDate(
+				summaryReportRequest.getStateCode(), summaryReportRequest.getAgencyId(), 
+				summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), 
+				summaryReportRequest.getOwnerId());
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAllById(ids);
+		for (AdministrativeSegment administrativeSegment: administrativeSegments) {
+			ReturnARecordCard returnARecordCard = getReturnARecordCard(returnARecordCardReport, administrativeSegment);
+			
+			ReturnARecordCardRow arsonRow = returnARecordCard.getArsonRow(); 
+			if (administrativeSegment.isClearanceInvolvingOnlyJuvenile()) {
+				arsonRow.increaseClearanceInvolvingOnlyJuvenile(1);
+			}
+			
+			arsonRow.increaseClearedOffenses(1);
+		}
+	}
+
+	private void processArsonReportedOffenses(SummaryReportRequest summaryReportRequest,
+			ReturnARecordCardReport returnARecordCardReport) {
+		List<Integer> ids = administrativeSegmentRepository.findArsonIdsBySummaryReportRequest(
+						summaryReportRequest.getStateCode(), summaryReportRequest.getAgencyId(), 
+						summaryReportRequest.getIncidentYear(), summaryReportRequest.getIncidentMonth(), 
+						summaryReportRequest.getOwnerId());
+		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository.findAllById(ids);
+		for (AdministrativeSegment administrativeSegment: administrativeSegments) {
+			ReturnARecordCard returnARecordCard = getReturnARecordCard(returnARecordCardReport, administrativeSegment);
+			int incidentMonth = administrativeSegment.getIncidentDate().getMonthValue(); 
+			
+			ReturnARecordCardRow arsonRow = returnARecordCard.getArsonRow(); 
+			increaseRecordCardRowCount(arsonRow, incidentMonth, 1);
+		}
+		
+	}
+
 	private void processOffenseClearances(SummaryReportRequest summaryReportRequest,
 			ReturnARecordCardReport returnARecordCardReport) {
 		List<Integer> administrativeSegmentIds = 
@@ -397,7 +421,7 @@ public class ReturnAFormService {
 				}
 				
 				if (returnARecordCardRowName != null){
-					increaseRowCount(returnARecordCard, incidentMonth, returnARecordCardRowName, offenseCount);
+					increaseRecordCardRowCount(returnARecordCard.getRows()[returnARecordCardRowName.ordinal()], incidentMonth, offenseCount);
 				}
 			}
 			
@@ -430,18 +454,15 @@ public class ReturnAFormService {
 		return returnARecordCard;
 	}
 
-	private void increaseRowCount(ReturnARecordCard returnARecordCard, int incidentMonth,
-			ReturnARecordCardRowName returnARecordCardRowName, int offenseCount) {
-		returnARecordCard.getRows()[returnARecordCardRowName.ordinal()].increaseTotal(offenseCount);
-		returnARecordCard.getRows()[returnARecordCardRowName.ordinal()].increaseMonthNumber(offenseCount, incidentMonth -1);
-		
-		returnARecordCard.getReturnAFormRows()[returnARecordCardRowName.ordinal()].increaseReportedOffenses(offenseCount);
+	private void increaseRecordCardRowCount(ReturnARecordCardRow row, int incidentMonth, int offenseCount) {
+		row.increaseTotal(offenseCount);
+		row.increaseMonthNumber(offenseCount, incidentMonth -1);
 		
 		if (incidentMonth <= 6) {
-			returnARecordCard.getRows()[returnARecordCardRowName.ordinal()].increaseFirstHalfSubtotal(offenseCount);
+			row.increaseFirstHalfSubtotal(offenseCount);
 		}
 		else {
-			returnARecordCard.getRows()[returnARecordCardRowName.ordinal()].increaseSecondHalfSubtotal(offenseCount);
+			row.increaseSecondHalfSubtotal(offenseCount);
 		}
 	}
 
@@ -450,7 +471,7 @@ public class ReturnAFormService {
 		
 		int totalOffenseCount = 0;
 		if ("A".equals(offense.getOffenseAttemptedCompleted())){
-			increaseRowCount(returnARecordCard, incidentMonth, ReturnARecordCardRowName.AUTOS_THEFT, 1);
+			increaseRecordCardRowCount(returnARecordCard.getRows()[ReturnARecordCardRowName.AUTOS_THEFT.ordinal()], incidentMonth, 1);
 			totalOffenseCount = 1;
 		}
 		else {
@@ -477,17 +498,17 @@ public class ReturnAFormService {
 							case "28": 
 							case "37": 
 								numberOfStolenMotorVehicles --; 
-								increaseRowCount(returnARecordCard, incidentMonth, ReturnARecordCardRowName.TRUCKS_BUSES_THEFT, 1);
+								increaseRecordCardRowCount(returnARecordCard.getRows()[ReturnARecordCardRowName.TRUCKS_BUSES_THEFT.ordinal()], incidentMonth, 1);
 								break; 
 							case "24": 
 								numberOfStolenMotorVehicles --; 
-								increaseRowCount(returnARecordCard, incidentMonth, ReturnARecordCardRowName.OTHER_VEHICLES_THEFT, 1);
+								increaseRecordCardRowCount(returnARecordCard.getRows()[ReturnARecordCardRowName.OTHER_VEHICLES_THEFT.ordinal()], incidentMonth, 1);
 								break; 
 							}
 						}
 						
 						if (numberOfStolenMotorVehicles > 0){
-							increaseRowCount(returnARecordCard, incidentMonth, ReturnARecordCardRowName.AUTOS_THEFT, numberOfStolenMotorVehicles);
+							increaseRecordCardRowCount(returnARecordCard.getRows()[ReturnARecordCardRowName.AUTOS_THEFT.ordinal()], incidentMonth, numberOfStolenMotorVehicles);
 						}
 					}
 					else if (CollectionUtils.containsAny(motorVehicleCodes, 
@@ -495,14 +516,14 @@ public class ReturnAFormService {
 						int countOfOtherVehicles = Long.valueOf(motorVehicleCodes.stream()
 								.filter(code -> code.equals(PropertyDescriptionCode._24.code)).count()).intValue();
 						numberOfStolenMotorVehicles -= countOfOtherVehicles;
-						increaseRowCount(returnARecordCard, incidentMonth, ReturnARecordCardRowName.OTHER_VEHICLES_THEFT, countOfOtherVehicles);
+						increaseRecordCardRowCount(returnARecordCard.getRows()[ReturnARecordCardRowName.OTHER_VEHICLES_THEFT.ordinal()], incidentMonth, countOfOtherVehicles);
 						
 						if (numberOfStolenMotorVehicles > 0){
-							increaseRowCount(returnARecordCard, incidentMonth, ReturnARecordCardRowName.TRUCKS_BUSES_THEFT, numberOfStolenMotorVehicles);
+							increaseRecordCardRowCount(returnARecordCard.getRows()[ReturnARecordCardRowName.TRUCKS_BUSES_THEFT.ordinal()], incidentMonth, numberOfStolenMotorVehicles);
 						}
 					}
 					else if (motorVehicleCodes.contains(PropertyDescriptionCode._24.code)){
-						increaseRowCount(returnARecordCard, incidentMonth, ReturnARecordCardRowName.OTHER_VEHICLES_THEFT, numberOfStolenMotorVehicles);
+						increaseRecordCardRowCount(returnARecordCard.getRows()[ReturnARecordCardRowName.OTHER_VEHICLES_THEFT.ordinal()], incidentMonth, numberOfStolenMotorVehicles);
 					}
 				}
 				totalOffenseCount += offenseCountInThisProperty;
@@ -547,7 +568,7 @@ public class ReturnAFormService {
 				burglaryOffenseCount = 1; 
 			}
 			
-			increaseRowCount(returnARecordCard, incidentMonth, rowName, burglaryOffenseCount);
+			increaseRecordCardRowCount(returnARecordCard.getRows()[rowName.ordinal()], incidentMonth, burglaryOffenseCount);
 		}
 		
 		return burglaryOffenseCount; 
