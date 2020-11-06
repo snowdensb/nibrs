@@ -70,10 +70,16 @@
      stateCode = $('#stateCode').val(); 
      xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
        $('#agencyId').empty();
-       $('#agencyId').append('<option value="">All</option>');
-       $.each( data, function( key, value ) {
-    	   $('#agencyId').append($('<option></option>').attr('value', key).text(value));
-       });
+       
+       if (Object.keys(data).length == 1){
+    	   $('#agencyId').append($('<option selected></option>').attr('value', Object.keys(data)[0]).text(Object.values(data)[0]));
+       }
+       else if (Object.keys(data).length > 1){
+	       $('#agencyId').append('<option value="">All</option>');
+	       $.each( data, function( key, value ) {
+	    	   $('#agencyId').append($('<option></option>').attr('value', key).text(value));
+	       });
+       }
        
        $('#agencyId').trigger("chosen:updated");
      }).fail(ojbc.displayFailMessage);
@@ -86,20 +92,30 @@
 	   if (agencyId && incidentYear){
 		   xhr = $.get( context +"months/" + incidentYear + "/" + agencyId, function(data) {
 			   $('#incidentMonth').empty();
-			   $('#incidentMonth').append('<option value="0">All months</option>');
-			   data.forEach( function(item, index) {
-				   $('#incidentMonth').append($('<option></option>').attr('value', item).text(item));
-			   });
+			   if (data.length == 1){
+                   $('#incidentMonth').append($('<option selected></option>').attr('value', data[0]).text(data[0]));
+			   }
+			   else if (data.length > 1){
+				   $('#incidentMonth').append('<option value="0">All months</option>');
+				   data.forEach( function(item, index) {
+					   $('#incidentMonth').append($('<option></option>').attr('value', item).text(item));
+				   });
+			   }
 			   $('#incidentMonth').trigger("chosen:updated");
 		   }).fail(ojbc.displayFailMessage);
 	   }
 	   else if (stateCode && incidentYear){
 		   xhr = $.get( context +"state/months/" + incidentYear + "/" + stateCode, function(data) {
 			   $('#incidentMonth').empty();
-			   $('#incidentMonth').append('<option value="0">All months</option>');
-			   data.forEach( function(item, index) {
-				   $('#incidentMonth').append($('<option></option>').attr('value', item).text(item));
-			   });
+			   if (data.length == 1){
+                   $('#incidentMonth').append($('<option selected></option>').attr('value', data[0]).text(data[0]));
+			   }
+			   else if (data.length > 1){
+				   $('#incidentMonth').append('<option value="0">All months</option>');
+				   data.forEach( function(item, index) {
+					   $('#incidentMonth').append($('<option></option>').attr('value', item).text(item));
+				   });
+			   }
 			   $('#incidentMonth').trigger("chosen:updated");
 		   }).fail(ojbc.displayFailMessage);
 	   }
@@ -114,10 +130,16 @@
 		   console.log("call the getYears method"); 
 		   xhr = $.get( context +"years/" + agencyId, function(data) {
 			   $('#incidentYear').empty();
-			   $('#incidentYear').append('<option value="">Please select ...</option>');
-			   data.forEach( function(item, index) {
-                   $('#incidentYear').append($('<option></option>').attr('value', item).text(item));
-               });
+			   if (data.length == 1){
+                   $('#incidentYear').append($('<option selected></option>').attr('value', data[0]).text(data[0]));
+				   refreshIncidentMonthDropDown();
+			   }
+			   else if (data.length > 1){
+				   $('#incidentYear').append('<option value="">Please select ...</option>');
+				   data.forEach( function(item, index) {
+	                   $('#incidentYear').append($('<option></option>').attr('value', item).text(item));
+	               });
+			   }
 			   $('#incidentYear').trigger("chosen:updated");
 	       }).fail(ojbc.displayFailMessage);
 	   }
@@ -126,10 +148,16 @@
 		   xhr = $.get( context +"state/years/" + stateCode, function(data) {
 //			   console.log("years: " + data); 
 			   $('#incidentYear').empty();
-			   $('#incidentYear').append('<option value="">Please select ...</option>');
-			   data.forEach( function(item, index) {
-                   $('#incidentYear').append($('<option></option>').attr('value', item).text(item));
-               });
+			   if (data.length == 1){
+                   $('#incidentYear').append($('<option selected></option>').attr('value', data[0]).text(data[0]));
+				   refreshIncidentMonthDropDown();
+			   }
+			   else if (data.length > 1){
+				   $('#incidentYear').append('<option value="">Please select ...</option>');
+				   data.forEach( function(item, index) {
+	                   $('#incidentYear').append($('<option></option>').attr('value', item).text(item));
+	               });
+			   }
 			   $('#incidentYear').trigger("chosen:updated");
 	       }).fail(ojbc.displayFailMessage);
 	   }
