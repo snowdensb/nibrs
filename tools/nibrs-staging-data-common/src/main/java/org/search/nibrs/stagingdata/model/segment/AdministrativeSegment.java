@@ -459,11 +459,14 @@ public class AdministrativeSegment implements Comparable<AdministrativeSegment>,
 		boolean isClearanceInvolvingOnlyJuvenile = false; 
 		if (ClearedExceptionallyCode.applicableCodeSet().contains(this.getClearedExceptionallyType().getNibrsCode())){
 			Set<OffenderSegment> offenders = this.getOffenderSegments();
-			isClearanceInvolvingOnlyJuvenile = offenders.stream().allMatch(offender -> offender.isJuvenile()); 
+			isClearanceInvolvingOnlyJuvenile = 
+					offenders.stream().anyMatch(offender -> offender.isJuvenile())
+					&& offenders.stream().noneMatch(offender -> offender.isAdult()); 
 		}
 		else {
 			Set<ArresteeSegment> arrestees = this.getArresteeSegments();
-			isClearanceInvolvingOnlyJuvenile = arrestees.stream().allMatch(arrestee -> arrestee.isJuvenile()); 
+			isClearanceInvolvingOnlyJuvenile = arrestees.stream().anyMatch(arrestee -> arrestee.isJuvenile())
+					&& arrestees.stream().noneMatch(arrestee -> arrestee.isAdult()); 
 		}
 		return isClearanceInvolvingOnlyJuvenile;
 	}
