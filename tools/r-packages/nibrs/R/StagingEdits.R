@@ -37,7 +37,13 @@ applyStagingEdits <- function(
                  select(AdministrativeSegmentID, IncidentNumber, ReportTimestamp, SegmentActionTypeTypeID), by='IncidentNumber') %>%
     group_by(IncidentNumber)
 
-  latestEdits <- editedIncidents %>% filter(ReportTimestamp==max(ReportTimestamp))
+  latestEdits <- editedIncidents %>%
+    filter(ReportTimestamp==max(ReportTimestamp)) %>%
+    # it's possible that timestamps don't have adequate resolution to produce a single "latest record". when this happens, we select
+    # from among the ties using the higher PK ID value (which will work if the table uses auto-incremented PKs)
+    group_by(IncidentNumber, ReportTimestamp) %>%
+    filter(AdministrativeSegmentID==max(AdministrativeSegmentID)) %>%
+    ungroup()
 
   editedIncidents <- editedIncidents %>% ungroup()
 
