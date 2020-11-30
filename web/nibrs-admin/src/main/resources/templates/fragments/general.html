@@ -72,8 +72,8 @@
 	            <li class="nav-item" th:if="${allowSubmitToFbi && !agencyMapping.empty}">
 	              <a class="nav-link" href="#" id="submitToFbi">Submit to FBI</a>
 	            </li>
-	            <li th:each="instance : ${externalLinksMapping}">
-							   <a class="nav-link" th:href="${instance.value}" th:text="${instance.key}" target="_blank"></a>
+	            <li th:each="instance : ${externalLinksMapping}" class="nav-item">
+							   <a class="nav-link external-link" th:href="${instance.value}" th:text="${instance.key}" target="_blank"></a>
 							</li>
 	          </ul>
 	          
@@ -142,7 +142,7 @@
  						});
 		  		}
 		   	      
-          $(".navbar-nav .nav-link").on("click", function(){
+          $(".navbar-nav .nav-link:not(.external-link)").on("click", function(){
 						$(this).parent().siblings().removeClass('show');
 						$(this).parent().addClass('active').siblings().removeClass('active');
 						
