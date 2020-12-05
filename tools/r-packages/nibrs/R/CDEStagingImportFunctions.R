@@ -81,7 +81,7 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
 
       if (!is.null(sdfs)) {
 
-        ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs), writeProgressDetail=writeProgressDetail)
+        ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs), DEFAULT_AGE_GROUP_FUNCTION_FACTORY, writeProgressDetail=writeProgressDetail)
 
         accumDfList <- list()
         accumDfList$DateType <- ddfs$DateType
@@ -207,7 +207,7 @@ loadMultiStateYearDataToParquetDimensional <- function(zipDirectory, codeTableLi
       sdfs <- loadCDEDataToStaging(directory, codeTableList, getStateCodeFromFile(file), writeProgressDetail=writeProgressDetail)
       unlink(directory, TRUE)
       if (!is.null(sdfs)) {
-        ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs), writeProgressDetail=writeProgressDetail)
+        ddfs <- convertStagingTablesToDimensional(keepCodeTables(sdfs), keepFactTables(sdfs), DEFAULT_AGE_GROUP_FUNCTION_FACTORY, writeProgressDetail=writeProgressDetail)
         enhancedCodeTableList <- keepCodeTables(ddfs)
         factTableList <- keepFactTables(ddfs)
         factTableList <- factTableList %>%

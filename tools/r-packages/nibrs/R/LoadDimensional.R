@@ -66,6 +66,81 @@ FACT_TABLES <- c(
   'ArrestReportSegmentWasArmedWith'
 )
 
+DEFAULT_AGE_GROUP_FUNCTION_FACTORY <- list(
+  createAgeGroup=function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
+    if (is.null(AgeNeonateIndicator)) {
+      AgeNeonateIndicator=rep(0, length(age))
+    }
+    if (is.null(AgeFirstWeekIndicator)) {
+      AgeFirstWeekIndicator=rep(0, length(age))
+    }
+    if (is.null(AgeFirstYearIndicator)) {
+      AgeFirstYearIndicator=rep(0, length(age))
+    }
+    if (is.null(NonNumericAge)) {
+      NonNumericAge=rep('0', length(age))
+    }
+    case_when(
+      AgeNeonateIndicator==1 ~ '1 or less',
+      AgeFirstWeekIndicator==1 ~ '1 or less',
+      AgeFirstYearIndicator==1 ~ '1 or less',
+      age <= 1 ~ '1 or less',
+      age <= 5 ~ '2-5',
+      age <= 10 ~ '6-10',
+      age <= 13 ~ '11-13',
+      age <= 17 ~ '14-17',
+      age <= 20 ~ '18-20',
+      age <= 25 ~ '21-25',
+      age <= 30 ~ '26-30',
+      age <= 40 ~ '31-40',
+      age <= 50 ~ '41-50',
+      age <= 60 ~ '51-60',
+      age <= 70 ~ '61-70',
+      age <= 80 ~ '71-80',
+      age >= 81 ~ '81+',
+      NonNumericAge == '00' ~ 'Unknown',
+      is.na(age) ~ 'Blank',
+      TRUE ~ 'N/A'
+    )
+  },
+  createAgeGroupSort=function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
+    if (is.null(AgeNeonateIndicator)) {
+      AgeNeonateIndicator=rep(0, length(age))
+    }
+    if (is.null(AgeFirstWeekIndicator)) {
+      AgeFirstWeekIndicator=rep(0, length(age))
+    }
+    if (is.null(AgeFirstYearIndicator)) {
+      AgeFirstYearIndicator=rep(0, length(age))
+    }
+    if (is.null(NonNumericAge)) {
+      NonNumericAge=rep('0', length(age))
+    }
+    case_when(
+      AgeNeonateIndicator==1 ~ 1,
+      AgeFirstWeekIndicator==1 ~ 1,
+      AgeFirstYearIndicator==1 ~ 1,
+      age <= 1 ~ 1,
+      age <= 5 ~ 2,
+      age <= 10 ~ 3,
+      age <= 13 ~ 4,
+      age <= 17 ~ 5,
+      age <= 20 ~ 6,
+      age <= 25 ~ 7,
+      age <= 30 ~ 8,
+      age <= 40 ~ 9,
+      age <= 50 ~ 10,
+      age <= 60 ~ 11,
+      age <= 70 ~ 12,
+      age <= 80 ~ 13,
+      age >= 81 ~ 14,
+      NonNumericAge == '00' ~ 99,
+      is.na(age) ~ 98,
+      TRUE ~ 100
+    )
+  }
+)
+
 #' Load the NIBRS dimensional database from a staging database
 #'
 #' Load the NIBRS dimensional database from a staging database, optionally taking a random sample of Administrative Segment
@@ -101,80 +176,7 @@ loadDimensionalFromStagingDatabase <- function(
   dimensionTables$State <- loadStatesForDimensional()
 
   if (is.null(ageGroupFunctionFactory)) {
-    ageGroupFunctionFactory <- list(
-      createAgeGroup=function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
-        if (is.null(AgeNeonateIndicator)) {
-          AgeNeonateIndicator=rep(0, length(age))
-        }
-        if (is.null(AgeFirstWeekIndicator)) {
-          AgeFirstWeekIndicator=rep(0, length(age))
-        }
-        if (is.null(AgeFirstYearIndicator)) {
-          AgeFirstYearIndicator=rep(0, length(age))
-        }
-        if (is.null(NonNumericAge)) {
-          NonNumericAge=rep('0', length(age))
-        }
-        case_when(
-          AgeNeonateIndicator==1 ~ '1 or less',
-          AgeFirstWeekIndicator==1 ~ '1 or less',
-          AgeFirstYearIndicator==1 ~ '1 or less',
-          age <= 1 ~ '1 or less',
-          age <= 5 ~ '2-5',
-          age <= 10 ~ '6-10',
-          age <= 13 ~ '11-13',
-          age <= 17 ~ '14-17',
-          age <= 20 ~ '18-20',
-          age <= 25 ~ '21-25',
-          age <= 30 ~ '26-30',
-          age <= 40 ~ '31-40',
-          age <= 50 ~ '41-50',
-          age <= 60 ~ '51-60',
-          age <= 70 ~ '61-70',
-          age <= 80 ~ '71-80',
-          age >= 81 ~ '81+',
-          NonNumericAge == '00' ~ 'Unknown',
-          is.na(age) ~ 'Blank',
-          TRUE ~ 'N/A'
-        )
-      },
-      createAgeGroupSort=function(age, AgeNeonateIndicator=NULL, AgeFirstWeekIndicator=NULL, AgeFirstYearIndicator=NULL, NonNumericAge=NULL) {
-        if (is.null(AgeNeonateIndicator)) {
-          AgeNeonateIndicator=rep(0, length(age))
-        }
-        if (is.null(AgeFirstWeekIndicator)) {
-          AgeFirstWeekIndicator=rep(0, length(age))
-        }
-        if (is.null(AgeFirstYearIndicator)) {
-          AgeFirstYearIndicator=rep(0, length(age))
-        }
-        if (is.null(NonNumericAge)) {
-          NonNumericAge=rep('0', length(age))
-        }
-        case_when(
-          AgeNeonateIndicator==1 ~ 1,
-          AgeFirstWeekIndicator==1 ~ 1,
-          AgeFirstYearIndicator==1 ~ 1,
-          age <= 1 ~ 1,
-          age <= 5 ~ 2,
-          age <= 10 ~ 3,
-          age <= 13 ~ 4,
-          age <= 17 ~ 5,
-          age <= 20 ~ 6,
-          age <= 25 ~ 7,
-          age <= 30 ~ 8,
-          age <= 40 ~ 9,
-          age <= 50 ~ 10,
-          age <= 60 ~ 11,
-          age <= 70 ~ 12,
-          age <= 80 ~ 13,
-          age >= 81 ~ 14,
-          NonNumericAge == '00' ~ 99,
-          is.na(age) ~ 98,
-          TRUE ~ 100
-        )
-      }
-    )
+    ageGroupFunctionFactory <- DEFAULT_AGE_GROUP_FUNCTION_FACTORY
   }
 
   if (writeToDatabase) {
