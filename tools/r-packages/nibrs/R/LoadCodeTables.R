@@ -24,7 +24,8 @@ loadCodeTables <- function(spreadsheetFile=NULL, conn=NULL, quiet=FALSE) {
     spreadsheetFile <- system.file("raw", "NIBRSCodeTables.xlsx", package=getPackageName())
   }
 
-  TOC <- read_excel(spreadsheetFile, sheet='TOC')
+  TOC <- read_excel(spreadsheetFile, sheet='TOC') %>%
+    filter(Table != 'NibrsErrorCodeType')
 
   map2(TOC$Table, TOC$Tab, function(codeTableName, tabName) {
     ct <- read_excel(spreadsheetFile, sheet=tabName) %>%
