@@ -230,7 +230,14 @@
 		            }
 		        }
 		        else{
-		              bootpopup.alert("Got Error Downloading the report " + this.status + ": " + this.statusText, "Error");
+		        	 console.log("An error occurred while downloading the summary report " + this.status + ": " + this.statusText);
+	 	             bootpopup({
+	            	    title: "Error",
+	            	    content: [
+	            	        'An error occurred while processing your request. Please contact SEARCH at <a href="mailto:nibrs@search.org">nibrs@search.org</a> or try again later.'
+	            	        ],
+	            	    close: function(data,e) {}
+	            	 });
 		        }
 		      }
 		     xhr[i].send(formData);

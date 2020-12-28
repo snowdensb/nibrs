@@ -59,7 +59,7 @@
 	            </li>
 	            <li class="nav-item">
 	              <a class="nav-link" href="#" id="summaryReportInputForm" th:unless="${agencyMapping.empty}">N2S/Summary Reports</a>
-	              <a class="nav-link disabled" href="#" id="summaryReportInputForm" th:if="${agencyMapping.empty}">N2S/Summary Reports</a>
+	              <a class="nav-link" href="#" id="summaryReportInputForm" th:if="${agencyMapping.empty}">N2S/Summary Reports</a>
 	            </li>
 	            <li class="nav-item">
 	              <a class="nav-link" href="#" id="incidents" th:unless="${agencyMapping.empty}">Incident Record Search</a>
@@ -95,7 +95,7 @@
 	    <p>Go to the next page to see fragments in action</p>
 	    <footer class="footer" th:fragment="footer">
 	      <div class="container" align="center">
-	        <span class="text-muted">NIBRS admin tool</span>
+	        <span>Questions? Email SEARCH at <a href="mailto:nibrs@search.org">nibrs@search.org</a></span>
 	      </div>
 	    </footer>
     
@@ -212,11 +212,12 @@
 								var modalDialog = visibleOjbcModal.children(".modal-dialog"); 
 								var loadingDiv = visibleOjbcModal.children(".modalIframeSpinner");
 			                
-								console.log("modalDialog.height():" + modalDialog.height()); 
+/* 								console.log("modalDialog.height():" + modalDialog.height()); 
 								console.log("modalDialog.height() + parseInt( modalDialog.css('margin-top'), 10):" + modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10)); 
 								console.log("modalDialog.css('margin-top'):" + modalDialog.css("margin-top")); 
 								console.log("visibleOjbcModal.width():" + visibleOjbcModal.width()); 
-								loadingDiv.css('height', modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10));
+ */								
+                loadingDiv.css('height', modalDialog.height() + parseInt( modalDialog.css("margin-top"), 10));
 								loadingDiv.css('width', visibleOjbcModal.width());
 								
 								loadingDiv.show();           
@@ -265,8 +266,13 @@
 	     	     
 	         displayFailMessage : function(jqXHR, textStatus, errorThrown) {
 	           if (jqXHR.status == 500) {
-	             var errorHeader = "A server-side error occurred while processing your request. Please contact the IT department or try again later.";
-	             bootpopup.alert(errorHeader, "Error");   
+ 	             bootpopup({
+	            	    title: "Error",
+	            	    content: [
+	            	        'An error occurred while processing your request. Please contact SEARCH at <a href="mailto:nibrs@search.org">nibrs@search.org</a> or try again later.'
+	            	        ],
+	            	    close: function(data,e) {}
+	            	});
 	           } else if (jqXHR.status == 0) {
 	             if (jqXHR.textStatus != "aborted"){
 	               window.location.reload();
@@ -274,7 +280,7 @@
 	           } else if (jqXHR.status == 403) {
 	              bootpopup.alert("Access is denied. Please check if you have the access right for the item.", "Error");
 	            } else {
-	         	  bootpopup.alert("Unable to talk to Server.  Please try again later.", "Error");
+	            	bootpopup.alert("Unable to talk to Server.  Please try again later.", "Error");
 	           }
 	        }, 
 	        
