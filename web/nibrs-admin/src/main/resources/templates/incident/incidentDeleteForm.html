@@ -91,7 +91,7 @@
                     $('#agencyId').append('<option value="">All</option>');
                     
                     $.each( data, function( key, value ) {
-                    	$('#agencyId').append($('<option></option>').attr('value', key).text(value));
+                    	$('#agencyId').append($('<option></option>').attr('value', value).text(key));
                    	});
                     $('#agencyId').trigger("chosen:updated");
                   }).fail(ojbc.displayFailMessage);

@@ -15,6 +15,7 @@
  */
 
  $(function(){
+   console.log(agencyMapping);
    $(".chosen-select").chosen();  
    $('[data-toggle="popover"]').popover(); 
    $('.incidentYear').mask('9999');
@@ -70,12 +71,12 @@
      xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
        $('#agencyId').empty();
        if (Object.keys(data).length == 1){
-    	   $('#agencyId').append($('<option selected></option>').attr('value', Object.keys(data)[0]).text(Object.values(data)[0]));
+    	   $('#agencyId').append($('<option selected></option>').attr('value', Object.values(data)[0]).text(Object.keys(data)[0]));
        }
        else if (Object.keys(data).length > 1){
 	       $('#agencyId').append('<option value="">All</option>');
 	       $.each( data, function( key, value ) {
-	    	   $('#agencyId').append($('<option></option>').attr('value', key).text(value));
+	    	   $('#agencyId').append($('<option></option>').attr('value', value).text(key));
 	       });
        }
        $('#agencyId').trigger("chosen:updated");
