@@ -71,13 +71,13 @@ public class RestService{
 				.block();
 	}
 	
-	public Map<Integer, String> getAgenciesNoChache(String ownerId) {
+	public Map<String, Integer> getAgenciesNoChache(String ownerId) {
 		return this.webClient.get().uri("/codeTables/agencies/"+ownerId)
 				.header("Expires", "0")
 				.header("Pragma", "no-cache")
 				.header("Cache-Control", "private",  "no-store", "max-age=0")
 				.retrieve()
-				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<String, Integer>>() {})
 				.block();
 	}
 	
