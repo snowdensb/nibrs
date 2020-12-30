@@ -103,27 +103,27 @@
 	            	bootpopup.confirm("Records will be deleted permanently. This action cannot be reversed. Please click on Yes to proceed" , "WARNING",
                   function(ans) { 
                     if(ans){
-                  	 var requestData = {
-		                		agencyId: $("#agencyId").val(),
-		                		stateCode: $("#stateCode").val() 		
-		                 }; 
-		                if (typeof _csrf_param_name !== 'undefined'){
-		                    requestData[_csrf_param_name] = _csrf_token;
-		                }
-		
-			              xhr = $.post(context + "incidents/delete",requestData,function(data) {
-			            	  $('#responseInfo').removeClass('d-none').html(data);  
-			            	  
-			            	  if($('#agencyId').val() !== ''){
-				            	  $('#agencyId option:selected').remove();
-				                $('#agencyId').trigger("chosen:updated");
-			            	  }
-		                  if($('#stateCode').val() !== ''){
-		                     $('#stateCode option:selected').remove();
-		                     $('#stateCode').trigger("chosen:updated");
-		                     refreshAgencyDropDown();
-		                  }
-			              }).fail(ojbc.displayFailMessage);
+		                 	var requestData = {
+			                	agencyId: $("#agencyId").val(),
+			                	stateCode: $("#stateCode").val() 		
+			                }; 
+			                if (typeof _csrf_param_name !== 'undefined'){
+			                    requestData[_csrf_param_name] = _csrf_token;
+			                }
+			
+				              xhr = $.post(context + "incidents/delete",requestData,function(data) {
+				            	  $('#responseInfo').removeClass('d-none').html(data);  
+				            	  
+				            	  if($('#agencyId').val() !== ''){
+					            	  $('#agencyId option:selected').remove();
+					                $('#agencyId').trigger("chosen:updated");
+				            	  }
+			                  if($('#stateCode').val() !== ''){
+			                     $('#stateCode option:selected').remove();
+			                     $('#stateCode').trigger("chosen:updated");
+			                     refreshAgencyDropDown();
+			                  }
+				              }).fail(ojbc.displayFailMessage);
                     }
 	            	});
 	            });

@@ -67,8 +67,15 @@
    }
    
    function refreshAgencyDropDown(){
-     stateCode = $('#stateCode').val(); 
-     xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
+     
+     var requestData = {
+    	stateCode: $("#stateCode").val() 		
+     }; 
+     if (typeof _csrf_param_name !== 'undefined'){
+        requestData[_csrf_param_name] = _csrf_token;
+     }
+
+     xhr = $.get( context +"incidents/agencies", requestData , function(data) {
        $('#agencyId').empty();
        if (Object.keys(data).length == 1){
     	   $('#agencyId').append($('<option selected></option>').attr('value', Object.values(data)[0]).text(Object.keys(data)[0]));
