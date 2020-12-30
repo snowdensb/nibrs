@@ -16,13 +16,13 @@
 package org.search.nibrs.admin.summaryreport;
 
 public enum SummaryReportType {
-	arsonReport("Arson"), 
+	returnAForm("Return A"), 
+	returnARecordCard("Return A by Month and Year"), 
+	returnASupplement("Return A Supplement"), 
 	asrReports("ASR Adult/Juvenile"), 
-	cargoTheftReport("Cargo Theft"),
+	arsonReport("Arson"), 
 	humanTraffickingReport("Human Trafficking"),
-    returnAForm("Return A"), 
-    returnARecordCard("Return A Record Card"), 
-    returnASupplement("Return A Supplement"), 
+	cargoTheftReport("Cargo Theft"),
     shrReports("SHR Negligent/Non Negligent");
 	
 	private String description;
