@@ -28,6 +28,7 @@
      <!-- Begin page content -->
      <form action="#" th:action="@{/incident/incidentSearch}" th:object="${incidentSearchRequest}" id="searchForm" method="post" th:fragment="incidentSearchFormContent">
        <div id="incidentSearchFormContent">
+         <p class="text-muted pl-4">Fill in the characteristics of the incidents that you wish to search</p>
          <div class="form-row">
            <label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Incident Date </label>
            <div class="col-8 col-xl-3"><input type="text" th:field="*{incidentDateRangeStartDate}" class="date" width="250" placeholder="From" th:errorclass="is-invalid"/></div>
