@@ -34,6 +34,7 @@
            </ol>
         </nav>
         
+        <p class="text-muted pl-4">Warning! Records are deleted permanently. This action cannot be reversed.</p>
 	      <form th:action="@{/incidents/delete}" th:object="${incidentDeleteRequest}" id="incidentDeleteForm" method="post" th:fragment="incidentDeleteFormContent">
 	         <div class="form-row">
 							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting State</label>
@@ -100,7 +101,7 @@
 	            $('#submit').click (function(){
 	            	$('#responseInfo').html("").addClass('d-none');
 	            	
-	            	bootpopup.confirm("Records will be deleted permanently. This action cannot be reversed. Please click on Yes to proceed" , "WARNING",
+	            	bootpopup.confirm("You have selected records to delete. Please confirm that you want to permanently delete the records" , "CONFIRM",
                   function(ans) { 
                     if(ans){
 		                 	var requestData = {
