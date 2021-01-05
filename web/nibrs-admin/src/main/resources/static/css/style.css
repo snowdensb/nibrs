@@ -423,3 +423,8 @@ styles below would be for that*/
         visibility: visible; /* make visible modal body and header */
     }
 }
+
+ul.inline { display:inline-block; padding:0; text-align:left }
+ul.inline li { display:inline }
+ul.inline li a { white-space:nowrap}
+ul.inline li:after { content:" "; letter-spacing:1em; background:center center no-repeat url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwAAADsABataJCQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xMkMEa+wAAAAnSURBVBhXY/Dz89MA4sNA/B9Ka4AEYQIwfBgkiCwAxjhVopnppwEApxQqhnyQ+VkAAAAASUVORK5CYII=); }
