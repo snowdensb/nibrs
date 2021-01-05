@@ -390,9 +390,9 @@ styles below would be for that*/
 
 .dropzone span {
     display: inline-block;
-    font-size: .8em;
+    font-size: 1em;
     line-height: 1.3em;
-    padding-top: 1em;
+    padding-top: 3em;
 }
 
 

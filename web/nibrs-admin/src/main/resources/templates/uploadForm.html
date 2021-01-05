@@ -31,35 +31,46 @@
 	           <li class="breadcrumb-item active" aria-current="page">Upload to Validate</li>
 	       </ol>
 		 	</nav>
- 	 		<div style="padding: 5px;">
- 	 			<p>The <strong>NIBRS Pre-Certification Tool (PCT)</strong> provides law enforcement agencies responsible for submitting incident records to State Uniform Crime Reporting (UCR) programs the ability to test their records before submitting them to either their state UCR program or the FBI. The PCT, however, only performs standard NIBRS edit and validation checks and cannot validate state-specific data reporting requirements. State UCR programs may also use the PCT to test their NIBRS submissions before beginning the NIBRS certification process with the FBI or at any time to validate their FBI submissions. The PCT applies the NIBRS 2019.1 data edit and validation rules and provides an error listing following the FBI error reporting format.  The error listing can be downloaded in a variety of formats so records can be corrected which should speed the NIBRS certification process.  The tool supports NIBRS records submission in either in the legacy "flat file" or XML format.  
-				</p>
-				<p><strong>PCT Limitations:</strong></p>
-				<div>
-					<ul>
-						<li>The validation rules implemented by the NIBRS PCT only reflect the FBI’s NIBRS rules and do not include state-specific data elements and rules.</li>
-						<li>The NIBRS PCT cannot validate some NIBRS rules specific to the submitting agency. See <a href="#" id="toolLimitations" data-toggle="modal" data-target="#toolLimitationModal">Tool Limitations</a> for specific details.</li>
-						<li>The NIBRS PCT is intended to help identify potential NIBRS data validation rule errors and provide guidance in aligning data submissions with the <a href=" https://www.fbi.gov/file-repository/ucr/ucr-2019-1-nibrs-technical-specification.pdf/view">FBI NIBRS standard version 2019.1</a>. It is not intended to substitute for FBI NIBRS or State certification.</li>
-					</ul>
-				</div>
-				<p>The NIBRS PCT is licensed under the open source <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2.0 </a>.  The source code is available <a href="https://goo.gl/9my95o">here</a>.</p>
-
+ 	 		<div class="p-1">
+ 	 		  <div><h6><strong>NIBRS Pre-Certification Tool (PCT)</strong></h6> </div>
+ 	 		  <ul>
+ 	 		    <li>Speeds up NIBRS certification process</li>
+ 	 		    <li>Allows agencies to test records before submission to State UCR Program or FBI. State UCR programs may use it to test their NIBRS submission before FBI certification</li>
+ 	 		    <li>Only performs standard NIBRS edit and validation checks (no state-specific validation)</li>
+ 	 		    <li>Applies the 2019.1 data edit and validation rules</li>
+ 	 		    <li>Generates an error list in the FBI error reporting format. Error list can be downloaded so records may be corrected</li>
+ 	 		    <li>Supports flat file or XML formats licensed under the open source <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2.0 </a>.  The source code is available <a href="https://goo.gl/9my95o">here</a>.</li>
+ 	 		  </ul>
 			</div>
-	 		<div class="jumbotron">
+	 		<div>
 				<div id="errorMsg"></div>
-				<form method="POST" enctype="multipart/form-data" th:action="@{/files/upload}" class="box">
+        <div align="center">
+            <h6><strong>Choose or drag and drop your file to get started</strong></h6>
+            <p class="m-3">
+              You may validate multiple NIBRS files at once: <br>
+              legacy flat file with multiple records, XML file with a single record, and a compressed(zip) file with multiple XML files. 
+            </p>
+        </div>
+				
+				<form method="POST" enctype="multipart/form-data" th:action="@{/files/upload}" class="box m-5">
 				  	<div id="uploads"></div>
 				 	<div class="dropzone" id="dropzone">
 						<div id="loadingFileAjaxPane" ></div>
 				 		<input type="file" name="file" id="file" class="inputfile" form="fileform" accept="application/zip, text/plain, application/octet-stream"/>  
-				 		<span><label for="file" class="inputfileLabel"><Strong>Choose</Strong></label> or drop file here to validate. You can validate multiple NIBRS XML files at once or a single NIBRS text file. <i>(drag-and-drop is not currently supported in IE)</i></span>
+				 		<span><label for="file" class="inputfileLabel"><Strong>Choose</Strong></label><strong> or drag and drop file here.</strong> </span>
 			 		</div>		
 				</form>
 			</div>
-			<div align="center" style="padding:2px 10px;">
-				Have questions? Ask SEARCH at <a href="mailto:nibrs@search.org?Subject=NIBRS%20PCT%20Question">nibrs@search.org</a>
+			<div class="row">
+			  <div class="offset-2">
+					<p><strong>Limitations:</strong></p>
+						<ul>
+							<li>Validation rules only reflect the FBI’s NIBRS rules. Does not include state-specific data elements and rules.</li>
+							<li>Cannot validate some NIBRS rules specific to the submitting agency. See <a href="#" id="toolLimitations" data-toggle="modal" data-target="#toolLimitationModal">Tool Limitations</a> for specific details.</li>
+						</ul>
+				</div>
 			</div>
-			
+
 			<script th:inline="javascript">
 			</script>
 			
