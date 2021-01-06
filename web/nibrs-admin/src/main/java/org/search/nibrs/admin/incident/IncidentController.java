@@ -212,7 +212,7 @@ public class IncidentController {
 	}
 	
 	@GetMapping("/agencies")
-	public @ResponseBody Map<Integer, String> getAgencyIdMapping(@RequestParam(required = false) String stateCode, Map<String, Object> model) throws IOException{
+	public @ResponseBody Map<String, Integer> getAgencyIdMapping(@RequestParam(required = false) String stateCode, Map<String, Object> model) throws IOException{
 		Integer ownerId = null;
 		
 		boolean privateSummaryReportSite = (boolean) model.get("privateSummaryReportSite");

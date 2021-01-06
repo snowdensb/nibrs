@@ -33,6 +33,7 @@
 			     <li class="breadcrumb-item active" aria-current="page">Get Summary Report</li>
 			   </ol>
 			</nav>
+			<p class="text-muted pl-4">Complete the fields below. All fields are required.</p>
 			<form class="needs-validation" action="#" th:object="${summaryReportRequest}" id="summaryReportRequestForm" method="post" novalidate>
 				<div class="form-row">
 					<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Report Type</label>
@@ -60,7 +61,7 @@
 					<div class="col-8 col-xl-3 form-group">
 						<select th:field="*{agencyId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="All Agencies"  required>
 							<option value='' th:if="${#maps.size(agencyMapping) > 1}">Please select ...</option>
-							<option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
+							<option th:each="item: ${agencyMapping}" th:value="${item.value}" th:text="${item.key}" />
 						</select>
 						<div class="invalid-feedback">Please select one agency</div>
 					</div>
@@ -93,6 +94,7 @@
           var context = [[@{/}]];
           var _csrf_token = /*[[${_csrf.token}]]*/ '';
           var _csrf_param_name = /*[[${_csrf.parameterName}]]*/ '';
+          var agencyMapping = [[${agencyMapping}]]; 
         /*]]>*/
       </script>			
 	    <script type="text/javascript" th:src="@{/js/summaryReportForm.js}"></script>

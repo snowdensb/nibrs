@@ -15,6 +15,7 @@
  */
 package org.search.nibrs.stagingdata.repository;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,7 @@ public class AgencyRepositorCustomImpl implements AgencyRepositoryCustom{
 				    "	OR exists (select arrestReportSegment from ArrestReportSegment arrestReportSegment " + 
 				    "				where arrestReportSegment.agency.agencyId = a.agencyId " + 
 				    "				AND (?1 = null OR arrestReportSegment.owner.ownerId = ?1)) " + 
-				    "order by stateCode ", Tuple.class)
+				    "order by stateName ", Tuple.class)
 				.setParameter( 1, ownerId)
 				.getResultList()
 				.stream()
@@ -58,15 +59,15 @@ public class AgencyRepositorCustomImpl implements AgencyRepositoryCustom{
 			             (stateCode1, stateCode2) -> {
 			                 log.warn("duplicate stateCode found!");
 			                 return stateCode1;
-			             }
+			             }, LinkedHashMap::new
 				 ));
 		
 		return stateCodeMapping;
 	}
 
 	@Override
-	public Map<Integer, String> findAllAgenciesByStateAndOwnerId(Integer ownerId, String stateCode) {
-		Map<Integer, String> agencyIdMapping = entityManager
+	public Map<String, Integer> findAllAgenciesByStateAndOwnerId(Integer ownerId, String stateCode) {
+		Map<String, Integer> agencyIdMapping = entityManager
 				.createQuery(
 				    "select " +
 				    "   agencyId as agencyId , " +
@@ -85,12 +86,12 @@ public class AgencyRepositorCustomImpl implements AgencyRepositoryCustom{
 				.stream()
 				.collect(
 				    Collectors.toMap(
+				    	entry -> (String)entry.get("agencyName"), 
 				        tuple -> (Integer)tuple.get("agencyId"),
-				        entry -> (String)entry.get("agencyName"), 
 			             (stateCode1, stateCode2) -> {
 			                 log.warn("duplicate stateCode found!");
 			                 return stateCode1;
-			             }
+			             }, LinkedHashMap::new
 				 ));
 		
 		return agencyIdMapping;

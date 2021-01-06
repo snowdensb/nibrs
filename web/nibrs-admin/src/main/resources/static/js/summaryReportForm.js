@@ -15,6 +15,7 @@
  */
 
  $(function(){
+   console.log(agencyMapping);
    $(".chosen-select").chosen();  
    $('[data-toggle="popover"]').popover(); 
    $('.incidentYear').mask('9999');
@@ -66,16 +67,23 @@
    }
    
    function refreshAgencyDropDown(){
-     stateCode = $('#stateCode').val(); 
-     xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
+     
+     var requestData = {
+    	stateCode: $("#stateCode").val() 		
+     }; 
+     if (typeof _csrf_param_name !== 'undefined'){
+        requestData[_csrf_param_name] = _csrf_token;
+     }
+
+     xhr = $.get( context +"incidents/agencies", requestData , function(data) {
        $('#agencyId').empty();
        if (Object.keys(data).length == 1){
-    	   $('#agencyId').append($('<option selected></option>').attr('value', Object.keys(data)[0]).text(Object.values(data)[0]));
+    	   $('#agencyId').append($('<option selected></option>').attr('value', Object.values(data)[0]).text(Object.keys(data)[0]));
        }
        else if (Object.keys(data).length > 1){
 	       $('#agencyId').append('<option value="">All</option>');
 	       $.each( data, function( key, value ) {
-	    	   $('#agencyId').append($('<option></option>').attr('value', key).text(value));
+	    	   $('#agencyId').append($('<option></option>').attr('value', value).text(key));
 	       });
        }
        $('#agencyId').trigger("chosen:updated");
@@ -230,7 +238,14 @@
 		            }
 		        }
 		        else{
-		              bootpopup.alert("Got Error Downloading the report " + this.status + ": " + this.statusText, "Error");
+		        	 console.log("An error occurred while downloading the summary report " + this.status + ": " + this.statusText);
+	 	             bootpopup({
+	            	    title: "Error",
+	            	    content: [
+	            	        'An error occurred while processing your request. Please contact SEARCH at <a href="mailto:nibrs@search.org">nibrs@search.org</a> or try again later.'
+	            	        ],
+	            	    close: function(data,e) {}
+	            	 });
 		        }
 		      }
 		     xhr[i].send(formData);

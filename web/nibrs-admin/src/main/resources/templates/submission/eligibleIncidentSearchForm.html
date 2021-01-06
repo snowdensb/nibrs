@@ -54,7 +54,7 @@
 						<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
 						<div class="col-8 col-xl-3">
 			    			    <select th:field="*{agencyIds}" class="form-control form-control-sm chosen-select" multiple th:errorclass="is-invalid" data-placeholder="Please select all that apply...">
-							  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
+							  <option th:each="item: ${agencyMapping}" th:value="${item.value}" th:text="${item.key}" />
 							</select>
 						</div>
           </div>

@@ -34,6 +34,7 @@
            </ol>
         </nav>
         
+        <p class="text-muted pl-4">Warning! Records are deleted permanently. This action cannot be reversed.</p>
 	      <form th:action="@{/incidents/delete}" th:object="${incidentDeleteRequest}" id="incidentDeleteForm" method="post" th:fragment="incidentDeleteFormContent">
 	         <div class="form-row">
 							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting State</label>
@@ -91,7 +92,7 @@
                     $('#agencyId').append('<option value="">All</option>');
                     
                     $.each( data, function( key, value ) {
-                    	$('#agencyId').append($('<option></option>').attr('value', key).text(value));
+                    	$('#agencyId').append($('<option></option>').attr('value', value).text(key));
                    	});
                     $('#agencyId').trigger("chosen:updated");
                   }).fail(ojbc.displayFailMessage);
@@ -100,27 +101,32 @@
 	            $('#submit').click (function(){
 	            	$('#responseInfo').html("").addClass('d-none');
 	            	
-                var requestData = {
-                		agencyId: $("#agencyId").val(),
-                		stateCode: $("#stateCode").val() 		
-                }; 
-                if (typeof _csrf_param_name !== 'undefined'){
-                    requestData[_csrf_param_name] = _csrf_token;
-                }
-
-	              xhr = $.post(context + "incidents/delete",requestData,function(data) {
-	            	  $('#responseInfo').removeClass('d-none').html(data);  
-	            	  
-	            	  if($('#agencyId').val() !== ''){
-		            	  $('#agencyId option:selected').remove();
-		                $('#agencyId').trigger("chosen:updated");
-	            	  }
-                  if($('#stateCode').val() !== ''){
-                     $('#stateCode option:selected').remove();
-                     $('#stateCode').trigger("chosen:updated");
-                     refreshAgencyDropDown();
-                  }
-	              }).fail(ojbc.displayFailMessage);
+	            	bootpopup.confirm("You have selected records to delete. Please confirm that you want to permanently delete the records" , "CONFIRM",
+                  function(ans) { 
+                    if(ans){
+		                 	var requestData = {
+			                	agencyId: $("#agencyId").val(),
+			                	stateCode: $("#stateCode").val() 		
+			                }; 
+			                if (typeof _csrf_param_name !== 'undefined'){
+			                    requestData[_csrf_param_name] = _csrf_token;
+			                }
+			
+				              xhr = $.post(context + "incidents/delete",requestData,function(data) {
+				            	  $('#responseInfo').removeClass('d-none').html(data);  
+				            	  
+				            	  if($('#agencyId').val() !== ''){
+					            	  $('#agencyId option:selected').remove();
+					                $('#agencyId').trigger("chosen:updated");
+				            	  }
+			                  if($('#stateCode').val() !== ''){
+			                     $('#stateCode option:selected').remove();
+			                     $('#stateCode').trigger("chosen:updated");
+			                     refreshAgencyDropDown();
+			                  }
+				              }).fail(ojbc.displayFailMessage);
+                    }
+	            	});
 	            });
 	            
 	            $('#reset').click (function(){

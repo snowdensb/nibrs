@@ -87,7 +87,7 @@ public class CodeTableController {
 	}
 
 	@GetMapping(value= {"/agencies/{ownerId}", "/agencies"})
-	public Map<Integer, String> agenciesByOwnerId(@PathVariable(required = false) Integer ownerId){
+	public Map<String, Integer> agenciesByOwnerId(@PathVariable(required = false) Integer ownerId){
 		
 		Set<Integer> agencyIds = administrativeSegmentRepository.findAgencyIdsByOwnerId(ownerId); 
 		Set<Integer> agencyIdsFromGroupB = arrestReportSegmentRepository.findAgencyIdsByOwnerId(ownerId); 
@@ -97,16 +97,16 @@ public class CodeTableController {
 		List<Agency> agencies = agencyRepository.findAllById(agencyIds); 
 		Collections.sort(agencies, compareByAgencyName); 
 		
-		Map<Integer, String> agencyMap = 
+		Map<String, Integer> agencyMap = 
 			StreamSupport.stream(agencies.spliterator(), false)
 				.filter(agency-> !unknownOrBlank.contains(agency.getAgencyName().toUpperCase()))
-					.collect(Collectors.toMap(Agency::getAgencyId, Agency::getAgencyName, (u, v) -> u,
+					.collect(Collectors.toMap(Agency::getAgencyName, Agency::getAgencyId, (u, v) -> u,
 						      LinkedHashMap::new));
 		return agencyMap;
 	}
 	
 	@GetMapping(value={"/states/{stateCode}/agencies/{ownerId}", "/states/{stateCode}/agencies"}) 
-	public Map<Integer, String> agenciesByStateAndOwnerId(@PathVariable String stateCode, 
+	public Map<String, Integer> agenciesByStateAndOwnerId(@PathVariable String stateCode, 
 			@PathVariable(required = false) Integer ownerId){
 		
 		return agencyRepositoryCustom.findAllAgenciesByStateAndOwnerId(ownerId, stateCode);

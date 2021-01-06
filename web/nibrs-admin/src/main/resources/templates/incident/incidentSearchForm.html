@@ -28,6 +28,7 @@
      <!-- Begin page content -->
      <form action="#" th:action="@{/incident/incidentSearch}" th:object="${incidentSearchRequest}" id="searchForm" method="post" th:fragment="incidentSearchFormContent">
        <div id="incidentSearchFormContent">
+         <p class="text-muted pl-4">Fill in the characteristics of the incidents that you wish to search</p>
          <div class="form-row">
            <label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Incident Date </label>
            <div class="col-8 col-xl-3"><input type="text" th:field="*{incidentDateRangeStartDate}" class="date" width="250" placeholder="From" th:errorclass="is-invalid"/></div>
@@ -64,7 +65,7 @@
 						<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
 						<div class="col-8 col-xl-3">
      			    <select th:field="*{agencyIds}" class="form-control form-control-sm chosen-select" multiple th:errorclass="is-invalid" data-placeholder="Please select all that apply...">
-    					  <option th:each="item: ${agencyMapping}" th:value="${item.key}" th:text="${item.value}" />
+    					  <option th:each="item: ${agencyMapping}" th:value="${item.value}" th:text="${item.key}" />
 		    			</select>
 				    </div>
          </div>
@@ -140,7 +141,7 @@
                   $('#agencyIds').empty();
                   $('#agencyIds').append('<option value="">All</option>');
                   $.each( data, function( key, value ) {
-                    $('#agencyIds').append($('<option></option>').attr('value', key).text(value));
+                    $('#agencyIds').append($('<option></option>').attr('value', value).text(key));
                   });
                   
                   $('#agencyIds').trigger("chosen:updated");

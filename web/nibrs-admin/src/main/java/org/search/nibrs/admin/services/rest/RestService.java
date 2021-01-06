@@ -63,32 +63,34 @@ public class RestService{
 		this.webClient = webClientBuilder.baseUrl(appProperties.getRestServiceBaseUrl()).build();
 	}
 	
-	public Map<Integer, String> getAgencies(Integer ownerId) {
+	public LinkedHashMap<String, Integer> getAgencies(Integer ownerId) {
 		String ownerIdString = Objects.toString(ownerId, "");
 		return this.webClient.get().uri("/codeTables/agencies/"+ownerIdString)
 				.retrieve()
-				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<String, Integer>>() {})
 				.block();
 	}
 	
-	public Map<Integer, String> getAgenciesNoChache(String ownerId) {
+	public Map<String, Integer> getAgenciesNoChache(String ownerId) {
 		return this.webClient.get().uri("/codeTables/agencies/"+ownerId)
 				.header("Expires", "0")
 				.header("Pragma", "no-cache")
 				.header("Cache-Control", "private",  "no-store", "max-age=0")
 				.retrieve()
-				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<String, Integer>>() {})
 				.block();
 	}
 	
-	public Map<Integer, String> getAgenciesByOwnerAndState(Integer ownerId, String stateCode) {
-		return this.webClient.get().uri("/codeTables/states/" + stateCode + "/agencies/"+ Objects.toString(ownerId, ""))
+	public Map<String, Integer> getAgenciesByOwnerAndState(Integer ownerId, String stateCode) {
+		Map<String, Integer> map = 
+				this.webClient.get().uri("/codeTables/states/" + stateCode + "/agencies/"+ Objects.toString(ownerId, ""))
 				.header("Expires", "0")
 				.header("Pragma", "no-cache")
 				.header("Cache-Control", "private",  "no-store", "max-age=0")
 				.retrieve()
-				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<Integer, String>>() {})
+				.bodyToMono( new ParameterizedTypeReference<LinkedHashMap<String, Integer>>() {})
 				.block();
+		return map; 
 	}
 	
 	public Map<String, String> getOris(String ownerId) {
