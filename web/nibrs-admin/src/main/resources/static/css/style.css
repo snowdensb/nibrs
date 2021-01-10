@@ -424,6 +424,17 @@ styles below would be for that*/
     }
 }
 
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255,255,255,.75);
+    /*font-weight: bold;*/
+}
+
+.navbar-dark .main-menu .nav-link:hover {
+    color: white;
+    background-color: #808080;
+    border-radius: 5px;
+}
+
 ul.inline { display:inline-block; padding:0; text-align:left }
 ul.inline li { display:inline }
 ul.inline li a { white-space:nowrap}

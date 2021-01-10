@@ -29,63 +29,79 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/5.2.0/css/all.css}" />
     <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <style>
+      html, body {
+          width: 100%;
+          height: 100%;
+      }
+
+      article {
+          min-height: 100%;
+          display: grid;
+          grid-template-rows: auto 1fr auto;
+          grid-template-columns: 100%;
+      }
+      
+      .footer {
+        background-color: #f5f5f5;
+      }
+    </style>
   </head>
   <body class="small">
-    <div class="container-fluid" th:include="fragments/splashPageHeader ::headerIamge"></div>
-    <div id="mainContent">
+    <article>
+      <header class="container-fluid" th:include="fragments/splashPageHeader ::headerIamge"></header>
       <div id="content" class="container">
-        <div class="p-4">
-          <div align="center">
-              <h3><strong>Welcome to the NIBRS Services Toolset</strong></h3>
-          </div>
-          <div>The NIBRS Services Toolset provides law enforcement agencies, state UCR programs, and other users with tools to process and understand NIBRS data.
-            <ol>
-              <li>Free to use </li>
-              <li>Must <a th:href="@{/home}" class="border-primary">create an account</a> to access tools</li>
-            </ol>
-          </div>
-          
-          <div class="row">
-            <div class="col border border-primary mr-2" style="border-width: medium!important;">
-		          <p class="m-2"><strong>NIBRS Pre-Certification Tool (PCT)</strong></p>
-		          
-              <ul>
-	              <li>Pre-checks NIBRS records to identify submission or validation errors </li>
-	              <li>Accepts NIBRS data in flat file format or XML formats</li>
-	              <li>Applies the FBI’s 2019.1 NIBRS validation rules. Produces a list of errors following the standard FBI error file format</li>
-	              <li>Errors may be downloaded for resolution as Excel, CSV or PDF</li>
-	              <li>Records are automatically deleted unless saved by the user</li>
-              </ul>
-            </div>
-            <div class="col border border-primary ml-2" style="border-width: medium!important;">
-              <p class="m-2"><strong>NIBRS to Summary Reporting Tool (N2S)</strong></p>
-              
-              <ul>
-                <li>Converts NIBRS data to 8 Summary UCR reports </li>
-                <li>Compares NIBRS crime counts to prior crime counts reported under the summary reporting System</li>
-                <li>Reports are produced interactively</li>
-                <li>May be downloaded as Excel spreadsheet</li>
-                <li><strong>Must first run PCT to be able to access N2S</strong></li>
-              </ul>
-            </div>
-          </div>
-          <div align="center" class="m-3">
-            <p><a th:href="@{/home}" class="btn btn-warning btn-small border-primary"> Create an Account or Log In</a></p>
-          </div>
-          
-	        <div class="mt-3 mb-3">
-	          The NIBRS Services Toolset is free to use, but users are required to create an account in order to access the tools. Registration ensures that only authorized users have access to their NIBRS data, and enables SEARCH to contact users when updates. Account information <u><i>will not be shared</i></u> with any third parties, nor will we use registration information for marketing.
-	        </div>
-        
+       <div class="p-4">
+         <div align="center">
+             <h3><strong>Welcome to the NIBRS Services Toolset</strong></h3>
+         </div>
+         <div>The NIBRS Services Toolset provides law enforcement agencies, state UCR programs, and other users with tools to process and understand NIBRS data.
+           <ol>
+             <li>Free to use </li>
+             <li>Must <a th:href="@{/home}" class="border-primary">create an account</a> to access tools</li>
+           </ol>
+         </div>
+         
+         <div class="row">
+           <div class="col border border-primary mr-2" style="border-width: medium!important;">
+            <p class="m-2"><strong>NIBRS Pre-Certification Tool (PCT)</strong></p>
+            
+             <ul>
+              <li>Pre-checks NIBRS records to identify submission or validation errors </li>
+              <li>Accepts NIBRS data in flat file format or XML formats</li>
+              <li>Applies the FBI’s 2019.1 NIBRS validation rules. Produces a list of errors following the standard FBI error file format</li>
+              <li>Errors may be downloaded for resolution as Excel, CSV or PDF</li>
+              <li>Records are automatically deleted unless saved by the user</li>
+             </ul>
+           </div>
+           <div class="col border border-primary ml-2" style="border-width: medium!important;">
+             <p class="m-2"><strong>NIBRS to Summary Reporting Tool (N2S)</strong></p>
+             
+             <ul>
+               <li>Converts NIBRS data to 8 Summary UCR reports </li>
+               <li>Compares NIBRS crime counts to prior crime counts reported under the summary reporting System</li>
+               <li>Reports are produced interactively</li>
+               <li>May be downloaded as Excel spreadsheet</li>
+               <li><strong>Must first run PCT to be able to access N2S</strong></li>
+             </ul>
+           </div>
+         </div>
+         <div align="center" class="m-3">
+           <p><a th:href="@{/home}" class="btn btn-warning btn-small border-primary"> Create an Account or Log In</a></p>
+         </div>
+         
+        <div class="mt-3 mb-3">
+          The NIBRS Services Toolset is free to use, but users are required to create an account in order to access the tools. Registration ensures that only authorized users have access to their NIBRS data, and enables SEARCH to contact users when updates. Account information <u><i>will not be shared</i></u> with any third parties, nor will we use registration information for marketing.
+        </div>
+       </div>
       </div>
-    </div>
-    <footer class="footer"style="background-color: #f5f5f5" >
-      <div class="container-fluid">
-        <p class="text-muted footerText" style="padding:0; margin:1em;">This website was funded by the Bureau of Justice Statistics (BJS), Office of Justice Programs, U.S. Department of Justice, under Cooperative Agreement No. 2012-MU-MU-K003, awarded to RTI International, 3040 Cornwallis Road Research Triangle Park, NC 27709-2194 and subawarded to SEARCH Group, Incorporated, 1900 Point West Way, Suite 275, Sacramento, California 95815. Contents of this document do not necessarily reflect the views or policies of BJS, the FBI, or the U.S. Department of Justice. This tool is not a substitute for FBI NIBRS or state UCR Program certification.</p>
-      </div>
-    </footer>
+      <footer class="footer">
+        <div class="container-fluid">
+          <p class="text-muted footerText" style="padding:0; margin:1em;">This website was funded by the Bureau of Justice Statistics (BJS), Office of Justice Programs, U.S. Department of Justice, under Cooperative Agreement No. 2012-MU-MU-K003, awarded to RTI International, 3040 Cornwallis Road Research Triangle Park, NC 27709-2194 and subawarded to SEARCH Group, Incorporated, 1900 Point West Way, Suite 275, Sacramento, California 95815. Contents of this document do not necessarily reflect the views or policies of BJS, the FBI, or the U.S. Department of Justice. This tool is not a substitute for FBI NIBRS or state UCR Program certification.</p>
+        </div>
+      </footer>
     <!-- /.container -->
     <th:block th:include="fragments/general.html :: javascripts"></th:block>
-    </div>
+   </article>
   </body>
 </html>
