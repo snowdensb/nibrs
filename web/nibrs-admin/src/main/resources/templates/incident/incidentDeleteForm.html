@@ -101,7 +101,7 @@
 	            $('#submit').click (function(){
 	            	$('#responseInfo').html("").addClass('d-none');
 	            	
-	            	bootpopup.confirm("You have selected records to delete. Please confirm that you want to permanently delete the records" , "CONFIRM",
+	            	bootpopup.confirm("You have selected records to delete. Please confirm that you want to permanently delete the records" , "WARNING",
                   function(ans) { 
                     if(ans){
 		                 	var requestData = {
