@@ -293,6 +293,14 @@ public class SummaryReportController {
 		return restService.getMonths(agencyId, year, ownerId);
 	}
 	
+	@GetMapping("/ownsData")
+	public @ResponseBody Boolean userOwnsData(Map<String, Object> model) throws IOException{
+		AuthUser authUser =(AuthUser) model.get("authUser");  
+		Map<String, Integer> agencyMapping = restService.getAgencies(authUser.getUserId());
+		model.put("agencyMapping", agencyMapping);
+		return agencyMapping.isEmpty();
+	}
+	
 	@GetMapping("state/months/{year}/{stateCode}")
 	public @ResponseBody List<Integer> getDistinctMonthsByStateCode(@PathVariable String stateCode, @PathVariable Integer year, Map<String, Object> model) throws IOException{
 		String ownerId = getOwnerId(model);

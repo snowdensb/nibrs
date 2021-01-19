@@ -121,6 +121,11 @@
                  	  }
                     else if (data.progress>=100){
                   	  contentArray.push("All " + data.totalCount + ' reports are processed' );
+	                    if ($("#summaryReportInputForm").hasClass("no-data") && data.totalCount > data.failedToProcess.length){
+	                    	$("#summaryReportInputForm").removeClass("no-data");
+	                    	$("#incidents").removeClass("no-data");
+	                    	$("#incidentDeleteForm").removeClass("no-data");
+	                    }
                     }
                     else {
                   	  contentArray.push('The process is aborted due to error.' );
@@ -134,6 +139,7 @@
                   		}
                       contentArray.push('</ul>');
                     }
+                    
                     
                     bootpopup({
                         title: "", 

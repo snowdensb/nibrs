@@ -124,6 +124,18 @@
 			                     $('#stateCode').trigger("chosen:updated");
 			                     refreshAgencyDropDown();
 			                  }
+			                  
+			                  $.get(context + "ownsData", function(data){
+			                	  if (data === true){
+	                          $("#summaryReportInputForm").addClass("no-data");
+	                          $("#incidents").addClass("no-data");
+	                          $("#incidentDeleteForm").addClass("no-data");
+	                          $('#agencyId').empty();
+	                          $('#agencyId').trigger("chosen:updated");
+	                          $('#stateCode').empty();
+	                          $('#stateCode').trigger("chosen:updated");
+			                	  }
+			                  });
 				              }).fail(ojbc.displayFailMessage);
                     }
 	            	});
