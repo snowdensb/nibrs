@@ -493,7 +493,7 @@ CREATE TABLE AdministrativeSegment (
 
 CREATE INDEX administrativesegment_idx
  ON AdministrativeSegment
- ( ORI, IncidentNumber, MonthOfTape, YearOfTape, );
+ ( ORI, IncidentNumber, MonthOfTape, YearOfTape);
 
 CREATE TABLE ArresteeSegment (
                 ArresteeSegmentID INT AUTO_INCREMENT NOT NULL,
