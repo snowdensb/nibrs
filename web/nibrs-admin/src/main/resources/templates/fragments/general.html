@@ -207,6 +207,15 @@
 						return false; 
 					});
 					
+          $('body').on('click', 'img.uploadToValidate', function() {   
+               $("#upload").click();
+          });
+
+          $('body').on('click', 'img.summaryReportInputForm', function() {   
+               $("a#summaryReportInputForm:not(.no-data)").click();
+          });
+
+					
 					$(document).ajaxSend(function( event, jqxhr, settings ) {
 						if (!settings.url.includes('files/uploadStatus')){
 						  if( $(".ojbc-modal").is(':visible')){
