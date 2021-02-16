@@ -466,11 +466,12 @@ public class PropertySegmentRulesFactory {
 						.reduce((a, b) -> getIntersection(a, b));
 						
 				if (illogicalPropertyDescriptionToAllOffense.isPresent() ) {
-					existingDescriptions.removeAll(illogicalPropertyDescriptionToAllOffense.get());
+					List<String> illogicalPropertyDescriptionToAll = 
+							getIntersection(existingDescriptions, illogicalPropertyDescriptionToAllOffense.get()); 
 					
-					if (existingDescriptions.size() == 0){
+					if (illogicalPropertyDescriptionToAll.size() > 0){
 						ret = subject.getErrorTemplate();
-						ret.setValue(illogicalPropertyDescriptionToAllOffense.get().get(0));
+						ret.setValue(illogicalPropertyDescriptionToAll.get(0));
 						ret.setNIBRSErrorCode(NIBRSErrorCode._390);
 						ret.setDataElementIdentifier("15");
 						return ret;
