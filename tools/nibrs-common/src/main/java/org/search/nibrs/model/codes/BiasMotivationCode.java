@@ -50,7 +50,7 @@ public enum BiasMotivationCode {
 	_85("85" , "Anti-Sikh", "ANTISIKH"),
 	_41("41" , "Anti-Gay", "ANTIMALE HOMOSEXUAL"),
 	_42("42" , "Anti-Lesbian", "ANTIFEMALE HOMOSEXUAL"),
-	_43("43" , "Anti-Lesbian, Gay, Bisexual, or Transgender (Mixed Group)", "NA"),	
+	_43("43" , "Anti-Lesbian, Gay, Bisexual, or Transgender (Mixed Group)", "ANTIHOMOSEXUAL"),	
 	_44("44","Anti-Heterosexual", "ANTIHETEROSEXUAL"),
 	_45("45","Anti-Bisexual", "ANTIBISEXUAL"),
 	_51("51","Anti-Physical Disability", "ANTIPHYSICAL DISABILITY"),
