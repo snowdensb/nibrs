@@ -207,11 +207,11 @@ public interface AdministrativeSegmentRepository
 			+ "				WHERE aa.incidentNumber = a.incidentNumber AND"
 			+ "					(?5 = null OR ?5 = 0 OR aa.owner.ownerId = ?5) "
 			+ "				GROUP BY aa.incidentNumber ) AND "
-			+ "		ao.ucrOffenseCodeType.nibrsCode in (?6) AND (aa.arrestDate = (select min (arrestDate) from a.arresteeSegments )) AND "
+			+ "		ao.ucrOffenseCodeType.nibrsCode in (?6) AND (aa.arrestDate is null OR aa.arrestDate = (select min (arrestDate) from a.arresteeSegments )) AND "
 			+ " 	(?1 = null OR ?1 = '' OR a.agency.stateCode = ?1) AND "
 			+ "		(?2 = null OR a.agency.agencyId = ?2) AND "
 			+ "		((year(a.exceptionalClearanceDate) = ?3 AND ( ?4 = 0 OR month(a.exceptionalClearanceDate) = ?4)) "
-			+ "			OR ( year(aa.arrestDate) = ?3 AND ( ?4 = 0 OR month(aa.arrestDate) = ?4 ))) ")
+			+ "			OR ( aa.arrestDate is not null and year(aa.arrestDate) = ?3 AND ( ?4 = 0 OR month(aa.arrestDate) = ?4 ))) ")
 	List<Integer> findIdsByStateCodeAndOriAndClearanceDateAndOffenses(String stateCode, Integer agencyId,
 			Integer incidentYear, Integer incidentMonth, Integer ownerId, List<String> offenseCodes);
 	
