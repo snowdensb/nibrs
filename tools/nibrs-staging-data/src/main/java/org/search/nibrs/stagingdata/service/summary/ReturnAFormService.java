@@ -93,17 +93,17 @@ public class ReturnAFormService {
 		partIOffensesMap.put("120", 6); 
 		partIOffensesMap.put("13A", 7); 
 		partIOffensesMap.put("13B", 8); 
-		partIOffensesMap.put("13C", 8); 
-		partIOffensesMap.put("220", 9); 
-		partIOffensesMap.put("23B", 10); 
-		partIOffensesMap.put("23A", 10); 
-		partIOffensesMap.put("23C", 10); 
-		partIOffensesMap.put("23D", 10); 
-		partIOffensesMap.put("23E", 10); 
-		partIOffensesMap.put("23F", 10); 
-		partIOffensesMap.put("23G", 10); 
-		partIOffensesMap.put("23H", 10); 
-		partIOffensesMap.put("240", 11); 
+		partIOffensesMap.put("13C", 9); 
+		partIOffensesMap.put("220", 10); 
+		partIOffensesMap.put("23B", 11); 
+		partIOffensesMap.put("23A", 11); 
+		partIOffensesMap.put("23C", 11); 
+		partIOffensesMap.put("23D", 11); 
+		partIOffensesMap.put("23E", 11); 
+		partIOffensesMap.put("23F", 11); 
+		partIOffensesMap.put("23G", 11); 
+		partIOffensesMap.put("23H", 11); 
+		partIOffensesMap.put("240", 12); 
 				
 		larcenyOffenseByNatureMap = new HashMap<>();
 		larcenyOffenseByNatureMap.put("23B", PropertyStolenByClassificationRowName.LARCENY_PURSE_SNATCHING);  // Purse-snatching
