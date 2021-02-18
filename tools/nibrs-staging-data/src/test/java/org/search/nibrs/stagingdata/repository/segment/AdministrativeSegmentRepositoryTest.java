@@ -105,23 +105,6 @@ public class AdministrativeSegmentRepositoryTest {
 	
 	@Test
 	@DirtiesContext
-	public void testFindIdsByOriAndClearanceDateAndFindAll() {
-		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
-				.findIdsByOriAndClearanceDate("WA1234567", 2016, 5);
-		
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentRepository
-				.findAllById(administrativeSegmentIds).stream().distinct().collect(Collectors.toList());
-		
-		assertThat(administrativeSegments.size(), equalTo(3));
-		List<String> incidentNumbers = administrativeSegments.stream()
-				.map(AdministrativeSegment::getIncidentNumber)
-				.collect(Collectors.toList()); 
-		assertTrue(incidentNumbers.containsAll(Arrays.asList("12345678", "54236732", "12345679")));
-
-	}
-
-	@Test
-	@DirtiesContext
 	public void testFindIdsByOriAndArrestDateAndFindAll() {
 		List<Integer> administrativeSegmentIds = administrativeSegmentRepository
 				.findIdsByOriAndArrestDate("WA1234567", 2016, 5, null);

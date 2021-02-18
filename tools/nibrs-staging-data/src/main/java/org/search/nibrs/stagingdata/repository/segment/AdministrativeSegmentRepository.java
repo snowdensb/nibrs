@@ -72,18 +72,6 @@ public interface AdministrativeSegmentRepository
 	@EntityGraph(value="allAdministrativeSegmentJoins", type=EntityGraphType.LOAD)
 	List<AdministrativeSegment> findAllById(Iterable<Integer> ids);
 	
-	@Query("SELECT a.administrativeSegmentId from AdministrativeSegment a "
-			+ "LEFT JOIN a.exceptionalClearanceDateType ae "
-			+ "LEFT JOIN a.arresteeSegments aa "
-			+ "WHERE a.administrativeSegmentId = ( SELECT max(administrativeSegmentId) "
-			+ "				FROM AdministrativeSegment aa "
-			+ "				WHERE aa.incidentNumber = a.incidentNumber "
-			+ "				GROUP BY aa.incidentNumber ) AND "
-			+ "		(?1 = null OR a.ori = ?1) AND (aa.arrestDate = (select min (arrestDate) from a.arresteeSegments )) AND "
-			+ "		((year(a.exceptionalClearanceDate) = ?2 AND ( ?3 = 0 OR month(a.exceptionalClearanceDate) = ?3)) "
-			+ "			OR ( year(aa.arrestDate) = ?2 AND ( ?3 = 0 OR month(aa.arrestDate) = ?3 ))) ")
-	List<Integer> findIdsByOriAndClearanceDate(String ori, Integer year, Integer month);
-	
 	@Query("SELECT DISTINCT a.administrativeSegmentId from AdministrativeSegment a "
 			+ "WHERE (?1 = null OR a.ori in (?1)) AND "
 			+ "		(?4 = null OR a.agency.agencyId in (?4)) AND "

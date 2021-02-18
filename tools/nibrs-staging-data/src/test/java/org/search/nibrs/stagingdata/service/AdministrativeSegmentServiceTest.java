@@ -82,54 +82,6 @@ public class AdministrativeSegmentServiceTest {
 
 	@Test
 	@DirtiesContext
-	public void testFindByOriAndClearanceDate() {
-		GroupAIncidentReport groupAIncidentReport = BaselineIncidentFactory.getBaselineIncident();
-		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
-		
-		groupAIncidentReport.setIncidentNumber("12345678");
-		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
-		
-		groupAIncidentReport.setIncidentNumber("12345679");
-		groupAIncidentReport.setExceptionalClearanceDate(new ParsedObject<>(LocalDate.of(2016, 6, 12)));
-		ArresteeSegment arrestee = new ArresteeSegment(groupAIncidentReport.getArrestees().get(0));
-		arrestee.setArrestDate(new ParsedObject<>(LocalDate.of(2016, 5, 12)));
-		
-		
-		groupAIncidentReport.addArrestee(arrestee);
-		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
-		
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService
-				.findByOriAndClearanceDate("WA1234567", 2016, 5);
-		assertThat(administrativeSegments.size(), equalTo(2));
-		
-		List<String> incidentNumbers = administrativeSegments.stream()
-				.map(AdministrativeSegment::getIncidentNumber)
-				.collect(Collectors.toList()); 
-		assertTrue(incidentNumbers.containsAll(Arrays.asList("12345678", "54236732")));
-		
-		administrativeSegments = administrativeSegmentService
-				.findByOriAndClearanceDate("WA1234567", 2015, 5);
-		assertThat(administrativeSegments.size(), equalTo(3));
-		
-		incidentNumbers = administrativeSegments.stream()
-				.map(AdministrativeSegment::getIncidentNumber)
-				.collect(Collectors.toList()); 
-		assertTrue(incidentNumbers.containsAll(Arrays.asList("12345678", "54236732", "12345679")));
-		
-		administrativeSegments = administrativeSegmentService
-				.findByOriAndIncidentDate("WA1234567", 2017, 5);
-		
-		
-		assertThat(administrativeSegments.size(), equalTo(0));
-		
-		administrativeSegments = administrativeSegmentService
-				.findByOriAndIncidentDate("WA1234568", 2017, 5);
-		
-		assertThat(administrativeSegments.size(), equalTo(0));
-		
-	}
-	@Test
-	@DirtiesContext
 	public void testFindByCriteria() {
 		GroupAIncidentReport groupAIncidentReport = BaselineIncidentFactory.getBaselineIncident();
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
@@ -142,10 +94,6 @@ public class AdministrativeSegmentServiceTest {
 		groupAIncidentReport.setMonthOfTape(6);
 		groupAIncidentReport.setYearOfTape(2017);
 		groupAIncidentService.saveGroupAIncidentReports(groupAIncidentReport);
-		
-		List<AdministrativeSegment> administrativeSegments = administrativeSegmentService
-				.findByOriAndClearanceDate("WA1234567", 2016, 5);
-		assertThat(administrativeSegments.size(), equalTo(2));
 		
 		IncidentSearchRequest incidentSearchRequest = new IncidentSearchRequest();
 		long count = administrativeSegmentService.countByCriteria(incidentSearchRequest);
@@ -173,7 +121,7 @@ public class AdministrativeSegmentServiceTest {
 		assertThat(count, equalTo(0L));
 		
 		incidentSearchRequest.setSubmissionYear(2017);
-		administrativeSegments = 
+		List<AdministrativeSegment> administrativeSegments = 
 				administrativeSegmentService.findByCriteria(incidentSearchRequest);
 		assertThat(administrativeSegments.size(), equalTo(1));
 		

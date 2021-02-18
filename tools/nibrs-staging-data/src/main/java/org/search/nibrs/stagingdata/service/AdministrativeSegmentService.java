@@ -145,27 +145,6 @@ public class AdministrativeSegmentService {
 		return predicates;
 	}
 
-	/**
-	 * Deprecated
-	 * @param ori
-	 * @param year
-	 * @param month
-	 * @return
-	 */
-	public List<AdministrativeSegment> findByOriAndClearanceDate(String ori, Integer year, Integer month){
-		
-		if ("StateWide".equalsIgnoreCase(ori)){
-			ori = null;
-		}
-		
-		List<Integer> ids = administrativeSegmentRepository.findIdsByOriAndClearanceDate(ori, year, month);
-			
-		List<AdministrativeSegment> administrativeSegments = 
-				administrativeSegmentRepository.findAllById(ids)
-				.stream().distinct().collect(Collectors.toList());
-		return administrativeSegments; 
-	}
-
 	public List<AdministrativeSegment> findByOriAndIncidentDate(String ori, Integer year, Integer month){
 		
 		if ("StateWide".equalsIgnoreCase(ori)){
