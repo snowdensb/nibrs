@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,6 @@ import org.search.nibrs.model.reports.ReturnARecordCardRow;
 import org.search.nibrs.model.reports.ReturnARecordCardRowName;
 import org.search.nibrs.model.reports.ReturnARowName;
 import org.search.nibrs.model.reports.SummaryReportRequest;
-import org.search.nibrs.model.reports.humantrafficking.HumanTraffickingRowName;
 import org.search.nibrs.stagingdata.AppProperties;
 import org.search.nibrs.stagingdata.model.Agency;
 import org.search.nibrs.stagingdata.model.PropertyType;
@@ -447,9 +447,7 @@ public class ReturnAFormService {
 			for (OffenseSegment offense: offensesToReport){
 				
 				ReturnARecordCardRowName returnARecordCardRowName = null; 
-				int burglaryOffenseCount = 0; 
 				int offenseCount = 1; 
-				boolean hasMotorVehicleTheftOffense = false; 
 				OffenseCode offenseCode = OffenseCode.forCode(offense.getUcrOffenseCodeType().getNibrsCode()); 
 				switch (offenseCode){
 				case _09A:
@@ -474,7 +472,7 @@ public class ReturnAFormService {
 					returnARecordCardRowName = getRowNameFor13B13COffense(offense, ReturnARecordCardRowName.class);
 					offenseCount = getOffenseCountByConnectedVictim(administrativeSegment, "13B", "13C");
 				case _220: 
-					burglaryOffenseCount = countRecordCardBurglaryOffense(returnARecordCard, offense, incidentMonth);
+					countRecordCardBurglaryOffense(returnARecordCard, offense, incidentMonth);
 					break;
 				case _23A: 
 				case _23B:
@@ -487,7 +485,7 @@ public class ReturnAFormService {
 					returnARecordCardRowName = ReturnARecordCardRowName.LARCENY_THEFT_TOTAL;
 					break; 
 				case _240: 
-					hasMotorVehicleTheftOffense = countRecordCardMotorVehicleTheftOffense(returnARecordCard, offense, incidentMonth);
+					countRecordCardMotorVehicleTheftOffense(returnARecordCard, offense, incidentMonth);
 					break; 
 				default: 
 				}
@@ -675,12 +673,12 @@ public class ReturnAFormService {
 		int batchSize = appProperties.getSummaryReportProcessingBatchSize();
 		for (i = 0; i+batchSize < administrativeSegmentIds.size(); i+=batchSize ) {
 			log.info("processing Reported offenses " + i + " to " + String.valueOf(i+batchSize));
-			getReportedOffenseRows(returnAForm, administrativeSegmentIds.subList(i, i+batchSize));
+			getReportedOffenseRows(returnAForm, administrativeSegmentIds.subList(i, i+batchSize), summaryReportRequest);
 		}
 		
 		if (i < administrativeSegmentIds.size()) {
 			log.info("processing Reported offenses " + i + " to " + administrativeSegmentIds.size());
-			getReportedOffenseRows(returnAForm, administrativeSegmentIds.subList(i, administrativeSegmentIds.size()));
+			getReportedOffenseRows(returnAForm, administrativeSegmentIds.subList(i, administrativeSegmentIds.size()), summaryReportRequest);
 		}
 	}
 
@@ -915,7 +913,8 @@ public class ReturnAFormService {
 		return offenses;
 	}
 
-	private void getReportedOffenseRows(ReturnAForm returnAForm, List<Integer> administrativeSegmentIds) {
+	private void getReportedOffenseRows(ReturnAForm returnAForm, List<Integer> administrativeSegmentIds, 
+			SummaryReportRequest summaryReportRequest) {
 		PropertyStolenByClassification[] stolenProperties = returnAForm.getPropertyStolenByClassifications();
 		
 		List<AdministrativeSegment> administrativeSegments = 
@@ -999,6 +998,7 @@ public class ReturnAFormService {
 					break; 
 				case _240: 
 					hasMotorVehicleTheftOffense = countMotorVehicleTheftOffense(returnAForm, offense);
+					processRecoveredVehicleTotal(stolenProperties, administrativeSegment, summaryReportRequest);	
 					break; 
 				default: 
 				}
@@ -1018,6 +1018,36 @@ public class ReturnAFormService {
 			
 		}
 		administrativeSegments.clear();
+	}
+
+	private void processRecoveredVehicleTotal(PropertyStolenByClassification[] stolenProperties,
+			AdministrativeSegment administrativeSegment,
+			SummaryReportRequest summaryReportRequest) {
+		int totalRecoveredCount = 0;
+		
+		List<PropertySegment> properties =  administrativeSegment.getPropertySegments()
+				.stream().filter(property->TypeOfPropertyLossCode._5.code.equals(property.getTypePropertyLossEtcType().getNibrsCode()))
+				.collect(Collectors.toList());
+		
+		for (PropertySegment property: properties){
+			boolean containsMotorVehicleCodes = property.getPropertyTypes().stream()
+					.filter(propertyType -> propertyType.getRecoveredDate() != null && 
+							Objects.equals(propertyType.getRecoveredDateType().getYearNum(),summaryReportRequest.getIncidentYear())
+							&& (summaryReportRequest.getIncidentMonth() == null || summaryReportRequest.getIncidentMonth() == 0 ||
+								Objects.equals(propertyType.getRecoveredDateType().getMonthNum(),summaryReportRequest.getIncidentMonth())))
+					.map(propertyType -> propertyType.getPropertyDescriptionType().getNibrsCode())
+					.anyMatch(code -> PropertyDescriptionCode.isMotorVehicleCode(code));
+			
+			int numberOfRecoveredMotorVehicles = Optional.ofNullable(property.getNumberOfRecoveredMotorVehicles()).orElse(0);
+			
+			if ( numberOfRecoveredMotorVehicles > 0 && containsMotorVehicleCodes){
+				totalRecoveredCount += numberOfRecoveredMotorVehicles;
+			}
+		}
+		
+		stolenProperties[PropertyStolenByClassificationRowName.MOTOR_VEHICLES_TOTAL_LOCALLY_STOLEN_MOTOR_VEHICLES_RECOVERED.ordinal()]
+			.increaseNumberOfOffenses(totalRecoveredCount);
+		
 	}
 
 	private int getOffenseCountByConnectedVictim(AdministrativeSegment administrativeSegment, OffenseSegment offense) {
