@@ -72,6 +72,14 @@
 	            <li th:each="instance : ${externalLinksMapping}" class="nav-item">
 							   <a class="nav-link external-link" th:href="${instance.value}" th:text="${instance.key}" target="_blank"></a>
 							</li>
+							<li class="nav-item dropdown" th:if="${aboutLinksMapping!=null && !aboutLinksMapping.empty}">
+							   <a class="nav-link dropdown-toggle" href="#" id="dropdownAbout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
+                 <div class="dropdown-menu" aria-labelledby="dropdownAbout">
+                   <th:block th:each="aboutLink : ${aboutLinksMapping}">
+                      <a class="dropdown-item"  th:href="${aboutLink.value}" th:text="${aboutLink.key}" target="_blank"></a>
+                   </th:block>
+                 </div>
+							</li>
 	          </ul>
 	          
 	          <ul class="navbar-nav flex-row ml-md-auto d-md-flex" sec:authorize="isAuthenticated()">
@@ -91,8 +99,9 @@
       </header>
 	    <p>Go to the next page to see fragments in action</p>
 	    <footer class="footer" th:fragment="footer">
-	      <div class="container" align="center">
+	      <div class="container-fluid" align="center">
 	        <span>Questions? Email SEARCH at <a href="mailto:nibrs@search.org">nibrs@search.org</a></span>
+	        <p class="text-muted">This Web site is funded through a grant from the Bureau of Justice Statistics, Office of Justice Programs, U.S. Department of Justice. Neither the U.S. Department of Justice nor any of its components operate, control, are responsible for, or necessarily endorse, this Web site (including, without limitation, its content, technical infrastructure, and policies, and any services or tools provided).</p>
 	      </div>
 	    </footer>
     

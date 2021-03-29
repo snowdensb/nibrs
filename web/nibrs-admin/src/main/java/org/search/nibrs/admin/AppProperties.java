@@ -45,6 +45,7 @@ public class AppProperties {
 	private String restServiceBaseUrl = "http://localhost:9080";
 	
 	private final Map<String, String> externalLinksMapping = new HashMap<>();
+	private final Map<String, String> aboutLinksMapping = new HashMap<>();
 
 	public AppProperties() {
 		super();
@@ -164,6 +165,10 @@ public class AppProperties {
 
 	public Map<String, String> getExternalLinksMapping() {
 		return externalLinksMapping;
+	}
+
+	public Map<String, String> getAboutLinksMapping() {
+		return aboutLinksMapping;
 	}
 
 }
