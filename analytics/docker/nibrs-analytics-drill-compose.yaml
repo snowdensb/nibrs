@@ -27,7 +27,7 @@ services:
     networks:
       nibrs_analytics_nw:
 # uncomment this to change memory to 8G or whatever is needed
-#    environment:
-#      - DRILL_MAX_DIRECT_MEMORY=8G
+    environment:
+      - DRILL_MAX_DIRECT_MEMORY=16G
     volumes:
       - /opt/data/nibrs/cde/:/nibrs/
