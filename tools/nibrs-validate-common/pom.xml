@@ -21,7 +21,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>nibrs-validate-common</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 
 	<parent>
 	  <groupId>org.search.nibrs</groupId>
@@ -31,6 +31,7 @@
 
 	<properties>
 		<apache-tika-version>1.18</apache-tika-version>
+		<nibrs-validation-version>[1.0.1,)</nibrs-validation-version>
 		<owner>SEARCH-The National Consortium for Justice Information and Statistics</owner>
 	</properties>
 
@@ -55,7 +56,7 @@
 		<dependency>
 			<groupId>org.search.nibrs</groupId>
 			<artifactId>nibrs-validation</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${nibrs-validation-version}</version>
 		</dependency>
 	
 		<dependency>

@@ -113,11 +113,6 @@
 		<!--NIBRS dependencies -->
  		<dependency>
 			<groupId>org.search.nibrs</groupId>
-			<artifactId>nibrs-validate-common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
- 		<dependency>
-			<groupId>org.search.nibrs</groupId>
 			<artifactId>nibrs-staging-data-common</artifactId>
 			<version>1.0.0</version>
 		</dependency>
