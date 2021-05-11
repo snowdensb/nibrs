@@ -347,7 +347,7 @@ public class ArsonFormService {
 		for (PropertyType propertyType: propertySegment.getPropertyTypes()) {
 			String propertyDescription = propertyType.getPropertyDescriptionType().getNibrsCode();
 			Integer level = propertyDescriptionHierarchyMap.get(propertyDescription);
-			if (level <= 0) continue;
+			if (level == null || level <= 0) continue;
 			
 			if (level < currentLevel || 
 				(level == currentLevel && propertyType.getValueOfProperty() > currentValue)) {
