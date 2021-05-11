@@ -327,7 +327,8 @@ public class AsrFormService {
 		List<ArresteeSegment> adultArresteeSegments = arresteeSegments
 				.stream()
 				.filter(i->
-				Arrays.asList("C", "N").contains(i.getMultipleArresteeSegmentsIndicatorType().getNibrsCode()) &&  i.getAverageAge() >= 18)
+				Arrays.asList("C", "N").contains(i.getMultipleArresteeSegmentsIndicatorType().getNibrsCode()) 
+					&& i.getAverageAge() != null && i.getAverageAge() >= 18)
 				.collect(Collectors.toList());
 		
 		for (ArresteeSegment arresteeSegment: adultArresteeSegments){
