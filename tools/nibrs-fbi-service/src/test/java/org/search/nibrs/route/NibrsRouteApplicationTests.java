@@ -15,17 +15,24 @@
  */
 package org.search.nibrs.route;
 
+import org.apache.camel.CamelContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.search.nibrs.fbi.service.NibrsFbiServiceApplication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.Assert;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = NibrsFbiServiceApplication.class)
 public class NibrsRouteApplicationTests {
 
+	@Autowired 
+	CamelContext context; 
 	@Test
 	public void contextLoads() {
+		Assert.notNull(context, "the camel context should not be null");
 	}
 
 }
