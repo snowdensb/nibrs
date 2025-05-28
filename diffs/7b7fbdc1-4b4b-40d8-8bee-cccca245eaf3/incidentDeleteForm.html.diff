@@ -1,0 +1,157 @@
+ <!--
+ 
+     Copyright 2016 SEARCH-The National Consortium for Justice Information and Statistics
+ 
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+ 
+        http://www.apache.org/licenses/LICENSE-2.0
+ 
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+ 
+ -->
+ <!DOCTYPE HTML>
+ <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+ 	<head>
+ 		<title>OJBC Web Portal</title>
+ 		<th:block th:include="fragments/general.html :: headerfiles"></th:block>
+ 		<link rel="stylesheet" type="text/css" th:href="@{/webjars/datatables/1.10.19/css/dataTables.bootstrap4.min.css}" />
+ 		<link rel="stylesheet" type="text/css" th:href="@{/webjars/font-awesome/5.2.0/css/all.css}" />
+ 		<link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+ 	</head>
+ 	<body>
+      <!-- Begin page content -->
+      <div th:fragment="incidentDeleteFormPage" class="container">
+         <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a th:href="@{/home}">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Incident Delete Form</li>
+            </ol>
+         </nav>
+         
+         <p class="text-muted pl-4">Warning! Records are deleted permanently. This action cannot be reversed.</p>
+ 	      <form th:action="@{/incidents/delete}" th:object="${incidentDeleteRequest}" id="incidentDeleteForm" method="post" th:fragment="incidentDeleteFormContent">
+ 	         <div class="form-row">
+ 							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting State</label>
+ 							<div class="col-8 col-xl-3">
+ 	     			    <select th:field="*{stateCode}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="All">
+ 	     			      <option value="">All</option>
+ 	    					  <option th:each="item: ${stateCodeMappingByOwner}" th:value="${item.key}" th:text="${item.value}" />
+ 			    			</select>
+ 					    </div>
+ 	         </div>
+ 	         <div class="form-row">
+ 							<label class="col-4 col-xl-2 col-form-label font-weight-bold text-right">Reporting Agency</label>
+ 							<div class="col-8 col-xl-3">
+ 	     			    <select th:field="*{agencyId}" class="form-control form-control-sm chosen-select" th:errorclass="is-invalid" data-placeholder="All">
+ 			    			</select>
+ 					    </div>
+ 	         </div>
+ 	         <div class="form-row mt-2">
+ 	            <div class="col-4 col-xl-2"></div>
+ 	            <div class="col-8 col-xl-3">
+ 	                <button type="button" class="btn-primary" id="submit">Delete</button>
+ 	                <button type="reset" class="btn-secondary" id="reset">Reset</button>
+ 	            </div>
+ 	          </div>
+        
+         </form>
+ 				<script th:inline="javascript" sec:authorize="isAuthenticated()">
+ 					 /*<![CDATA[*/
+ 					   var _csrf_token = /*[[${_csrf.token}]]*/ '';
+ 					   var _csrf_param_name = /*[[${_csrf.parameterName}]]*/ '';
+ 					 /*]]>*/
+ 				</script>     
+ 	       <script th:inline="javascript">
+ 	          $(function(){
+ 	            $(".chosen-select").chosen();  
+ 	            $('[data-toggle="popover"]').popover(); 
+ 	            
+ 	            $('#searchForm input').keypress(function (e) {
+ 	              if (e.which == 13) {
+ 	                $('#submit').click();
+ 	                return false;    
+ 	              }
+ 	            });
+ 	            
+ 	            refreshAgencyDropDown();
+ 	            
+ 	            $('#portalContent').on('change', '#incidentDeleteForm #stateCode', function(){
+ 	            	refreshAgencyDropDown();
+ 	            });
+ 	            
+ 	            function refreshAgencyDropDown(){
+ 	                stateCode = $('#stateCode').val(); 
+                   xhr = $.get( context +"incidents/agencies", {stateCode: stateCode} , function(data) {
+                     $('#agencyId').empty();
+                     $('#agencyId').append('<option value="">All</option>');
+                     
+                     $.each( data, function( key, value ) {
+-                    	$('#agencyId').append($('<option></option>').attr('value', value).text(key));
++                        $('#agencyId').append($('<option></option>').attr('value', $('<div>').text(value).html()).text($('<div>').text(key).html()));
+                    	});
+                     $('#agencyId').trigger("chosen:updated");
+                   }).fail(ojbc.displayFailMessage);
+ 	            }
+ 	            
+ 	            $('#submit').click (function(){
+ 	            	$('#responseInfo').html("").addClass('d-none');
+ 	            	
+ 	            	bootpopup.confirm("You have selected records to delete. Please confirm that you want to permanently delete the records" , "WARNING",
+                   function(ans) { 
+                     if(ans){
+ 		                 	var requestData = {
+ 			                	agencyId: $("#agencyId").val(),
+ 			                	stateCode: $("#stateCode").val() 		
+ 			                }; 
+ 			                if (typeof _csrf_param_name !== 'undefined'){
+ 			                    requestData[_csrf_param_name] = _csrf_token;
+ 			                }
+ 			
+ 				              xhr = $.post(context + "incidents/delete",requestData,function(data) {
+ 				            	  $('#responseInfo').removeClass('d-none').html(data);  
+ 				            	  
+ 				            	  if($('#agencyId').val() !== ''){
+ 					            	  $('#agencyId option:selected').remove();
+ 					                $('#agencyId').trigger("chosen:updated");
+ 				            	  }
+ 			                  if($('#stateCode').val() !== ''){
+ 			                     $('#stateCode option:selected').remove();
+ 			                     $('#stateCode').trigger("chosen:updated");
+ 			                     refreshAgencyDropDown();
+ 			                  }
+ 			                  
+ 			                  $.get(context + "ownsData", function(data){
+ 			                	  if (data === true){
+ 	                          $("#summaryReportInputForm").addClass("no-data");
+ 	                          $("#incidents").addClass("no-data");
+ 	                          $("#incidentDeleteForm").addClass("no-data");
+ 	                          $('#agencyId').empty();
+ 	                          $('#agencyId').trigger("chosen:updated");
+ 	                          $('#stateCode').empty();
+ 	                          $('#stateCode').trigger("chosen:updated");
+ 			                	  }
+ 			                  });
+ 				              }).fail(ojbc.displayFailMessage);
+                     }
+ 	            	});
+ 	            });
+ 	            
+ 	            $('#reset').click (function(){
+ 	            	$('#responseInfo').html("").addClass('d-none');
+ 	              xhr = $.get(context + "incidents/incidentDeleteForm/reset", function(data) {
+ 	                $('#portalContent').replaceWith(data); 
+ 	              }).fail(ojbc.displayFailMessage);
+ 	            });
+ 	
+ 	          });
+ 	        </script>
+           <div class="alert alert-info d-none mt-2" id="responseInfo"></div>   
+       </div>
+ 	</body>
+ </html>
